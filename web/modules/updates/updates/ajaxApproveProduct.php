@@ -112,7 +112,11 @@ foreach ($f['name_procedure'] as $indextableau => $name) {
         }elseif  ($productfamily == "Windows_Security_platform"){
             $listename[] = _T("WINDOWS SECURITY PLATFORM", "updates");
         }
-        $htmlelementcheck[] = '&nbsp;';
+        $htmlelementcheck[] = sprintf(
+            '<input type="checkbox" class="family-check-all" data-family="%s" title="%s">',
+            htmlspecialchars($productfamily),
+            _T("Approve every update of this family", "updates")
+        );
         $cssClasses[] = "family-separator";
         $counttitleproduit++;
         //$cssClasses[] = "sub-section-row";
@@ -149,9 +153,10 @@ foreach ($f['name_procedure'] as $indextableau => $name) {
     // Génération des champs input (hidden + checkbox)
     $hiddenInput = sprintf('<input type="hidden" name="check[%s]" value="0">', $id);
     $checkboxInput = sprintf(
-        '<input type="checkbox" id="check%s" name="check[%s]" value="1" %s>',
+        '<input type="checkbox" id="check%s" name="check[%s]" value="1" data-family="%s" %s>',
         $id,
         $id,
+        htmlspecialchars((string) $currentFamily),
         $checked
     );
     $htmlelementcheck[] = $hiddenInput . $checkboxInput;
@@ -213,5 +218,29 @@ echo "\n</form>";
         btn.style.marginLeft = (r.left - f.left) + 'px';
         btn.style.width = r.width + 'px';
     }
+})();
+
+(function() {
+    /* Ne cibler que les checkbox : chaque ligne a aussi un input hidden de meme nom. */
+    document.querySelectorAll('.approval-form .family-check-all').forEach(function(master) {
+        var boxes = Array.prototype.slice.call(document.querySelectorAll(
+            '.approval-form table.listinfos tbody input[type=checkbox][name^="check["]'
+            + '[data-family="' + master.dataset.family + '"]'
+        ));
+        if (!boxes.length) { return; }
+
+        function refreshMaster() {
+            var checked = boxes.filter(function(b) { return b.checked; }).length;
+            master.checked = (checked === boxes.length);
+            master.indeterminate = (checked > 0 && checked < boxes.length);
+        }
+
+        master.addEventListener('click', function() {
+            boxes.forEach(function(b) { b.checked = master.checked; });
+            master.indeterminate = false;
+        });
+        boxes.forEach(function(b) { b.addEventListener('change', refreshMaster); });
+        refreshMaster();
+    });
 })();
 </script>

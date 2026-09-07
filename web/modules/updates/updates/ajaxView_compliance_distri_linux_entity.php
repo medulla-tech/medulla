@@ -194,7 +194,7 @@ $action_no_update_other_all_linux_entity = new EmptyActionItem1(
             "ajaxUpdateCreateGroup",  // Méthode AJAX appelée
             "btnCreateGroup",         // ID bouton
             '',
-            _T($question, "updates"), // Question personnalisée
+            $question,                // Question personnalisée (deja traduite)
             "updates",                // Module
             "updates",                // Sous-module
             null,                     // Onglet
@@ -207,35 +207,35 @@ $action_no_update_other_all_linux_entity = new EmptyActionItem1(
         switch ($colonne) {
 
         case "total_machines":
-            $question = "Do you want to create a group containing<br> {$distribution} machines of entity {$nameentitycomplete}?";
+            $question = _T('Do you want to create a group containing<br> %1$s machines of entity %2$s?', "updates");
             $largeur=500;
             break;
 
         case "machines_not_up_to_date":
-            $question = "Do you want to create a group of {$distribution} machines with pending updates<br> for entity {$nameentitycomplete}?";
+            $question = _T('Do you want to create a group of %1$s machines with pending updates<br> for entity %2$s?', "updates");
             $largeur=500;
             break;
 
         case "machines_security_not_ok":
-            $question = "Do you want to create a group of {$distribution} machines missing security updates<br> for entity {$nameentitycomplete}?";
+            $question = _T('Do you want to create a group of %1$s machines missing security updates<br> for entity %2$s?', "updates");
             $largeur=500;
             break;
 
         case "machines_kernel_not_ok":
-            $question = "Do you want to create a group of {$distribution} machines with outdated kernels<br> for entity {$nameentitycomplete}?";
+            $question = _T('Do you want to create a group of %1$s machines with outdated kernels<br> for entity %2$s?', "updates");
             $largeur=500;
             break;
 
         case "machines_other_not_ok":
-            $question = "Do you want to create a group of {$distribution} machines with other pending updates<br> for entity {$nameentitycomplete}?";
+            $question = _T('Do you want to create a group of %1$s machines with other pending updates<br> for entity %2$s?', "updates");
             $largeur=500;
             break;
 
         default:
-            $question = "Do you want to create this {$distribution} group<br>for entity {$nameentitycomplete}?";
+            $question = _T('Do you want to create this %1$s group<br>for entity %2$s?', "updates");
             $largeur=500;
         }
-        return array($question, $largeur);
+        return array(sprintf($question, $distribution, $nameentitycomplete), $largeur);
     }
 
 
@@ -416,7 +416,7 @@ $action_no_update_other_all_linux_entity = new EmptyActionItem1(
      |--------------------------------------------------------------------------
      */
 
-    $txtaction= _T("Update complete $distribution \non entity [$completename]", "updates");
+    $txtaction= sprintf(_T("Update complete %s \non entity [%s]", "updates"), $distribution, $completename);
     if (intval($entitycompliances['machines_not_up_to_date'][$index]) > 0) {
         // $vue_compliance_distri_linux_entity[]=$View_compliance_distri_linux_entity;
         $msgtitle = _T(
@@ -507,7 +507,7 @@ $action_no_update_other_all_linux_entity = new EmptyActionItem1(
      | SECURITY NOT OK DISTRIBUTION
      |--------------------------------------------------------------------------
      */
-      $txtaction=_T("Update $distribution security on entity [$completename]", "updates");
+      $txtaction=sprintf(_T("Update %s security on entity [%s]", "updates"), $distribution, $completename);
 
 
     if (intval($entitycompliances['machines_security_not_ok'][$index]) > 0) {
@@ -568,7 +568,7 @@ $action_no_update_other_all_linux_entity = new EmptyActionItem1(
      | KERNEL NOT OK DISTRIBUTION
      |--------------------------------------------------------------------------
      */
-      $txtaction=_T("Update $distribution kernel on entity [$completename]", "updates");
+      $txtaction=sprintf(_T("Update %s kernel on entity [%s]", "updates"), $distribution, $completename);
     if (intval($entitycompliances['machines_kernel_not_ok'][$index]) > 0) {
         // $vue_detail_machine_kernel_linux_entity[]=$View_detail_machine_kernel_linux_entity;
         // $action_update_kernel_linux[]=$action_update_kernel_all_linux_entity;
@@ -623,7 +623,7 @@ $action_no_update_other_all_linux_entity = new EmptyActionItem1(
      | OTHER PACKAGES NOT OK DISTRIBUTION
      |--------------------------------------------------------------------------
      */
-     $txtaction=_T("Update $distribution other packages on entity [$completename]", "updates");
+     $txtaction=sprintf(_T("Update %s other packages on entity [%s]", "updates"), $distribution, $completename);
      if (intval($entitycompliances['machines_other_not_ok'][$index]) > 0) {
 
             // $vue_detail_machine_other_linux_entity[]=$View_detail_machine_other_linux_entity;

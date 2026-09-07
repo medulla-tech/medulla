@@ -93,7 +93,7 @@ foreach ($userDetails as $user) {
     $userFirstnames[]   = $user['firstname'];
     $userLastName[]     = $user['realname'];
     $userPhones[]       = $user['phone'];
-    $userStatus[]       = $isActive ? _("Enabled") : _("Disabled");
+    $userStatus[]       = $isActive ? _T("Enabled", "admin") : _T("Disabled", "admin");
     $userLastLogin[]    = $fmtDate($user['last_login'] ?? null);
     $userProfileNames[] = $user['profile_name'];
 

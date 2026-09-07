@@ -86,6 +86,21 @@ var actionsList = [
     'action_question',  // Ask a "YES" / "NO" question, if YES : goto A, then goto B
     'action_loop_question',
 ];
+
+/**
+ * actionsOs lists, for each action, the operating systems it supports.
+ * An action which is not listed here is available on every os.
+ * The values must match the targetos select values ('win', 'linux', 'mac').
+ *
+ * Actions unavailable for the selected os are kept visible but disabled.
+ * @see updateActionsAvailability() in controller.js
+ */
+var actionsOs = {
+    'action_kiosknotification': ['win'],
+    'action_notification': ['win'],
+    'action_question': ['win'],
+    'action_loop_question': ['win'],
+};
 /**
  *
  * optionsList contains information about the options.

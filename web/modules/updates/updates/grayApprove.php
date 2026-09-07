@@ -39,7 +39,7 @@ if(isset($_POST['bconfirm'])){
     exit;
 }
 else{
-    $f = new PopupForm(sprintf(_T("<b>Approve update</b><br>%s<br>(package: %s) ?", "update"), $title,
+    $f = new PopupForm(sprintf(_T("<b>Approve update</b><br>%s<br>(package: %s) ?", "updates"), $title,
     $updateid));
     $hidden = new HiddenTpl("updateid");
     $f->add($hidden, array("value" =>$updateid, "hide" => True));

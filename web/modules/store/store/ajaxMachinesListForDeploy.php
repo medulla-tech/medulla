@@ -51,6 +51,9 @@ $ctx['maxperpage'] = $maxperpage;
 // Only show online machines (can't deploy to offline)
 $ctx['computerpresence'] = 'presence';
 
+$os = isset($_GET['os']) ? trim($_GET['os']) : '';
+if ($os !== '') $ctx['osfamily'] = $os;
+
 try {
     $machines = xmlrpc_xmppmaster_get_machines_list($start, $maxperpage, $ctx);
 } catch(Exception $e) {

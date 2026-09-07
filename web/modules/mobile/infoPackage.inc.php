@@ -418,6 +418,11 @@ $pageAjaxAppSearch->setFile("modules/mobile/mobile/ajaxAppSearch.php");
 $pageAjaxAppSearch->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($pageAjaxAppSearch);
 
+$pageAjaxAppVersions = new Page("ajaxAppVersions", _T('App versions', 'mobile'));
+$pageAjaxAppVersions->setFile("modules/mobile/mobile/ajaxAppVersions.php");
+$pageAjaxAppVersions->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageAjaxAppVersions);
+
 #export logs page
 $pageExportLogs = new Page("exportLogs", _T('Export logs', 'mobile'));
 $pageExportLogs->setFile("modules/mobile/mobile/exportLogs.php");

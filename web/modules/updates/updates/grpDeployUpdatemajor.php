@@ -225,13 +225,13 @@ if(isset($_POST['bconfirm'],
 
             if (empty($start_date)) {
                 header("location:". urlStrRedirect("updates/updates/index"));
-                new NotifyWidgetFailure(_T('Slot start date missing', 'msc'));
+                new NotifyWidgetFailure(_T('Slot start date missing', 'updates'));
                 exit;
             }
 
             if (empty($end_date)) {
                 header("location:". urlStrRedirect("updates/updates/index"));
-                new NotifyWidgetFailure(_T('Slot end date missing', 'msc'));
+                new NotifyWidgetFailure(_T('Slot end date missing', 'updates'));
                 exit;
             }
 

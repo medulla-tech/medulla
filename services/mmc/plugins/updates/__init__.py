@@ -270,6 +270,20 @@ class RpcProxy(RpcProxyI):
             filter,
         )
 
+    @with_optional_xmpp_context
+    def get_win_major_deployment_history_by_entity(self,
+                                                   entity_id,
+                                                   start=0,
+                                                   limit=-1,
+                                                   filter="",
+                                                   ctx=None):
+        return XmppMasterDatabase().get_win_major_deployment_history_by_entity(
+            entity_id,
+            start,
+            limit,
+            filter,
+        )
+
 
 
     @with_optional_xmpp_context
@@ -571,6 +585,25 @@ def get_linux_major_deployment_history_by_entity(distributor_id,
     """
     return XmppMasterDatabase().get_linux_major_deployment_history_by_entity(
         distributor_id,
+        entity_id,
+        start,
+        limit,
+        filter,
+    )
+
+
+def get_win_major_deployment_history_by_entity(entity_id,
+                                               start=0,
+                                               limit=-1,
+                                               filter=""):
+    """
+    Retourne l'historique des déploiements Windows major d'une entité.
+
+    Identifie les déploiements majeurs via le marqueur ``--@upd@--W``
+    dans le titre (catégories W10to10, W10to11, W11to11).
+    La fenêtre temporelle est limitée au dernier mois.
+    """
+    return XmppMasterDatabase().get_win_major_deployment_history_by_entity(
         entity_id,
         start,
         limit,

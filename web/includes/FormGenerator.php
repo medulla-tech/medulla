@@ -1517,4 +1517,136 @@ class TrFormElement extends FormElement
 
 }
 
+class MergedTrFormElement extends FormElement
+{
+    public $template;
+    public $desc;
+    public $cssErrorName;
+    public $firstColWidth;
+    public $style;
+    public $class;
+    public $trid;
+    public $tooltip;
+
+
+    public function __construct($desc, $tpl, $extraInfo = array())
+    {
+        parent::__construct($desc, $tpl, $extraInfo);
+        $this->desc = $desc;
+        $this->template = &$tpl;
+        $this->tooltip = false;
+        $this->firstColWidth = "40%";
+        $this->style = null; /* css style */
+        $this->class = null; /* html class for the tr element */
+        $this->trid = null;
+        foreach ($extraInfo as $key => $value) {
+            $this->$key = $value;
+        }
+    }
+
+
+    /**
+     *  display input Element
+     *  $arrParam accept ["value"] to corresponding value
+     */
+    public function display($arrParam = array())
+    {
+        if (empty($arrParam)) {
+            $arrParam = $this->options;
+        }
+        if (!isset($this->cssErrorName)) {
+            $this->cssErrorName = isset($this->template->name) ? $this->template->name : "";
+        }
+
+        printf('<tr class="mmc-form-row');
+        if ($this->class !== null) {
+            printf(' %s', $this->class);
+        }
+        printf('"');
+        if ($this->trid !== null) {
+            printf(' id="%s"', $this->trid);
+        }
+        if ($this->style !== null) {
+            printf(' style="%s"', $this->style);
+        }
+        printf('><td class="mmc-label" colspan="2">');
+
+        // set hidden form with old_value for each TrFormElement field
+        if (isset($arrParam["value"])) {
+            // if checkbox
+            if ($arrParam["value"] == "checked") {
+                $old_value = "on";
+            } else {
+                $old_value = $arrParam["value"];
+            }
+        } else {
+            $old_value = "";
+        }
+        if (is_object($this->template)) {
+            $field_name = isset($this->template->name) ? $this->template->name : "";
+        } elseif (is_array($this->template)) {
+            $field_name = $this->template["name"];
+        } else {
+            $field_name = "";
+        }
+        if ($field_name && is_string($old_value)) {
+            print '<input type="hidden" name="old_' . $field_name . '" value="' . $old_value . '" />';
+        }
+        print('<h2 class="desc">'.$this->desc.'</h2>');
+        // display real field
+        parent::display($arrParam);
+
+        if (isset($arrParam["extra"])) {
+            print "&nbsp;" . $arrParam["extra"];
+        }
+        print "</td></tr>";
+    }
+
+    public function displayRo($arrParam)
+    {
+
+        printf('<tr class="mmc-form-row"><td class="mmc-label" ');
+        print displayErrorCss($this->cssErrorName);
+        print '>';
+
+        //if we got a tooltip, we show it
+        if ($this->tooltip) {
+            print "<a href=\"#\" class=\"tooltip\">" . $this->desc . "<span>" . $this->tooltip . "</span></a>";
+        } else {
+            print $this->desc;
+        }
+        print '</td><td>';
+
+        parent::displayRo($arrParam);
+
+        print '</td></tr>';
+    }
+
+    public function setClass($className)
+    {
+        $this->class = $className;
+    }
+
+    public function getClass()
+    {
+        return $this->class;
+    }
+
+    public function setStyle($style)
+    {
+        $this->style = $style;
+    }
+
+    public function setFirstColWidth($firstColWidth)
+    {
+        $this->firstColWidth = $firstColWidth;
+    }
+
+    public function getFirstColWidth()
+    {
+        return $this->firstColWidth;
+    }
+
+}
+
 ?>

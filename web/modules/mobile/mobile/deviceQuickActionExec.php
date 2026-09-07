@@ -42,6 +42,11 @@ switch ($action) {
         $messageType = 'reboot';
         $payload = '';
         break;
+
+    case 'passwordReset':
+        $messageType = 'passwordReset';
+        $payload = '{"password":""}';
+        break;
         
     case 'configUpdated':
         $messageType = 'configUpdated';

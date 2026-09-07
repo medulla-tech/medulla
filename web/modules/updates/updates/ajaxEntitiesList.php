@@ -144,7 +144,8 @@ foreach ($merged_array as $index_tab => $entitycompliance) {
     $params[] = array(
         'entity' => $entitycompliance['uuid'],// $transformed_uuid, //
         'completename' => $entitycompliance['completename'],
-        'source' => $source
+        'source' => $source,
+        'history_type' => 'windows_updates'
     );
 }
 
@@ -152,25 +153,48 @@ $n = new OptimizedListInfos($entityNames, _T("Entity name", "updates"));
 $n->setcssIds($ids_entity);
 $n->disableFirstColumnActionLink();
 
-$n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
-$n->addExtraInfoCentered($nbupdate, _T("Missing", "updates"));
-$n->addExtraInfoCentered($nbMachines, _T("Non-compliant", "updates"));
-$n->addExtraInfoCentered($totalMachine, _T("Total machines", "updates"));
+$n->addExtraInfo(
+    $complRates,
+    _T("Compliance rate", "updates"),
+    "",
+    _T("Share of machines with no missing update, out of all machines in the entity.", "updates")
+);
+$n->addExtraInfoCentered(
+    $nbupdate,
+    _T("Missing", "updates"),
+    "",
+    _T("Number of distinct updates missing across the machines of the entity.", "updates")
+);
+$n->addExtraInfoCentered(
+    $nbMachines,
+    _T("Non-compliant", "updates"),
+    "",
+    _T("Number of machines with at least one missing update.", "updates")
+);
+$n->addExtraInfoCentered(
+    $totalMachine,
+    _T("Total machines", "updates"),
+    "",
+    _T("Total number of machines attached to this entity.", "updates")
+);
 
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($params);
 
-$n->addActionItemArray($actionHistories);
-$n->addActionItemArray($actiondetailsByMachs);
-$n->addActionItemArray($actiondetailsByUpds);
+// Ordre : deploiements, puis consultation, puis historique.
 //$n->addActionItemArray($actiondeployAlls);
 $n->addActionItemArray($actiondeploySpecifics);
+
+$n->addActionItemArray($actiondetailsByMachs);
+$n->addActionItemArray($actiondetailsByUpds);
+
+$n->addActionItemArray($actionHistories);
 $n->start = 0;
 $n->end = $count;
 $n->setEmptyState(_T("No entities found", "updates"), _T("No entities match the current filter.", "updates"));
-(new TitleElement(_T("Windows", "updates")))->display();
 echo '<div class="entity-compliance-table">';
 $n->display();
 echo '</div>';
+
 ?>

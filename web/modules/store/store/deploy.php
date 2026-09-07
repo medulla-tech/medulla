@@ -127,7 +127,8 @@ $p->setDescription(
 );
 
 // Tabs — pass package params to each tab
-$tabParams = array('packageUuid' => $packageUuid, 'pid' => $pid, 'packageName' => $packageName, 'packageVersion' => $packageVersion);
+$deployOs = !empty($_GET['os']) ? $_GET['os'] : $packageOs;
+$tabParams = array('packageUuid' => $packageUuid, 'pid' => $pid, 'packageName' => $packageName, 'packageVersion' => $packageVersion, 'os' => $deployOs);
 $p->addTab("tabmachines", _T("Machines", "store"), "", "modules/store/store/tabMachinesDeploy.php", $tabParams);
 $p->addTab("tabgroups", _T("Groups", "store"), "", "modules/store/store/tabGroupsDeploy.php", $tabParams);
 

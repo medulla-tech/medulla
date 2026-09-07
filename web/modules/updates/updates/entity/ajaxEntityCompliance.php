@@ -65,10 +65,12 @@ require_once("modules/updates/includes/xmlrpc.php");
 <?php
 
 // print_r( getFilteredGetParams());
+echo '<div class="ajax-section">';
 $ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxEntitiesListwindows"), "container", [], 'formRunning');
 
 $ajax->display();
 $ajax->displayDivToUpdate();
+echo '</div>';
 ?>
 
 <style>

@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2024-2025 Medulla, http://www.medulla-tech.io
+ * (c) 2024-2026 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
@@ -19,21 +19,20 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
  *
- * Medulla Store - Update subscription page
+ * Store - page "Catalogue" (liste : ajaxCatalogList.php). Selection = Set JS
+ * persistant cote client (survit aux recherches).
  */
 
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/store/includes/xmlrpc.php");
+require_once("modules/store/includes/storeui.inc.php");
 
-$p = new PageGenerator(_T("Subscriptions", 'store'));
+$p = new PageGenerator(_T("Catalog", 'store'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-// Get client info (auth_uuid est dérivé de keyAES32, plus à configurer)
 $clientInfo = xmlrpc_get_client_info();
-
-// Check if client is configured
 if (!$clientInfo) {
     echo '<div class="alert alert-warning" style="padding: 20px; background: #fcf8e3; border: 1px solid #faebcc; border-radius: 4px; margin: 20px 0;">';
     echo '<strong>' . _T('Configuration required', 'store') . '</strong><br>';
@@ -42,14 +41,12 @@ if (!$clientInfo) {
     exit;
 }
 
-// Process POST form - Save subscriptions
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_subscriptions'])) {
     $selectedIds = isset($_POST['software_ids']) ? array_map('intval', $_POST['software_ids']) : array();
     $result = xmlrpc_save_subscriptions($selectedIds);
 
     if ($result && $result['success']) {
         $msg = _T('Subscriptions saved successfully!', 'store') . ' (' . $result['count'] . ' ' . _T('software selected', 'store') . ')';
-        // Check if sync was performed
         if (isset($result['sync'])) {
             if ($result['sync']['success']) {
                 $msg .= ' - ' . $result['sync']['synced'] . ' ' . _T('packages synchronized', 'store');
@@ -61,15 +58,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_subscriptions'])
     } else {
         new NotifyWidgetFailure(_T('Error saving subscriptions', 'store') . ': ' . htmlspecialchars($result['error'] ?? 'Unknown error'));
     }
-    // POST/Redirect/GET to avoid resubmission on refresh
     header("Location: " . urlStrRedirect("store/store/subscribe"));
     exit;
 }
 
-// Process POST form - Manual sync (lancé en arrière-plan, rend la main tout de suite)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['sync_packages'])) {
     $result = xmlrpc_sync_packages_async();
-
     if ($result && $result['success']) {
         new NotifyWidgetSuccess(_T('Synchronization started in background', 'store') . '. ' . _T('Refresh in a moment to see the status', 'store') . '.');
     } else {
@@ -80,65 +74,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['sync_packages'])) {
     exit;
 }
 
-// Get available filters
 $filters = xmlrpc_get_filters();
-
-// Get filter parameters
 $currentFilters = array();
 if (!empty($_GET['os'])) $currentFilters['os'] = $_GET['os'];
 if (!empty($_GET['category'])) $currentFilters['category'] = $_GET['category'];
 if (!empty($_GET['search'])) $currentFilters['search'] = $_GET['search'];
-$currentSort = isset($_GET['sort']) ? $_GET['sort'] : 'popular';
 
-// Pagination parameters
 global $conf;
 $maxperpage = isset($conf["global"]["maxperpage"]) ? $conf["global"]["maxperpage"] : 10;
-$start = isset($_GET['start']) ? intval($_GET['start']) : 0;
 
-// Get software (filtered or all) with pagination and sorting
-if (!empty($currentFilters)) {
-    $result = xmlrpc_search_software($currentFilters, $start, $maxperpage, $currentSort);
-} else {
-    $result = xmlrpc_get_all_software(true, $start, $maxperpage, $currentSort);
+$allResult = xmlrpc_get_all_software(true, 0, 0, 'name');
+$allProductsData = store_group_by_product(isset($allResult['data']) ? $allResult['data'] : array());
+$jsProducts = array();
+foreach ($allProductsData as $prod) {
+    $jsProducts[] = array_map('intval', $prod['build_ids']);
 }
+$totalProductsCount = count($allProductsData);
 
-// Extract total and data
-$totalCount = isset($result['total']) ? $result['total'] : 0;
-$softwares = isset($result['data']) ? $result['data'] : array();
-
-// Get current subscriptions
 $subscriptions = xmlrpc_get_client_subscriptions();
-$subscribedIds = is_array($subscriptions) ? $subscriptions : array();
-
-// Helper for OS labels
-function getOsLabel($os) {
-    switch(strtolower($os)) {
-        case 'win': return 'Windows';
-        case 'linux': return 'Linux';
-        case 'mac': return 'macOS';
-        default: return ucfirst($os);
-    }
-}
-
-// Build base URL for pagination links
-$baseUrl = "main.php?module=store&submod=store&action=subscribe";
-if (!empty($currentFilters['os'])) $baseUrl .= "&os=" . urlencode($currentFilters['os']);
-if (!empty($currentFilters['category'])) $baseUrl .= "&category=" . urlencode($currentFilters['category']);
-if (!empty($currentFilters['search'])) $baseUrl .= "&search=" . urlencode($currentFilters['search']);
-if (!empty($currentSort) && $currentSort !== 'popular') $baseUrl .= "&sort=" . urlencode($currentSort);
+$subscribedIds = is_array($subscriptions) ? array_map('intval', $subscriptions) : array();
 ?>
 
-
 <!-- Filters -->
-<form method="get" class="store-filters">
-    <input type="hidden" name="module" value="store">
-    <input type="hidden" name="submod" value="store">
-    <input type="hidden" name="action" value="subscribe">
-
+<form name="storeFilterForm" id="storeFilterForm" class="store-filters" onsubmit="storeReload(0); return false;">
     <input type="text" name="search" placeholder="<?php echo _T('Search...', 'store'); ?>"
-           value="<?php echo htmlspecialchars($currentFilters['search'] ?? ''); ?>">
+           value="<?php echo htmlspecialchars($currentFilters['search'] ?? ''); ?>" onkeyup="storeDebounce()">
 
-    <select name="category">
+    <select name="category" onchange="storeReload(0)">
         <option value=""><?php echo _T('All categories', 'store'); ?></option>
         <?php foreach ($filters['category'] ?? [] as $cat): ?>
         <option value="<?php echo htmlspecialchars($cat); ?>" <?php echo ($currentFilters['category'] ?? '') == $cat ? 'selected' : ''; ?>>
@@ -147,160 +109,52 @@ if (!empty($currentSort) && $currentSort !== 'popular') $baseUrl .= "&sort=" . u
         <?php endforeach; ?>
     </select>
 
-    <select name="os">
+    <select name="os" onchange="storeReload(0)">
         <option value=""><?php echo _T('All OS', 'store'); ?></option>
         <?php foreach ($filters['os'] ?? [] as $os): ?>
         <option value="<?php echo htmlspecialchars($os); ?>" <?php echo ($currentFilters['os'] ?? '') == $os ? 'selected' : ''; ?>>
-            <?php echo getOsLabel($os); ?>
+            <?php echo store_os_label($os); ?>
         </option>
         <?php endforeach; ?>
     </select>
 
-    <select name="sort">
-        <option value="popular" <?php echo $currentSort == 'popular' ? 'selected' : ''; ?>><?php echo _T('Most Popular', 'store'); ?></option>
-        <option value="name" <?php echo $currentSort == 'name' ? 'selected' : ''; ?>><?php echo _T('A-Z', 'store'); ?></option>
-        <option value="recent" <?php echo $currentSort == 'recent' ? 'selected' : ''; ?>><?php echo _T('Most Recent', 'store'); ?></option>
-    </select>
 
-    <button type="submit" class="btn btn-primary btn-small"><?php echo _T('Filter', 'store'); ?></button>
-    <a href="main.php?module=store&submod=store&action=subscribe" class="btn btn-default btn-small"><?php echo _T('Reset', 'store'); ?></a>
+    <a href="#" onclick="storeResetFilters(); return false;" class="btn btn-default btn-small"><?php echo _T('Reset', 'store'); ?></a>
 </form>
-
-<?php if (empty($softwares) && $totalCount == 0): ?>
-<div style="text-align: center; padding: 40px; color: #888;">
-    <p><?php echo _T('No software available for subscription.', 'store'); ?></p>
-</div>
-<?php else: ?>
 
 <!-- Selection controls -->
 <div class="subscription-controls">
-    <button type="button" id="selectAll" class="btn btn-default btn-small">
-        <?php echo _T('Select All', 'store'); ?>
-    </button>
-    <button type="button" id="selectNone" class="btn btn-default btn-small">
-        <?php echo _T('Deselect All', 'store'); ?>
-    </button>
-    <button type="button" id="toggleSelection" class="btn btn-default btn-small">
-        <?php echo _T('Invert Selection', 'store'); ?>
-    </button>
+    <button type="button" id="selectAll" class="btn btn-default btn-small"><?php echo _T('Select All', 'store'); ?></button>
+    <button type="button" id="selectNone" class="btn btn-default btn-small"><?php echo _T('Deselect All', 'store'); ?></button>
+    <button type="button" id="toggleSelection" class="btn btn-default btn-small"><?php echo _T('Invert Selection', 'store'); ?></button>
     <span class="count">
-        <span id="selectedCount"><?php echo count($subscribedIds); ?></span> / <?php echo $totalCount; ?>
+        <span id="selectedCount">0</span> / <?php echo $totalProductsCount; ?>
         <?php echo _T('selected', 'store'); ?>
     </span>
 </div>
 
-<?php
-    // Prepare data for OptimizedListInfos
-    $names = array();
-    $vendors = array();
-    $categoriesList = array();
-    $descriptions = array();
-    $versions = array();
-    $osList = array();
-    $langsList = array();
-    $popularityList = array();
-    $statusList = array();
-    $params = array();
+<input type="hidden" id="maxperpage" value="<?php echo $maxperpage; ?>">
+<div id="storeList"></div>
 
-    foreach ($softwares as $soft) {
-        $isSubscribed = in_array($soft['id'], $subscribedIds);
-        $hasDeployed = !empty($soft['deployed_at']);
-        $softId = $soft['id'];
-
-        // Determine languages
-        $isMultilingual = !empty($soft['is_multilingual']);
-        $softLangs = is_array($soft['languages']) ? $soft['languages'] : array_filter(explode(',', $soft['languages'] ?? 'multi'));
-        $subLangs = isset($subscribedLangs[$softId]) ? $subscribedLangs[$softId] : array();
-
-        // Build checkbox + lang selectors
-        $langLabels = array('multi' => 'Multi', 'fr_FR' => 'FR', 'en_US' => 'EN', 'es_ES' => 'ES', 'de_DE' => 'DE', 'it_IT' => 'IT');
-
-        // Simple checkbox
-        $checked = $isSubscribed ? 'checked' : '';
-        $names[] = '<input type="checkbox" class="software-checkbox" name="software_ids[]" value="' . $softId . '" ' . $checked . ' style="position:relative;top:-5px;margin-right:10px;width:18px;height:18px;cursor:pointer;"/>' .
-                   "<img style='position:relative;top:5px;margin-right:5px;' src='img/other/package.svg' width='25' height='25'/> " .
-                   htmlspecialchars($soft['name']);
-
-        $vendors[] = htmlspecialchars($soft['vendor'] ?? '-');
-        $categoriesList[] = htmlspecialchars($soft['category'] ?? '-');
-        $descriptions[] = htmlspecialchars($soft['short_desc'] ?? '-');
-        $versions[] = !empty($soft['version']) ? '<span style="background:#e9ecef;padding:2px 8px;border-radius:4px;font-family:monospace;font-size:12px;">' . htmlspecialchars($soft['version']) . '</span>' : '-';
-        $osList[] = getOsLabel($soft['os'] ?? '');
-
-        // Subscribers count display
-        $subCount = intval($soft['subscribers_count'] ?? 0);
-        if ($subCount > 0) {
-            $popularityList[] = '<span style="color:#666;font-size:12px;">' . $subCount . '</span>';
-        } else {
-            $popularityList[] = '<span style="color:#ccc;">-</span>';
-        }
-
-        // Statut (badges)
-        if ($isSubscribed && $hasDeployed) {
-            $statusList[] = '<span style="background:#28a745;color:#fff;padding:3px 8px;border-radius:3px;font-size:11px;font-weight:bold;text-transform:uppercase;">' . _T('Deployed', 'store') . '</span>';
-        } elseif ($isSubscribed) {
-            $statusList[] = '<span style="background:#ffc107;color:#fff;padding:3px 8px;border-radius:3px;font-size:11px;font-weight:bold;text-transform:uppercase;">' . _T('Pending sync', 'store') . '</span>';
-        } else {
-            $statusList[] = '-';
-        }
-
-        $params[] = array('id' => $soft['id']);
-    }
-
-    // Build extra params for pagination links
-    $extraParams = "";
-    if (!empty($currentSort) && $currentSort !== 'popular') $extraParams .= "&amp;sort=" . urlencode($currentSort);
-    if (!empty($currentFilters['os'])) $extraParams .= "&amp;os=" . urlencode($currentFilters['os']);
-    if (!empty($currentFilters['category'])) $extraParams .= "&amp;category=" . urlencode($currentFilters['category']);
-    if (!empty($currentFilters['search'])) $extraParams .= "&amp;search=" . urlencode($currentFilters['search']);
-
-    $n = new OptimizedListInfos($names, _T("Software", "store"));
-    $n->disableFirstColumnActionLink();
-    $n->addExtraInfo($categoriesList, _T("Category", "store"));
-    $n->addExtraInfo($versions, _T("Version", "store"));
-    $n->addExtraInfo($osList, _T("OS", "store"));
-    $n->addExtraInfo($vendors, _T("Vendor", "store"));
-    $n->addExtraInfo($descriptions, _T("Description", "store"));
-    $n->addExtraInfo($statusList, _T("Status", "store"));
-    $n->setItemCount($totalCount);
-    $n->setNavBar(new SimpleNavBar($start, $start + count($softwares) - 1, $totalCount, $extraParams, $maxperpage));
-    $n->setParamInfo($params);
-    $n->setResizable();
-    $n->start = 0;
-    $n->end = count($softwares);
-
-    // Display list (contains checkboxes but may have form conflicts)
-    $n->display();
-    ?>
-
-<!-- Actions container with both buttons on same line -->
+<!-- Actions -->
 <div class="subscription-actions">
-    <!-- Save subscriptions form -->
     <form action="main.php?module=store&submod=store&action=subscribe" method="post" id="subscriptionForm" style="display: inline-block;">
         <input type="hidden" name="save_subscriptions" value="1">
-        <!-- Hidden container for selected IDs - populated by JavaScript before submit -->
         <div id="selectedIdsContainer"></div>
-        <button type="button" id="btnOpenDisclaimer" class="btn btn-primary" disabled>
-            <?php echo _T('Save Subscriptions', 'store'); ?>
-        </button>
+        <button type="button" id="btnOpenDisclaimer" class="btn btn-primary"><?php echo _T('Save Subscriptions', 'store'); ?></button>
     </form>
 
-    <!-- Sync button form -->
     <form action="main.php?module=store&submod=store&action=subscribe" method="post" id="syncForm" style="display: inline-block; margin-left: 10px; vertical-align: top;">
         <input type="hidden" name="sync_packages" value="1">
-        <button type="submit" class="btnSecondary">
-            <?php echo _T('Sync Now', 'store'); ?>
-        </button>
+        <button type="submit" class="btnSecondary"><?php echo _T('Sync Now', 'store'); ?></button>
     </form>
 </div>
 
 <!-- Disclaimer modal -->
 <?php
-// Load disclaimer text based on current language
 $lang = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'en_US';
 $disclaimerFile = "modules/store/graph/legal/disclaimer_{$lang}.txt";
 if (!file_exists($disclaimerFile)) {
-    // Fallback to English
     $disclaimerFile = "modules/store/graph/legal/disclaimer_en_US.txt";
 }
 $disclaimerText = file_exists($disclaimerFile) ? nl2br(htmlspecialchars(file_get_contents($disclaimerFile))) : '';
@@ -330,167 +184,152 @@ $disclaimerText = file_exists($disclaimerFile) ? nl2br(htmlspecialchars(file_get
 </div>
 
 <script>
+var storeSelected = new Set(<?php echo json_encode($subscribedIds); ?>);
+var storeInitialSelected = <?php echo json_encode($subscribedIds); ?>;
+var storeAllProducts = <?php echo json_encode($jsProducts); ?>;
 var disclaimerAccepted = false;
-// Initial subscribed IDs (from server)
-var initialSubscribedIds = <?php echo json_encode(array_map('intval', $subscribedIds)); ?>;
-// IDs visible on the current page only (used to merge selection across pages
-// when paginating: subscriptions from other pages must be preserved on save).
-var currentPageIds = <?php echo json_encode(array_map(function($s) { return (int) $s['id']; }, $softwares)); ?>;
 
-document.addEventListener('DOMContentLoaded', function() {
-    var form = document.getElementById('subscriptionForm');
-    var checkboxes = document.querySelectorAll('.software-checkbox');
-    var countEl = document.getElementById('selectedCount');
-    var hiddenContainer = document.getElementById('selectedIdsContainer');
-    var btnOpenDisclaimer = document.getElementById('btnOpenDisclaimer');
-    var btnConfirmDisclaimer = document.getElementById('btnConfirmDisclaimer');
-    var disclaimerCheckbox = document.getElementById('disclaimerAccept');
+function cbBuildIds(cb) {
+    return (cb.getAttribute('data-build-ids') || '').split(',')
+        .filter(function (s) { return s !== ''; })
+        .map(function (s) { return parseInt(s, 10); });
+}
 
-    // Get currently checked IDs
-    function getCheckedIds() {
-        var ids = [];
-        document.querySelectorAll('.software-checkbox:checked').forEach(function(cb) {
-            ids.push(parseInt(cb.value, 10));
+function productSelectedCount() {
+    var n = 0;
+    storeAllProducts.forEach(function (ids) {
+        if (ids.length > 0 && ids.every(function (id) { return storeSelected.has(id); })) { n++; }
+    });
+    return n;
+}
+function updateCount() {
+    document.getElementById('selectedCount').textContent = productSelectedCount();
+    document.getElementById('btnOpenDisclaimer').disabled = (storeSelected.size === 0 && storeInitialSelected.length === 0);
+}
+function applySelection() {
+    jQuery('#storeList .product-checkbox').each(function () {
+        var ids = cbBuildIds(this);
+        this.checked = ids.length > 0 && ids.every(function (id) { return storeSelected.has(id); });
+    });
+    updateCount();
+}
+function hasNewSubscriptions() {
+    var initSet = new Set(storeInitialSelected);
+    var found = false;
+    storeSelected.forEach(function (id) { if (!initSet.has(id)) { found = true; } });
+    return found;
+}
+
+function storeCollectParams() {
+    var f = document.forms['storeFilterForm'];
+    var p = ['module=store', 'submod=store', 'action=ajaxCatalogList'];
+    if (f.search.value)   p.push('search='   + encodeURIComponent(f.search.value));
+    if (f.category.value) p.push('category=' + encodeURIComponent(f.category.value));
+    if (f.os.value)       p.push('os='       + encodeURIComponent(f.os.value));
+    return p;
+}
+function storeReload(start, end) {
+    var max = parseInt(document.getElementById('maxperpage').value) || 10;
+    start = parseInt(start) || 0;
+    end = parseInt(end);
+    if (isNaN(end)) end = start + max - 1;
+    var p = storeCollectParams();
+    p.push('start=' + start);
+    p.push('end=' + end);
+    p.push('maxperpage=' + max);
+    jQuery.get('main.php?' + p.join('&'), function (data) {
+        jQuery('#storeList').html(data);
+        applySelection();
+    });
+}
+function storeReloadParam(filter, start, end) { storeReload(start, end); }
+var storeSearchTimer = null;
+function storeDebounce() {
+    clearTimeout(storeSearchTimer);
+    var v = document.forms['storeFilterForm'].search.value;
+    if (v.length > 0 && v.length < 3) return;
+    storeSearchTimer = setTimeout(function () { storeReload(0); }, 300);
+}
+function storeResetFilters() {
+    var f = document.forms['storeFilterForm'];
+    f.search.value = ''; f.category.value = ''; f.os.value = '';
+    storeReload(0);
+}
+
+jQuery(function () {
+    jQuery('#storeList').on('change', '.product-checkbox', function () {
+        var ids = cbBuildIds(this);
+        var self = this;
+        ids.forEach(function (id) { if (self.checked) { storeSelected.add(id); } else { storeSelected.delete(id); } });
+        updateCount();
+    });
+
+    document.getElementById('selectAll').addEventListener('click', function () {
+        jQuery('#storeList .product-checkbox').each(function () {
+            this.checked = true;
+            cbBuildIds(this).forEach(function (id) { storeSelected.add(id); });
         });
-        return ids;
-    }
-
-    // Check if there are new subscriptions (not in initial list)
-    function hasNewSubscriptions() {
-        var currentChecked = getCheckedIds();
-        return currentChecked.some(function(id) {
-            return initialSubscribedIds.indexOf(id) === -1;
+        updateCount();
+    });
+    document.getElementById('selectNone').addEventListener('click', function () {
+        jQuery('#storeList .product-checkbox').each(function () {
+            this.checked = false;
+            cbBuildIds(this).forEach(function (id) { storeSelected.delete(id); });
         });
-    }
-
-    function updateCount() {
-        // Total = preserved-from-other-pages + checked-on-this-page
-        var checkedHere = [];
-        document.querySelectorAll('.software-checkbox:checked').forEach(function(cb) {
-            checkedHere.push(parseInt(cb.value, 10));
+        updateCount();
+    });
+    document.getElementById('toggleSelection').addEventListener('click', function () {
+        jQuery('#storeList .product-checkbox').each(function () {
+            this.checked = !this.checked;
+            var checked = this.checked;
+            cbBuildIds(this).forEach(function (id) { if (checked) { storeSelected.add(id); } else { storeSelected.delete(id); } });
         });
-        var preserved = initialSubscribedIds.filter(function(id) {
-            return currentPageIds.indexOf(id) === -1;
-        });
-        countEl.textContent = preserved.length + checkedHere.length;
-        updateSaveButton();
-    }
+        updateCount();
+    });
 
-    function updateSaveButton() {
-        var hasChanges = true; // Always allow save if there are changes
-        var checkedCount = document.querySelectorAll('.software-checkbox:checked').length;
-        // Enable button if there's at least a selection or if we're clearing all
-        btnOpenDisclaimer.disabled = (checkedCount === 0 && initialSubscribedIds.length === 0);
-    }
-
-    // Click on save button
-    btnOpenDisclaimer.addEventListener('click', function() {
-        // Only show disclaimer if adding NEW subscriptions and not yet accepted
+    document.getElementById('btnOpenDisclaimer').addEventListener('click', function () {
         if (hasNewSubscriptions() && !disclaimerAccepted) {
-            // Open disclaimer modal first
             openDisclaimerModal();
         } else {
-            // No new subscriptions (only removing) or disclaimer already accepted
             submitForm();
         }
     });
-
-    // Disclaimer checkbox change
-    disclaimerCheckbox.addEventListener('change', function() {
-        btnConfirmDisclaimer.disabled = !this.checked;
+    document.getElementById('disclaimerAccept').addEventListener('change', function () {
+        document.getElementById('btnConfirmDisclaimer').disabled = !this.checked;
     });
 
-    checkboxes.forEach(function(cb) {
-        cb.addEventListener('change', updateCount);
-    });
-
-    document.getElementById('selectAll').addEventListener('click', function() {
-        checkboxes.forEach(function(cb) { cb.checked = true; });
-        updateCount();
-    });
-
-    document.getElementById('selectNone').addEventListener('click', function() {
-        checkboxes.forEach(function(cb) { cb.checked = false; });
-        updateCount();
-    });
-
-    document.getElementById('toggleSelection').addEventListener('click', function() {
-        checkboxes.forEach(function(cb) { cb.checked = !cb.checked; });
-        updateCount();
-    });
-
-    // Initial state
     updateCount();
-
-    // Submit form function
-    window.submitForm = function() {
-        // Clear previous hidden inputs
-        hiddenContainer.innerHTML = '';
-
-        // The backend save_subscriptions() replaces the full list, so we must
-        // submit the *complete* desired set, not just what's checked on this
-        // page. Otherwise paginating then saving wipes subscriptions from
-        // other pages.
-        //
-        //   final = (initial - currentPageIds) + checkedOnThisPage
-        //
-        // i.e. preserve everything that wasn't on the current page, then add
-        // what is currently checked here.
-        var checkedHere = [];
-        document.querySelectorAll('.software-checkbox:checked').forEach(function(cb) {
-            checkedHere.push(parseInt(cb.value, 10));
-        });
-        var preserved = initialSubscribedIds.filter(function(id) {
-            return currentPageIds.indexOf(id) === -1;
-        });
-        var finalIds = preserved.concat(checkedHere);
-
-        finalIds.forEach(function(id) {
-            var hidden = document.createElement('input');
-            hidden.type = 'hidden';
-            hidden.name = 'software_ids[]';
-            hidden.value = id;
-            hiddenContainer.appendChild(hidden);
-        });
-
-        form.submit();
-    };
-
-    // Make updateSaveButton accessible globally
-    window.updateSaveButton = updateSaveButton;
+    storeReload(0);
 });
 
-function openDisclaimerModal() {
-    document.getElementById('disclaimerModal').classList.add('open');
-}
+window.submitForm = function () {
+    var container = document.getElementById('selectedIdsContainer');
+    container.innerHTML = '';
+    storeSelected.forEach(function (id) {
+        var hidden = document.createElement('input');
+        hidden.type = 'hidden';
+        hidden.name = 'software_ids[]';
+        hidden.value = id;
+        container.appendChild(hidden);
+    });
+    document.getElementById('subscriptionForm').submit();
+};
 
+function openDisclaimerModal() { document.getElementById('disclaimerModal').classList.add('open'); }
 function closeDisclaimerModal() {
     document.getElementById('disclaimerModal').classList.remove('open');
-    // Reset checkbox when closing
     document.getElementById('disclaimerAccept').checked = false;
     document.getElementById('btnConfirmDisclaimer').disabled = true;
 }
-
 function confirmDisclaimer() {
     disclaimerAccepted = true;
     closeDisclaimerModal();
-    // Submit form directly after accepting
     window.submitForm();
 }
-
-// Close modal on overlay click
-document.addEventListener('click', function(e) {
-    if (e.target.id === 'disclaimerModal') {
-        closeDisclaimerModal();
-    }
+document.addEventListener('click', function (e) {
+    if (e.target.id === 'disclaimerModal') { closeDisclaimerModal(); }
 });
-
-// Close with Escape key
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeDisclaimerModal();
-    }
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { closeDisclaimerModal(); }
 });
 </script>
-
-<?php endif; ?>

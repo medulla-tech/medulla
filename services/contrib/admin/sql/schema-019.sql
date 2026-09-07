@@ -21,64 +21,59 @@ SET NAMES utf8mb4;
 START TRANSACTION;
 USE admin;
 
--- A source user is unique only inside its ITSM client. Local GLPI logins are
--- technical identifiers so identical source logins or emails never collide.
-CREATE TABLE IF NOT EXISTS `saas_itsm_user_mapping` (
+-- =====================================================================
+-- Global inventory tag -> entity rules (admin scope, root-managed)
+-- =====================================================================
+CREATE TABLE IF NOT EXISTS `admin_inventory_entity_rules` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `client_id` VARCHAR(50) NOT NULL,
-  `source_user_id` VARCHAR(100) NOT NULL,
-  `source_login` VARCHAR(255) NOT NULL DEFAULT '',
-  `source_email` VARCHAR(255) NOT NULL DEFAULT '',
-  `target_user_id` INT NOT NULL,
-  `target_login` VARCHAR(255) NOT NULL,
-  `source_updated_at` VARCHAR(50) NOT NULL DEFAULT '',
-  `last_seen_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  UNIQUE KEY `uk_client_source_user` (`client_id`, `source_user_id`),
-  UNIQUE KEY `uk_target_user` (`target_user_id`),
-  KEY `idx_client_email` (`client_id`, `source_email`),
-  KEY `idx_client_login` (`client_id`, `source_login`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
-COMMENT='[SaaS] Mapping scoped ITSM source users to ITSMLocal users';
-
--- Explicit Medulla-owned exceptions to the default source profile remapping.
--- A target profile is validated by the synchronizer and can never be the
--- ITSMLocal platform Super-Admin profile.
-CREATE TABLE IF NOT EXISTS `saas_itsm_profile_mapping` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `client_id` VARCHAR(50) NOT NULL,
-  `source_profile_id` VARCHAR(100) NOT NULL,
-  `source_profile_name` VARCHAR(255) NOT NULL DEFAULT '',
-  `target_profile_name` VARCHAR(255) NOT NULL,
   `enabled` TINYINT(1) NOT NULL DEFAULT 1,
+  `rule_name` VARCHAR(190) NOT NULL DEFAULT '',
+  `tag_name` VARCHAR(100) NOT NULL DEFAULT 'TAG',
+  `tag_value` VARCHAR(255) NOT NULL,
+  `entity_id` INT NOT NULL,
+  `priority` INT NOT NULL DEFAULT 100,
+  -- Champ reserve pour future evaluation multi-regles.
+  -- Actuellement non exploite par le moteur (premier match par priority/id).
+  `stop_on_match` TINYINT(1) NOT NULL DEFAULT 1,
+  `comment` VARCHAR(255) NOT NULL DEFAULT '',
+  `created_by` VARCHAR(100) NOT NULL DEFAULT 'root',
+  `updated_by` VARCHAR(100) NOT NULL DEFAULT 'root',
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  UNIQUE KEY `uk_client_source_profile` (`client_id`, `source_profile_id`),
-  KEY `idx_client_target_profile` (`client_id`, `target_profile_name`)
+  UNIQUE KEY `uniq_tag_rule` (`tag_name`, `tag_value`, `priority`),
+  KEY `idx_tag_rule_lookup` (`enabled`, `tag_name`, `tag_value`, `priority`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
-COMMENT='[SaaS] Explicit client ITSM profile to allowed ITSMLocal profile mapping';
+COMMENT='[Admin] Global inventory rules mapping TAG to GLPI entity';
 
--- OIDC identity is scoped by both tenant/client and provider. Email is only
--- searchable for an explicit initial match and is never globally unique.
-CREATE TABLE IF NOT EXISTS `saas_oidc_user_mapping` (
+
+--
+-- Update version du schema (rejouable)
+--
+UPDATE version
+SET Number = 19
+WHERE Number < 19;
+
+-- =====================================================================
+-- Custom metadata storage for inventory machines (substitute scope)
+-- =====================================================================
+CREATE TABLE IF NOT EXISTS `substitute_inventory_metadata` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `client_id` VARCHAR(50) NOT NULL,
-  `provider_id` INT NOT NULL,
-  `subject` VARCHAR(255) NOT NULL,
-  `email` VARCHAR(255) NOT NULL DEFAULT '',
-  `preferred_username` VARCHAR(255) NOT NULL DEFAULT '',
-  `target_user_id` INT NOT NULL,
-  `target_login` VARCHAR(255) NOT NULL,
-  `first_seen_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `last_login_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `jid` VARCHAR(255) NOT NULL,
+  `hostname` VARCHAR(255) NOT NULL DEFAULT '',
+  `key_name` VARCHAR(255) NOT NULL,
+  `value` LONGTEXT,
+  `description` LONGTEXT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  UNIQUE KEY `uk_client_provider_subject` (`client_id`, `provider_id`, `subject`),
-  UNIQUE KEY `uk_client_target_user` (`client_id`, `target_user_id`),
-  KEY `idx_client_email` (`client_id`, `email`)
+  UNIQUE KEY `uniq_jid_key` (`jid`, `key_name`),
+  KEY `idx_jid_lookup` (`jid`),
+  KEY `idx_hostname_lookup` (`hostname`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
-COMMENT='[SaaS] Mapping scoped OIDC identities to ITSMLocal users';
+COMMENT='[Substitute] Custom metadata indexed by machine JID';
 
+--
+-- Finalize version update
+--
 UPDATE version
 SET Number = 19
 WHERE Number < 19;

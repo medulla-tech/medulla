@@ -27,8 +27,8 @@
 
 %define use_git                1
 %define git                    SHA
-%define real_version           5.6.3
-%define mmc_version            5.6.3
+%define real_version           5.6.4
+%define mmc_version            5.6.4
 
 Summary:	Management Console
 Name:		medulla
@@ -1028,7 +1028,6 @@ Requires(pre): python3-mmc-base
 Requires:   python3-mmc-base
 Requires:   ajax-php-file-manager
 Requires:   python3-memory-profiler
-Requires:   python3-posix-ipc
 Requires:   python3.11-pyyaml
 Requires:   python3.11-incremental
 Requires:   python3.11-typing-extensions

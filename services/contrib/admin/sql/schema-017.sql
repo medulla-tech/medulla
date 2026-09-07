@@ -1,132 +1,55 @@
 --
--- (c) 2022 Siveo, http://www.siveo.net/
+--  (c) 2024-2026 Medulla, http://www.medulla-tech.io
 --
--- $Id$
+-- This file is part of MMC, http://www.medulla-tech.io
 --
--- This file is part of Pulse 2, http://www.siveo.net/
---
--- Pulse 2 is free software; you can redistribute it and/or modify
+-- MMC is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
--- the Free Software Foundation; either version 2 of the License, or
+-- the Free Software Foundation; either version 3 of the License, or
 -- (at your option) any later version.
 --
--- Pulse 2 is distributed in the hope that it will be useful,
+-- MMC is distributed in the hope that it will be useful,
 -- but WITHOUT ANY WARRANTY; without even the implied warranty of
 -- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -- GNU General Public License for more details.
 --
 -- You should have received a copy of the GNU General Public License
--- along with Pulse 2; if not, write to the Free Software
--- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
--- MA 02110-1301, USA.
-
---
--- Schema v017 : Support du moteur de synchronisation ITSM → GLPI Medulla
--- Ajoute 3 nouvelles tables pour la synchronisation des entités ITSM
---
--- Historique :
---  - v004 : saas_application, saas_organisations
---  - v017 : itsm_entity_mapping, sync_logs, sync_metrics
+-- along with MMC; If not, see <http://www.gnu.org/licenses/>.
 --
 
--- =====================================================================
--- Table 1 : saas_itsm_entity_mapping
--- =====================================================================
--- Rôle : Réconciliation / Mapping source (ITSM) → cible (Medulla/GLPI)
--- Objectif : Enregistrer la correspondance entre les entités source et cibles,
---            garantir la stabilité des IDs Medulla, tracer l'historique
--- Rejouabilité : CREATE TABLE IF NOT EXISTS (safe)
---
-CREATE TABLE IF NOT EXISTS `admin`.`saas_itsm_entity_mapping` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `client_id` VARCHAR(50) NOT NULL COMMENT 'Identifiant client ITSM (ex: c001)',
-  `source_path` VARCHAR(500) NOT NULL COMMENT 'Chemin complet source ITSM (ex: Organisation/Finance/Comptabilité)',
-  `source_id` VARCHAR(100) NOT NULL COMMENT 'ID unique source ITSM (ex: glpi_entity_1)',
-  `target_path` VARCHAR(500) COMMENT 'Chemin Medulla après normalisation (ex: c001/Finance/Comptabilité)',
-  `target_glpi_id` INT COMMENT 'ID entité Medulla/GLPI créée/modifiée',
-  `config_version` VARCHAR(50) COMMENT 'Version config utilisée pour ce mapping',
-  `last_modifier` VARCHAR(100) COMMENT 'Qui a modifié (user ou system_sync)',
-  `modification_origin` VARCHAR(20) COMMENT 'Origine: sync (auto), mmc (manuel), bootstrap (initial)',
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Création du mapping',
-  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Dernière modification',
-  
-  -- Constraints et indexes
-  UNIQUE KEY `uk_client_source_id` (`client_id`, `source_id`),
-  INDEX `idx_client_target_glpi_id` (`client_id`, `target_glpi_id`),
-  INDEX `idx_updated_at` (`updated_at`),
-  INDEX `idx_modification_origin` (`modification_origin`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci 
-COMMENT='[SaaS] Mapping source → cible pour synchronisation ITSM';
+SET NAMES utf8mb4;
+START TRANSACTION;
+USE admin;
 
--- =====================================================================
--- Table 2 : saas_itsm_sync_logs
--- =====================================================================
--- Rôle : Historique et audit des exécutions de synchronisation
--- Objectif : Tracer chaque sync (résultats, erreurs, stats),
---            permettre diagnostique et audit complet
--- Rejouabilité : CREATE TABLE IF NOT EXISTS (safe)
---
-CREATE TABLE IF NOT EXISTS `admin`.`saas_itsm_sync_logs` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `client_id` VARCHAR(50) NOT NULL COMMENT 'Identifiant client synchro',
-  `sync_timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Quand la sync a exécuté',
-  `config_version` VARCHAR(50) COMMENT 'Version config utilisée pour cette sync',
-  `status` VARCHAR(20) COMMENT 'Résultat: success, partial, failed',
-  `objects_created` INT DEFAULT 0 COMMENT 'Nombre entités créées en Medulla',
-  `objects_updated` INT DEFAULT 0 COMMENT 'Nombre entités modifiées en Medulla',
-  `objects_ignored` INT DEFAULT 0 COMMENT 'Nombre entités skippées (erreur, mapping absent)',
-  `errors` LONGTEXT COMMENT 'Messages erreurs détaillés si status != success',
-  `debug_mode` BOOLEAN DEFAULT FALSE COMMENT 'Mode debug activé lors de la sync',
-  
-  -- Indexes pour requêtes courantes
-  INDEX `idx_client_sync_timestamp` (`client_id`, `sync_timestamp`),
-  INDEX `idx_status` (`status`),
-  INDEX `idx_sync_timestamp` (`sync_timestamp`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci 
-COMMENT='[SaaS] Historique et audit des synchronisations ITSM';
+DELETE FROM acl_feature_definitions
+ WHERE feature_key = 'config_files_rw'
+    OR acl_entry IN ('store#store#deploy#tabmachines',
+                     'store#store#deploy#tabgroups',
+                     'store#store#unsubscribe',
+                     'xmppmaster#xmppmaster#shareqa',
+                     'xmppmaster#xmppmaster#xmppMonitoring',
+                     'xmppmaster#xmppmaster#remoteeditorconfigurationrelay',
+                     'admin#admin#websocketLogs');
 
--- =====================================================================
--- Table 3 : saas_itsm_sync_metrics
--- =====================================================================
--- Rôle : Métriques de performance de chaque synchronisation
--- Objectif : Monitoring perf, tendances, alertes, dimensionnement ressources
--- Rejouabilité : CREATE TABLE IF NOT EXISTS (safe)
---
-CREATE TABLE IF NOT EXISTS `admin`.`saas_itsm_sync_metrics` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `client_id` VARCHAR(50) NOT NULL COMMENT 'Identifiant client synchro',
-  `sync_timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Quand exécuté',
-  `duration_seconds` INT COMMENT 'Durée totale de la sync (secondes)',
-  `objects_count` INT COMMENT 'Nombre total entités traitées',
-  `errors_count` INT COMMENT 'Nombre entités en erreur',
-  `performance_notes` TEXT COMMENT 'Notes optionnelles (ex: Slow DB query)',
-  
-  -- Indexes pour requêtes courantes
-  INDEX `idx_client_sync_timestamp` (`client_id`, `sync_timestamp`),
-  INDEX `idx_duration_seconds` (`duration_seconds`),
-  INDEX `idx_sync_timestamp` (`sync_timestamp`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci 
-COMMENT='[SaaS] Métriques de performance des synchronisations ITSM';
+DELETE FROM acl_feature_definitions
+ WHERE feature_key = 'computer_management_rw'
+   AND acl_entry = 'xmppmaster#xmppmaster#listfichierconf';
 
--- =====================================================================
--- Vérification : tables créées
--- =====================================================================
--- Requêtes de vérification (à exécuter manuellement si nécessaire) :
---
--- SELECT TABLE_NAME FROM information_schema.TABLES 
--- WHERE TABLE_SCHEMA='admin' 
--- AND TABLE_NAME IN ('saas_itsm_entity_mapping', 'saas_itsm_sync_logs', 'saas_itsm_sync_metrics');
---
--- SELECT * FROM admin.saas_application;
--- SELECT * FROM admin.saas_organisations;
--- SELECT COUNT(*) FROM admin.saas_itsm_entity_mapping;
--- SELECT COUNT(*) FROM admin.saas_itsm_sync_logs;
--- SELECT COUNT(*) FROM admin.saas_itsm_sync_metrics;
---
+INSERT INTO acl_feature_definitions (feature_key, label, description, category, superadmin_only, acl_entry, access_type, install_types) VALUES
+('store_rw', 'Store - gestion (abonner, déployer)', 'Abonnement aux logiciels|Désabonnement|Déploiement depuis le Store|Sélection machines/groupes', 'deployment', 0, 'store#store#deploy#tabmachines', 'rw', 'onpremise,saas'),
+('store_rw', 'Store - gestion (abonner, déployer)', 'Abonnement aux logiciels|Désabonnement|Déploiement depuis le Store|Sélection machines/groupes', 'deployment', 0, 'store#store#deploy#tabgroups', 'rw', 'onpremise,saas'),
+('store_rw', 'Store - gestion (abonner, déployer)', 'Abonnement aux logiciels|Désabonnement|Déploiement depuis le Store|Sélection machines/groupes', 'deployment', 0, 'store#store#unsubscribe', 'rw', 'onpremise,saas'),
+('package_deployment_rw', 'Déploiement - actions (lancer, planifier, convergence...)', 'Lancement de déploiements|Commandes avancées|Convergence|Wake-on-LAN|Console XMPP|Quick Actions', 'deployment', 0, 'xmppmaster#xmppmaster#shareqa', 'rw', 'onpremise,saas'),
+('computer_management_ro', 'Postes - consultation (monitoring, CVE, sécurité...)', 'Monitoring|CVE par machine/entité/groupe|Détails logiciels|Vulnérabilités', 'security', 0, 'xmppmaster#xmppmaster#xmppMonitoring', 'ro', 'onpremise,saas'),
+('admin_technician', 'Consultation infrastructure (relais, clusters...)', 'Relais|Paquets|Règles|Clusters|Entités|Téléchargement agent', 'admin', 0, 'admin#admin#websocketLogs', 'ro', 'onpremise'),
+('admin_superadmin', 'Infrastructure serveur (relais, clusters, règles...)', 'Relais|Clusters|Règles de routage|Entités|Providers OIDC|Mises à jour serveur|Régénération agent', 'admin', 1, 'xmppmaster#xmppmaster#remoteeditorconfigurationrelay', 'rw', 'onpremise'),
+('config_files_rw', 'Édition des fichiers de configuration sur un poste', 'Liste des fichiers de configuration|Éditeur distant|Enregistrement sur le poste', 'inventory', 0, 'xmppmaster#xmppmaster#listfichierconf', 'rw', 'onpremise,saas'),
+('config_files_rw', 'Édition des fichiers de configuration sur un poste', 'Liste des fichiers de configuration|Éditeur distant|Enregistrement sur le poste', 'inventory', 0, 'xmppmaster#xmppmaster#remoteeditorconfigurationlist', 'rw', 'onpremise,saas'),
+('config_files_rw', 'Édition des fichiers de configuration sur un poste', 'Liste des fichiers de configuration|Éditeur distant|Enregistrement sur le poste', 'inventory', 0, 'xmppmaster#xmppmaster#remoteeditorconfiguration', 'rw', 'onpremise,saas');
 
---
--- Update version du schema
---
+INSERT IGNORE INTO acl_profile_features (profile_name, feature_key, access_level) VALUES
+  ('Super-Admin', 'config_files_rw', 'rw');
+
 UPDATE version SET Number = 17;
 
 COMMIT;

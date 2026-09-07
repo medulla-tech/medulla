@@ -249,6 +249,17 @@ function xmlrpc_get_linux_major_deployment_history_by_entity($distributor_id, $e
     return xmlCall("updates.get_linux_major_deployment_history_by_entity", [$distributor_id, $entity_id, $start, $limit, $filter]);
 }
 
+/**
+ * Retourne l'historique des déploiements majeurs Windows pour une entité.
+ * Identifie les déploiements via le marqueur --@upd@--W (W10to10, W10to11, W11to11).
+ * Fenêtre limitée au dernier mois.
+ */
+function xmlrpc_get_win_major_deployment_history_by_entity($entity_id, $start = 0, $limit = -1, $filter = "")
+{
+    // Proxy XML-RPC : la logique de filtrage est côté backend xmppmaster.
+    return xmlCall("updates.get_win_major_deployment_history_by_entity", [$entity_id, $start, $limit, $filter]);
+}
+
 function xmlrpc_get_os_xmpp_update_major_details($entity_id, $filter="",$start=0, $limit=-1, )
 {
     return xmlCall("updates.get_os_xmpp_update_major_details", [$entity_id, $filter, $start, $limit]);

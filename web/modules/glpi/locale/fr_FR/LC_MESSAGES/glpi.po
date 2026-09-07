@@ -748,7 +748,7 @@ msgstr "Numéro d'inventaire"
 
 #: modules/glpi/glpi/ajaxViewPart.php:269
 msgid "Enabled"
-msgstr "Activ"
+msgstr "Activé"
 
 #: modules/glpi/glpi/ajaxViewPart.php:270
 msgid "Up-to-date"

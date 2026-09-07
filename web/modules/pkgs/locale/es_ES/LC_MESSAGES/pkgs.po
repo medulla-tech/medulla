@@ -1536,3 +1536,8 @@ msgstr "El paquete "
 msgid "The relays <b>"
 msgstr "Los relés <b>"
 
+
+#. Badge on a disabled workflow action, %s is an operating system list
+#: modules/pkgs/pkgs/addXMPP.php
+msgid "%s only"
+msgstr "Solo %s"

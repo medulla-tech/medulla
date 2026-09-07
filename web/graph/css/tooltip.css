@@ -6,6 +6,7 @@
   --tt-font-size: 11px;
   --tt-color-text: #e8edf2;
   --tt-color-label: #5fbcd3;
+  --tt-color-bg: rgba(24, 55, 78, 0.92);
   --tt-border-color: rgba(100, 160, 200, 0.2);
 }
 
@@ -13,7 +14,7 @@
   padding: 8px 12px !important;
   max-width: 680px !important;
   color: var(--tt-color-text) !important;
-  background: rgba(24, 55, 78, 0.92) !important;
+  background: var(--tt-color-bg) !important;
   backdrop-filter: blur(12px) !important;
   -webkit-backdrop-filter: blur(12px) !important;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.06) inset !important;

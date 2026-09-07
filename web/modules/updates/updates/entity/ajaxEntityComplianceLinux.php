@@ -27,10 +27,12 @@ require_once("modules/updates/includes/xmlrpc.php");
 
 <?php
 
+echo '<div class="ajax-section">';
 $ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxEntitiesListlinux"), "container", [], 'formRunning');
 
 $ajax->display();
 $ajax->displayDivToUpdate();
+echo '</div>';
 ?>
 
 <style>

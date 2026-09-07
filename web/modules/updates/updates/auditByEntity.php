@@ -7,9 +7,13 @@ require_once("modules/updates/includes/xmlrpc.php");
 
 $completename = htmlentities($_GET['completename']) ?? '';
 $historyType = isset($_GET['history_type']) ? htmlentities($_GET['history_type']) : '';
-$pageTitle = ($historyType === 'linux_updates')
-	? _T("Updates history linux for entity %s", 'updates')
-	: _T("Updates history for entity %s", 'updates');
+if ($historyType === 'linux_updates') {
+	$pageTitle = _T("Linux updates history for entity %s", 'updates');
+} elseif ($historyType === 'windows_updates') {
+	$pageTitle = _T("Windows updates history for entity %s", 'updates');
+} else {
+	$pageTitle = _T("Updates history for entity %s", 'updates');
+}
 
 $p = new PageGenerator(sprintf($pageTitle, $completename));
 $p->setSideMenu($sidemenu);

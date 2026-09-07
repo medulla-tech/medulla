@@ -187,6 +187,30 @@ esac""" % (
         """
         return 'wusa.exe "%s" /quiet /norestart' % basename(self.file)
 
+    def getPkgCommand(self):
+        """Command for Apple Installer .pkg files (macOS)."""
+        return 'installer -pkg "%s" -target /' % basename(self.file)
+
+    def getDmgCommand(self):
+        """Command for Apple .dmg disk images (macOS).
+        Mounts the image, runs the .pkg inside or copies the .app to
+        /Applications, then unmounts.
+        """
+        return """set -e
+MNT=$(mktemp -d)
+hdiutil attach -nobrowse -mountpoint "$MNT" "%s"
+PKG=$(find "$MNT" -maxdepth 1 -name '*.pkg' -print -quit)
+APP=$(find "$MNT" -maxdepth 1 -name '*.app' -print -quit)
+if [ -n "$PKG" ]; then
+    installer -pkg "$PKG" -target /
+elif [ -n "$APP" ]; then
+    cp -R "$APP" /Applications/
+else
+    hdiutil detach "$MNT"
+    echo "No .pkg or .app found in DMG"; exit 1
+fi
+hdiutil detach "$MNT" """ % basename(self.file)
+
     def getCommand(self):
         self.logger.debug("Parsing %s:" % self.file)
 
@@ -283,6 +307,12 @@ esac""" % (
         elif self.file.endswith(".msu"):
             self.logger.debug("Windows Update file detected")
             return self.getMSUCommand()
+        elif self.file.endswith(".pkg"):
+            self.logger.debug("Apple pkg file detected")
+            return self.getPkgCommand()
+        elif self.file.endswith(".dmg"):
+            self.logger.debug("Apple dmg file detected")
+            return self.getDmgCommand()
         else:
             return self.logger.info(
                 "I don't know what to do with %s (%s)"

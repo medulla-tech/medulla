@@ -576,7 +576,10 @@ class RpcProxy(RpcProxyI):
 
         Return dict containing the machines counts.
         """
-        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        entities = []
+        infos=ctx.get_session_info()['mondict']
+        if 'liste_entities_user' in infos:
+            entities = infos['liste_entities_user']
         return xmlrpcCleanup(XmppMasterDatabase().get_computer_count_for_dashboard(entities))
 
     @with_optional_xmpp_context
@@ -601,27 +604,39 @@ class RpcProxy(RpcProxyI):
                 ]
             }
             """
-        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        infos=ctx.get_session_info()['mondict']
+        entities = []
+        if 'liste_entities_user' in infos:
+            entities = infos['liste_entities_user']
 
         result = XmppMasterDatabase().get_mon_events(start, maxperpage, filter, entities)
         return result
 
     @with_optional_xmpp_context
     def get_count_success_rate_for_dashboard(self, ctx=None):
-        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        infos=ctx.get_session_info()['mondict']
+        entities = []
+        if 'liste_entities_user' in infos:
+            entities = infos['liste_entities_user']
 
         result = XmppMasterDatabase().get_count_success_rate_for_dashboard(entities)
         return result
 
     @with_optional_xmpp_context
     def get_count_total_deploy_for_dashboard(self, ctx=None):
-        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        infos=ctx.get_session_info()['mondict']
+        entities = []
+        if 'liste_entities_user' in infos:
+            entities = infos['liste_entities_user']
         result = XmppMasterDatabase().get_count_total_deploy_for_dashboard(entities)
         return result
 
     @with_optional_xmpp_context
     def get_count_agent_for_dashboard(self, ctx=None):
-        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        infos=ctx.get_session_info()['mondict']
+        entities = []
+        if 'liste_entities_user' in infos:
+            entities = infos['liste_entities_user']
         result = XmppMasterDatabase().get_count_agent_for_dashboard(entities)
         return result
 
@@ -1786,9 +1801,9 @@ def get_plugin_lists():
                 line = ""
                 with open(fullpath, "r") as fb:
                     # Get the line starting with plugin =  to extract the meta of the plugin
-                    while not line.startswith("plugin = "):
-                        line = fb.readline()
-                        line = line.split("#")[0]
+                    while _line := fb.readline():
+                        if isinstance(_line, str) and line.startswith("plugin = "):
+                            line = _line.split("#")[0]
                     fb.close()
 
                 # We got the line we want, now we need to parse it

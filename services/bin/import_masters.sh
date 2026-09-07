@@ -54,6 +54,14 @@ import_w1125h2profrx64() {
         return 0
     fi
 
+    # Download and extract master files
+    echo "Downloading and extracting Windows 11 25H2 Professionnel FR x64 master..."
+    curl -fsSL ${DL_URL}/Win11/4dddf514-c4f6-11f0-ade0-bc2411916521.tar?token=${KEYAES32} | tar -xf - -C ${DEST}
+    if [[ $? -ne 0 ]]; then
+        echo "Error: Failed to download or extract Windows 11 master. Please check your network connection and the availability of the master files."
+        exit 1
+    fi
+
     # Insert master record in db for Windows 11 25H2 Professionnel FR x64
     echo -e "\nInserting Windows 11 25H2 Professionnel FR x64 master into database..."
     mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT INTO Image (\`path\`, \`name\`, \`uuid\`, \`desc\`, \`size\`, \`is_master\`, \`creation_date\`, \`fk_creator\`, \`fk_state\`) VALUES ('/var/lib/pulse2/imaging/masters/4dddf514-c4f6-11f0-ade0-bc2411916521','Master Windows 11 Pro FR','4dddf514-c4f6-11f0-ade0-bc2411916521','Windows 11 25H2 Professionnel FR x64',9063433016,1,'2025-11-19 03:17:39',1,1)"
@@ -62,10 +70,6 @@ import_w1125h2profrx64() {
     mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO ImagingLog VALUES (1,'2025-11-19 03:17:39','unknown',1,1,6)"
     mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO ImageOnImagingServer VALUES (${id_image},1)"
     mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO MasteredOn VALUES (${id_image},1)"
-
-    # Download and extract master files
-    echo "Downloading and extracting Windows 11 25H2 Professionnel FR x64 master..."
-    curl -fsSL ${DL_URL}/Win11/4dddf514-c4f6-11f0-ade0-bc2411916521.tar?token=${KEYAES32} | tar -xf - -C ${DEST}
 }
 
 import_ubu2404biosamd64() {
@@ -73,6 +77,14 @@ import_ubu2404biosamd64() {
     if [[ -n "${existing_id}" ]]; then
         echo -e "\nUbuntu 24.04 BIOS AMD64 master already exists (id=${existing_id}). Skipping import."
         return 0
+    fi
+
+    # Download and extract master files
+    echo "Downloading and extracting Ubuntu 24.04 AMD64 master..."
+    curl -fsSL ${DL_URL}/Ubu2404/38fe12a0-59eb-11f1-8795-bc2411e4867f.tar?token=${KEYAES32} | tar -xf - -C ${DEST}
+    if [[ $? -ne 0 ]]; then
+        echo "Error: Failed to download or extract Ubuntu 24.04 master. Please check your network connection and the availability of the master files."
+        exit 1
     fi
 
     # Insert master record in db for Ubuntu 24.04 BIOS AMD64
@@ -83,10 +95,6 @@ import_ubu2404biosamd64() {
     mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO ImagingLog VALUES (1,'2025-11-19 03:17:39','unknown',1,1,6)"
     mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO ImageOnImagingServer VALUES (${id_image},1)"
     mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO MasteredOn VALUES (${id_image},1)"
-
-    # Download and extract master files
-    echo "Downloading and extracting Ubuntu 24.04 AMD64 master..."
-    curl -fsSL ${DL_URL}/Ubu2404/38fe12a0-59eb-11f1-8795-bc2411e4867f.tar?token=${KEYAES32} | tar -xf - -C ${DEST}
 }
 
 import_ubu2604biosamd64() {
@@ -94,6 +102,14 @@ import_ubu2604biosamd64() {
     if [[ -n "${existing_id}" ]]; then
         echo -e "\nUbuntu 26.04 BIOS AMD64 master already exists (id=${existing_id}). Skipping import."
         return 0
+    fi
+
+    # Download and extract master files
+    echo "Downloading and extracting Ubuntu 26.04 AMD64 master..."
+    curl -fsSL ${DL_URL}/Ubu2604/17734af0-5a76-11f1-ad8c-bc2411e4867f.tar?token=${KEYAES32} | tar -xf - -C ${DEST}
+    if [[ $? -ne 0 ]]; then
+        echo "Error: Failed to download or extract Ubuntu 26.04 master. Please check your network connection and the availability of the master files."
+        exit 1
     fi
 
     # Insert master record in db for Ubuntu 26.04 BIOS AMD64
@@ -104,10 +120,6 @@ import_ubu2604biosamd64() {
     mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO ImagingLog VALUES (1,'2025-11-19 03:17:39','unknown',1,1,6)"
     mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO ImageOnImagingServer VALUES (${id_image},1)"
     mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO MasteredOn VALUES (${id_image},1)"
-
-    # Download and extract master files
-    echo "Downloading and extracting Ubuntu 26.04 AMD64 master..."
-    curl -fsSL ${DL_URL}/Ubu2604/17734af0-5a76-11f1-ad8c-bc2411e4867f.tar?token=${KEYAES32} | tar -xf - -C ${DEST}
 }
 
 import_min223biosamd64() {
@@ -115,6 +127,14 @@ import_min223biosamd64() {
     if [[ -n "${existing_id}" ]]; then
         echo -e "\nMint 22.3 BIOS AMD64 master already exists (id=${existing_id}). Skipping import."
         return 0
+    fi
+
+    # Download and extract master files
+    echo "Downloading and extracting Mint 22.3 AMD64 master..."
+    curl -fsSL ${DL_URL}/Min223/369f382d-60ec-11f1-8288-bc241111a7ae.tar?token=${KEYAES32} | tar -xf - -C ${DEST}
+    if [[ $? -ne 0 ]]; then
+        echo "Error: Failed to download or extract Mint 22.3 master. Please check your network connection and the availability of the master files."
+        exit 1
     fi
 
     # Insert master record in db for Mint 22.3 BIOS AMD64
@@ -125,10 +145,6 @@ import_min223biosamd64() {
     mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO ImagingLog VALUES (1,'2025-11-19 03:17:39','unknown',1,1,6)"
     mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO ImageOnImagingServer VALUES (${id_image},1)"
     mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO MasteredOn VALUES (${id_image},1)"
-
-    # Download and extract master files
-    echo "Downloading and extracting Mint 22.3 AMD64 master..."
-    curl -fsSL ${DL_URL}/Min223/369f382d-60ec-11f1-8288-bc241111a7ae.tar?token=${KEYAES32} | tar -xf - -C ${DEST}
 }
 
 import_zorin181corebiosamd64() {
@@ -136,6 +152,14 @@ import_zorin181corebiosamd64() {
     if [[ -n "${existing_id}" ]]; then
         echo -e "\nZorin OS 18.1 Core BIOS AMD64 master already exists (id=${existing_id}). Skipping import."
         return 0
+    fi
+
+    # Download and extract master files
+    echo "Downloading and extracting Zorin OS 18.1 Core AMD64 master..."
+    curl -fsSL ${DL_URL}/Zor181/a23aa027-697d-11f1-8c3e-bc24112b8ad5.tar?token=${KEYAES32} | tar -xf - -C ${DEST}
+    if [[ $? -ne 0 ]]; then
+        echo "Error: Failed to download or extract Zorin OS 18.1 master. Please check your network connection and the availability of the master files."
+        exit 1
     fi
 
     # Insert master record in db for Zorin OS 18.1 Core BIOS AMD64
@@ -146,10 +170,6 @@ import_zorin181corebiosamd64() {
     mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO ImagingLog VALUES (1,'2025-11-19 03:17:39','unknown',1,1,6)"
     mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO ImageOnImagingServer VALUES (${id_image},1)"
     mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO MasteredOn VALUES (${id_image},1)"
-
-    # Download and extract master files
-    echo "Downloading and extracting Zorin OS 18.1 Core AMD64 master..."
-    curl -fsSL ${DL_URL}/Zor181/a23aa027-697d-11f1-8c3e-bc24112b8ad5.tar?token=${KEYAES32} | tar -xf - -C ${DEST}
 }
 
 # First show disclaimer and wait for user confirmation to proceed. If user presses y we continue, else we exit.

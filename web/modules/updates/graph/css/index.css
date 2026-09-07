@@ -22,9 +22,25 @@
     cursor: pointer;
 }
 
-.approval-form-actions {
-    margin-top: 12px;
-    text-align: center;
+.approval-form table.listinfos thead input[type="checkbox"] {
+    vertical-align: middle;
+    margin: 0 0 2px 8px;
+    cursor: pointer;
+}
+
+/* Boutons de validation des formulaires du module : alignes a droite, fin du
+   formulaire. .form-actions vient de bootstrap-forms.css et pose un fond gris. */
+.linux-autoupdate-policy table.listinfos {
+    width: 100%;
+}
+
+.approval-form-actions,
+.linux-autoupdate-policy .form-actions {
+    background: none;
+    border-top: none;
+    padding: 0;
+    margin: 16px 0 0;
+    text-align: right;
 }
 
 /* Last column (checkboxes) */
@@ -46,6 +62,10 @@
 
 .approval-form table.listinfos .family-separator td:last-child {
     text-align: center;
+}
+
+.approval-form table.listinfos .family-separator input[type="checkbox"] {
+    vertical-align: middle;
 }
 
 /* Product rows */
@@ -198,6 +218,32 @@
 }
 
 /* ===== Entity compliance ===== */
+
+/* Air sous la barre de recherche, remontee par .ajax-section. */
+.entity-compliance-table {
+    margin-top: 16px;
+}
+
+/* Tableaux de synthese : la premiere colonne porte un nombre, pas un libelle. */
+table.listinfos.major-summary thead th,
+table.listinfos.major-summary tbody td {
+    text-align: center;
+}
+
+/* En-tetes a infobulle : pas de soulignement, seul le curseur signale. */
+table.listinfos thead th .column-tooltip {
+    border-bottom: none;
+    cursor: help;
+}
+
+/* Infobulle : registre "valeur" (blanc, casse normale), pas "libelle". */
+.column-tooltip__text {
+    max-width: 320px;
+    text-transform: none;
+    letter-spacing: normal;
+    white-space: normal;
+    line-height: 1.35;
+}
 
 .entity-compliance-table table.listinfos {
     width: 100%;

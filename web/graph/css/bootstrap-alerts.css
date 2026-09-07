@@ -126,6 +126,10 @@
 }
 
 /* ========== JS Alert Modal (from header.inc.php alert()) ========== */
+.popup:has(.js-alert-modal) #__popup_container {
+  padding: 0;
+}
+
 .js-alert-modal {
   text-align: center;
   padding: 50px 40px 20px;

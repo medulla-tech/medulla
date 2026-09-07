@@ -171,13 +171,14 @@ $messageTypeSelect->setElements(array(
     _T('Exit Kiosk', 'mobile'),
     _T('Clear Download History', 'mobile'),
     _T('Grant Permissions', 'mobile'),
+    _T('Reset Password', 'mobile'),
     _T('Custom', 'mobile')
 ));
 $messageTypeSelect->setElementsVal(array(
     'configUpdated', 'reboot', 'lockDevice', 'wipe', 'runApp',
     'uninstallApp', 'deleteFile', 'deleteDir', 'purgeDir',
     'permissiveMode', 'intent', 'runCommand', 'exitKiosk',
-    'clearDownloadHistory', 'grantPermissions', 'custom'
+    'clearDownloadHistory', 'grantPermissions', 'passwordReset', 'custom'
 ));
 $messageTypeSelect->setSelected($message_type);
 $form->add(new TrFormElement(_T('Message Type', 'mobile'), $messageTypeSelect));
@@ -214,7 +215,8 @@ $form->display();
         'purgeDir': '{\n  "path": "/path/to/dir",\n  "recursive": "1"\n}',
         'intent': '{\n  "action": "android.intent.action.VIEW",\n  "data": "https://example.com"\n}',
         'runCommand': '{\n  "command": "shell command"\n}',
-        'grantPermissions': '{\n  "pkg": "app.package.id"\n}'
+        'grantPermissions': '{\n  "pkg": "app.package.id"\n}',
+        'passwordReset': '{\n  "password": ""\n}'
     };
 
     function updateMessageType(applyTemplate) {
@@ -267,14 +269,15 @@ $form->display();
         }
 
         // Confirmation for destructive actions
-        var _destructiveTypes = ['wipe', 'reboot', 'lockDevice', 'runCommand', 'purgeDir', 'deleteDir'];
+        var _destructiveTypes = ['wipe', 'reboot', 'lockDevice', 'runCommand', 'purgeDir', 'deleteDir', 'passwordReset'];
         var _destructiveLabels = {
             'wipe':       '<?php echo addslashes(_T('Factory Reset', 'mobile')); ?>',
             'reboot':     '<?php echo addslashes(_T('Reboot', 'mobile')); ?>',
             'lockDevice': '<?php echo addslashes(_T('Lock Screen', 'mobile')); ?>',
             'runCommand': '<?php echo addslashes(_T('Run Command', 'mobile')); ?>',
             'purgeDir':   '<?php echo addslashes(_T('Purge Directory', 'mobile')); ?>',
-            'deleteDir':  '<?php echo addslashes(_T('Delete Directory', 'mobile')); ?>'
+            'deleteDir':  '<?php echo addslashes(_T('Delete Directory', 'mobile')); ?>',
+            'passwordReset': '<?php echo addslashes(_T('Reset Password', 'mobile')); ?>'
         };
         var _sendBtn = document.querySelector('input[name="test"]');
         var _sendForm = _sendBtn ? _sendBtn.closest('form') : null;

@@ -42,7 +42,7 @@ if(isset($_POST['bconfirm'])){
     exit;
 }
 else{
-    $f = new PopupForm(sprintf(_T("<b>Unlist</b> update %s (%s) ?", "update"), $title, $updateid));
+    $f = new PopupForm(sprintf(_T("<b>Unlist</b> update %s (%s) ?", "updates"), $title, $updateid));
     $hidden = new HiddenTpl("updateid");
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");

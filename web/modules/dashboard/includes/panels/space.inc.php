@@ -41,10 +41,17 @@ class SpacePanel extends Panel {
         <script>
 
 var dataset = $json;
+// size_format() backend can return any unit (B/KB/MB/GB/TB); parse dynamically
+function parseSizeStr(s) {
+  var m = s.match(/^([\d.]+)([KMGT]?B)$/);
+  return m ? {value: parseFloat(m[1]), unit: m[2]} : {value: 0, unit: "B"};
+}
 dataset.forEach(function(d,i){
+  var freeP = parseSizeStr(dataset[i].usage.free);
+  var usedP = parseSizeStr(dataset[i].usage.used);
   var tmp = [
-    {"label":"$free","value":parseFloat(dataset[i].usage.free.split("GB")[0]),"unit":"GB"},
-    {"label":"$used","value":parseFloat(dataset[i].usage.used.split("GB")[0]),"unit":"GB"},
+    {"label":"$free","value":freeP.value,"unit":freeP.unit},
+    {"label":"$used","value":usedP.value,"unit":usedP.unit},
   ];
   jQuery("#spaceChart").append("<div id='spaceChart"+i+"' class='space-chart-item'></div>");
   donut("spaceChart"+i, tmp, dataset[i].mountpoint, dataset[i].usage.total);

@@ -167,6 +167,9 @@ $root = $conf["global"]["root"];
                 if (!evt)
                     evt = window.event;
 
+                // Reset inline styles left by a previous popup (padding set by alert())
+                jQuery('#__popup_container').removeAttr('style');
+
                 // Show overlay with blur
                 jQuery('#overlay').fadeIn();
 
@@ -315,7 +318,6 @@ $root = $conf["global"]["root"];
 
                 PopupWindow(null, null, 0, function(evt) {
                     var $popup = jQuery('#popup');
-                    $popup.find('#__popup_container').css('padding', '0');
                     $popup.css({
                         'top': '50%',
                         'left': '50%',

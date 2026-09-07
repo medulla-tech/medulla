@@ -58,13 +58,27 @@ colored_echo() {
 }
 
 
+log_replay_download_command() {
+    #
+    # Log a copy/paste command that operators can replay manually in a shell.
+    # Token is intentionally masked in logs for security reasons.
+    #
+    local OUTPUT_FILE=$1
+    local URL_WITH_MASKED_TOKEN=$2
+    colored_echo yellow "$(date +\[%F\ %X\]) Replay download command (replace <TOKEN_AES32>):"
+    colored_echo yellow "curl --show-error --fail --location -C - -o \"${OUTPUT_FILE}\" \"${URL_WITH_MASKED_TOKEN}\""
+}
+
+
 display_usage() {
     #
     # Display usage message
     #
-    echo -e "\nUsage:\n$0 [--force]\n"
+    echo -e "\nUsage:\n$0 [--force] [--test-download-iso <ISO_FILENAME>]\n"
     echo -e "arguments:"
     echo -e "\t[--force]"
+    echo -e "\t[--test-download-iso <ISO_FILENAME>]"
+    echo -e "\t\tTest only: verify download access for update_iso.ps1 and the ISO in console/logs."
     exit 0
 }
 
@@ -73,14 +87,25 @@ check_arguments() {
     #
     # Make sure the options passed are valid
     #
-    for i in "$@"; do
-        case $i in
-            --force*)
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --force)
                 FORCE=1
                 shift
                 ;;
+            --test-download-iso)
+                if [[ -z "$2" ]]; then
+                    colored_echo red "$(date +\[%F\ %X\]) Missing value for --test-download-iso"
+                    display_usage
+                fi
+                TEST_DOWNLOAD_ISO="$2"
+                shift 2
+                ;;
+            --help|-h)
+                display_usage
+                ;;
             *)
-                # unknown option
+                colored_echo red "$(date +\[%F\ %X\]) Unknown option: $1"
                 display_usage
                 ;;
         esac
@@ -95,6 +120,77 @@ run_checks() {
         colored_echo red "$(date +\[%F\ %X\]) DL_URL parameter is not set. Please set it"
         exit 1
     fi
+    if [[ ${KEYAES32} == '' ]]; then
+        colored_echo red "$(date +\[%F\ %X\]) keyAES32 parameter is not set in xmppmaster.ini.local"
+        exit 1
+    fi
+}
+
+
+test_single_iso_download() {
+    #
+    # Console test mode: verify that PS1 and ISO can be downloaded for one ISO filename.
+    # No package directory, no DB write, no scheduler side effect.
+    #
+    local ISO_FILENAME=$1
+    local FAMILY=${ISO_FILENAME%%_*}
+    local TEST_DIR="/tmp/medulla-winupdatemajor-test"
+    local PS1_OUTPUT="${TEST_DIR}/update_iso.ps1"
+    local ISO_OUTPUT="${TEST_DIR}/${ISO_FILENAME}"
+    local PS1_URL_BASE="${DL_URL}/${FAMILY}/update_iso.ps1"
+    local PS1_URL_REAL="${PS1_URL_BASE}?token=${KEYAES32}"
+    local PS1_URL_MASKED="${PS1_URL_BASE}?token=<TOKEN_AES32>"
+    local ISO_URL_BASE="${DL_URL}/${FAMILY}/${ISO_FILENAME}"
+    local ISO_URL_REAL="${ISO_URL_BASE}?token=${KEYAES32}"
+    local ISO_URL_MASKED="${ISO_URL_BASE}?token=<TOKEN_AES32>"
+    local CURL_ERR_FILE
+    local HTTP_CODE
+    local CURL_RC
+
+    mkdir -p "${TEST_DIR}"
+
+    colored_echo blue "$(date +\[%F\ %X\]) Test mode enabled for ISO: ${ISO_FILENAME}"
+    colored_echo blue "$(date +\[%F\ %X\]) Testing PowerShell bootstrap download..."
+    log_replay_download_command "${PS1_OUTPUT}" "${PS1_URL_MASKED}"
+
+    CURL_ERR_FILE=$(mktemp)
+    HTTP_CODE=$(curl --silent --show-error --fail --location -C - -w "%{http_code}" -o "${PS1_OUTPUT}" "${PS1_URL_REAL}" 2>"${CURL_ERR_FILE}")
+    CURL_RC=$?
+    if [[ ${CURL_RC} -ne 0 ]]; then
+        colored_echo red "$(date +\[%F\ %X\]) TEST FAILED: update_iso.ps1 download failed"
+        colored_echo red "$(date +\[%F\ %X\]) curl exit=${CURL_RC} http=${HTTP_CODE:-000}"
+        if [[ -s "${CURL_ERR_FILE}" ]]; then
+            while IFS= read -r line; do
+                colored_echo red "$(date +\[%F\ %X\]) curl stderr: ${line}"
+            done < "${CURL_ERR_FILE}"
+        fi
+        rm -f "${CURL_ERR_FILE}" "${PS1_OUTPUT}" "${ISO_OUTPUT}"
+        return 1
+    fi
+    rm -f "${CURL_ERR_FILE}"
+    colored_echo green "$(date +\[%F\ %X\]) TEST OK: update_iso.ps1 downloaded"
+
+    colored_echo blue "$(date +\[%F\ %X\]) Testing ISO download..."
+    log_replay_download_command "${ISO_OUTPUT}" "${ISO_URL_MASKED}"
+
+    CURL_ERR_FILE=$(mktemp)
+    HTTP_CODE=$(curl --silent --show-error --fail --location -C - -w "%{http_code}" -o "${ISO_OUTPUT}" "${ISO_URL_REAL}" 2>"${CURL_ERR_FILE}")
+    CURL_RC=$?
+    if [[ ${CURL_RC} -ne 0 ]]; then
+        colored_echo red "$(date +\[%F\ %X\]) TEST FAILED: ISO download failed"
+        colored_echo red "$(date +\[%F\ %X\]) curl exit=${CURL_RC} http=${HTTP_CODE:-000}"
+        if [[ -s "${CURL_ERR_FILE}" ]]; then
+            while IFS= read -r line; do
+                colored_echo red "$(date +\[%F\ %X\]) curl stderr: ${line}"
+            done < "${CURL_ERR_FILE}"
+        fi
+        rm -f "${CURL_ERR_FILE}" "${ISO_OUTPUT}"
+        return 1
+    fi
+    rm -f "${CURL_ERR_FILE}"
+    colored_echo green "$(date +\[%F\ %X\]) TEST OK: ISO downloaded"
+    colored_echo blue "$(date +\[%F\ %X\]) Test files kept in ${TEST_DIR}"
+    return 0
 }
 
 find_packages_to_generate() {
@@ -138,11 +234,34 @@ download_ps1_script() {
     #
     local PACKAGE_UUID=$1
     local ISO_FILENAME=$2
-    if ! curl --silent --fail -C - -o "${DEST}/${PACKAGE_UUID}/update_iso.ps1" \
-            "${DL_URL}/${ISO_FILENAME%%_*}/update_iso.ps1?token=${KEYAES32}"; then
-        colored_echo red "$(date +\[%F\ %X\]) Failed to download update_iso.ps1 for family ${ISO_FILENAME%%_*}"
+    local FAMILY=${ISO_FILENAME%%_*}
+    local OUTPUT_FILE="${DEST}/${PACKAGE_UUID}/update_iso.ps1"
+    local URL_BASE="${DL_URL}/${FAMILY}/update_iso.ps1"
+    local URL_REAL="${URL_BASE}?token=${KEYAES32}"
+    local URL_MASKED="${URL_BASE}?token=<TOKEN_AES32>"
+    local CURL_ERR_FILE
+    local HTTP_CODE
+    local CURL_RC
+
+    log_replay_download_command "${OUTPUT_FILE}" "${URL_MASKED}"
+
+    CURL_ERR_FILE=$(mktemp)
+    HTTP_CODE=$(curl --silent --show-error --fail --location -C - -w "%{http_code}" -o "${OUTPUT_FILE}" "${URL_REAL}" 2>"${CURL_ERR_FILE}")
+    CURL_RC=$?
+
+    if [[ ${CURL_RC} -ne 0 ]]; then
+        colored_echo red "$(date +\[%F\ %X\]) Failed to download update_iso.ps1 for family ${FAMILY}"
+        colored_echo red "$(date +\[%F\ %X\]) curl exit=${CURL_RC} http=${HTTP_CODE:-000}"
+        if [[ -s "${CURL_ERR_FILE}" ]]; then
+            while IFS= read -r line; do
+                colored_echo red "$(date +\[%F\ %X\]) curl stderr: ${line}"
+            done < "${CURL_ERR_FILE}"
+        fi
+        rm -f "${CURL_ERR_FILE}" "${OUTPUT_FILE}"
         return 1
     fi
+
+    rm -f "${CURL_ERR_FILE}"
 }
 
 generate_package() {
@@ -327,15 +446,38 @@ download_iso() {
     #
     local PACKAGE_UUID=$1
     local ISO_FILENAME=$2
-    colored_echo blue "Downloading ISO file ${DL_URL}/${ISO_FILENAME%%_*}/${ISO_FILENAME} to ${DEST}/${PACKAGE_UUID}/${ISO_FILENAME}..."
-    if ! curl --silent --fail -C - -o ${DEST}/${PACKAGE_UUID}/${ISO_FILENAME} "${DL_URL}/${ISO_FILENAME%%_*}/${ISO_FILENAME}?token=${KEYAES32}"; then
+    local FAMILY=${ISO_FILENAME%%_*}
+    local OUTPUT_FILE="${DEST}/${PACKAGE_UUID}/${ISO_FILENAME}"
+    local URL_BASE="${DL_URL}/${FAMILY}/${ISO_FILENAME}"
+    local URL_REAL="${URL_BASE}?token=${KEYAES32}"
+    local URL_MASKED="${URL_BASE}?token=<TOKEN_AES32>"
+    local CURL_ERR_FILE
+    local HTTP_CODE
+    local CURL_RC
+
+    colored_echo blue "Downloading ISO file ${URL_BASE} to ${OUTPUT_FILE}..."
+    log_replay_download_command "${OUTPUT_FILE}" "${URL_MASKED}"
+
+    CURL_ERR_FILE=$(mktemp)
+    HTTP_CODE=$(curl --silent --show-error --fail --location -C - -w "%{http_code}" -o "${OUTPUT_FILE}" "${URL_REAL}" 2>"${CURL_ERR_FILE}")
+    CURL_RC=$?
+
+    if [[ ${CURL_RC} -ne 0 ]]; then
         colored_echo red "$(date +\[%F\ %X\]) Failed to download ISO ${ISO_FILENAME} (file not found or server error)"
+        colored_echo red "$(date +\[%F\ %X\]) curl exit=${CURL_RC} http=${HTTP_CODE:-000}"
+        if [[ -s "${CURL_ERR_FILE}" ]]; then
+            while IFS= read -r line; do
+                colored_echo red "$(date +\[%F\ %X\]) curl stderr: ${line}"
+            done < "${CURL_ERR_FILE}"
+        fi
         colored_echo red "$(date +\[%F\ %X\]) To create the package manually, place the ISO file ${ISO_FILENAME} in the directory:"
         colored_echo red "$(date +\[%F\ %X\])   /var/web0Xshare/updates/updates_protected/${ISO_FILENAME%%_*}/${ISO_FILENAME}"
         colored_echo red "$(date +\[%F\ %X\]) Then re-run this script to generate the package."
-        rm -f ${DEST}/${PACKAGE_UUID}/${ISO_FILENAME}
+        rm -f "${CURL_ERR_FILE}" "${OUTPUT_FILE}"
         return 1
     fi
+
+    rm -f "${CURL_ERR_FILE}"
 }
 
 create_package_record() {
@@ -344,6 +486,27 @@ create_package_record() {
     #
     colored_echo blue "$(date +\[%F\ %X\]) Creating package record in the database..."
     /usr/sbin/pulse2-generation_package.py -H${DBHOST} -P${DBPORT} -u${DBUSER} -p${DBPASS} -r -l -g
+}
+
+
+cleanup_orphan_major_deployments() {
+    #
+    # Remove deployment candidates that reference a package UUID not present in pkgs.packages.
+    # This prevents scheduler warnings like "package does not exist" after a partial generation failure.
+    #
+    local deleted_count
+    deleted_count=$(mysql -N -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} xmppmaster -se "
+        DELETE umw
+        FROM xmppmaster.up_machine_major_windows umw
+        LEFT JOIN pkgs.packages p ON p.uuid = umw.update_id
+        WHERE p.uuid IS NULL;
+        SELECT ROW_COUNT();")
+
+    if [[ ${deleted_count:-0} -gt 0 ]]; then
+        colored_echo yellow "$(date +\[%F\ %X\]) Removed ${deleted_count} orphan rows from up_machine_major_windows (missing package in pkgs.packages)"
+    else
+        colored_echo blue "$(date +\[%F\ %X\]) No orphan rows found in up_machine_major_windows"
+    fi
 }
 
 
@@ -361,7 +524,20 @@ fi
 colored_echo blue "$(date +\[%F\ %X\]) ##### Starting $(basename $0)"
 check_arguments $@
 run_checks
+
+if [[ -n "${TEST_DOWNLOAD_ISO}" ]]; then
+    test_single_iso_download "${TEST_DOWNLOAD_ISO}"
+    TEST_RC=$?
+    if [[ ${TEST_RC} -ne 0 ]]; then
+        colored_echo red "$(date +\[%F\ %X\]) ##### Finished $(basename $0) with download test failure"
+        exit ${TEST_RC}
+    fi
+    colored_echo green "$(date +\[%F\ %X\]) ##### Finished $(basename $0) (test mode)"
+    exit 0
+fi
+
 PACKAGES_LIST=$(find_packages_to_generate)
+FAILED_PACKAGES=""
 # If no packages to generate, exit
 if [[ ${PACKAGES_LIST} == '' ]]; then
     colored_echo red "$(date +\[%F\ %X\]) No packages to generate"
@@ -391,6 +567,7 @@ echo "$PACKAGES_LIST" | while IFS=$'\t' read -r ISO_FILENAME PACKAGE_UUID; do
     colored_echo blue "$(date +\[%F\ %X\]) Downloading powershell script for ${ISO_FILENAME}..."
     if ! download_ps1_script ${PACKAGE_UUID} ${ISO_FILENAME}; then
         colored_echo red "$(date +\[%F\ %X\]) Skipping package ${PACKAGE_UUID} due to ps1 download failure"
+        FAILED_PACKAGES="${FAILED_PACKAGES} ${PACKAGE_UUID}"
         rm -rf ${DEST}/${PACKAGE_UUID}
         continue
     fi
@@ -399,9 +576,14 @@ echo "$PACKAGES_LIST" | while IFS=$'\t' read -r ISO_FILENAME PACKAGE_UUID; do
     colored_echo blue "$(date +\[%F\ %X\]) Downloading ISO ${ISO_FILENAME}..."
     if ! download_iso ${PACKAGE_UUID} ${ISO_FILENAME}; then
         colored_echo red "$(date +\[%F\ %X\]) Skipping package ${PACKAGE_UUID} due to ISO download failure"
+        FAILED_PACKAGES="${FAILED_PACKAGES} ${PACKAGE_UUID}"
         rm -rf ${DEST}/${PACKAGE_UUID}
         continue
     fi
 done
 create_package_record
+cleanup_orphan_major_deployments
+if [[ -n "${FAILED_PACKAGES// }" ]]; then
+    colored_echo yellow "$(date +\[%F\ %X\]) Package generation failures detected for UUID(s):${FAILED_PACKAGES}"
+fi
 colored_echo green "$(date +\[%F\ %X\]) ##### Finished $(basename $0)"
