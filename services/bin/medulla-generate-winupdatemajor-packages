@@ -554,21 +554,25 @@ echo "$PACKAGES_LIST" | while IFS=$'\t' read -r ISO_FILENAME PACKAGE_UUID; do
     a="$(check_package_exists ${PACKAGE_UUID})"
     if [ "${a}" != "false" ] && [ "${FORCE}" == "1" ]; then
         colored_echo blue "$(date +\[%F\ %X\]) Package already exists but forcing package re-creation..."
-        rm -rf ${DEST}/${PACKAGE_UUID}
-        colored_echo blue "$(date +\[%F\ %X\]) Creating new package with UUID ${PACKAGE_UUID}..."
-        mkdir -p ${DEST}/${PACKAGE_UUID}
+        if [ -n "${PACKAGE_UUID}" ]; then
+            rm -rf "${DEST}/${PACKAGE_UUID}"
+            colored_echo blue "$(date +\[%F\ %X\]) Creating new package with UUID ${PACKAGE_UUID}..."
+            mkdir -p "${DEST}/${PACKAGE_UUID}"
+        fi
     elif [ "${a}" != "false" ]; then
         colored_echo red "$(date +\[%F\ %X\]) Package already exists with UUID: ${PACKAGE_UUID}"
         continue
     else
         colored_echo blue "$(date +\[%F\ %X\]) Creating new package with UUID ${PACKAGE_UUID}..."
-        mkdir -p ${DEST}/${PACKAGE_UUID}
+        mkdir -p "${DEST}/${PACKAGE_UUID}"
     fi
     colored_echo blue "$(date +\[%F\ %X\]) Downloading powershell script for ${ISO_FILENAME}..."
     if ! download_ps1_script ${PACKAGE_UUID} ${ISO_FILENAME}; then
         colored_echo red "$(date +\[%F\ %X\]) Skipping package ${PACKAGE_UUID} due to ps1 download failure"
         FAILED_PACKAGES="${FAILED_PACKAGES} ${PACKAGE_UUID}"
-        rm -rf ${DEST}/${PACKAGE_UUID}
+        if [ -n "${PACKAGE_UUID}" ]; then
+            rm -rf "${DEST}/${PACKAGE_UUID}"
+        fi
         continue
     fi
     colored_echo blue "$(date +\[%F\ %X\]) Generating package files for ${ISO_FILENAME}..."
@@ -577,7 +581,9 @@ echo "$PACKAGES_LIST" | while IFS=$'\t' read -r ISO_FILENAME PACKAGE_UUID; do
     if ! download_iso ${PACKAGE_UUID} ${ISO_FILENAME}; then
         colored_echo red "$(date +\[%F\ %X\]) Skipping package ${PACKAGE_UUID} due to ISO download failure"
         FAILED_PACKAGES="${FAILED_PACKAGES} ${PACKAGE_UUID}"
-        rm -rf ${DEST}/${PACKAGE_UUID}
+        if [ -n "${PACKAGE_UUID}" ]; then
+            rm -rf "${DEST}/${PACKAGE_UUID}"
+        fi
         continue
     fi
 done
