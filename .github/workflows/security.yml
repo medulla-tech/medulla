@@ -35,6 +35,22 @@ jobs:
           output-file: grype-report.json
           fail-build: false
 
+      - name: Display vulnerability summary
+        if: always()
+        run: |
+          echo "=== Vulnerability summary ==="
+          jq -r '
+            .matches[]
+            | [
+                .vulnerability.id,
+                .vulnerability.severity,
+                .artifact.name,
+                .artifact.version,
+                .artifact.locations[0].path
+              ]
+            | @tsv
+          ' grype-report.json | sort -u
+
       - name: Upload security reports
         uses: actions/upload-artifact@v4
         with:
