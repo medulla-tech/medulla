@@ -9,71 +9,70 @@
 Contains the base plugin for the MMC agent.
 """
 
+import base64
+import copy
+import crypt
+import hashlib
+import logging
+import os
+import random
+import re
+import shelve
+import shutil
+import string
+import tempfile
+import time
+import xmlrpc.client
+from configparser import NoOptionError, NoSectionError
+from subprocess import PIPE, Popen
+from time import localtime, mktime, strftime, strptime
+from uuid import uuid1
 
-from mmc.support.errorObj import errorMessage
-from mmc.support.config import PluginConfig, PluginConfigFactory
-from mmc.plugins.base.config import BasePluginConfig
-from mmc.plugins.base.computers import ComputerManager, ComputerI
+import ldap
+import ldif
+from twisted.internet import defer
+
+from mmc.agent import PluginManager
+from mmc.core.audit import AuditFactory as AF
+from mmc.core.version import scmRevision
+from mmc.plugins.base.audit import AA, AT, PLUGIN_NAME
 from mmc.plugins.base.auth import (
     AuthenticationManager,
-    AuthenticatorI,
     AuthenticationToken,
+    AuthenticatorI,
 )
-from mmc.plugins.base.provisioning import ProvisioningManager
+from mmc.plugins.base.computers import ComputerI, ComputerManager
+from mmc.plugins.base.config import BasePluginConfig
 from mmc.plugins.base.externalldap import (
     ExternalLdapAuthenticator,
     ExternalLdapProvisioner,
 )
 from mmc.plugins.base.ldapconnect import LDAPConnection
+from mmc.plugins.base.provisioning import ProvisioningManager
+from mmc.plugins.base.subscription import SubscriptionManager
+from mmc.site import localstatedir, mmcconfdir
 from mmc.support import mmctools
+from mmc.support.config import PluginConfig, PluginConfigFactory
+from mmc.support.errorObj import errorMessage
 from mmc.support.mmctools import (
+    ContextMakerI,
+    EnhancedSecurityContext,
+    RpcProxyI,
+    SecurityContext,
+    cleanFilter,
+    copytree,
     cSort,
     rchown,
-    copytree,
-    cleanFilter,
     xmlrpcCleanup,
-    RpcProxyI,
-    ContextMakerI,
-    SecurityContext,
-    EnhancedSecurityContext,
 )
-from mmc.site import mmcconfdir, localstatedir
-from mmc.core.version import scmRevision
-from mmc.core.audit import AuditFactory as AF
-from mmc.plugins.base.audit import AA, AT, PLUGIN_NAME
-from mmc.plugins.base.subscription import SubscriptionManager
-from mmc.agent import PluginManager
-
-from uuid import uuid1
-import shelve
-import ldap
-import ldif
-import crypt
-import base64
-import random
-import string
-import re
-import os
-import time
-import copy
-import tempfile
-import logging
-import shutil
-import xmlrpc.client
-from subprocess import Popen, PIPE
-
-from time import mktime, strptime, strftime, localtime
-from configparser import NoSectionError, NoOptionError
-from twisted.internet import defer
-
-import hashlib
 
 _digest = hashlib.sha1
-from mmc.core.tasks import TaskManager
-from time import strftime
-import gc
 import datetime
+import gc
+
 from memory_profiler import *
+
+from mmc.core.tasks import TaskManager
 
 logger = logging.getLogger()
 mesuref = 0.0
@@ -153,9 +152,11 @@ def with_xmpp_context(func):
     - Avec le **décorateur**, vous devez ajouter un paramètre `ctx`
       à votre fonction (juste après `self`), sinon Python lèvera une erreur.
     """
+
     def wrapper(self, *args, **kwargs):
         ctx = Contexte_XmlRpc_Glpi(self)  # prépare le contexte une fois
         return func(self, ctx, *args, **kwargs)
+
     return wrapper
 
 
@@ -201,6 +202,7 @@ def with_optional_xmpp_context(func):
 
     return wrapper
 
+
 class Contexte_XmlRpc_surcharge_info_Glpi:
     """
     Wrapper autour du contexte XMPP pour gérer automatiquement les informations
@@ -240,12 +242,18 @@ class Contexte_XmlRpc_surcharge_info_Glpi:
         # En déplaçant l'import ici, il est exécuté uniquement au moment de la création
         # de l'objet, après que tous les modules aient été initialisés.
         from mmc.plugins.glpi.database import Glpi
+
         self.ctx = session_xmlrpc_xmpp.currentContext
         self.session_info = self.ctx.get_session_info()
         # On garde l'UUID en mémoire (dans le contexte ou une variable statique)
-        if not hasattr(self.ctx, "last_uuid") or self.session_info["uuid"] != self.ctx.last_uuid:
+        if (
+            not hasattr(self.ctx, "last_uuid")
+            or self.session_info["uuid"] != self.ctx.last_uuid
+        ):
             # Nouveau contexte ou changement d'utilisateur
-            self.ctx._mondict = Glpi().get_user_or_superadmin_details(self.session_info["userid"])
+            self.ctx._mondict = Glpi().get_user_or_superadmin_details(
+                self.session_info["userid"]
+            )
             self.ctx.last_uuid = self.session_info["uuid"]
             logger.debug("context evaluation %s" % self.ctx._mondict)
 
@@ -265,7 +273,6 @@ class Contexte_XmlRpc_surcharge_info_Glpi:
             L'attribut correspondant dans `self.ctx`.
         """
         return getattr(self.ctx, name)
-
 
 
 def activate():
@@ -501,7 +508,7 @@ def searchUserAdvanced(searchFilter="", start=None, end=None):
     ldapObj = ldapUserGroupControl()
     if "=" in searchFilter:
         terms = [f"({term})" for term in searchFilter.split() if "=" in term]
-        searchFilter = f'(&{"".join(terms)})'
+        searchFilter = f"(&{''.join(terms)})"
     else:
         searchFilter = cleanFilter(searchFilter)
         if searchFilter:
@@ -658,7 +665,7 @@ def backupUser(user, media, login, configFile=f"{mmcconfdir}/plugins/base.ini"):
         f"backup user {user}",
         mmctools.progressBackup,
     )
-    return os.path.join(config.backupdir, f'{login}-{user}-{strftime("%Y%m%d")}')
+    return os.path.join(config.backupdir, f"{login}-{user}-{strftime('%Y%m%d')}")
 
 
 # return entire ldap info on uid user
@@ -964,8 +971,12 @@ class LdapUserGroupControl:
         """
         Generate a string suitable for the LDAP userPassword field
 
-        @param password: password to hash
-        @type password: str
+        @param password: password to hash. May arrive as an xmlrpc.client.Binary
+            object when it contains non-ASCII characters (e.g. accented
+            passwords); it is then decoded as UTF-8 instead of relying on
+            str(Binary), which uses Latin-1 and corrupts accented characters
+            before hashing.
+        @type password: str or xmlrpc.client.Binary
 
         @param scheme: LDAP password scheme to use (crypt or ssha)
         @type scheme: str
@@ -977,7 +988,7 @@ class LdapUserGroupControl:
             scheme = self.config.passwordscheme
         # If the passwd has been encoded in the XML-RPC stream, decode it
         if isinstance(password, xmlrpc.client.Binary):
-            password = str(password)
+            password = password.data.decode("utf-8")
         salt = self._getSalt(scheme)
         if scheme == "crypt":
             return "{crypt}" + crypt.crypt(password, salt)
@@ -1074,7 +1085,22 @@ class LdapUserGroupControl:
 
     def runHook(self, hookName, uid=None, password=None):
         """
-        Run a hook.
+        Run a hook script registered in the [hooks] config section.
+
+        @param hookName: name of the hook to run (e.g. "base.adduser")
+        @type hookName: str
+
+        @param uid: if given, a temporary ldif file with the user's entry is
+            built and passed as an argument to the hook script
+        @type uid: str or None
+
+        @param password: if given together with uid, the user's clear text
+            password is added to the temporary ldif entry (userPassword).
+            May arrive as an xmlrpc.client.Binary object when it contains
+            non-ASCII characters (e.g. accented passwords); it is then
+            decoded as UTF-8 instead of relying on str(Binary), which uses
+            Latin-1 and corrupts accented characters.
+        @type password: str or xmlrpc.client.Binary or None
         """
         if hookName not in self.hooks:
             return
@@ -1088,7 +1114,7 @@ class LdapUserGroupControl:
                 entry = self.getUserEntry(uid)
                 if password:
                     if isinstance(password, xmlrpc.client.Binary):
-                        password = str(password)
+                        password = password.data.decode("utf-8")
                     # Put user password in clear text in ldif
                     entry["userPassword"] = [password]
                 writer = ldif.LDIFWriter(fob)
@@ -1169,10 +1195,10 @@ class LdapUserGroupControl:
         """
         entry = copy.deepcopy(entry)
         for attribute, value in list(default.items()):
-            if s := re.search("^\[(.*)\]", value):
+            if s := re.search(r"^\[(.*)\]", value):
                 modifiers = s.groups()[0]
                 # Remove modifiers from the string
-                value = re.sub("^\[.*\]", "", value)
+                value = re.sub(r"^\[.*\]", "", value)
             else:
                 modifiers = ""
             # Interpolate value
@@ -1477,7 +1503,7 @@ class LdapUserGroupControl:
         """
         if not base:
             base = self.baseGroupsDN
-        ret = self.search(f"cn={str(cn)}", base)
+        ret = self.search(f"cn={cn!s}", base)
         newattrs = {}
         if ret:
             for result in ret:
@@ -1699,7 +1725,6 @@ class LdapUserGroupControl:
                 self.l.modify_s(userdn, [(ldap.MOD_REPLACE, attr, attrVal)])
             except Exception as e:
                 logging.getLogger().error(e)
-                pass
             if log:
                 r.commit()
         else:
@@ -1814,9 +1839,9 @@ class LdapUserGroupControl:
         self.runHook("base.deluser", uid)
 
         if home and self.userHomeAction:
-            details  = self.getDetailedUser(uid) or {}
-            values   = details.get("homeDirectory") or []
-            homedir  = values[0] if values else None
+            details = self.getDetailedUser(uid) or {}
+            values = details.get("homeDirectory") or []
+            homedir = values[0] if values else None
 
             if homedir and os.path.isdir(homedir):
                 try:
@@ -1825,9 +1850,15 @@ class LdapUserGroupControl:
                     if real.startswith(os.path.realpath(SAFE_ROOT) + os.sep):
                         shutil.rmtree(real)
                     else:
-                        self.logger.warning("Home en dehors de %s (%s) — suppression ignorée", SAFE_ROOT, real)
+                        self.logger.warning(
+                            "Home en dehors de %s (%s) — suppression ignorée",
+                            SAFE_ROOT,
+                            real,
+                        )
                 except Exception as e:
-                    self.logger.warning("Suppression du home échouée pour %s: %s", homedir, e)
+                    self.logger.warning(
+                        "Suppression du home échouée pour %s: %s", homedir, e
+                    )
             # sinon: rien à faire (home absent)
 
         self.delRecursiveEntry(userdn)
@@ -1890,7 +1921,7 @@ class LdapUserGroupControl:
         return resArr
 
     def delGroup(self, group):
-        """
+        r"""
         Remove a group
         /!\ baseGroupsDN based on INI file
 
@@ -1966,7 +1997,7 @@ class LdapUserGroupControl:
         """
         if not base:
             base = self.baseUsersDN
-        ret = self.search(f"uidNumber={str(id)}", base)
+        ret = self.search(f"uidNumber={id!s}", base)
         newattrs = {}
         if ret:
             for result in ret:
@@ -2039,7 +2070,7 @@ class LdapUserGroupControl:
         """
         if not base:
             base = self.baseGroupsDN
-        ret = self.search(f"gidNumber={str(id)}", base)
+        ret = self.search(f"gidNumber={id!s}", base)
         newattrs = {}
         if ret:
             for result in ret:
@@ -2511,7 +2542,7 @@ class LdapUserGroupControl:
             return False
 
         tokensdb = shelve.open(os.path.join(localstatedir, "lib", "mmc", "tokens.db"))
-        token = f"{str(uuid1())}#{uid}#{server}#{lang}#{time.time()}"
+        token = f"{uuid1()!s}#{uid}#{server}#{lang}#{time.time()}"
         encoded_token = base64.urlsafe_b64encode(token)
         self.logger.debug(f"Created token for {uid} : {encoded_token}")
         tokensdb[uid] = encoded_token
@@ -2528,7 +2559,9 @@ class LdapUserGroupControl:
         try:
             from mmc.plugins.admin import validateToken
         except Exception as e:
-            self.logger.error("Impossible d'importer mmc.plugins.admin.validateToken: %s", e)
+            self.logger.error(
+                "Impossible d'importer mmc.plugins.admin.validateToken: %s", e
+            )
             return False
 
         try:
@@ -2536,7 +2569,6 @@ class LdapUserGroupControl:
         except Exception as e:
             self.logger.error("Erreur pendant validateToken: %s", e)
             return False
-
 
 
 ldapUserGroupControl = LdapUserGroupControl
@@ -2568,6 +2600,7 @@ class BaseLdapAuthenticator(AuthenticatorI):
     def validate(self):
         return True
 
+
 class ldapAuthen:
     """
     class for LDAP authentification
@@ -2583,8 +2616,12 @@ class ldapAuthen:
         @param login: login
         @type login: str
 
-        @param password: not encrypted password
-        @type password: str
+        @param password: not encrypted password. May arrive as an
+            xmlrpc.client.Binary object when it contains non-ASCII characters
+            (e.g. accented passwords); it is then decoded as UTF-8 instead of
+            relying on str(Binary), which uses Latin-1 and corrupts accented
+            characters before the LDAP bind.
+        @type password: str or xmlrpc.client.Binary
 
         Try a LDAP bind.
 
@@ -2605,7 +2642,7 @@ class ldapAuthen:
 
         # If the passwd has been encoded in the XML-RPC stream, decode it
         if isinstance(password, xmlrpc.client.Binary):
-            password = str(password)
+            password = password.data.decode("utf-8")
 
         self.result = False
         try:
@@ -2848,7 +2885,7 @@ class Computers(ldapUserGroupControl, ComputerI):
 
     def getComputer(self, ctx, filt=None, empty_macs=False):
         """ """
-        pass  # TODO...
+        # TODO...
 
     def getMachineMac(self, ctx, filt=None):
         pass  # TODO...
@@ -2946,6 +2983,8 @@ class Computers(ldapUserGroupControl, ComputerI):
         """
         dn = f"objectUUID={uuid},{self.baseComputersDN}"
         return self.l.delete_s(dn)
+
+
 #
 #
 # class ContextMaker(ContextMakerI):
@@ -2958,6 +2997,7 @@ class Computers(ldapUserGroupControl, ComputerI):
 #         s.userid = self.userid
 #         s.userdn = LdapUserGroupControl().searchUserDN(self.userid)
 #         return s
+
 
 class ContextMaker(ContextMakerI):
     """
@@ -3169,8 +3209,8 @@ class LogView:
             self.pattern = pattern
         else:
             self.pattern = {
-                "slapd-syslog": "^(?P<b>[A-z]{3}) *(?P<d>[0-9]+) (?P<H>[0-9]{2}):(?P<M>[0-9]{2}):(?P<S>[0-9]{2}) .* conn=(?P<conn>[0-9]+)\ (?P<opfd>op|fd)=(?P<opfdnum>[0-9]+) (?P<op>[A-Za-z]+) (?P<extra>.*)$",
-                "fds-accesslog": "^\[(?P<d>[0-9]{2})/(?P<b>[A-z]{3})/(?P<y>[0-9]{4}):(?P<H>[0-9]{2}):(?P<M>[0-9]{2}):(?P<S>[0-9]{2}) .*\] conn=(?P<conn>[0-9]+)\ (?P<opfd>op|fd)=(?P<opfdnum>[0-9]+) (?P<op>[A-Za-z]+)(?P<extra> .*|)$",
+                "slapd-syslog": r"^(?P<b>[A-z]{3}) *(?P<d>[0-9]+) (?P<H>[0-9]{2}):(?P<M>[0-9]{2}):(?P<S>[0-9]{2}) .* conn=(?P<conn>[0-9]+)\ (?P<opfd>op|fd)=(?P<opfdnum>[0-9]+) (?P<op>[A-Za-z]+) (?P<extra>.*)$",
+                "fds-accesslog": r"^\[(?P<d>[0-9]{2})/(?P<b>[A-z]{3})/(?P<y>[0-9]{4}):(?P<H>[0-9]{2}):(?P<M>[0-9]{2}):(?P<S>[0-9]{2}) .*\] conn=(?P<conn>[0-9]+)\ (?P<opfd>op|fd)=(?P<opfdnum>[0-9]+) (?P<op>[A-Za-z]+)(?P<extra> .*|)$",
             }
 
     def isLogViewEnabled(self):
@@ -3186,8 +3226,7 @@ class LogView:
         f.seek(0, 2)  # go to the end
         leftover = ""
         while f.tell():
-            if f.tell() < bufsize:
-                bufsize = f.tell()
+            bufsize = min(bufsize, f.tell())
             f.seek(-bufsize, 1)
             in_memory = f.read(bufsize) + leftover
             f.seek(-bufsize, 1)
@@ -3225,7 +3264,7 @@ class LogView:
                     if "Y" not in res:
                         res["Y"] = str(localtime()[0])
                     timed = strptime(
-                        f'{res["b"]} {res["d"]} {res["Y"]} {res["H"]} {res["M"]} {res["S"]}',
+                        f"{res['b']} {res['d']} {res['Y']} {res['H']} {res['M']} {res['S']}",
                         "%b %d %Y %H %M %S",
                     )
                     res["time"] = mktime(timed)
