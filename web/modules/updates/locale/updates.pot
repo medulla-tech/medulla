@@ -905,3 +905,9 @@ msgstr ""
 #: modules/updates/updates/ajaxMajorEntitiesList.php:268
 msgid "The machine does not meet the minimum requirements for Windows 11"
 msgstr ""
+
+msgid "Products"
+msgstr ""
+
+msgid "Automatic Deployment"
+msgstr ""

@@ -21,7 +21,23 @@
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Page fusionnee dans "products", onglet Windows.
-header("Location: " . urlStrRedirect("updates/updates/products&tab=tabwin"));
-exit;
+require_once("modules/admin/includes/xmlrpc.php");
+require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once("modules/medulla_server/includes/xmlrpc.inc.php");
+require_once("modules/updates/includes/updates.inc.php");
+
+if (
+    $_SERVER['REQUEST_METHOD'] === 'POST' &&
+    isset($_POST['form_name']) &&
+    $_POST['form_name'] === 'montableau' && isset($_POST['entityid'])
+) {
+    $submittedCheckValues = $_POST['check'] ?? [];
+    $result = [];
+    foreach ($submittedCheckValues as $key => $value) {
+        $result[] = [$key, $value];
+    }
+    xmlrpc_update_approve_products($result, $_POST['entityid']);
+}
+
+generateEntityPage("", "ajaxApproveProduct");
 ?>

@@ -1,8 +1,5 @@
 <?php
 /*
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007 Mandriva, http://www.mandriva.com
- * (c) 2016-2023 Siveo, http://www.siveo.net
  * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
  * This file is part of MMC, http://www.medulla-tech.io
@@ -21,7 +18,18 @@
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Page fusionnee dans "products", onglet Windows.
-header("Location: " . urlStrRedirect("updates/updates/products&tab=tabwin"));
-exit;
+require("localSidebar.php");
+require("graph/navbar.inc.php");
+
+$p = new TabbedPageGenerator();
+$p->setSideMenu($sidemenu);
+$p->setTitle(_T("Products", "updates"));
+
+$p->addTab("tabwin", _T("Windows", "updates"), "",
+           "modules/updates/updates/products/windowsProducts.php", array());
+
+$p->addTab("tablinux", _T("Linux", "updates"), "",
+           "modules/updates/updates/products/linuxReleases.php", array());
+
+$p->display();
 ?>

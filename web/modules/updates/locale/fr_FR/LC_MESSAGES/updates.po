@@ -1538,3 +1538,9 @@ msgstr "Mise à jour de sécurité Linux de la machine"
 
 msgid "Windows updates history for entity %s"
 msgstr "Historique des mises à jour Windows pour l'entité %s"
+
+msgid "Products"
+msgstr "Produits"
+
+msgid "Automatic Deployment"
+msgstr "Déploiement automatique"

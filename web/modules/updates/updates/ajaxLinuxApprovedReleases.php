@@ -182,7 +182,7 @@ echo '<style type="text/css">
     float: none;
 }
 </style>';
-echo '<form method="post" action="'.urlStrRedirect("updates/updates/linuxApprovedReleases").'" name="linuxApprovedReleasesForm" class="approval-form linux-approved-releases">';
+echo '<form method="post" action="'.urlStrRedirect("updates/updates/products&tab=tablinux").'" name="linuxApprovedReleasesForm" class="approval-form linux-approved-releases">';
 echo '<div class="approval-table-scroll">';
 
 $n = new ListInfos($groupedVersionColumn, _T("Version", "updates"));

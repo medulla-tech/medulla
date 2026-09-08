@@ -67,7 +67,7 @@ function policyHeader(string $label, string $tooltip): string
 
 echo '<div class="linux-autoupdate-policy">';
 echo '<form id="linuxAutoUpdatePolicyForm" method="post" action="' .
-    urlStrRedirect("updates/updates/linuxAutoUpdatePolicy") . '">';
+    urlStrRedirect("updates/updates/automation&tab=tablinux") . '">';
 echo '<input type="hidden" name="form_name" value="linux_auto_update_policy">';
 echo '<input type="hidden" name="auth_token" value="' . htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8') . '">';
 echo '<input type="hidden" name="entityid" value="' . $entityId . '">';
