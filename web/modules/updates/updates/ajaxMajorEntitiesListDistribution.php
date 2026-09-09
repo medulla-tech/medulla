@@ -257,16 +257,16 @@ $texte_help = _T(
   //   );
 $updateAll = new ActionPopupItem(_T("Deploy all major updates on entity", "updates"),
                                 "grpDeployUpdateLinuxMajor",
-                                "updateallg",
+                                "updateall",
                                 "",
                                 "updates",
                                 "updates",
                                 null,
-                                320,"machine");
+                                640,"machine");
 
 $emptyupdateAll = new EmptyActionItem1(_T("There are no major updates to deploy for the entity.", "updates"),
                                         "grpDeployUpdateLinuxMajor",
-                                        "updateallg",
+                                        "updateall",
                                         "",
                                         "updates",
                                         "updates");
