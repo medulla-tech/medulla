@@ -4,13 +4,10 @@ on:
   pull_request:
   push:
     branches:
-      - security-sbom
       - integration
       - master
-      - security-alert-basecamp
 permissions:
   contents: read
-
 
 jobs:
   security:
@@ -44,7 +41,6 @@ jobs:
 
           echo "HIGH vulnerabilities: $HIGH"
           echo "CRITICAL vulnerabilities: $CRITICAL"
-          CRITICAL=1
           echo "high=$HIGH" >> "$GITHUB_OUTPUT"
           echo "critical=$CRITICAL" >> "$GITHUB_OUTPUT"
 
