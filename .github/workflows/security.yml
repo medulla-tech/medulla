@@ -4,10 +4,8 @@ on:
   pull_request:
   push:
     branches:
-      - security-sbom
       - integration
       - master
-
 permissions:
   contents: read
 
@@ -34,6 +32,62 @@ jobs:
           output-format: json
           output-file: grype-report.json
           fail-build: false
+
+      - name: Check vulnerabilities
+        id: vulnerability_check
+        run: |
+          HIGH=$(jq '[.matches[] | select(.vulnerability.severity == "High")] | length' grype-report.json)
+          CRITICAL=$(jq '[.matches[] | select(.vulnerability.severity == "Critical")] | length' grype-report.json)
+
+          echo "HIGH vulnerabilities: $HIGH"
+          echo "CRITICAL vulnerabilities: $CRITICAL"
+          echo "high=$HIGH" >> "$GITHUB_OUTPUT"
+          echo "critical=$CRITICAL" >> "$GITHUB_OUTPUT"
+
+          if [ "$HIGH" -gt 0 ] || [ "$CRITICAL" -gt 0 ]; then
+            echo "alert=true" >> "$GITHUB_OUTPUT"
+            echo "HIGH/CRITICAL vulnerabilities detected!"
+          else
+            echo "alert=false" >> "$GITHUB_OUTPUT"
+            echo "No HIGH/CRITICAL vulnerabilities detected."
+          fi
+
+      - name: Alert Basecamp
+        if: steps.vulnerability_check.outputs.alert == 'true'
+        env:
+          BASECAMP_ACCESS_TOKEN: ${{ secrets.BASECAMP_ACCESS_TOKEN }}
+          BASECAMP_ACCOUNT_ID: ${{ secrets.BASECAMP_ACCOUNT_ID }}
+          BASECAMP_TODOLIST_ID: ${{ secrets.BASECAMP_TODOLIST_ID }}
+          HIGH: ${{ steps.vulnerability_check.outputs.high }}
+          CRITICAL: ${{ steps.vulnerability_check.outputs.critical }}
+        run: |
+          TITLE="🔴 Security Alert - ${{ github.repository }} - ${{ github.ref_name }}"
+
+          DESCRIPTION="<p><strong>Security vulnerabilities detected.</strong></p>
+          <p><strong>Repository:</strong> ${{ github.repository }}</p>
+          <p><strong>Branch:</strong> ${{ github.ref_name }}</p>
+          <p><strong>Commit:</strong> ${{ github.sha }}</p>
+          <p><strong>HIGH:</strong> ${HIGH}</p>
+          <p><strong>CRITICAL:</strong> ${CRITICAL}</p>
+          <p><strong>Workflow:</strong>
+          <a href=\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\">
+          View GitHub Actions
+          </a></p>"
+
+          jq -n \
+            --arg content "$TITLE" \
+            --arg description "$DESCRIPTION" \
+            '{
+              content: $content,
+              description: $description
+            }' > basecamp-alert.json
+
+          curl --fail-with-body -sS -X POST \
+            -H "Authorization: Bearer ${BASECAMP_ACCESS_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -H "User-Agent: Medulla Security Alerts" \
+            --data @basecamp-alert.json \
+            "https://3.basecampapi.com/${BASECAMP_ACCOUNT_ID}/todolists/${BASECAMP_TODOLIST_ID}/todos.json"
 
       - name: Display vulnerability summary
         if: always()
