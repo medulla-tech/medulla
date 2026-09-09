@@ -20,6 +20,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 require("localSidebar.php");
 require_once("modules/admin/includes/xmlrpc.php");
 require_once("modules/medulla_server/includes/xmlrpc.inc.php");
+require_once("modules/updates/includes/entityselection.inc.php");
 
 
 global $maxperpage;
@@ -32,9 +33,11 @@ $start = (isset($_GET['start'])) ? htmlentities($_GET['start']) : 0;
 $end = (isset($_GET['end'])) ? htmlentities($_GET['end']) : $maxperpage;
 $filter = (isset($_GET['filter'])) ? htmlentities($_GET['filter']) : "";
 
-$selectedLocation = $_POST['selected_location'] ?? $_GET['selected_location'] ?? [];
-$rawEntity = $_POST['entityid'] ?? $_GET['entityid'] ?? ($selectedLocation['uuid'] ?? ($selectedLocation['id'] ?? ''));
-$entityId = (int) preg_replace('/^UUID/i', '', (string) $rawEntity);
+// Le selecteur d'entite recolle le POST precedent a l'URL de rechargement :
+// selected_location est la seule source fiable du choix courant, entityid n'est
+// qu'un repli. L'entite racine porte l'id 0, testee sur sa presence.
+$selectedLocation = updatesSelectedLocation();
+$entityId = updatesResolveEntityId($selectedLocation);
 
 $releases = xmlrpc_get_linux_approved_releases($entityId);
 if (!is_array($releases) || !isset($releases['id']) || !is_array($releases['id'])) {
@@ -200,7 +203,8 @@ echo '<div class="approval-table-clear"></div>';
 echo '<input type="hidden" name="form_name" value="linux_approved_releases">';
 echo '<input type="hidden" name="auth_token" value="'.htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8').'">';
 echo '<input type="hidden" name="entityid" value="'.$entityId.'">';
-echo '<input type="hidden" name="entityname" value="'.($selectedLocation['name'] ?? '').'">';
+$entityName = $selectedLocation['name'] ?? '';
+echo '<input type="hidden" name="entityname" value="'.htmlspecialchars(is_scalar($entityName) ? (string) $entityName : '', ENT_QUOTES, 'UTF-8').'">';
 echo '<div class="approval-form-actions">';
 echo '<input class="btnPrimary" type="submit" value="' . _T("Apply", "updates") . '">';
 echo '</div>';

@@ -13,32 +13,14 @@
  */
 
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once("modules/updates/includes/entityselection.inc.php");
 
 
-// Récupère l'entity_id avec la même logique de fallback que ajaxLinuxApprovedReleases.php
-$selectedLocation = $_POST['selected_location'] ?? $_GET['selected_location'] ?? [];
-
-// Si selected_location est une string query, la parser
-if (is_string($selectedLocation) && $selectedLocation !== '') {
-    parse_str($selectedLocation, $selectedLocationArray);
-    $selectedLocation = $selectedLocationArray;
-}
-if (!is_array($selectedLocation)) {
-    $selectedLocation = [];
-}
-
-// Extraire l'uuid de selected_location ou via les paramètres standards
-$rawEntity = $_POST['entityid'] ?? $_GET['entityid'] ?? ($selectedLocation['uuid'] ?? ($selectedLocation['id'] ?? null));
-
-// Si on n'a rien en entityid/selected_location, chercher en GET 'entity' (format utilisé
-// par d'autres pages). L'entité racine porte l'id 0 : seuls null et la chaîne vide
-// valent absence de valeur.
-if ($rawEntity === null || $rawEntity === '') {
-    $rawEntity = $_GET['entity'] ?? '';
-}
-
-// Nettoyage du préfixe UUID si présent
-$entityId = (int) preg_replace('/^UUID/i', '', is_scalar($rawEntity) ? (string) $rawEntity : '');
+// Le selecteur d'entite recolle le POST precedent a l'URL de rechargement :
+// selected_location est la seule source fiable du choix courant, entityid n'est
+// qu'un repli. L'entite racine porte l'id 0, testee sur sa presence.
+$selectedLocation = updatesSelectedLocation();
+$entityId = updatesResolveEntityId($selectedLocation);
 
 // Récupère les policies pour cette entité seulement
 $policies = xmlrpc_get_linux_auto_update_policy([$entityId]);
