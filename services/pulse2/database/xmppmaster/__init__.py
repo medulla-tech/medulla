@@ -16244,22 +16244,37 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
 
     @DatabaseHelper._sessionm
     def get_updates_by_machineids(
-        self, session, machineids, start=0, limit=-1, filter=""
+        self, session, machineids, start=0, limit=-1, filter="", state="available"
     ):
+        if state == "required":
+            deploy_filters = [
+                Up_machine_activated.required_deploy == 1,
+                or_(
+                    Up_machine_activated.curent_deploy == None,
+                    Up_machine_activated.curent_deploy == 0,
+                ),
+            ]
+        elif state == "current":
+            deploy_filters = [Up_machine_activated.curent_deploy == 1]
+        else:
+            deploy_filters = [
+                or_(
+                    Up_machine_activated.curent_deploy == None,
+                    Up_machine_activated.curent_deploy == 0,
+                ),
+                or_(
+                    Up_machine_activated.required_deploy == None,
+                    Up_machine_activated.required_deploy == 0,
+                ),
+            ]
+
         query = (
             session.query(Up_machine_activated, Update_data)
             .join(Update_data, Update_data.updateid == Up_machine_activated.update_id)
             .filter(
                 and_(
                     Up_machine_activated.id_machine.in_(machineids),
-                    or_(
-                        Up_machine_activated.curent_deploy == None,
-                        Up_machine_activated.curent_deploy == 0,
-                    ),
-                    or_(
-                        Up_machine_activated.required_deploy == None,
-                        Up_machine_activated.required_deploy == 0,
-                    ),
+                    *deploy_filters,
                 )
             )
             .order_by(

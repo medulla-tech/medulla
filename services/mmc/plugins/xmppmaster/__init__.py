@@ -2410,9 +2410,11 @@ def get_updates_by_uuids(uuids, start=0, limit=-1, filter=""):
     return XmppMasterDatabase().get_updates_by_uuids(uuids, start, limit, filter)
 
 
-def get_updates_by_machineids(machineids, start=0, limit=-1, filter=""):
+def get_updates_by_machineids(
+    machineids, start=0, limit=-1, filter="", state="available"
+):
     return XmppMasterDatabase().get_updates_by_machineids(
-        machineids, start, limit, filter
+        machineids, start, limit, filter, state
     )
 
 

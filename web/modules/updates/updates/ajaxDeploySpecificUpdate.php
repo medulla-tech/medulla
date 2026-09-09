@@ -18,6 +18,8 @@ $start = isset($_GET['start']) ? $_GET['start'] : 0;
 $end   = (isset($_GET['end']) ? $_GET['start'] + $maxperpage : $maxperpage);
 
 $updates_list = [];
+$isMachineView = false;
+$machineUpdatesByState = [];
 if(!empty($_GET['entity'])) {
     $entityId = (!empty($_GET['entity'])) ? htmlentities($_GET['entity']) : '';
     $entityCompleteName = htmlentities($_GET['completename']);
@@ -34,12 +36,130 @@ if(!empty($_GET['entity'])) {
     $updates_list = xmlrpc_get_updates_by_uuids($machinesList, $start, $end, $filter);
 
 } elseif(!empty($_GET['machineid']) || !empty($_GET['inventoryid'])) {
+    $isMachineView = true;
     $updates_list = ["datas" => [], "count" => 0];
     $machineid = (!empty($_GET['machineid'])) ? htmlentities($_GET['machineid']) : '';
     $inventoryid = (!empty($_GET['inventoryid'])) ? htmlentities($_GET['inventoryid']) : '';
     $machinename = (!empty($_GET['cn'])) ? htmlentities($_GET['cn']) : '';
     $deployThisUpdate = new ActionPopupItem(sprintf(_T("Deploy this update on machine %s", "updates"), $machinename), "deployUpdate", "updateone", "", "updates", "updates");
-    $updates_list = xmlrpc_get_updates_by_machineids([$machineid], $start, $end, $filter);
+    // Trois etats distincts pour que les mises a jour comptees dans Missing
+    // restent visibles meme quand elles sont planifiees ou en cours de deploiement.
+    $machineUpdatesByState = [
+        "available" => [
+            "title" => _T("Updates to deploy", "updates"),
+            "emptyTitle" => _T("No updates available", "updates"),
+            "emptyDescription" => _T("No updates to deploy on this machine.", "updates"),
+            "datas" => xmlrpc_get_updates_by_machineids([$machineid], $start, $end, $filter, "available"),
+            "withAction" => true,
+        ],
+        "required" => [
+            "title" => _T("Planned updates", "updates"),
+            "emptyTitle" => _T("No planned updates", "updates"),
+            "emptyDescription" => _T("No updates are currently planned for this machine.", "updates"),
+            "datas" => xmlrpc_get_updates_by_machineids([$machineid], $start, $end, $filter, "required"),
+            "withAction" => false,
+        ],
+        "current" => [
+            "title" => _T("Updates in progress", "updates"),
+            "emptyTitle" => _T("No updates in progress", "updates"),
+            "emptyDescription" => _T("No updates are currently being deployed on this machine.", "updates"),
+            "datas" => xmlrpc_get_updates_by_machineids([$machineid], $start, $end, $filter, "current"),
+            "withAction" => false,
+        ],
+    ];
+    $updates_list = $machineUpdatesByState["available"]["datas"];
+}
+
+function displayDeploySpecificUpdatesTable($updates_list, $deployThisUpdate, $filter, $title, $emptyTitle, $emptyDescription, $withAction, $machineParams)
+{
+    $params = [];
+    $names_updates = [];
+    $id_updates = [];
+    $actionspeclistUpds = [];
+
+    $count = $updates_list['total'];
+    $updates_list = $updates_list['datas'];
+    $row = 0;
+
+    $hostnames = [];
+    $jids = [];
+    $severities = [];
+
+    foreach ($updates_list as $update) {
+        if($withAction) {
+            $actionspeclistUpds[] = $deployThisUpdate;
+        }
+        $id_updates[] = $update['update_id'];
+        $names_updates[] = (!empty($updates_list[$row]["pkgs_label"])) ? $updates_list[$row]["pkgs_label"] : $updates_list[$row]["title"];
+        $version_updates[] = $updates_list[$row]['pkgs_version'];
+
+        if(!empty($updates_list[$row]['hostname'])) {
+            $hostnames[] = $updates_list[$row]['hostname'];
+        }
+        if(!empty($updates_list[$row]['jid'])) {
+            $jids[] =  $updates_list[$row]['jid'];
+        }
+
+        if(!empty($updates_list[$row]['msrcseverity'])) {
+            $severities[] =  $updates_list[$row]['msrcseverity'];
+        }
+
+        $tmp = [
+            "pid" => $updates_list[$row]["update_id"],
+            "title" => $updates_list[$row]["pkgs_description"],
+            "ltitle" => $updates_list[$row]["pkgs_label"],
+            "version" => $updates_list[$row]['pkgs_version'],
+            "deployment_intervals" => $updates_list[$row]["deployment_intervals"] ];
+        $tmp = array_merge($tmp, $machineParams);
+        $params[] = $tmp;
+        $row++;
+    }
+
+    echo '<h3>' . $title . '</h3>';
+    $n = new OptimizedListInfos($names_updates, _T("Name", "updates"));
+    $n->addExtraInfo($id_updates, _T("Update Id", "updates"));
+    $n->addExtraInfo($severities, _T("Severity", "updates"));
+    if($hostnames != []) {
+        $n->addExtraInfo($hostnames, _T("Machine", "xmppmaster"));
+    }
+    if($jids != []) {
+        $n->addExtraInfo($jids, _T("Jid", "xmppmaster"));
+    }
+
+    $n->disableFirstColumnActionLink();
+    $n->setItemCount($count);
+    $n->setNavBar(new AjaxNavBar($count, $filter));
+    $n->setParamInfo($params);
+    $n->start = 0;
+    $n->end = $count;
+    if($withAction) {
+        $n->addActionItemArray($actionspeclistUpds);
+    }
+    $n->setEmptyState($emptyTitle, $emptyDescription);
+    echo '<div class="deploy-updates-table">';
+    $n->display();
+    echo '</div>';
+}
+
+if($isMachineView) {
+    $machineParams = [
+        "inventoryid" => $inventoryid,
+        "machineid" => $machineid,
+        "cn" => $machinename,
+    ];
+    foreach ($machineUpdatesByState as $state) {
+        displayDeploySpecificUpdatesTable(
+            $state["datas"],
+            $deployThisUpdate,
+            $filter,
+            $state["title"],
+            $state["emptyTitle"],
+            $state["emptyDescription"],
+            $state["withAction"],
+            $machineParams
+        );
+    }
+    return;
 }
 
 $params = [];
