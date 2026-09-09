@@ -1665,3 +1665,22 @@ msgstr "Productos"
 
 msgid "Automatic Deployment"
 msgstr "Despliegue automático"
+
+# Despliegue automatico - pestana Linux
+msgid "Update type"
+msgstr "Tipo de actualización"
+
+msgid "Enabled"
+msgstr "Activado"
+
+msgid "These settings apply to every Linux distribution of the selected entity."
+msgstr "Estos ajustes se aplican a todas las distribuciones Linux de la entidad seleccionada."
+
+msgid "Updates other than kernel and security."
+msgstr "Actualizaciones distintas de núcleo y seguridad."
+
+msgid "Kernel updates for the distribution."
+msgstr "Actualizaciones del núcleo de la distribución."
+
+msgid "Security fixes published by the distribution."
+msgstr "Correcciones de seguridad publicadas por la distribución."

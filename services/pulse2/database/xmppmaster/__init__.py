@@ -808,13 +808,23 @@ class XmppMasterDatabase(DatabaseHelper):
                     is_latest_major_version.
         """
         try:
-            if entity_id:
-                entity_id = int(entity_id)
+            # L'entite racine porte l'id 0 : seule une valeur absente ou non
+            # numerique vaut absence d'entite.
+            normalized_entity_id = None
+            if entity_id is not None and str(entity_id).strip() != "":
+                try:
+                    normalized_entity_id = int(entity_id)
+                except (TypeError, ValueError):
+                    normalized_entity_id = None
+
+            if normalized_entity_id is not None:
+                entity_id = normalized_entity_id
                 self._sync_linux_approved_releases_entities(
                     session,
                     entity_id=entity_id,
                     actor="system-sync"
                 )
+                session.commit()
 
                 # Récupération avec les selections de l'entité
                 query = text("""
@@ -1082,6 +1092,7 @@ class XmppMasterDatabase(DatabaseHelper):
             if not entity_ids:
                 return []
             self._sync_linux_auto_update_policy_entities(session, entity_ids)
+            session.commit()
             placeholders = ",".join([":eid_{}".format(i) for i in range(len(entity_ids))])
             params = {"eid_{}".format(i): eid for i, eid in enumerate(entity_ids)}
             query = text("""

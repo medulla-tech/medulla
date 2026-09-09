@@ -28,40 +28,80 @@ if (
 ) {
     verifyCSRFToken($_POST);
 
-    $kernelValues   = $_POST['auto_update_kernel']   ?? [];
-    $securityValues = $_POST['auto_update_security'] ?? [];
-    $otherValues    = $_POST['auto_update_other']    ?? [];
+    // L'entite racine porte l'id 0 : seule une valeur absente ou non numerique
+    // est une erreur, l'autorisation repose sur getUserLocations().
+    $entityIdRaw = $_POST['entityid'] ?? null;
+    $entityIdStr = is_scalar($entityIdRaw)
+        ? preg_replace('/^UUID/i', '', (string) $entityIdRaw)
+        : '';
+    $postedEntityId = preg_match('/^\d+$/', $entityIdStr) ? (int) $entityIdStr : null;
 
-    $policyIds = array_unique(array_merge(
-        array_keys($kernelValues),
-        array_keys($securityValues),
-        array_keys($otherValues)
-    ));
-
-    $updates = [];
-    foreach ($policyIds as $policyId) {
-        $updates[] = [
-            'id'                   => (int) $policyId,
-            'auto_update_kernel'   => isset($kernelValues[$policyId])   ? (int) $kernelValues[$policyId]   : 0,
-            'auto_update_security' => isset($securityValues[$policyId]) ? (int) $securityValues[$policyId] : 0,
-            'auto_update_other'    => isset($otherValues[$policyId])    ? (int) $otherValues[$policyId]    : 0,
-        ];
+    // L'entite doit faire partie de celles auxquelles l'utilisateur a acces :
+    // les identifiants de policy sont ensuite relus en base, jamais pris du POST.
+    $allowedEntityIds = [];
+    foreach (getUserLocations() as $location) {
+        $allowedEntityIds[] = (int) preg_replace('/^UUID/i', '', (string) ($location['uuid'] ?? ''));
     }
 
-    $result  = xmlrpc_update_linux_auto_update_policy($updates);
-    $success = is_array($result) && !empty($result['success']);
-
-    if ($success) {
-        new NotifyWidgetSuccess(_T("Auto-update policies saved.", "updates"));
+    if ($postedEntityId === null || !in_array($postedEntityId, $allowedEntityIds, true)) {
+        new NotifyWidgetFailure(_T("Missing entity selection.", "updates"));
     } else {
-        new NotifyWidgetFailure(_T("Failed to save auto-update policies.", "updates"));
+        // Un seul reglage par type, applique a toutes les distributions de l'entite.
+        $values = [];
+        foreach (['auto_update_kernel', 'auto_update_security', 'auto_update_other'] as $flag) {
+            $posted        = $_POST[$flag] ?? '0';
+            $values[$flag] = (is_scalar($posted) && (string) $posted === '1') ? 1 : 0;
+        }
+
+        $policies = xmlrpc_get_linux_auto_update_policy([$postedEntityId]);
+        if (!is_array($policies)) {
+            $policies = [];
+        }
+
+        $updates = [];
+        foreach ($policies as $policy) {
+            if (!is_array($policy) || empty($policy['id'])) {
+                continue;
+            }
+            if (isset($policy['entity_id']) && (int) $policy['entity_id'] !== $postedEntityId) {
+                continue;
+            }
+            $updates[] = array_merge(['id' => (int) $policy['id']], $values);
+        }
+
+        if (empty($updates)) {
+            new NotifyWidgetFailure(_T("No auto-update policies found for this entity.", "updates"));
+        } else {
+            $result  = xmlrpc_update_linux_auto_update_policy($updates);
+            $success = is_array($result) && !empty($result['success']);
+
+            if ($success) {
+                new NotifyWidgetSuccess(_T("Auto-update policies saved.", "updates"));
+            } else {
+                new NotifyWidgetFailure(_T("Failed to save auto-update policies.", "updates"));
+            }
+        }
     }
 }
 
-$selectedEntityIdRaw = $_POST['entityid'] ?? $_GET['entityid'] ?? ($_POST['selected_location'] ?? $_GET['selected_location'] ?? null);
-$selectedEntityIdStr = is_string($selectedEntityIdRaw) ? $selectedEntityIdRaw : strval($selectedEntityIdRaw);
-$selectedEntityIdStr = preg_replace('/^UUID/i', '', $selectedEntityIdStr);
-$selectedEntityId = ($selectedEntityIdStr !== null && $selectedEntityIdStr !== '') ? (int) $selectedEntityIdStr : null;
+// Entite a preselectionner dans le selecteur : POST du formulaire, puis GET,
+// puis la query string du selecteur AJAX.
+$selectedEntityIdRaw = $_POST['entityid'] ?? $_GET['entityid'] ?? null;
+if ($selectedEntityIdRaw === null) {
+    $selectedLocation = $_POST['selected_location'] ?? $_GET['selected_location'] ?? null;
+    if (is_string($selectedLocation) && $selectedLocation !== '') {
+        parse_str($selectedLocation, $selectedLocationArray);
+        $selectedLocation = $selectedLocationArray;
+    }
+    if (is_array($selectedLocation)) {
+        $selectedEntityIdRaw = $selectedLocation['uuid'] ?? ($selectedLocation['id'] ?? null);
+    }
+}
+$selectedEntityIdStr = is_scalar($selectedEntityIdRaw)
+    ? preg_replace('/^UUID/i', '', (string) $selectedEntityIdRaw)
+    : '';
+// Une valeur non numerique ne doit pas retomber sur l'entite racine via (int).
+$selectedEntityId = preg_match('/^\d+$/', $selectedEntityIdStr) ? (int) $selectedEntityIdStr : null;
 
 generateEntityPage("", "ajaxLinuxAutoUpdatePolicy", null, 'updates', $selectedEntityId);
 ?>

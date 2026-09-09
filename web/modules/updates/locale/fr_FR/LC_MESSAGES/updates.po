@@ -1544,3 +1544,22 @@ msgstr "Produits"
 
 msgid "Automatic Deployment"
 msgstr "Déploiement automatique"
+
+# Deploiement automatique - onglet Linux
+msgid "Update type"
+msgstr "Type de mise à jour"
+
+msgid "Enabled"
+msgstr "Activé"
+
+msgid "These settings apply to every Linux distribution of the selected entity."
+msgstr "Ces réglages s'appliquent à toutes les distributions Linux de l'entité sélectionnée."
+
+msgid "Updates other than kernel and security."
+msgstr "Mises à jour autres que noyau et sécurité."
+
+msgid "Kernel updates for the distribution."
+msgstr "Mises à jour du noyau de la distribution."
+
+msgid "Security fixes published by the distribution."
+msgstr "Correctifs de sécurité publiés par la distribution."

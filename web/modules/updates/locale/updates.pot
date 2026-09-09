@@ -911,3 +911,27 @@ msgstr ""
 
 msgid "Automatic Deployment"
 msgstr ""
+
+#: modules/updates/updates/ajaxLinuxAutoUpdatePolicy.php
+msgid "Update type"
+msgstr ""
+
+#: modules/updates/updates/ajaxLinuxAutoUpdatePolicy.php
+msgid "Enabled"
+msgstr ""
+
+#: modules/updates/updates/ajaxLinuxAutoUpdatePolicy.php
+msgid "These settings apply to every Linux distribution of the selected entity."
+msgstr ""
+
+#: modules/updates/updates/ajaxLinuxAutoUpdatePolicy.php
+msgid "Updates other than kernel and security."
+msgstr ""
+
+#: modules/updates/updates/ajaxLinuxAutoUpdatePolicy.php
+msgid "Kernel updates for the distribution."
+msgstr ""
+
+#: modules/updates/updates/ajaxLinuxAutoUpdatePolicy.php
+msgid "Security fixes published by the distribution."
+msgstr ""
