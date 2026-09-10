@@ -37,62 +37,64 @@ class AntivirusPanel extends Panel
 {
     public function display_content()
     {
-
         $count = xmlrpc_get_antiviruses_for_dashboard();
 
-        $uninventorized_text = _T("Uninventoried Machines", "dashboard");
-        $uninventorized = get_computer_count_for_dashboard()['total_uninventoried'];
-        $jsonCount = json_encode($count);
-        $createGroupText = json_encode(_T("Create a group", "glpi"));
-        $greenMessage = json_encode(_T("OK: %percent% (%d)", "glpi"));
-        $orangeMessage = json_encode(_T("Not running or not up-to-date: %percent% (%d)", "glpi"));
-        $redMessage = json_encode(_T("Outdated antivirus: %percent% (%d)", "glpi"));
-        $missingMessage = json_encode(_T("Missing antivirus: %percent% (%d)", "glpi"));
-        $urlRedirect = json_encode(urlStrRedirect("base/computers/createAntivirusStaticGroup"));
+        $jsonCount        = json_encode($count);
+        $okLabel          = json_encode(_T("OK", "glpi"));
+        $notUpToDateLabel = json_encode(_T("Not up to date", "glpi"));
+        $disabledLabel    = json_encode(_T("Antivirus disabled", "glpi"));
+        $missingLabel     = json_encode(_T("Missing antivirus", "glpi"));
+        $staleLabel       = json_encode(_T("Unreliable information", "glpi"));
+        $urlRedirect      = json_encode(urlStrRedirect("base/computers/createAntivirusStaticGroup"));
 
         echo <<< ANTIVIRUS
     <div id="antivirus-graphs" style="display:flex;flex-direction:column;align-items:center;flex:1;"></div>
     <script type="text/javascript">
-    var machineCount = $jsonCount,
-        greenMessage = $greenMessage,
-        orangeMessage = $orangeMessage,
-        redMessage = $redMessage,
-        missingMessage = $missingMessage,
-        uninventorized = $uninventorized,
-        createGroupText = $createGroupText,
-        urlRedirect = $urlRedirect;
+    var machineCount     = $jsonCount,
+        okLabel          = $okLabel,
+        notUpToDateLabel = $notUpToDateLabel,
+        disabledLabel    = $disabledLabel,
+        missingLabel     = $missingLabel,
+        staleLabel       = $staleLabel,
+        urlRedirect      = $urlRedirect;
 
-        var datas = [
-          {'label': '', 'value': 0, 'href': ''},
-          {'label': '', 'value': 0, 'href': ''},
-          {
-            'label': greenMessage.split(" %percent% ")[0],
-            'value':("green" in machineCount)?machineCount["green"]:0,
-            'href':urlRedirect+"&group=green",
-          },
-          {
-            'label': orangeMessage.split(" %percent% ")[0],
-            'value':("orange" in machineCount)?machineCount["orange"]:0,
-            'href':urlRedirect+"&group=orange",
-          },
-          {
-            'label': redMessage.split(" %percent% ")[0],
-            'value':("red" in machineCount)?machineCount["red"]:0,
-            'href':urlRedirect+"&group=red",
-          },
-          {
-            'label': missingMessage.split(" %percent% ")[0],
-            'value':("missing" in machineCount)?machineCount["missing"]:0,
-            'href':urlRedirect+"&group=missing",
+    function antivirusCount(key) {
+      return (key in machineCount) ? parseInt(machineCount[key], 10) : 0;
+    }
 
-          },
-          {
-            'label': '$uninventorized_text',
-            'value': uninventorized,
-            'href':"#",
-          }
-        ];
-        donut("antivirus-graphs", datas, "Total", parseInt(machineCount["total"])+parseInt(uninventorized));
+    // The donut colors are positional (see dashboard/graph/js/donut.js) :
+    // 0 grey, 1 blue, 2 green, 3 orange, 4 red, 5 dark grey, 6 light grey.
+    // The two empty slices shift the first real slice on the green color.
+    var datas = [
+      {'label': '', 'value': 0, 'href': ''},
+      {'label': '', 'value': 0, 'href': ''},
+      {
+        'label': okLabel,
+        'value': antivirusCount("green"),
+        'href': urlRedirect+"&group=green",
+      },
+      {
+        'label': notUpToDateLabel,
+        'value': antivirusCount("orange"),
+        'href': urlRedirect+"&group=orange",
+      },
+      {
+        'label': disabledLabel,
+        'value': antivirusCount("red"),
+        'href': urlRedirect+"&group=red",
+      },
+      {
+        'label': missingLabel,
+        'value': antivirusCount("missing"),
+        'href': urlRedirect+"&group=missing",
+      },
+      {
+        'label': staleLabel,
+        'value': antivirusCount("stale"),
+        'href': urlRedirect+"&group=stale",
+      }
+    ];
+    donut("antivirus-graphs", datas, "Total", antivirusCount("total"));
     </script>
 ANTIVIRUS;
     }

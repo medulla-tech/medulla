@@ -6444,22 +6444,63 @@ class Glpi100(DyngroupDatabaseHelper):
         ]
 
     def getMachineListByAntivirusState(self, ctx, groupName):
-        session = create_session()
+        """
+        Return the machines of an antivirus state, as counted by
+        get_antiviruses_for_dashboard.
 
-        __computersListQ = self.__getRestrictedComputersListQuery
+        The antivirus row kept for a machine is, among its rows with
+        is_deleted = 0, the first one ordered by is_active DESC,
+        is_uptodate DESC, date_mod DESC, id DESC.
+
+        Accepted states are missing, red, orange, stale and green. Any other
+        value returns an empty dict.
+        """
+        if self.fusionantivirus is None:
+            return {}
+
+        conditions = {
+            "missing": "a.id IS NULL",
+            "red": "a.id IS NOT NULL AND a.is_active = 0",
+            "orange": "a.id IS NOT NULL AND a.is_active = 1 AND a.is_uptodate = 0",
+            "stale": "a.id IS NOT NULL AND a.is_active = 1 AND a.is_uptodate = 1 "
+            "AND COALESCE(c.last_inventory_update, c.date_mod) < :stale_date",
+            "green": "a.id IS NOT NULL AND a.is_active = 1 AND a.is_uptodate = 1 "
+            "AND COALESCE(c.last_inventory_update, c.date_mod) >= :stale_date",
+        }
+
+        if groupName not in conditions:
+            return {}
+
+        subquery = text(
+            "SELECT c.id FROM glpi_computers c "
+            "LEFT JOIN glpi_computerantiviruses a ON a.id = ("
+            "SELECT a2.id FROM glpi_computerantiviruses a2 "
+            "WHERE a2.computers_id = c.id AND a2.is_deleted = 0 "
+            "ORDER BY a2.is_active DESC, a2.is_uptodate DESC, "
+            "a2.date_mod DESC, a2.id DESC LIMIT 1) "
+            "WHERE c.is_deleted = 0 AND c.is_template = 0 AND (%s)"
+            % conditions[groupName]
+        )
+
+        if groupName in ("stale", "green"):
+            stale_date = datetime.datetime.now() - datetime.timedelta(
+                days=self.config.red
+            )
+            subquery = subquery.bindparams(stale_date=stale_date)
 
         complete_ctx(ctx)
         filt = {"ctxlocation": ctx.locations}
-        query = __computersListQ(
-            ctx, dict(filt, **{"antivirus": groupName}), session)
+
+        session = create_session()
+        query = self.__getRestrictedComputersListQuery(ctx, filt, session)
 
         # Limit list according to max_elements_for_static_list param in dyngroup.ini
         limit = DGConfig().maxElementsForStaticList
 
-        query = query.limit(limit)
+        result = query.filter(self.machine.c.id.in_(subquery)).limit(limit)
 
         ret = {}
-        for machine in query.all():
+        for machine in result.all():
             if machine.name is not None:
                 ret[toUUID(machine.id) + "##" + machine.name] = {
                     "hostname": machine.name,
@@ -9562,7 +9603,23 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
 
     @DatabaseHelper._sessionm
     def get_antiviruses_for_dashboard(self, session, entities=[]):
-        """Get the count of machines, without antiviruses (missing), outdated antiviruses (red), not actives or becomming old (orange), uptodate (green).
+        """Get the count of machines by antivirus state.
+
+        The antivirus row kept for a machine is, among its rows with
+        is_deleted = 0, the first one ordered by is_active DESC,
+        is_uptodate DESC, date_mod DESC, id DESC.
+
+        The categories are exclusive and their sum equals total:
+            * missing: no antivirus row
+            * red: the antivirus is not active
+            * orange: the antivirus is active but not up to date
+            * stale: antivirus active and up to date, but the machine has not
+              been inventoried for more than `red` days
+            * green: antivirus active and up to date, machine inventoried
+              within the last `red` days
+
+        The inventory date is glpi_computers.last_inventory_update, and falls
+        back to glpi_computers.date_mod when no inventory has been received.
 
         Args:
             self (Glpi100): Model Instance Object
@@ -9573,75 +9630,96 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
             (dict): The count as dict. The dict will have the shape:
             {
             "total": 0,
-            "missing":"0,
-            "red":0,
-            "orange":0,
-            "green":0
+            "missing": 0,
+            "red": 0,
+            "orange": 0,
+            "stale": 0,
+            "green": 0
             }
         """
-        entities_str = ""
-        if entities != []:
-            entities_str = "AND c.entities_id in (%s)"%','.join([str(e) for e in entities])
+        result = {
+            "total": 0,
+            "missing": 0,
+            "red": 0,
+            "orange": 0,
+            "stale": 0,
+            "green": 0,
+        }
 
-        excluded = ""
-        if self.config.av_false_positive != []:
-            lst = ",".join(["\"%s\""%e for e in self.config.av_false_positive if e != ""])
-            excluded = " WHERE  name not in (%s)"%lst
+        if self.fusionantivirus is None or not entities:
+            return result
+
+        stale_date = datetime.datetime.now() - datetime.timedelta(days=self.config.red)
+
+        params = {"stale_date": stale_date}
+        placeholders = []
+        for index, entity in enumerate(entities):
+            key = "entity_%d" % index
+            placeholders.append(":%s" % key)
+            params[key] = int(entity)
 
         filter_on_state = ""
-        if self.config.filter_on != None:
+        if self.config.filter_on is not None:
+            state_placeholders = []
             for filter_key, filter_values in list(self.config.filter_on.items()):
-                if filter_key == "state":
-                    filter_on_state = "AND c.states_id in (%s) "%(",".join([val for val in filter_values]))
+                if filter_key != "state":
+                    continue
+                for index, value in enumerate(filter_values):
+                    try:
+                        state_id = int(value)
+                    except (TypeError, ValueError):
+                        continue
+                    key = "state_%d" % index
+                    state_placeholders.append(":%s" % key)
+                    params[key] = state_id
+            if state_placeholders:
+                filter_on_state = "AND c.states_id IN (%s)" % ", ".join(
+                    state_placeholders
+                )
 
-        result = {"total":0, "missing":0, "red":0, "orange":0, "green":0}
-        if self.fusionantivirus is None:
+        sqlrequest = text(
+            """
+            SELECT
+                COUNT(*) AS total,
+                COALESCE(SUM(CASE WHEN a.id IS NULL THEN 1 ELSE 0 END), 0) AS missing,
+                COALESCE(SUM(CASE WHEN a.id IS NOT NULL AND a.is_active = 0
+                                  THEN 1 ELSE 0 END), 0) AS red,
+                COALESCE(SUM(CASE WHEN a.id IS NOT NULL AND a.is_active = 1
+                                   AND a.is_uptodate = 0
+                                  THEN 1 ELSE 0 END), 0) AS orange,
+                COALESCE(SUM(CASE WHEN a.id IS NOT NULL AND a.is_active = 1
+                                   AND a.is_uptodate = 1
+                                   AND COALESCE(c.last_inventory_update, c.date_mod) < :stale_date
+                                  THEN 1 ELSE 0 END), 0) AS stale,
+                COALESCE(SUM(CASE WHEN a.id IS NOT NULL AND a.is_active = 1
+                                   AND a.is_uptodate = 1
+                                   AND COALESCE(c.last_inventory_update, c.date_mod) >= :stale_date
+                                  THEN 1 ELSE 0 END), 0) AS green
+            FROM glpi_computers c
+            LEFT JOIN glpi_computerantiviruses a
+                   ON a.id = (SELECT a2.id FROM glpi_computerantiviruses a2
+                               WHERE a2.computers_id = c.id AND a2.is_deleted = 0
+                               ORDER BY a2.is_active DESC, a2.is_uptodate DESC,
+                                        a2.date_mod DESC, a2.id DESC LIMIT 1)
+            WHERE c.is_deleted = 0
+                AND c.is_template = 0
+                AND c.entities_id IN (%s)
+                %s
+            """
+            % (", ".join(placeholders), filter_on_state)
+        )
+
+        row = session.execute(sqlrequest, params).fetchone()
+
+        if row is None:
             return result
-        bind = {
-            "red1":self.config.red,
-            "red2":self.config.red,
-            "orange1":self.config.orange,
-            "orange2":self.config.orange,
-        }
-        sql="""select
-    coalesce(NULL, sum(1), 0) as total,
-    coalesce(NULL, sum(case when a.id is NULL then 1 else 0 end), 0) as missing,
-    coalesce(NULL, sum(case when a.date_mod <= (CURDATE() - INTERVAL :red1 DAY) then 1 else 0 end), 0) as red,
-    coalesce(NULL, sum(case when a.date_mod > (CURDATE() - INTERVAL :red2 DAY) and a.date_mod <= (CURDATE() - INTERVAL :orange1 DAY) or (a.is_uptodate = 0 and a.is_active=0) then 1 else 0 end), 0) as orange,
-    coalesce(NULL, sum(case when a.date_mod >(CURDATE() - INTERVAL :orange2 DAY) and a.is_uptodate=1 and a.is_active = 1 then 1 else 0 end), 0) as green
-from glpi_computers c
-left join (select
-            antivirus.id,
-            antivirus.computers_id,
-            antivirus.name,
-            antivirus.date_mod,
-            antivirus.is_uptodate,
-            antivirus.is_active
-        from glpi_computerantiviruses antivirus
-        join
-        (select
-            distinct(computers_id) as computers_id,
-            max(date_mod) as max_date
-        from glpi_computerantiviruses
-        %s
-        group by computers_id
-        order by computers_id desc) as ref on antivirus.computers_id=ref.computers_id and antivirus.date_mod = ref.max_date
-        group by antivirus.date_mod
-        order by computers_id
-    ) as a  on c.id = a.computers_id
-where c.is_deleted=0 and c.is_template=0 %s %s
-    """%(excluded, entities_str, filter_on_state)
 
-        query = session.execute(sql, bind, execution_options={"autocommit": True}).first()
-
-        if query is None:
-            return result
-
-        result["total"] = query.total
-        result["missing"] = query.missing
-        result["red"] = query.red
-        result["orange"] = query.orange
-        result["green"] = query.green
+        result["total"] = int(row.total or 0)
+        result["missing"] = int(row.missing or 0)
+        result["red"] = int(row.red or 0)
+        result["orange"] = int(row.orange or 0)
+        result["stale"] = int(row.stale or 0)
+        result["green"] = int(row.green or 0)
         return result
 
     @DatabaseHelper._sessionm

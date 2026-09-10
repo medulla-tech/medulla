@@ -18,7 +18,7 @@ msgstr "Salir del modo pull"
 #: modules/glpi/glpi/tabs.php:79 modules/glpi/glpi/tabs.php:83
 #, php-format
 msgid "%s's inventory %s"
-msgstr "inventario %s"
+msgstr "Inventario de %s %s"
 
 #: modules/glpi/glpi/tabs.php:92
 msgid "Summary"
@@ -49,7 +49,7 @@ msgid "History"
 msgstr "Historia"
 
 #: modules/glpi/glpi/tabs.php:100
-#: modules/glpi/includes/panels/antivirus.inc.php:32
+#: modules/glpi/includes/panels/antivirus.inc.php:33
 msgid "Antivirus"
 msgstr "Antivirus"
 
@@ -66,17 +66,31 @@ msgstr "Obtener informe XLS"
 msgid "Antivirus status is OK at %s"
 msgstr "El estado del antivirus es OK en %s"
 
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:34
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:32
 #, php-format
-msgid "Antivirus is not running or not up-to-date at %s"
-msgstr "El antivirus no se está ejecutando o no está actualizado en %s"
+msgid "Antivirus is not up to date at %s"
+msgstr "El antivirus no está actualizado en %s"
 
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:37
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:33
+#, php-format
+msgid "Antivirus is disabled at %s"
+msgstr "El antivirus está desactivado en %s"
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:34
 #, php-format
 msgid "No antivirus found at %s"
 msgstr "No se ha encontrado ningún antivirus en %s"
 
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:47
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:35
+#, php-format
+msgid "Antivirus information is unreliable at %s"
+msgstr "La información del antivirus no es fiable en %s"
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:40
+msgid "Unknown antivirus status"
+msgstr "Estado de antivirus desconocido"
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:54
 #: modules/glpi/glpi/createBackupStaticGroup.php:69
 #: modules/glpi/glpi/createOSStaticGroup.php:54
 #: modules/glpi/glpi/createMachinesStaticGroup.php:75
@@ -969,7 +983,6 @@ msgid "Inventories"
 msgstr "Inventarios"
 
 #: modules/glpi/includes/panels/inventory.inc.php:47
-#: modules/glpi/includes/panels/antivirus.inc.php:45
 msgid "Create a group"
 msgstr "Crear un grupo"
 
@@ -985,30 +998,29 @@ msgstr "&gt; %s días: %percent% (%d)"
 msgid "Uninventoried machines"
 msgstr "Máquinas no inventariadas"
 
-#: modules/glpi/includes/panels/antivirus.inc.php:41
 #: modules/glpi/includes/panels/os_repartition.inc.php:44
 msgid "Uninventoried Machines"
 msgstr "Máquinas no inventariadas"
 
+#: modules/glpi/includes/panels/antivirus.inc.php:43
+msgid "OK"
+msgstr "OK"
+
+#: modules/glpi/includes/panels/antivirus.inc.php:44
+msgid "Not up to date"
+msgstr "Antivirus no actualizado"
+
+#: modules/glpi/includes/panels/antivirus.inc.php:45
+msgid "Antivirus disabled"
+msgstr "Antivirus desactivado"
+
 #: modules/glpi/includes/panels/antivirus.inc.php:46
-msgid "OK: %percent% (%d)"
-msgstr "OK: %percent% (%d)"
+msgid "Missing antivirus"
+msgstr "Antivirus no instalado"
 
 #: modules/glpi/includes/panels/antivirus.inc.php:47
-msgid "Not running or not up-to-date: %percent% (%d)"
-msgstr "No funciona o no está actualizado: %percent% (%d)"
-
-#: modules/glpi/includes/panels/antivirus.inc.php:48
-msgid "No antivirus found: %percent% (%d)"
-msgstr "No se ha encontrado ningún antivirus: %percent% (%d)"
-
-#: modules/glpi/includes/panels/antivirus.inc.php:49
-msgid "Outdated antivirus: %percent% (%d)"
-msgstr "Antivirus obsoleto: %percent% (%d)"
-
-#: modules/glpi/includes/panels/antivirus.inc.php:50
-msgid "Missing antivirus: %percent% (%d)"
-msgstr "Antivirus no instalado: %percent% (%d)"
+msgid "Unreliable information"
+msgstr "Información no fiable"
 
 #: modules/glpi/includes/panels/os_repartition.inc.php:36
 msgid "Operating systems"
@@ -1175,3 +1187,20 @@ msgstr "Ficha Registro (GLPI)"
 msgid "Connections tab (GLPI)"
 msgstr "Ficha Conexiones (GLPI)"
 
+#~ msgid "Antivirus is not running or not up-to-date at %s"
+#~ msgstr "El antivirus no se está ejecutando o no está actualizado en %s"
+
+#~ msgid "OK: %percent% (%d)"
+#~ msgstr "OK: %percent% (%d)"
+
+#~ msgid "Not running or not up-to-date: %percent% (%d)"
+#~ msgstr "No funciona o no está actualizado: %percent% (%d)"
+
+#~ msgid "No antivirus found: %percent% (%d)"
+#~ msgstr "No se ha encontrado ningún antivirus: %percent% (%d)"
+
+#~ msgid "Outdated antivirus: %percent% (%d)"
+#~ msgstr "Antivirus obsoleto: %percent% (%d)"
+
+#~ msgid "Missing antivirus: %percent% (%d)"
+#~ msgstr "Antivirus no instalado: %percent% (%d)"
