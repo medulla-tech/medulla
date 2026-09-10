@@ -2302,7 +2302,10 @@ class Glpi110(DyngroupDatabaseHelper):
 
     def getRestrictedComputersListStatesLen(self, ctx, filt, orange, red):
         """
-        Return number of computers by state
+        Return number of computers by state.
+
+        The state is computed on COALESCE(glpi_computers.last_inventory_update,
+        glpi_computers.date_mod), like the inventories dashboard widget.
         """
         session = create_session()
         now = datetime.datetime.now()
@@ -2317,41 +2320,30 @@ class Glpi110(DyngroupDatabaseHelper):
             session.close()
             return {"green": 0, "orange": 0, "red": 0}
 
-        if self.fusionagents is not None:
-            # Green: last_contact > orange_date (recent inventory)
-            green_subquery = session.query(self.fusionagents.c.items_id).filter(
-                self.fusionagents.c.last_contact > orange_date
-            ).subquery()
-            green_count = base_query.filter(
-                self.machine.c.id.in_(green_subquery)
-            ).count()
+        green_subquery = text(
+            "SELECT id FROM glpi_computers "
+            "WHERE COALESCE(last_inventory_update, date_mod) >= :orange_date"
+        ).bindparams(orange_date=orange_date)
+        green_count = base_query.filter(
+            self.machine.c.id.in_(green_subquery)
+        ).count()
 
-            # Orange: orange_date >= last_contact > red_date
-            orange_subquery = session.query(self.fusionagents.c.items_id).filter(
-                and_(
-                    self.fusionagents.c.last_contact <= orange_date,
-                    self.fusionagents.c.last_contact > red_date
-                )
-            ).subquery()
-            orange_count = base_query.filter(
-                self.machine.c.id.in_(orange_subquery)
-            ).count()
+        orange_subquery = text(
+            "SELECT id FROM glpi_computers "
+            "WHERE COALESCE(last_inventory_update, date_mod) >= :red_date "
+            "AND COALESCE(last_inventory_update, date_mod) < :orange_date"
+        ).bindparams(red_date=red_date, orange_date=orange_date)
+        orange_count = base_query.filter(
+            self.machine.c.id.in_(orange_subquery)
+        ).count()
 
-            # Red: last_contact <= red_date (old inventory)
-            red_subquery = session.query(self.fusionagents.c.items_id).filter(
-                self.fusionagents.c.last_contact <= red_date
-            ).subquery()
-            red_count = base_query.filter(
-                self.machine.c.id.in_(red_subquery)
-            ).count()
-        else:
-            # Fallback to machine.date_mod
-            date_mod = self.machine.c.date_mod
-            green_count = base_query.filter(date_mod > orange_date).count()
-            orange_count = base_query.filter(
-                and_(date_mod <= orange_date, date_mod > red_date)
-            ).count()
-            red_count = base_query.filter(date_mod <= red_date).count()
+        red_subquery = text(
+            "SELECT id FROM glpi_computers "
+            "WHERE COALESCE(last_inventory_update, date_mod) < :red_date"
+        ).bindparams(red_date=red_date)
+        red_count = base_query.filter(
+            self.machine.c.id.in_(red_subquery)
+        ).count()
 
         ret = {
             "green": int(green_count),
@@ -6273,6 +6265,13 @@ class Glpi110(DyngroupDatabaseHelper):
         return ret_gw
 
     def getMachineListByState(self, ctx, groupName):
+        """
+        Return the machines of an inventory state, as counted by
+        getRestrictedComputersListStatesLen.
+
+        The state is computed on COALESCE(glpi_computers.last_inventory_update,
+        glpi_computers.date_mod).
+        """
         # Read config from ini file
         orange = self.config.orange
         red = self.config.red
@@ -6282,38 +6281,35 @@ class Glpi110(DyngroupDatabaseHelper):
 
         session = create_session()
         now = datetime.datetime.now()
-        orange = now - datetime.timedelta(orange)
-        red = now - datetime.timedelta(red)
+        orange_date = now - datetime.timedelta(days=orange)
+        red_date = now - datetime.timedelta(days=red)
 
-        date_mod = self.machine.c.date_mod
         query = self.__getRestrictedComputersListQuery(ctx, filt, session)
 
         # Limit list according to max_elements_for_static_list param in dyngroup.ini
         limit = DGConfig().maxElementsForStaticList
 
-        if self.fusionagents is not None:
-            if groupName == "green":
-                subquery = session.query(self.fusionagents.c.items_id).filter(
-                    self.fusionagents.c.last_contact > orange
-                ).subquery()
-            elif groupName == "orange":
-                subquery = session.query(self.fusionagents.c.items_id).filter(
-                    and_(self.fusionagents.c.last_contact < orange,
-                         self.fusionagents.c.last_contact > red)
-                ).subquery()
-            elif groupName == "red":
-                subquery = session.query(self.fusionagents.c.items_id).filter(
-                    self.fusionagents.c.last_contact < red
-                ).subquery()
-            result = query.filter(self.machine.c.id.in_(subquery)).limit(limit)
+        if groupName == "green":
+            subquery = text(
+                "SELECT id FROM glpi_computers "
+                "WHERE COALESCE(last_inventory_update, date_mod) >= :orange_date"
+            ).bindparams(orange_date=orange_date)
+        elif groupName == "orange":
+            subquery = text(
+                "SELECT id FROM glpi_computers "
+                "WHERE COALESCE(last_inventory_update, date_mod) >= :red_date "
+                "AND COALESCE(last_inventory_update, date_mod) < :orange_date"
+            ).bindparams(red_date=red_date, orange_date=orange_date)
+        elif groupName == "red":
+            subquery = text(
+                "SELECT id FROM glpi_computers "
+                "WHERE COALESCE(last_inventory_update, date_mod) < :red_date"
+            ).bindparams(red_date=red_date)
         else:
-            if groupName == "green":
-                result = query.filter(date_mod > orange).limit(limit)
-            elif groupName == "orange":
-                result = query.filter(
-                    and_(date_mod < orange, date_mod > red)).limit(limit)
-            elif groupName == "red":
-                result = query.filter(date_mod < red).limit(limit)
+            session.close()
+            return {}
+
+        result = query.filter(self.machine.c.id.in_(subquery)).limit(limit)
 
         ret = {}
         for machine in result.all():
@@ -9452,7 +9448,11 @@ where c.is_deleted=0 and c.is_template=0 %s %s
     @DatabaseHelper._sessionm
     def get_inventories_for_dashboard(self, session, entities:list=[]) -> dict:
         """
-        Get the count of inventories older than 35 days, bewtween 35 and 10 days and newer than 10 days.
+        Get the count of inventories older than `red` days, between `red` and `orange` days and newer than `orange` days.
+
+        The reference date is glpi_computers.last_inventory_update, and falls back to
+        glpi_computers.date_mod when no inventory has been received yet. Deleted
+        machines and templates are excluded.
 
         Args:
             self (Glpi100): Glpi100 Model Instance
@@ -9473,23 +9473,51 @@ where c.is_deleted=0 and c.is_template=0 %s %s
         orange = self.config.orange
         red = self.config.red
 
-        query = (
-        session.query(
-            func.coalesce(func.sum(case((Machine.date_mod < func.curdate() - func.interval(red, "DAY"), 1), else_=0)), 0).label("red"),
-            func.coalesce(func.sum(case(((Machine.date_mod >= func.curdate() - func.interval(red, "DAY")) &(Machine.date_mod < func.curdate() - func.interval(orange, "DAY")), 1), else_=0)), 0).label("orange"),
-            func.coalesce(func.sum(case((Machine.date_mod >= func.curdate() - func.interval(orange, "DAY"), 1),else_=0)), 0).label("green"))
-        .filter(Machine.entities_id.in_(entities))
-        )
-        result = query.one()
-
         ret = {
-            "days": {"red":red,"orange":orange},
-            "count": {
-                "red" : result.red,
-                "orange" : result.orange,
-                "green" : result.green
-            }
+            "days": {"red": red, "orange": orange},
+            "count": {"red": 0, "orange": 0, "green": 0},
         }
+
+        if not entities:
+            return ret
+
+        now = datetime.datetime.now()
+        orange_date = now - datetime.timedelta(days=orange)
+        red_date = now - datetime.timedelta(days=red)
+
+        params = {"orange_date": orange_date, "red_date": red_date}
+        placeholders = []
+        for index, entity in enumerate(entities):
+            key = "entity_%d" % index
+            placeholders.append(":%s" % key)
+            params[key] = int(entity)
+
+        sqlrequest = text(
+            """
+            SELECT
+                COALESCE(SUM(CASE WHEN COALESCE(last_inventory_update, date_mod) < :red_date
+                                  THEN 1 ELSE 0 END), 0) AS red,
+                COALESCE(SUM(CASE WHEN COALESCE(last_inventory_update, date_mod) >= :red_date
+                                   AND COALESCE(last_inventory_update, date_mod) < :orange_date
+                                  THEN 1 ELSE 0 END), 0) AS orange,
+                COALESCE(SUM(CASE WHEN COALESCE(last_inventory_update, date_mod) >= :orange_date
+                                  THEN 1 ELSE 0 END), 0) AS green
+            FROM glpi_computers
+            WHERE entities_id IN (%s)
+                AND is_deleted = 0
+                AND is_template = 0
+            """
+            % ", ".join(placeholders)
+        )
+
+        result = session.execute(sqlrequest, params).fetchone()
+
+        if result is not None:
+            ret["count"] = {
+                "red": int(result.red),
+                "orange": int(result.orange),
+                "green": int(result.green),
+            }
         return ret
 
     @DatabaseHelper._sessionm
