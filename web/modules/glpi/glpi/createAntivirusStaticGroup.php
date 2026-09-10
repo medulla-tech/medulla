@@ -27,20 +27,24 @@ require_once("modules/dyngroup/includes/dyngroup.php"); # for Group Class
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
 
-if ($_GET['group'] == 'green') {
-    $groupname = sprintf (_T("Antivirus status is OK at %s", "glpi"), date("Y-m-d H:i:s"));
-}
-elseif ($_GET['group'] == 'orange') {
-    $groupname = sprintf (_T("Antivirus is not running or not up-to-date at %s", "glpi"), date("Y-m-d H:i:s"));
-}
-else if($_GET['group'] == 'missing'){
-    $groupname = sprintf (_T("No antivirus found at %s", "glpi"), date("Y-m-d H:i:s"));
-}
-else {
-    $groupname = sprintf (_T("No antivirus found at %s", "glpi"), date("Y-m-d H:i:s"));
+$groupnames = array(
+    'green'   => _T("Antivirus status is OK at %s", "glpi"),
+    'orange'  => _T("Antivirus is not up to date at %s", "glpi"),
+    'red'     => _T("Antivirus is disabled at %s", "glpi"),
+    'missing' => _T("No antivirus found at %s", "glpi"),
+    'stale'   => _T("Antivirus information is unreliable at %s", "glpi"),
+);
+
+$state = isset($_GET['group']) ? $_GET['group'] : '';
+if (!array_key_exists($state, $groupnames)) {
+    new NotifyWidgetFailure(_T("Unknown antivirus status", "glpi"));
+    header("Location: " . urlStrRedirect("dashboard/main/default"));
+    exit;
 }
 
-$groupmembers = getMachineListByAntivirusState($_GET['group']);
+$groupname = sprintf($groupnames[$state], date("Y-m-d H:i:s"));
+
+$groupmembers = getMachineListByAntivirusState($state);
 
 $group = new Group();
 $group->create($groupname, False);
