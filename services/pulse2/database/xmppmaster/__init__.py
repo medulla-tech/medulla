@@ -18049,30 +18049,31 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
         sql = """
             SELECT
                 SQL_CALC_FOUND_ROWS
-                distributor_id,
+                up.distributor_id,
                 COUNT(*) AS total_machines,
-                SUM(CASE WHEN total_count <> 0 THEN 1 ELSE 0 END) AS machines_not_up_to_date,
-                SUM(CASE WHEN total_count = 0 THEN 1 ELSE 0 END) AS machines_up_to_date,
-                SUM(CASE WHEN security_count <> 0 THEN 1 ELSE 0 END) AS machines_security_not_ok,
-                SUM(CASE WHEN kernel_count <> 0 THEN 1 ELSE 0 END) AS machines_kernel_not_ok,
-                SUM(CASE WHEN other_count <> 0 THEN 1 ELSE 0 END) AS machines_other_not_ok,
-                ROUND(SUM(CASE WHEN total_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_total_percent,
-                ROUND(SUM(CASE WHEN security_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_security_percent,
-                ROUND(SUM(CASE WHEN kernel_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_kernel_percent,
-                ROUND(SUM(CASE WHEN other_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_other_percent
-            FROM up_machine_linux
-            WHERE entity_id = :entity_id
+                SUM(CASE WHEN up.total_count <> 0 THEN 1 ELSE 0 END) AS machines_not_up_to_date,
+                SUM(CASE WHEN up.total_count = 0 THEN 1 ELSE 0 END) AS machines_up_to_date,
+                SUM(CASE WHEN up.security_count <> 0 THEN 1 ELSE 0 END) AS machines_security_not_ok,
+                SUM(CASE WHEN up.kernel_count <> 0 THEN 1 ELSE 0 END) AS machines_kernel_not_ok,
+                SUM(CASE WHEN up.other_count <> 0 THEN 1 ELSE 0 END) AS machines_other_not_ok,
+                ROUND(SUM(CASE WHEN up.total_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_total_percent,
+                ROUND(SUM(CASE WHEN up.security_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_security_percent,
+                ROUND(SUM(CASE WHEN up.kernel_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_kernel_percent,
+                ROUND(SUM(CASE WHEN up.other_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_other_percent
+            FROM up_machine_linux AS up
+            INNER JOIN machines AS ma ON ma.uuid_serial_machine = up.harduuid
+            WHERE up.entity_id = :entity_id
         """
 
         params = {"entity_id": entity_id_int}
 
         # Filtre optionnel sur distributor_id
         if filter not in (None, ""):
-            sql += " AND distributor_id REGEXP :filter"
+            sql += " AND up.distributor_id REGEXP :filter"
             params["filter"] = filter
 
         # GROUP BY par distribution
-        sql += " GROUP BY distributor_id ORDER BY distributor_id"
+        sql += " GROUP BY up.distributor_id ORDER BY up.distributor_id"
 
         # LIMIT / OFFSET
         if start != -1 and limit != -1:
