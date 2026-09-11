@@ -623,6 +623,9 @@ class UpdatesDatabase(DatabaseHelper):
         """
         Dispatcher pour les fonctions spécialisées de récupération des machines.
         Appelle la fonction appropriée en fonction de `type` et `colonne`.
+
+        Les groupes de conformité Linux contiennent uniquement les machines
+        présentes dans l'inventaire XMPP et correspondant au compteur demandé.
         """
         try:
             entity_id = int(entity_id)
@@ -641,7 +644,82 @@ class UpdatesDatabase(DatabaseHelper):
             elif colonne == "UPDATED":
                 return self._get_windows_UPDATED(session, entity_id)
 
+        if type.lower() in ("compliancelinux", "compliancedistribution"):
+            return self._get_linux_compliance_group(
+                session,
+                entity_id,
+                colonne,
+                with_distribution=type.lower() == "compliancelinux",
+            )
+
         return {}
+
+    def _get_linux_compliance_group(self,
+                                    session,
+                                    entity_id,
+                                    group_name,
+                                    with_distribution=False):
+        """Retourne les machines d'un groupe de conformité Linux."""
+        normalized_group = group_name.lower()
+        group_conditions = {
+            "total": "1 = 1",
+            "machines_not_up_to_date": "up.total_count > 0",
+            "machines_up_to_date": "up.total_count = 0",
+            "machines_security_not_ok": "up.security_count > 0",
+            "machines_kernel_not_ok": "up.kernel_count > 0",
+            "machines_other_not_ok": "up.other_count > 0",
+        }
+
+        distribution = None
+        if normalized_group.startswith("total_") and normalized_group.endswith("_entity"):
+            criterion = "total"
+            distribution = normalized_group[len("total_"):-len("_entity")]
+        else:
+            criterion = next(
+                (
+                    name
+                    for name in group_conditions
+                    if normalized_group == f"{name}_linux"
+                    or normalized_group.startswith(f"{name}_")
+                ),
+                None,
+            )
+            if criterion and normalized_group != f"{criterion}_linux":
+                distribution = normalized_group[len(criterion) + 1:]
+
+        if criterion not in group_conditions:
+            return {}
+
+        sql = f"""
+        SELECT ma.hostname, ma.uuid_inventorymachine
+        FROM xmppmaster.up_machine_linux AS up
+        INNER JOIN xmppmaster.machines AS ma
+            ON ma.uuid_serial_machine = up.harduuid
+        WHERE up.entity_id = :entity_id
+          AND {group_conditions[criterion]}
+        """
+        params = {"entity_id": entity_id}
+
+        if with_distribution:
+            if not distribution:
+                return {}
+            sql += " AND LOWER(up.distributor_id) = :distribution"
+            params["distribution"] = distribution
+
+        ret = {}
+        rows = session.execute(sql, params)
+        for row in rows:
+            hostname = row.hostname
+            machine_uuid = row.uuid_inventorymachine
+            if hostname and machine_uuid:
+                machine_uuid = str(machine_uuid)
+                if not machine_uuid.upper().startswith("UUID"):
+                    machine_uuid = f"UUID{machine_uuid}"
+                ret[f"{machine_uuid}##{hostname}"] = {
+                    "hostname": hostname,
+                    "uuid": machine_uuid,
+                }
+        return ret
 
     # Fonction spécialisée pour hardware_requirements
     def _get_windows_hardware_requirements(self, session, entity_id):
