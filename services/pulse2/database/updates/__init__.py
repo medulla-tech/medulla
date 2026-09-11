@@ -649,7 +649,6 @@ class UpdatesDatabase(DatabaseHelper):
                 session,
                 entity_id,
                 colonne,
-                with_distribution=type.lower() == "compliancelinux",
             )
 
         return {}
@@ -657,8 +656,7 @@ class UpdatesDatabase(DatabaseHelper):
     def _get_linux_compliance_group(self,
                                     session,
                                     entity_id,
-                                    group_name,
-                                    with_distribution=False):
+                                    group_name):
         """Retourne les machines d'un groupe de conformité Linux."""
         normalized_group = group_name.lower()
         group_conditions = {
@@ -687,6 +685,9 @@ class UpdatesDatabase(DatabaseHelper):
             if criterion and normalized_group != f"{criterion}_linux":
                 distribution = normalized_group[len(criterion) + 1:]
 
+        if distribution == "linux":
+            distribution = None
+
         if criterion not in group_conditions:
             return {}
 
@@ -700,9 +701,7 @@ class UpdatesDatabase(DatabaseHelper):
         """
         params = {"entity_id": entity_id}
 
-        if with_distribution:
-            if not distribution:
-                return {}
+        if distribution:
             sql += " AND LOWER(up.distributor_id) = :distribution"
             params["distribution"] = distribution
 
