@@ -17719,14 +17719,17 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
             valid_actions = {
                 "require_kernel": {
                     "fields": ["kernel_require"],
+                    "reset_fields": ["kernel_current"],
                     "date_fields": ["kernel_start", "kernel_stop", "kernel_interval"]
                 },
                 "require_security": {
                     "fields": ["security_require"],
+                    "reset_fields": ["security_curent"],
                     "date_fields": ["security_start", "security_stop", "security_interval"]
                 },
                 "require_other": {
                     "fields": ["other_require"],
+                    "reset_fields": ["other_current"],
                     "date_fields": ["other_start", "other_stop", "other_interval"]
                 },
                 "current_kernel": {
@@ -17743,6 +17746,7 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                 },
                 "require_all": {
                     "fields": ["kernel_require", "security_require", "other_require"],
+                    "reset_fields": ["kernel_current", "security_curent", "other_current"],
                     "date_fields": [
                         "kernel_start", "kernel_stop", "kernel_interval",
                         "security_start", "security_stop", "security_interval",
@@ -17781,6 +17785,10 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
             date_fields = valid_actions[action]["date_fields"]
 
             set_clauses = [f"{field} = :value" for field in fields]
+            set_clauses.extend(
+                f"{field} = 0"
+                for field in valid_actions[action].get("reset_fields", [])
+            )
 
             # Ajout des dates si elles sont fournies
             if date_start is not None:
@@ -17817,6 +17825,13 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                     return ("error: La liste des distributor_ids ne peut pas être vide.", 0)
                 conditions.append("distributor_id IN :distributor_ids")
                 params["distributor_ids"] = tuple(distributor_ids_list)
+
+            # A deployment request must target a machine still present in XMPP.
+            conditions.append(
+                "EXISTS (SELECT 1 FROM machines ma "
+                "WHERE ma.uuid_serial_machine = up_machine_linux.harduuid "
+                "AND ma.agenttype = 'machine')"
+            )
 
             if not conditions:
                 logger.warning("Aucun filtre appliqué : la requête mettra à jour TOUTES les lignes de la table.")
