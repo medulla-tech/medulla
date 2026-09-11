@@ -772,6 +772,28 @@ def deploy_update_major(package_id,
     return result
 
 
+def is_deployment_running_on_machine(uuid_inventorymachine):
+    """
+    Indique si un déploiement (kernel/security/other ou tout autre commande)
+    est déjà actif sur la machine, indépendamment de son type.
+
+    Utilisée avant de lancer un upgrade majeur Linux/Windows pour éviter un
+    conflit d'exécution sur la machine (ex: verrou dpkg/apt déjà détenu par
+    un déploiement en cours).
+
+    Args:
+        uuid_inventorymachine (str): UUID GLPI de la machine (préfixe "UUID").
+
+    Returns:
+        bool: True si un déploiement non terminé existe pour cette machine.
+    """
+    machine = XmppMasterDatabase().getMachinefromuuid(uuid_inventorymachine)
+    jid = machine.get("jid") if machine else None
+    if not jid:
+        return False
+    return XmppMasterDatabase().deployment_is_running_on_machine(jid)
+
+
 def get_os_xmpp_update_major_details(entity_id,
                                      filter="",
                                      start=0,

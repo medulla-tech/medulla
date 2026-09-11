@@ -378,6 +378,13 @@ if(isset($_POST['bconfirm'],
                 continue;
             }
 
+            // Empeche un conflit avec un deploiement kernel/security/other deja actif sur la machine.
+            if (xmlrpc_is_deployment_running_on_machine($candidate_uuid)) {
+                $fail_count++;
+                $messages[] = sprintf("Déploiement déjà en cours sur %s, upgrade majeur ignoré", htmlentities($candidate_host));
+                continue;
+            }
+
             $title_deployement = sprintf(
                 "%s--@upd@--%s_%s_%s",
                 htmlentities($candidate_host),
@@ -429,6 +436,16 @@ if(isset($_POST['bconfirm'],
     }
 
     // Mode machine: déploiement unitaire.
+    // Empeche un conflit avec un deploiement kernel/security/other deja actif sur la machine.
+    if (xmlrpc_is_deployment_running_on_machine($_POST['uuid_inventorymachine'])) {
+        header("location:". urlStrRedirect("updates/updates/index"));
+        new NotifyWidgetFailure(sprintf(
+            "Déploiement déjà en cours sur %s, upgrade majeur ignoré",
+            htmlentities($_POST['cn'])
+        ));
+        exit;
+    }
+
     $title_deployement = sprintf("%s--@upd@--%s_%s_%s" ,
                                  htmlentities($_POST['cn']),
                                  htmlentities($_POST['distributor_id']),
