@@ -158,6 +158,7 @@ class BulkSelectBar
     private $cssClass;
     private $i18n;
     private $items = [];
+    private $tableSelector = '.listinfos';
 
     public function __construct($deleteUrl, $itemType = '0', $cssClass = 'bulk-select', $i18n = [])
     {
@@ -176,6 +177,17 @@ class BulkSelectBar
             'close'          => _T("Close", "dyngroup"),
             'andMore'        => _T("and %d more", "dyngroup"),
         ], $i18n);
+    }
+
+    /**
+     * Bind the bar to one table rather than to the first of the document.
+     * A page showing several lists needs it: the default selector equips
+     * whichever table comes first, which is not necessarily the one the
+     * rows were registered for.
+     */
+    public function setTableSelector($selector)
+    {
+        $this->tableSelector = (string) $selector;
     }
 
     /**
@@ -220,6 +232,7 @@ class BulkSelectBar
         $jsDeleteUrl   = addslashes($this->deleteUrl);
         $jsItemType    = addslashes(clean_xss($this->itemType));
         $jsCssClass    = addslashes($this->cssClass);
+        $jsTableSel    = addslashes($this->tableSelector);
         $jsBarId       = addslashes($barId);
         $jsBtnId       = addslashes($btnId);
         $jsCountId     = addslashes($countId);
@@ -233,19 +246,29 @@ class BulkSelectBar
         $jsNo            = addslashes($this->i18n['no']);
         $jsClose         = addslashes($this->i18n['close']);
         $jsAndMore       = addslashes($this->i18n['andMore']);
+        // The bar posts to a page that changes data: it must carry the CSRF
+        // token, otherwise the target page cannot call verifyCSRFToken().
+        $jsAuthToken     = addslashes($_SESSION['auth_token'] ?? '');
 
-        $jsItemsJson = addslashes(json_encode($this->items));
+        // Names come from user or agent supplied data and are inlined in a
+        // <script> block: the hex flags keep '<' and quotes out of the source,
+        // JSON.parse hands the original characters back to the page.
+        $jsItemsJson = addslashes(json_encode(
+            $this->items,
+            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+        ));
 
         echo <<<SCRIPT
 <script type="text/javascript">
 (function() {
-    var table = document.querySelector('.listinfos');
+    var table = document.querySelector('{$jsTableSel}');
     if (!table) return;
 
     var deleteUrl  = '{$jsDeleteUrl}';
     var itemType   = '{$jsItemType}';
     var cssClass   = '{$jsCssClass}';
     var items      = JSON.parse('{$jsItemsJson}');
+    var authToken  = '{$jsAuthToken}';
 
     var bulkBar   = document.getElementById('{$jsBarId}');
     var bulkBtn   = document.getElementById('{$jsBtnId}');
@@ -350,6 +373,7 @@ class BulkSelectBar
         var params = '';
         for (var j = 0; j < ids.length; j++) { if (j) params += '&'; params += 'gid[]=' + encodeURIComponent(ids[j]); }
         params += '&type=' + encodeURIComponent(itemType);
+        params += '&auth_token=' + encodeURIComponent(authToken);
         var xhr = new XMLHttpRequest();
         xhr.open('POST', deleteUrl, true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
