@@ -276,8 +276,17 @@ def _save_user_mapping(
     )
 
 
-def _local_login(client_id: str, source_user_id: str) -> str:
-    """Return a collision-free technical login for one client source user."""
+def _local_login(client_id: str, source_user_id: str, raw_login: str = "") -> str:
+    """Return the local login for one client source user.
+
+    Collision-free technical login by default (``medulla__<hash>``), needed
+    when the source is an external ITSM where two clients may share the same
+    login without being the same person. Adapters whose source already
+    guarantees a globally unique login (e.g. the single local LDAP directory)
+    can opt out via ``config["preserve_login"]`` and keep the raw login as-is.
+    """
+    if raw_login:
+        return raw_login
     digest = sha256(f"{client_id}:{source_user_id}".encode()).hexdigest()
     return f"{LOCAL_LOGIN_PREFIX}{digest}"
 
@@ -626,7 +635,13 @@ def reconcile_client(
                 default_profile_id = profile_ids_by_name.get(
                     default_profile_name, fallback_profile_id
                 )
-                local_login = _local_login(client_id, source_user_id)
+                local_login = _local_login(
+                    client_id,
+                    source_user_id,
+                    raw_login=str(user.get("login") or "")
+                    if config.get("preserve_login")
+                    else "",
+                )
                 existing_user = user_mapping.get(source_user_id) or {}
                 user_id, is_update = _upsert_user(
                     connection,

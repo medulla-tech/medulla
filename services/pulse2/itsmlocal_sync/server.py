@@ -17,6 +17,7 @@ from urllib.parse import quote_plus
 from sqlalchemy import create_engine, text
 
 import pulse2.itsmlocal_sync.glpi_adapter  # noqa: F401 - registers GLPI adapter
+import pulse2.itsmlocal_sync.ldap_local_adapter  # noqa: F401 - registers LDAP local adapter
 from pulse2.itsmlocal_sync.adapters import adapter_names, get_adapter
 from pulse2.itsmlocal_sync.reconcile import reconcile_client
 
