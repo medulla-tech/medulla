@@ -200,7 +200,7 @@ find_packages_to_generate() {
     #
     mysql -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} xmppmaster -se "CALL up_init_table_major_win_complet();"
     local result=$(mysql -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} xmppmaster \
-        -se "SELECT DISTINCT iso_filename,package_uuid FROM up_major_win;")
+        -se "SELECT DISTINCT iso_filename,package_uuid FROM up_major_win WHERE COALESCE(TRIM(iso_filename), '') NOT IN ('', 'NULL') AND COALESCE(TRIM(package_uuid), '') NOT IN ('', 'NULL');")
     # Quote result to preserve multi-line output and avoid word splitting
     echo "${result}"
     return 0
@@ -312,33 +312,39 @@ generate_package() {
                 "actionlabel": "upd_70a70cc9"
             }, 
             {
+                "step": 1,
+                "action": "action_comment",
+                "actionlabel": "release_user_context",
+                "comment": "@@@IF|@@@USER_CONNECTED@@@|Windows release update: connected user=@@@CONNECTED_USER@@@; target release=@@@TARGET_RELEASE@@@|Windows release update: no connected user; target release=@@@TARGET_RELEASE@@@@@@"
+            },
+            {
                 "command": "$(echo $COMMAND | base64 -w0)",
                 "30@lastlines": "30@lastlines",
                 "actionlabel": "02d57e96",
                 "codereturn": "",
-                "step": 1,
-                "error": 6,
+                "step": 2,
+                "error": 7,
                 "action": "actionprocessscript",
                 "timeout": "3600",
                 "gotoreturncode@3010": "REBOOTREQUIRED"
             },
             {
                 "action": "actionwaitandgoto",
-                "step": 2,
+                "step": 3,
                 "codereturn": "",
                 "actionlabel": "wait_cc66c870",
                 "waiting": "1",
                 "goto": "END_SUCCESS"
             },
             {
-                "step": 3,
+                "step": 4,
                 "action": "action_comment",
                 "actionlabel": "REBOOTREQUIRED",
                 "comment": "The update has been installed but a reboot is required to apply it."
             },
             {
                 "action": "action_notification",
-                "step": 4,
+                "step": 5,
                 "codereturn": "",
                 "actionlabel": "notif_ee9943f2",
                 "titlemessage": "V2luZG93cyBVcGRhdGUgLSBSZWJvb3Q=",
@@ -350,14 +356,14 @@ generate_package() {
             },
             {
                 "action": "actionsuccescompletedend",
-                "step": 5,
+                "step": 6,
                 "actionlabel": "END_SUCCESS",
                 "clear": "False",
                 "inventory": "noforced"
             },
             {
                 "action": "actionerrorcompletedend",
-                "step": 6,
+                "step": 7,
                 "actionlabel": "END_ERROR"
             }
         ]
@@ -366,12 +372,13 @@ generate_package() {
         "win": {
             "label": {
                 "upd_70a70cc9": 0,
-                "02d57e96": 1,
-                "wait_cc66c870": 2,
-                "REBOOTREQUIRED": 3,
-                "notif_ee9943f2": 4,    
-                "END_SUCCESS": 5,
-                "END_ERROR": 6
+                "release_user_context": 1,
+                "02d57e96": 2,
+                "wait_cc66c870": 3,
+                "REBOOTREQUIRED": 4,
+                "notif_ee9943f2": 5,
+                "END_SUCCESS": 6,
+                "END_ERROR": 7
             }
         },
         "os": [
@@ -547,6 +554,11 @@ fi
 echo "$PACKAGES_LIST" | while IFS=$'\t' read -r ISO_FILENAME PACKAGE_UUID; do
     # Skip the header line if it exists
     if [[ "$ISO_FILENAME" == "iso_filename" ]]; then
+        continue
+    fi
+
+    if [[ -z "${ISO_FILENAME}" || "${ISO_FILENAME}" == "NULL" || -z "${PACKAGE_UUID}" || "${PACKAGE_UUID}" == "NULL" ]]; then
+        colored_echo yellow "$(date +\[%F\ %X\]) Skipping invalid major update candidate: iso=${ISO_FILENAME:-empty} package_uuid=${PACKAGE_UUID:-empty}"
         continue
     fi
 
