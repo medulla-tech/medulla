@@ -533,8 +533,12 @@ if ! getent passwd | grep -q "^pulsetransfert:"; then
     echo -n "Adding user pulsetransfert..."
     adduser --system \
         -d /var/lib/pulse2/file-transfer \
-        -s /bin/rbash \
+        -s /usr/sbin/nologin \
         pulsetransfert
+    echo "..done"
+else
+    echo "User pulsetransfert already exists. Updating shell to nologin..."
+    usermod -s /usr/sbin/nologin pulsetransfert
     echo "..done"
 fi
 
