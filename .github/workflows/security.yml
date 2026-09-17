@@ -5,18 +5,52 @@ on:
   push:
     branches:
       - integration
+      - dev
       - master
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   security:
     name: SBOM and vulnerability scan
     runs-on: ubuntu-latest
-
+    if: github.actor != 'github-actions[bot]'
+ 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Prepare Python dependencies for SBOM
+        run: |
+          python3 - <<'PY'
+          import re
+          import json
+          from pathlib import Path
+
+          control = Path("debian/control").read_text()
+
+          packages = sorted(set(
+              re.findall(r'\bpython3-[a-zA-Z0-9.+-]+', control)
+          ))
+
+          # Exclude internal Medulla packages and generic/system packages
+          packages = [
+              p for p in packages
+              if not re.match(r'^python3-(mmc-|pulse2-)', p)
+              and p not in {
+                  "python3-all",
+                  "python3-gi",
+              }
+          ]
+
+          Path("python-dependencies.json").write_text(
+              json.dumps(packages, indent=2)
+          )
+
+          print("Python dependencies found:")
+          for package in packages:
+              print(f"- {package}")
+          PY
 
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
@@ -24,6 +58,38 @@ jobs:
           path: .
           format: cyclonedx-json
           output-file: sbom.cdx.json
+          upload-artifact: false
+
+      - name: Add Python dependencies to SBOM
+        run: |
+          python3 - <<'PY'
+          import json
+
+          with open("sbom.cdx.json") as f:
+              sbom = json.load(f)
+
+          with open("python-dependencies.json") as f:
+              packages = json.load(f)
+
+          components = sbom.setdefault("components", [])
+
+          existing = {
+              component.get("name")
+              for component in components
+          }
+
+          for package in packages:
+              if package not in existing:
+                  components.append({
+                      "type": "library",
+                      "name": package
+                  })
+
+          with open("sbom.cdx.json", "w") as f:
+              json.dump(sbom, f, indent=2)
+
+          print(f"Added {len(packages)} Python dependencies to SBOM.")
+          PY
 
       - name: Scan SBOM
         uses: anchore/scan-action@v7
@@ -32,6 +98,11 @@ jobs:
           output-format: json
           output-file: grype-report.json
           fail-build: false
+
+      - name: Format Grype report
+        run: |
+          jq '.' grype-report.json > grype-report-formatted.json
+          mv grype-report-formatted.json grype-report.json
 
       - name: Check vulnerabilities
         id: vulnerability_check
@@ -105,10 +176,24 @@ jobs:
             | @tsv
           ' grype-report.json | sort -u
 
-      - name: Upload security reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: security-reports
-          path: |
-            sbom.cdx.json
-            grype-report.json
+      - name: Commit security reports
+        if: github.event_name == 'push'
+        run: |
+          mkdir -p security
+
+          cp sbom.cdx.json security/sbom.cdx.json
+          cp grype-report.json security/grype-report.json
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add security/sbom.cdx.json security/grype-report.json
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git commit -m "ci: update security reports"
+          git push
+
