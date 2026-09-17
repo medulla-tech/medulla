@@ -179,15 +179,11 @@ jobs:
       - name: Commit security reports
         if: github.event_name == 'push'
         run: |
-          mkdir -p security
-
-          cp sbom.cdx.json security/sbom.cdx.json
-          cp grype-report.json security/grype-report.json
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add security/sbom.cdx.json security/grype-report.json
+          git add sbom.cdx.json grype-report.json
 
           if git diff --cached --quiet; then
             echo "No changes to commit."
