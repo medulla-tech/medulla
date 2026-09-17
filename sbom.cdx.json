@@ -1,0 +1,456 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:16666fc6-cad0-4c3a-b12e-d1566ffd71a0",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-09-17T15:26:59Z",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "author": "anchore",
+          "name": "syft",
+          "version": "1.42.3"
+        }
+      ]
+    },
+    "component": {
+      "bom-ref": "af63bd4c8601b7f1",
+      "type": "file",
+      "name": "."
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "pkg:maven/VncViewer/VncViewer?package-id=5ebf592824933a91",
+      "type": "library",
+      "name": "VncViewer",
+      "version": "UNKNOWN",
+      "cpe": "cpe:2.3:a:VncViewer:VncViewer:*:*:*:*:*:*:*:*",
+      "purl": "pkg:maven/VncViewer/VncViewer",
+      "externalReferences": [
+        {
+          "url": "",
+          "hashes": [
+            {
+              "alg": "SHA-1",
+              "content": "f810cc2900fa49eb7e91c65da0a5adffb7c65fcc"
+            }
+          ],
+          "type": "build-meta"
+        }
+      ],
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "java-archive-cataloger"
+        },
+        {
+          "name": "syft:package:language",
+          "value": "java"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "java-archive"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "java-archive"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/web/modules/msc/graph/java/VncViewer.jar"
+        },
+        {
+          "name": "syft:metadata:virtualPath",
+          "value": "/web/modules/msc/graph/java/VncViewer.jar"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:github/actions/checkout@v1?package-id=9fe1f71ba96609fd",
+      "type": "library",
+      "name": "actions/checkout",
+      "version": "v1",
+      "cpe": "cpe:2.3:a:actions\\/checkout:actions\\/checkout:v1:*:*:*:*:*:*:*",
+      "purl": "pkg:github/actions/checkout@v1",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "github-actions-usage-cataloger"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "github-action"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "github-actions-use-statement"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/.github/workflows/phplint.yml"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:github/actions/checkout@v4?package-id=914baa20c1f7042a",
+      "type": "library",
+      "name": "actions/checkout",
+      "version": "v4",
+      "cpe": "cpe:2.3:a:actions\\/checkout:actions\\/checkout:v4:*:*:*:*:*:*:*",
+      "purl": "pkg:github/actions/checkout@v4",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "github-actions-usage-cataloger"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "github-action"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "github-actions-use-statement"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/.github/workflows/security.yml"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:github/anchore/sbom-action@v0?package-id=e6e8e0d85f4ac974",
+      "type": "library",
+      "name": "anchore/sbom-action",
+      "version": "v0",
+      "cpe": "cpe:2.3:a:anchore\\/sbom-action:anchore\\/sbom-action:v0:*:*:*:*:*:*:*",
+      "purl": "pkg:github/anchore/sbom-action@v0",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "github-actions-usage-cataloger"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "github-action"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "github-actions-use-statement"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:anchore\\/sbom-action:anchore\\/sbom_action:v0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:anchore\\/sbom_action:anchore\\/sbom-action:v0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:anchore\\/sbom_action:anchore\\/sbom_action:v0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:anchore\\/sbom:anchore\\/sbom-action:v0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:anchore\\/sbom:anchore\\/sbom_action:v0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/.github/workflows/security.yml"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:github/anchore/scan-action@v7?package-id=6fc960dbdb0922c3",
+      "type": "library",
+      "name": "anchore/scan-action",
+      "version": "v7",
+      "cpe": "cpe:2.3:a:anchore\\/scan-action:anchore\\/scan-action:v7:*:*:*:*:*:*:*",
+      "purl": "pkg:github/anchore/scan-action@v7",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "github-actions-usage-cataloger"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "github-action"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "github-actions-use-statement"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:anchore\\/scan-action:anchore\\/scan_action:v7:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:anchore\\/scan_action:anchore\\/scan-action:v7:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:anchore\\/scan_action:anchore\\/scan_action:v7:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:anchore\\/scan:anchore\\/scan-action:v7:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:anchore\\/scan:anchore\\/scan_action:v7:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/.github/workflows/security.yml"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:github/michaelw90/php-lint@master?package-id=9a5b1dfd9a77f589",
+      "type": "library",
+      "name": "michaelw90/PHP-Lint",
+      "version": "master",
+      "cpe": "cpe:2.3:a:michaelw90\\/PHP-Lint:michaelw90\\/PHP-Lint:master:*:*:*:*:*:*:*",
+      "purl": "pkg:github/michaelw90/PHP-Lint@master",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "github-actions-usage-cataloger"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "github-action"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "github-actions-use-statement"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:michaelw90\\/PHP-Lint:michaelw90\\/PHP_Lint:master:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:michaelw90\\/PHP_Lint:michaelw90\\/PHP-Lint:master:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:michaelw90\\/PHP_Lint:michaelw90\\/PHP_Lint:master:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:michaelw90\\/PHP:michaelw90\\/PHP-Lint:master:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:michaelw90\\/PHP:michaelw90\\/PHP_Lint:master:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/.github/workflows/phplint.yml"
+        }
+      ]
+    },
+    {
+      "bom-ref": "0d81b2ad296819bf",
+      "type": "application",
+      "name": "services",
+      "version": "UNKNOWN",
+      "cpe": "cpe:2.3:a:services:services:*:*:*:*:*:*:*:*",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "pe-binary-package-cataloger"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "binary"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "pe-binary"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/services/clients/agent/win32/plugins/services.dll"
+        }
+      ]
+    },
+    {
+      "bom-ref": "4bbcc46c65fe49d6",
+      "type": "file",
+      "name": "/home/runner/work/medulla/medulla/.github/workflows/phplint.yml",
+      "hashes": [
+        {
+          "alg": "SHA-1",
+          "content": "e9f0a98600937b31e8bf9665079aa9d1a3cd9f31"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "d4acb844507704514a601cbce524c3a0d4326599688f268e1696bfdb6fa8c596"
+        }
+      ]
+    },
+    {
+      "bom-ref": "a19c890be9531965",
+      "type": "file",
+      "name": "/home/runner/work/medulla/medulla/.github/workflows/security.yml",
+      "hashes": [
+        {
+          "alg": "SHA-1",
+          "content": "9727dc02fdcaf3362d8cf8f0d3fe9e7d55e9b172"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "88cf9576a27587b0679a643b597c186f24f95fddde4bf167b1dbb25444858825"
+        }
+      ]
+    },
+    {
+      "bom-ref": "c562a5dd6f261ec6",
+      "type": "file",
+      "name": "/home/runner/work/medulla/medulla/services/clients/agent/win32/plugins/services.dll",
+      "hashes": [
+        {
+          "alg": "SHA-1",
+          "content": "bd9f08641cbe86d18c985cea5325dc2ad8525aa6"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "065564c3d7e19e7dea083fb9a426dfdfeabba6ca3a7587bee938f75db5753114"
+        }
+      ]
+    },
+    {
+      "bom-ref": "154b36e3ee45d3dc",
+      "type": "file",
+      "name": "/home/runner/work/medulla/medulla/web/modules/msc/graph/java/VncViewer.jar",
+      "hashes": [
+        {
+          "alg": "SHA-1",
+          "content": "f810cc2900fa49eb7e91c65da0a5adffb7c65fcc"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "3c22f9803c89de646ea9fa72d31c4e719e3ea7fd161d9cdc86629fcd67ee7577"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "python3-configobj"
+    },
+    {
+      "type": "library",
+      "name": "python3-croniter"
+    },
+    {
+      "type": "library",
+      "name": "python3-distro"
+    },
+    {
+      "type": "library",
+      "name": "python3-dnspython"
+    },
+    {
+      "type": "library",
+      "name": "python3-geoip"
+    },
+    {
+      "type": "library",
+      "name": "python3-ldap"
+    },
+    {
+      "type": "library",
+      "name": "python3-magic"
+    },
+    {
+      "type": "library",
+      "name": "python3-memory-profiler"
+    },
+    {
+      "type": "library",
+      "name": "python3-mysqldb"
+    },
+    {
+      "type": "library",
+      "name": "python3-netaddr"
+    },
+    {
+      "type": "library",
+      "name": "python3-netifaces"
+    },
+    {
+      "type": "library",
+      "name": "python3-openssl"
+    },
+    {
+      "type": "library",
+      "name": "python3-psutil"
+    },
+    {
+      "type": "library",
+      "name": "python3-pygal"
+    },
+    {
+      "type": "library",
+      "name": "python3-pyinotify"
+    },
+    {
+      "type": "library",
+      "name": "python3-pyopenssl"
+    },
+    {
+      "type": "library",
+      "name": "python3-pyquery"
+    },
+    {
+      "type": "library",
+      "name": "python3-requests"
+    },
+    {
+      "type": "library",
+      "name": "python3-slixmpp"
+    },
+    {
+      "type": "library",
+      "name": "python3-socketio"
+    },
+    {
+      "type": "library",
+      "name": "python3-sqlalchemy"
+    },
+    {
+      "type": "library",
+      "name": "python3-systemd-dbus"
+    },
+    {
+      "type": "library",
+      "name": "python3-twisted"
+    },
+    {
+      "type": "library",
+      "name": "python3-unidecode"
+    },
+    {
+      "type": "library",
+      "name": "python3-weasyprint"
+    },
+    {
+      "type": "library",
+      "name": "python3-websocket"
+    },
+    {
+      "type": "library",
+      "name": "python3-xlwt"
+    }
+  ]
+}
