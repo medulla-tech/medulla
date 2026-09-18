@@ -147,6 +147,59 @@ ALTER TABLE `xmppmaster`.`up_machine_windows`
   ADD INDEX IF NOT EXISTS `idx_update_entity` (`update_id`, `entityid`);
 
 
+-- ----------------------------------------------------------------------
+-- File d'attente de regeneration complete de base agent.
+-- ----------------------------------------------------------------------
+
+ALTER TABLE `xmppmaster`.`reset_machine`
+    ADD COLUMN IF NOT EXISTS `jidrelay` varchar(255) NOT NULL AFTER `jid`;
+
+-- ----------------------------------------------------------------------
+-- Trigger de validation: une machine doit avoir un relay attribue.
+-- ----------------------------------------------------------------------
+
+DROP TRIGGER IF EXISTS `xmppmaster`.`reset_machine_BEFORE_INSERT`;
+
+DELIMITER $$
+
+CREATE DEFINER = CURRENT_USER TRIGGER `xmppmaster`.`reset_machine_BEFORE_INSERT`
+BEFORE INSERT ON `xmppmaster`.`reset_machine` FOR EACH ROW
+BEGIN
+    DECLARE v_jidrelay VARCHAR(255);
+    DECLARE v_jidmachine VARCHAR(255);
+    DECLARE v_machine_key VARCHAR(255);
+
+    -- Regle de normalisation du JID machine :
+    --  - un JID XMPP peut etre sous forme machine@domain/resource
+    --  - la ressource (/5254000d56ea) ne definit pas l'identite machine
+    --  - le suffixe .u2o, s'il existe, fait partie de la cle machine
+    --    pour eviter les collisions de hostname entre clients/environnements.
+    --  - on recherche donc la machine sur la partie avant @ puis sans la
+    --    resource, par exemple :
+    --       W11-pro1-LOCAL.u2o@pulse/5254000d56ea -> W11-pro1-LOCAL.u2o
+    --       W11-pro1-LOCAL.u2o@pulse            -> W11-pro1-LOCAL.u2o
+    --       W11-pro1-LOCAL.u2o                  -> W11-pro1-LOCAL.u2o
+    SET v_machine_key = SUBSTRING_INDEX(SUBSTRING_INDEX(NEW.jid, '/', 1), '@', 1);
+
+        SELECT m.jid, m.groupdeploy
+            INTO v_jidmachine, v_jidrelay
+            FROM xmppmaster.machines m
+         WHERE m.jid = v_machine_key
+                OR m.jid LIKE CONCAT(v_machine_key, '@%')
+         LIMIT 1;
+
+        IF v_jidrelay IS NULL OR v_jidrelay = '' THEN
+            SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'No relay assigned for this machine; regenerate request rejected';
+        END IF;
+
+    SET NEW.jidrelay = v_jidrelay;
+        SET NEW.jid = v_jidmachine;
+END$$
+
+DELIMITER ;
+
+
 UPDATE version SET Number = 108;
 
 
