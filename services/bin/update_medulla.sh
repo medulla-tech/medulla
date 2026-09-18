@@ -1046,6 +1046,32 @@ update_563_to_564() {
     fi
 }
 
+update_564_to_565() {
+    str="Applying Medulla config update from 5.6.4 to 5.6.5..."
+    echo "$str"
+    write_to_log "$str"
+    update_medulla
+
+    # Harden reversessh connection
+    usermod -s /usr/sbin/nologin reversessh
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error setting nologin shell for reversessh user. Aborting."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+
+    echo "5.6.5" > /var/lib/mmc/version
+    str="[v] Medulla config update from 5.6.4 to 5.6.5 applied successfully."
+    echo "$str"
+    write_to_log "$str"
+    if [[ -f /tmp/update_medulla.sh ]]; then
+        exec /tmp/update_medulla.sh "$@"
+    else
+        exec /usr/sbin/update_medulla.sh "$@"
+    fi
+}
+
 # --- End of specific update functions for each version ---
 
 
@@ -1195,6 +1221,11 @@ case "$CURRENT_VERSION" in
     "5.6.3")
         if [[ "$AVAILABLE_VERSION" > "5.6.3" ]]; then
             update_563_to_564
+        fi
+        ;;
+    "5.6.4")
+        if [[ "$AVAILABLE_VERSION" > "5.6.4" ]]; then
+            update_564_to_565
         fi
         ;;
     *)
