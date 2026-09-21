@@ -17928,7 +17928,10 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                 ROUND(SUM(CASE WHEN security_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_security_percent,
                 ROUND(SUM(CASE WHEN kernel_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_kernel_percent,
                 ROUND(SUM(CASE WHEN other_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_other_percent
-            FROM up_machine_linux
+            FROM up_machine_linux AS up
+            INNER JOIN machines AS ma
+                ON ma.uuid_serial_machine = up.harduuid
+               AND ma.agenttype = 'machine'
         """
 
         params = {}
