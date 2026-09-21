@@ -447,7 +447,7 @@ for ($counter = 0; $counter < $entity_count; $counter++) {
                 "grp"        => "Total_linux_entity",        // Identifiant technique du groupe
                 "namegrp"    => "Linux_machines_{$datestring}", // Nom fonctionnel du groupe
                 "colonne"    => "total_machines",            // Colonne concernée
-                "typeaction" => "print_r"                      // Contexte Linux
+                "typeaction" => "Compliancelinux"              // Contexte Linux
             ]
         );
         $question_largeur = question_custom_colonne("total_machines", $nameentitycomplete);
