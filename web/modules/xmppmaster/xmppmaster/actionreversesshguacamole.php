@@ -38,8 +38,6 @@ require_once('../includes/xmlrpc.php');
 
 require_once("../../medulla_server/includes/locations_xmlrpc.inc.php");
 
-verifyCSRFToken($_GET);
-
 xmlrpc_runXmppReverseSSHforGuacamole($_GET['uuid'], $_GET['cux_id'], $_GET['cux_type']);
 
 xmlrpc_setfromxmppmasterlogxmpp('Reverse SSH for Guacamole on machine '. $_GET['cn']."[".$_GET['uuid']."]".', connecion id: '.$_GET['cux_id'].', connection type: '.$_GET['cux_type'],
