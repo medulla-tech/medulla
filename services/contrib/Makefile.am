@@ -67,6 +67,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	admin/sql/schema-018.sql \
 	admin/sql/schema-019.sql \
 	admin/sql/schema-020.sql \
+	admin/sql/schema-021.sql \
 	dyngroup/sql/schema-001.sql \
 	dyngroup/sql/schema-002.sql \
 	dyngroup/sql/schema-003.sql \

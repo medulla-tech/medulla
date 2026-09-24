@@ -8,6 +8,8 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 if (isset($_POST['add_domain']) && !empty($_POST['domain'])) {
+    verifyCSRFToken($_POST);
+
     $domain = trim($_POST['domain']);
     $rule_type = in_array($_POST['rule_type'] ?? '', ['BLOCK', 'ALLOW']) ? $_POST['rule_type'] : 'BLOCK';
     $result = xmlrpc_add_netfilter_rule($domain, $rule_type);

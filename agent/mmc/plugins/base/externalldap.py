@@ -1,23 +1,23 @@
-# -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2007-2008 Mandriva, http://www.mandriva.com/
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import os
 import imp
-import ldap
+import os
 import xmlrpc.client
 from configparser import NoOptionError
 
-from mmc.site import mmcconfdir
-from mmc.plugins.base.ldapconnect import LDAPConnectionConfig, LDAPConnection
+import ldap
+
 from mmc.plugins.base.auth import (
+    AuthenticationToken,
     AuthenticatorConfig,
     AuthenticatorI,
-    AuthenticationToken,
 )
+from mmc.plugins.base.ldapconnect import LDAPConnection, LDAPConnectionConfig
 from mmc.plugins.base.provisioning import ProvisionerConfig, ProvisionerI
+from mmc.site import mmcconfdir
 
 INI = f"{mmcconfdir}/plugins/base.ini"
 
@@ -179,9 +179,26 @@ class ExternalLdapAuthenticator(AuthenticatorI):
         )
 
     def ldapBind(self, l, userdn, password):
+        """
+        Bind to the external LDAP/AD server as the authenticating user.
+
+        @param l: LDAP connection returned by connect()
+        @type l: LDAPObject
+
+        @param userdn: DN of the user to bind as
+        @type userdn: str
+
+        @param password: user's password. May arrive as an xmlrpc.client.Binary
+            object when it contains non-ASCII characters (e.g. accented
+            passwords); it is then decoded as UTF-8 instead of relying on
+            str(Binary), which uses Latin-1 and corrupts accented characters.
+        @type password: str or xmlrpc.client.Binary
+
+        @raise ldap.INVALID_CREDENTIALS: if the bind fails
+        """
         if isinstance(password, xmlrpc.client.Binary):
-            password = str(password)
-        self.logger.debug(f"Binding with dn: {userdn} {password}")
+            password = password.data.decode("utf-8")
+        self.logger.debug(f"Binding with dn: {userdn}")
         l.simple_bind_s(userdn, password)
 
 
@@ -335,7 +352,7 @@ class ExternalLdapProvisioner(ProvisionerI):
                         tmp.append(entity)
                 entities = tmp[:]
                 self.logger.info(
-                    f"****Setting user '{uid}' entities corresponding to user profile '{profile}': {str(entities)}"
+                    f"****Setting user '{uid}' entities corresponding to user profile '{profile}': {entities!s}"
                 )
                 from pulse2.database.inventory import Inventory
 
@@ -351,7 +368,7 @@ class ExternalLdapProvisioner(ProvisionerI):
                 acls = None
             if profile and acls:
                 self.logger.info(
-                    f"Setting MMC ACL corresponding to user profile {profile}: {str(acls)}"
+                    f"Setting MMC ACL corresponding to user profile {profile}: {acls!s}"
                 )
             entry = l.getDetailedUser(uid)
             if "lmcUserObject" not in entry["objectClass"]:

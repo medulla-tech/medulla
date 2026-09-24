@@ -29,6 +29,8 @@ $location = htmlentities($_GET["location"]);
 
 if (isset($_POST["bconfirm"])) {
 
+    verifyCSRFToken($_POST);
+
     $result = xmlrpc_delete_profile($id);
 
     if($result["status"] == true){

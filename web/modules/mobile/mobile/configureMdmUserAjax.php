@@ -10,6 +10,7 @@ if ($WEBROOT === false) {
 }
 require_once($WEBROOT . '/includes/session.inc.php');
 require_once($WEBROOT . '/includes/xmlrpc.inc.php');
+require_once($WEBROOT . '/includes/utils.inc.php');
 require_once(__DIR__ . '/../includes/xmlrpc.php');
 
 $_is_hmdm_admin = false;
@@ -35,6 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
     exit;
 }
+
+verifyCSRFToken($_POST);
 
 $login       = trim($_POST['login']   ?? '');
 $user_id     = trim($_POST['user_id'] ?? '') ?: null;

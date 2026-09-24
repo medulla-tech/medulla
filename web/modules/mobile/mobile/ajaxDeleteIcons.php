@@ -11,6 +11,7 @@ if ($WEBROOT === false) {
 }
 require_once($WEBROOT . '/includes/session.inc.php');
 require_once($WEBROOT . '/includes/xmlrpc.inc.php');
+require_once($WEBROOT . '/includes/utils.inc.php');
 require_once(__DIR__ . '/../includes/xmlrpc.php');
 
 if (!function_exists('xmlCall')) {
@@ -28,6 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'error' => 'Method not allowed']);
     exit;
 }
+
+verifyCSRFToken($_POST);
 
 $id = trim($_POST['id'] ?? '');
 if ($id === '') {

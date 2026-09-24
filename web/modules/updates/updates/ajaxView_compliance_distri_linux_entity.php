@@ -72,7 +72,7 @@ $action_Update_complete_all_Linux_on_entity = new ActionPopupItem( _T("Update co
                                                             "updates",
                                                             "updates",
                                                             null,
-                                                            320,
+                                                            640,
                                                             "action_update_all_linux_entity");
 
 $action_no_Update_complete_all_Linux_on_entity = new EmptyActionItem1(
@@ -87,7 +87,7 @@ $action_update_kernel_all_linux_entity = new ActionPopupItem( _T("Update all Lin
                                                             "updates",
                                                             "updates",
                                                             null,
-                                                            320,
+                                                            640,
                                                             "action_update_kernel_all_linux_entity");
 
 // // Affiche le lien dans un <li> avec la popup titre "Mettre à jour tous les kernels Linux de l'entité" // titre affiché
@@ -108,7 +108,7 @@ $action_Update_complete_all_Linux_on_entity = new ActionPopupItem( _T("Update co
                                                             "updates",
                                                             "updates",
                                                             null,
-                                                            320,
+                                                            640,
                                                             "action_update_complete_all_linux_entity");
 
 $action_no_Update_complete_all_Linux_on_entity = new EmptyActionItem1(
@@ -130,7 +130,7 @@ $action_update_security_all_linux_entity = new ActionPopupItem(_T("Update all Li
                                                             "updates",
                                                             "updates",
                                                             null,
-                                                            320,
+                                                            640,
                                                             "action_update_security_all_linux_entity");
 
 
@@ -153,7 +153,7 @@ $action_update_other_all_linux_entity = new ActionPopupItem(_T("Update all other
                                                             "updates",
                                                             "updates",
                                                             null,
-                                                            320,
+                                                            640,
                                                             "action_update_other_all_linux_entity");
 
 
@@ -448,7 +448,7 @@ $action_no_update_other_all_linux_entity = new EmptyActionItem1(
                                                             "updates",
                                                             "updates",
                                                             null,
-                                                            320,
+                                                            640,
                                                             "action_Update_distribution_not_up_to_date_on_entity");
 
     } else {
@@ -544,7 +544,7 @@ $action_no_update_other_all_linux_entity = new EmptyActionItem1(
                                                             "updates",
                                                             "updates",
                                                             null,
-                                                            320,
+                                                            640,
                                                             "action_update_security_distribution_linux_entity");
 
 
@@ -602,7 +602,7 @@ $action_no_update_other_all_linux_entity = new EmptyActionItem1(
                                                             "updates",
                                                             "updates",
                                                             null,
-                                                            320,
+                                                            640,
                                                             "action_update_kernel_distribution_linux_entity");
 
 
@@ -660,7 +660,7 @@ $action_no_update_other_all_linux_entity = new EmptyActionItem1(
                                                                 "updates",
                                                                 "updates",
                                                                 null,
-                                                                320,
+                                                                640,
                                                                 "action_update_other_distribution_linux_entity");
         } else {
         // $action_update_other_linux[]=$action_no_update_other_all_linux_entity;        $vue_detail_machine_other_linux_entity[]=$NoView_detail_machine_other_linux_entity;

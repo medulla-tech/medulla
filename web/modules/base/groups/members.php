@@ -213,6 +213,8 @@ if (isset($_POST["bdeluser_x"])) {
     sort($members);
     reset($members);
 } elseif (isset($_POST["bconfirm"])) {
+    verifyCSRFToken($_POST);
+
     $curmem = get_members($group);
     $curmem = array_map(function ($member) {
         return is_object($member) && property_exists($member, 'scalar') ? $member->scalar : $member;
@@ -268,6 +270,7 @@ $p->display();
 ?>
 
 <form action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">
+<input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
     <div id="grouplist">
         <div class="grouplist-flex">
             <div class="grouplist-col">

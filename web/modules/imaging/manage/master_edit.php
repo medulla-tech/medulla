@@ -68,6 +68,8 @@ if(safeCount($_POST) == 0) {
     $f->addButton("bvalid", _T("Validate"));
     $f->display();
 } else {
+    verifyCSRFToken($_POST);
+
     $item_uuid = $_POST['itemid'];
     $loc_uuid = getCurrentLocation();
 

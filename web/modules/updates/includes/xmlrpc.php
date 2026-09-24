@@ -511,3 +511,16 @@ function xmlrpc_deploy_update_major($package_id,
                                                     $list_file,
                                                     $upgrade_parameters]);
 }
+
+/**
+ * Indique si un déploiement (kernel/security/other, majeur ou autre) est
+ * déjà en cours sur la machine, pour éviter de lancer un upgrade majeur en
+ * conflit avec un déploiement actif (ex: verrou dpkg/apt).
+ *
+ * @param string $uuid_inventorymachine UUID GLPI de la machine (préfixe "UUID").
+ * @return bool True si un déploiement non terminé existe pour cette machine.
+ */
+function xmlrpc_is_deployment_running_on_machine($uuid_inventorymachine)
+{
+    return xmlCall("updates.is_deployment_running_on_machine", [$uuid_inventorymachine]);
+}

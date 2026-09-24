@@ -36,6 +36,8 @@ $location = getCurrentLocation();
 $label = urldecode($_GET['itemlabel']);
 
 if ($_POST) {
+    verifyCSRFToken($_POST);
+
     $script_id = $_POST['itemid'];
     // delete image
     $ret = xmlrpc_delPostInstallScript($script_id);
@@ -96,6 +98,7 @@ if ($_POST) {
         ?>
         <h2><?php echo _T("Delete post-imaging script", "imaging") ?></h2>
         <form action="<?php echo urlStr("imaging/manage/postinstall_delete") ?>" method="post">
+<input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
             <p><?php printf(_T("Are you sure you want to delete the <b>%s</b> script ?", "imaging"), $label); ?></p>
             <input name='itemid' type='hidden' value="<?php echo $script_id ?>" />
             <input name='valid' type="submit" class="btnPrimary" value="<?php echo _T("Delete", "imaging"); ?>" />

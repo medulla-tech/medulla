@@ -6,6 +6,7 @@ require_once("modules/mastering/includes/xmlrpc.php");
 
 // Handle locally posted form for specific cases.
 if($_POST != [] && isset($_POST["bconfirm"])){
+    verifyCSRFToken($_POST);
 
     $ignoredKeys = ["codeToCopy", "old_", "auth_token", "mode", "bconfirm", "entity", "server", "name","description", "content"];
     $ignoredKeysRegex = "";

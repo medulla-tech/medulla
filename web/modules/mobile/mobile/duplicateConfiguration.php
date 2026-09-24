@@ -39,6 +39,8 @@ if (isset($_POST['bback'])) {
 }
 
 if (isset($_POST['bconfirm'])) {
+    verifyCSRFToken($_POST);
+
     $newName = isset($_POST['name']) ? trim($_POST['name']) : '';
     $newDescription = isset($_POST['description']) ? trim($_POST['description']) : '';
     

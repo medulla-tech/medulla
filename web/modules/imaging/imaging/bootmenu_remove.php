@@ -56,6 +56,8 @@ if (isset($_GET['gid'])) {
 }
 
 if (quickGet('valid')) {
+    verifyCSRFToken($_POST);
+
     if (isset($bs_uuid)) {
         $ret = xmlrpc_delServiceToTarget($bs_uuid, $target_uuid, $type);
         xmlrpc_setfromxmppmasterlogxmpp(sprintf(_T("Remove Service %s", "imaging"), $bs_uuid),
@@ -138,6 +140,7 @@ $params['bs_uuid'] = $bs_uuid;
 <h2><?php echo _T("Remove from boot menu", "imaging") ?></h2>
 
 <form action="<?php echo urlStr("base/computers/bootmenu_remove", $params) ?>" method="post">
+    <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
     <p><?php printf(_T("Are you sure you want to remove <b>%s</b> from the boot menu ?", "imaging"), $label); ?></p>
     <input name='valid' type="submit" class="btnPrimary" value="<?php echo _T("Remove", "imaging"); ?>" />
     <input name="bback" type="submit" class="btnSecondary" value="<?php echo _T("Cancel", "imaging"); ?>" onClick="closePopup();

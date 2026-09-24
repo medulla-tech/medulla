@@ -31,6 +31,8 @@ $location = getCurrentLocation();
 $label = urldecode($_GET['itemlabel']);
 
 if ($_POST) {
+    verifyCSRFToken($_POST);
+
     $menu_item_id = $_POST['menu_item_id'];
     $ret = xmlrpc_delImageToLocation($menu_item_id, $location);
     if ($ret[0] and !isXMLRPCError()) {

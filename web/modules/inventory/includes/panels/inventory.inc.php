@@ -43,7 +43,7 @@ class InventoryPanel extends Panel {
         $createGroupText = json_encode(_T("Create a group", "inventory"));
         $lessThanText = json_encode(_T("< %s days: %percent% (%d)", "inventory"));
         $moreThanText = json_encode(_T("> %s days: %percent% (%d)", "inventory"));
-        $urlRedirect = json_encode(urlStrRedirect("inventory/inventory/createStaticGroup"));
+        $urlRedirect = json_encode(urlStrRedirect("inventory/inventory/createStaticGroup") . "&auth_token=" . urlencode($_SESSION['auth_token'] ?? ''));
 
         print _T("Latest Inventory Date", "inventory");
 

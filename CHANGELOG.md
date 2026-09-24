@@ -1,5 +1,20 @@
 # Change Log
 
+## [5.6.5](https://github.com/medulla-tech/medulla/releases/tag/5.6.5) (2026-09-18)
+- [FEATURE] Support for MacOS clients
+- [FEATURE] Support for .pkg and .dmp packages
+- [FEATURE] New view for past major updates deployments
+- [FEATURE] Harden forms used throughout Medulla
+- [FEATURE] Improve the performance of the count of the agents for the dashboard widget
+- [FEATURE] Grey out the packaging actions that are not available on specific OSes
+- [FEATURE] Harden reversessh connections
+- [BUGFIX]  Allow accentuated characters in users passwords
+- [BUGFIX]  Fix counters used by inventory and antivirus widgets
+- [BUGFIX]  Fix cron job that generates windows major update packages
+- [BUGFIX]  Remove unused ajax xml-rpc call
+- [BUGFIX]  Fix update rules that are not applied on all entities
+- [BUGFIX]  Fix edition of dynamic groups based on double criteria
+
 ## [5.6.4](https://github.com/medulla-tech/medulla/releases/tag/5.6.4) (2026-09-03)
 - [FEATURE] Improve security module queries
 - [FEATURE] Force a reset of the agent files from remoteagent base

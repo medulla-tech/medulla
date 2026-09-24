@@ -52,6 +52,7 @@ if (isset($multicast) &&
         isset($path) &&
         $location != "" &&
         $process != "") {
+    verifyCSRFToken($_POST);
 
     $objprocess['location'] = $location;
 
