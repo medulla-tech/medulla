@@ -247,18 +247,21 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
             width: 100%;
             box-sizing: border-box;
         }
+
         .grouplist-flex {
             display: flex;
             align-items: stretch;
             gap: 12px;
             width: 100%;
         }
+
         .grouplist-col {
             flex: 1;
             min-width: 0;
             display: flex;
             flex-direction: column;
         }
+
         .grouplist-col select,
         .grouplist-col select.list {
             width: 100% !important;
@@ -266,10 +269,12 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
             flex: 1;
             box-sizing: border-box;
         }
+
         .grouplist-col .filter-row input {
             width: auto !important;
             height: auto !important;
         }
+
         .grouplist-buttons-wrapper {
             display: flex;
             align-items: center;
@@ -278,6 +283,7 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
             gap: 8px;
             flex-shrink: 0;
         }
+
         .grouplist-buttons {
             display: flex;
             flex-direction: column;
@@ -285,6 +291,7 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
         }
     </style>
     <form action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">
+        <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
         <table class="mmc-form-table" style="margin-bottom:18px;">
             <tr class="mmc-form-row">
                 <td class="mmc-label"><?php echo $label_name; ?></td>
@@ -410,6 +417,7 @@ function drawGroupShare($nonmemb, $members, $listOfMembers, $diff, $gid, $name)
 {
 ?>
     <form action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">
+        <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
         <input name="name" value="<?php echo $name ?>" type="hidden" />
         <div id="grouplist">
             <div class="grouplist-flex">
