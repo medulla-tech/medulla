@@ -61,6 +61,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 if (isset($_POST["badd"])) {
+    verifyCSRFToken($_POST);
+
     $result = create_group($error, $groupname);
     change_group_desc($groupname, $groupdesc ?? "");
     if (!isXMLRPCError()) {
@@ -68,6 +70,8 @@ if (isset($_POST["badd"])) {
         redirectTo(urlStrRedirect("base/groups/index"));
     }
 } elseif (isset($_POST["bmodify"])) {
+    verifyCSRFToken($_POST);
+
     change_group_desc($groupname, $groupdesc ?? "");
     $error = false;
     $ret = callPluginFunction("changeGroup", array($_POST));
@@ -102,6 +106,7 @@ $p->display();
 <?php } ?>
 
 <form id="Form" name="groupform" method="post" onsubmit="return validateForm('Form');">
+<input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
 <table cellspacing="0">
 <?php
 if ($action === "add") {

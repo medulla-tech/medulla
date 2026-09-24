@@ -808,13 +808,23 @@ class XmppMasterDatabase(DatabaseHelper):
                     is_latest_major_version.
         """
         try:
-            if entity_id:
-                entity_id = int(entity_id)
+            # L'entite racine porte l'id 0 : seule une valeur absente ou non
+            # numerique vaut absence d'entite.
+            normalized_entity_id = None
+            if entity_id is not None and str(entity_id).strip() != "":
+                try:
+                    normalized_entity_id = int(entity_id)
+                except (TypeError, ValueError):
+                    normalized_entity_id = None
+
+            if normalized_entity_id is not None:
+                entity_id = normalized_entity_id
                 self._sync_linux_approved_releases_entities(
                     session,
                     entity_id=entity_id,
                     actor="system-sync"
                 )
+                session.commit()
 
                 # Récupération avec les selections de l'entité
                 query = text("""
@@ -1082,6 +1092,7 @@ class XmppMasterDatabase(DatabaseHelper):
             if not entity_ids:
                 return []
             self._sync_linux_auto_update_policy_entities(session, entity_ids)
+            session.commit()
             placeholders = ",".join([":eid_{}".format(i) for i in range(len(entity_ids))])
             params = {"eid_{}".format(i): eid for i, eid in enumerate(entity_ids)}
             query = text("""
@@ -16233,22 +16244,37 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
 
     @DatabaseHelper._sessionm
     def get_updates_by_machineids(
-        self, session, machineids, start=0, limit=-1, filter=""
+        self, session, machineids, start=0, limit=-1, filter="", state="available"
     ):
+        if state == "required":
+            deploy_filters = [
+                Up_machine_activated.required_deploy == 1,
+                or_(
+                    Up_machine_activated.curent_deploy == None,
+                    Up_machine_activated.curent_deploy == 0,
+                ),
+            ]
+        elif state == "current":
+            deploy_filters = [Up_machine_activated.curent_deploy == 1]
+        else:
+            deploy_filters = [
+                or_(
+                    Up_machine_activated.curent_deploy == None,
+                    Up_machine_activated.curent_deploy == 0,
+                ),
+                or_(
+                    Up_machine_activated.required_deploy == None,
+                    Up_machine_activated.required_deploy == 0,
+                ),
+            ]
+
         query = (
             session.query(Up_machine_activated, Update_data)
             .join(Update_data, Update_data.updateid == Up_machine_activated.update_id)
             .filter(
                 and_(
                     Up_machine_activated.id_machine.in_(machineids),
-                    or_(
-                        Up_machine_activated.curent_deploy == None,
-                        Up_machine_activated.curent_deploy == 0,
-                    ),
-                    or_(
-                        Up_machine_activated.required_deploy == None,
-                        Up_machine_activated.required_deploy == 0,
-                    ),
+                    *deploy_filters,
                 )
             )
             .order_by(
@@ -17693,14 +17719,17 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
             valid_actions = {
                 "require_kernel": {
                     "fields": ["kernel_require"],
+                    "reset_fields": ["kernel_current"],
                     "date_fields": ["kernel_start", "kernel_stop", "kernel_interval"]
                 },
                 "require_security": {
                     "fields": ["security_require"],
+                    "reset_fields": ["security_curent"],
                     "date_fields": ["security_start", "security_stop", "security_interval"]
                 },
                 "require_other": {
                     "fields": ["other_require"],
+                    "reset_fields": ["other_current"],
                     "date_fields": ["other_start", "other_stop", "other_interval"]
                 },
                 "current_kernel": {
@@ -17717,6 +17746,7 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                 },
                 "require_all": {
                     "fields": ["kernel_require", "security_require", "other_require"],
+                    "reset_fields": ["kernel_current", "security_curent", "other_current"],
                     "date_fields": [
                         "kernel_start", "kernel_stop", "kernel_interval",
                         "security_start", "security_stop", "security_interval",
@@ -17755,6 +17785,10 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
             date_fields = valid_actions[action]["date_fields"]
 
             set_clauses = [f"{field} = :value" for field in fields]
+            set_clauses.extend(
+                f"{field} = 0"
+                for field in valid_actions[action].get("reset_fields", [])
+            )
 
             # Ajout des dates si elles sont fournies
             if date_start is not None:
@@ -17791,6 +17825,13 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                     return ("error: La liste des distributor_ids ne peut pas être vide.", 0)
                 conditions.append("distributor_id IN :distributor_ids")
                 params["distributor_ids"] = tuple(distributor_ids_list)
+
+            # A deployment request must target a machine still present in XMPP.
+            conditions.append(
+                "EXISTS (SELECT 1 FROM machines ma "
+                "WHERE ma.uuid_serial_machine = up_machine_linux.harduuid "
+                "AND ma.agenttype = 'machine')"
+            )
 
             if not conditions:
                 logger.warning("Aucun filtre appliqué : la requête mettra à jour TOUTES les lignes de la table.")
@@ -18023,30 +18064,31 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
         sql = """
             SELECT
                 SQL_CALC_FOUND_ROWS
-                distributor_id,
+                up.distributor_id,
                 COUNT(*) AS total_machines,
-                SUM(CASE WHEN total_count <> 0 THEN 1 ELSE 0 END) AS machines_not_up_to_date,
-                SUM(CASE WHEN total_count = 0 THEN 1 ELSE 0 END) AS machines_up_to_date,
-                SUM(CASE WHEN security_count <> 0 THEN 1 ELSE 0 END) AS machines_security_not_ok,
-                SUM(CASE WHEN kernel_count <> 0 THEN 1 ELSE 0 END) AS machines_kernel_not_ok,
-                SUM(CASE WHEN other_count <> 0 THEN 1 ELSE 0 END) AS machines_other_not_ok,
-                ROUND(SUM(CASE WHEN total_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_total_percent,
-                ROUND(SUM(CASE WHEN security_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_security_percent,
-                ROUND(SUM(CASE WHEN kernel_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_kernel_percent,
-                ROUND(SUM(CASE WHEN other_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_other_percent
-            FROM up_machine_linux
-            WHERE entity_id = :entity_id
+                SUM(CASE WHEN up.total_count <> 0 THEN 1 ELSE 0 END) AS machines_not_up_to_date,
+                SUM(CASE WHEN up.total_count = 0 THEN 1 ELSE 0 END) AS machines_up_to_date,
+                SUM(CASE WHEN up.security_count <> 0 THEN 1 ELSE 0 END) AS machines_security_not_ok,
+                SUM(CASE WHEN up.kernel_count <> 0 THEN 1 ELSE 0 END) AS machines_kernel_not_ok,
+                SUM(CASE WHEN up.other_count <> 0 THEN 1 ELSE 0 END) AS machines_other_not_ok,
+                ROUND(SUM(CASE WHEN up.total_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_total_percent,
+                ROUND(SUM(CASE WHEN up.security_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_security_percent,
+                ROUND(SUM(CASE WHEN up.kernel_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_kernel_percent,
+                ROUND(SUM(CASE WHEN up.other_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_other_percent
+            FROM up_machine_linux AS up
+            INNER JOIN machines AS ma ON ma.uuid_serial_machine = up.harduuid
+            WHERE up.entity_id = :entity_id
         """
 
         params = {"entity_id": entity_id_int}
 
         # Filtre optionnel sur distributor_id
         if filter not in (None, ""):
-            sql += " AND distributor_id REGEXP :filter"
+            sql += " AND up.distributor_id REGEXP :filter"
             params["filter"] = filter
 
         # GROUP BY par distribution
-        sql += " GROUP BY distributor_id ORDER BY distributor_id"
+        sql += " GROUP BY up.distributor_id ORDER BY up.distributor_id"
 
         # LIMIT / OFFSET
         if start != -1 and limit != -1:

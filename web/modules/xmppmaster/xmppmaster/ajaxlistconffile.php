@@ -64,7 +64,7 @@ $result = xmlrpc_remotefileeditaction($jid, array('action' => 'listconfigfile'))
 
 
 $editaction =  new ActionItem(_("Edit config files"),
-                                "remoteeditorconfigurationlist",
+                                "remoteeditorconfigurationrelay",
                                 "edit",
                                 "computers",
                                 "xmppmaster",

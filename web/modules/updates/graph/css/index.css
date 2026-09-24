@@ -28,12 +28,42 @@
     cursor: pointer;
 }
 
-/* Boutons de validation des formulaires du module : alignes a droite, fin du
-   formulaire. .form-actions vient de bootstrap-forms.css et pose un fond gris. */
+/* ===== Deploiement automatique Linux ===== */
+
+.linux-autoupdate-policy {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+}
+
+.linux-autoupdate-policy .policy-scope {
+    margin: 0 0 12px;
+}
+
+.linux-autoupdate-policy .policy-table-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0 12px 12px 0;
+}
+
 .linux-autoupdate-policy table.listinfos {
     width: 100%;
 }
 
+.linux-autoupdate-policy table.listinfos input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.linux-autoupdate-policy table.listinfos label {
+    cursor: pointer;
+}
+
+/* Boutons de validation des formulaires du module : alignes a droite, fin du
+   formulaire. .form-actions vient de bootstrap-forms.css et pose un fond gris. */
 .approval-form-actions,
 .linux-autoupdate-policy .form-actions {
     background: none;

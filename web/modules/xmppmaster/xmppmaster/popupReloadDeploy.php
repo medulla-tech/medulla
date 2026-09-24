@@ -1,5 +1,6 @@
 <?php
 if (isset($_POST["bconfirm"])) {
+    verifyCSRFToken($_POST);
 
     header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/reloaddeploy", $_POST));
     exit;

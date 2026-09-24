@@ -416,6 +416,7 @@ if ($_GET['uuid'] != '') {
                     cmd_params.deploy_params.parameters = param_string;
                     cmd_params.deploy_params.ltitle = 'regchange - ' + (new Date()).toLocaleString();
                     cmd_params.uuids = [ uuid ];
+                    cmd_params.auth_token = <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>;
                     console.log(JSON.stringify(cmd_params));
                     $.ajax({
                         type: "POST",

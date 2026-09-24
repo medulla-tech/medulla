@@ -32,7 +32,7 @@ $params = array(
 );
 
 //Receiving form data
-if (isset($_POST['name'], $_POST['parent'])){
+if (isset($_POST['name'], $_POST['parent'])){    verifyCSRFToken($_POST);
     //Le champ name ne doit pas contenir d'espaces ni de virgules ni de slash (/) '^[a-zA-Z0-9]{3,64}$'
     createLocation($_POST['name'], $_POST['parent']);
     if (!isXMLRPCError()){

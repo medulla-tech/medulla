@@ -25,6 +25,8 @@
 require_once("modules/inventory/includes/xmlrpc.php");
 
 if (isset($_GET['numRule'])) {
+    verifyCSRFToken($_GET);
+
     echo  $_GET['entitie']." rule " . $_GET['numRule']." up";
     moveEntityRuleUp($_GET['numRule']);
 }

@@ -29,6 +29,8 @@ require_once("modules/base/includes/computers.inc.php");
 
 $err = false;
 if (isset($_POST["bcreate"])) {
+    verifyCSRFToken($_POST);
+
     if (checkComputerName($_POST["computername"])) {
         if (isComputerNameAvailable($_POST["location_uuid"], $_POST["computername"])) {
             addComputer($_POST);

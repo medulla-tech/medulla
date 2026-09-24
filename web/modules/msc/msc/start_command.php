@@ -26,6 +26,9 @@ require('modules/msc/includes/commands_xmlrpc.inc.php');
 require('modules/msc/includes/package_api.php');
 require('modules/msc/includes/scheduler_xmlrpc.php');
 require('modules/msc/includes/mscoptions_xmlrpc.php');
+
+// "Direct launch" executes immediately on GET; require a token in the URL to prevent CSRF.
+verifyCSRFToken($_GET);
 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
     require_once("modules/xmppmaster/includes/xmlrpc.php");
 }

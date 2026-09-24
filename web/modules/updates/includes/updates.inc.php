@@ -70,6 +70,13 @@ function generateEntityPage(string $pageTitle,
 
     $currentEntityId = $selectedEntityId ?? ($_POST['entityid'] ?? $_GET['entityid'] ?? null);
 
+    // L'entite racine porte l'id 0 : tester la presence d'une valeur, pas sa
+    // veracite, et comparer des entiers.
+    $currentEntityIdStr = is_scalar($currentEntityId)
+        ? preg_replace('/^UUID/i', '', (string) $currentEntityId)
+        : '';
+    $currentEntityIdInt = preg_match('/^\d+$/', $currentEntityIdStr) ? (int) $currentEntityIdStr : null;
+
     foreach ($_entities as $value) {
         $uuidNumber = str_replace('UUID', '', $value['uuid']);
 
@@ -86,7 +93,7 @@ function generateEntityPage(string $pageTitle,
         $parametresCGI[] = http_build_query($newElement);
 
         // Détermination de l'entité sélectionnée
-        if ($currentEntityId && $uuidNumber == $currentEntityId) {
+        if ($currentEntityIdInt !== null && (int) $uuidNumber === $currentEntityIdInt) {
             $selectedEntityIndex = count($parametresCGI) - 1;
         }
     }

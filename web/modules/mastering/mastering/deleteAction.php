@@ -19,6 +19,8 @@ $params = [
     "target" =>$target,
 ];
 if($_POST["bconfirm"]){
+    verifyCSRFToken($_POST);
+
     $ret = xmlrpc_delete_action($id);
     if($ret["status"] == 0){
         new NotifyWidgetSuccess(_T($ret["msg"], "mastering"));

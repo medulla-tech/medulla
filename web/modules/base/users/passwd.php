@@ -38,6 +38,8 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 if (isset($_POST["bchpasswd"]) && ($_POST["curpass"] != "") && ($_POST["newpass"] != "") && ($_POST["newpass"] == $_POST["confpass"]) && (check_auth($_SESSION['login'], $_POST["curpass"], $error))) {
+    verifyCSRFToken($_POST);
+
     callPluginFunction("changeUserPasswd", array(array($user, prepare_string($_POST["newpass"]), prepare_string($_POST["curpass"]), True)));
     if (!isXMLRPCError())
         $n = new NotifyWidgetSuccess(_("Your password has been changed."));
@@ -56,6 +58,7 @@ else
 {
 ?>
 <form action="<?php echo "main.php?module=base&submod=users&action=passwd"; ?>" method="post">
+<input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
 <p>
 <?php echo  _("You are going to change your password") ?>
 </p>

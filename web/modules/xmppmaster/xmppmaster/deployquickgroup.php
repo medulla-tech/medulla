@@ -161,6 +161,7 @@ $nbr_absent = $count - $nbr_presense;
 
 <script type="text/javascript">
 var groupinfo = <?php echo json_encode($_GET); ?>;
+groupinfo.auth_token = <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>;
 
 jQuery(function() {
     var t = jQuery('#select option:selected').val();

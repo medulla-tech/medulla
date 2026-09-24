@@ -422,9 +422,22 @@ $page = new Page("auditByEntity", _T('History by Entity', 'updates'));
 $page->setFile("modules/updates/updates/auditByEntity.php");
 $submod->addPage($page);
 
+// --- Page Products (onglets Windows / Linux) ---
+$page = new Page("products", _T('Products', 'updates'));
+$page->setFile("modules/updates/updates/products.php");
+
+$tab = new Tab("tabwin", _T("Windows", "updates"));
+$page->addTab($tab);
+
+$tab = new Tab("tablinux", _T("Linux", "updates"));
+$page->addTab($tab);
+
+$submod->addPage($page);
+
 // --- Pages Linux Approved Releases ---
 $page = new Page("linuxApprovedReleases", _T('Approved Linux releases', 'updates'));
 $page->setFile("modules/updates/updates/linuxApprovedReleases.php");
+$page->setOptions(array("visible" => false));
 $submod->addPage($page);
 
 $page = new Page("ajaxLinuxApprovedReleases", _T("Approved Linux releases", "updates"));
@@ -432,9 +445,22 @@ $page->setFile("modules/updates/updates/ajaxLinuxApprovedReleases.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
+// --- Page Automatic Deployment (onglets Windows / Linux) ---
+$page = new Page("automation", _T('Automatic Deployment', 'updates'));
+$page->setFile("modules/updates/updates/automation.php");
+
+$tab = new Tab("tabwin", _T("Windows", "updates"));
+$page->addTab($tab);
+
+$tab = new Tab("tablinux", _T("Linux", "updates"));
+$page->addTab($tab);
+
+$submod->addPage($page);
+
 // --- Pages Linux Auto-Update Policy ---
 $page = new Page("linuxAutoUpdatePolicy", _T('Linux Auto-Update Policy', 'updates'));
 $page->setFile("modules/updates/updates/linuxAutoUpdatePolicy.php");
+$page->setOptions(array("visible" => false));
 $submod->addPage($page);
 
 $page = new Page("ajaxLinuxAutoUpdatePolicy", _T("Linux Auto-Update Policy", "updates"));
@@ -459,6 +485,7 @@ $submod->addPage($page);
 // choose rule upa products
 $page = new Page("approve_rules", _T('Automatic approval rules', 'updates'));
 $page->setFile("modules/updates/updates/approve_rules.php");
+$page->setOptions(array("visible" => false));
 $submod->addPage($page);
 
 $page = new Page("ajaxApproveRules", _T("Choose update event for entity", "updates"));
@@ -469,6 +496,7 @@ $submod->addPage($page);
 /// choose produit
 $page = new Page("approve_products", _T('Approve Microsoft products updates', 'updates'));
 $page->setFile("modules/updates/updates/approve_products.php");
+$page->setOptions(array("visible" => false));
 $submod->addPage($page);
 
 $page = new Page("ajaxApproveProduct", _T("Choose product for entity", "updates"));

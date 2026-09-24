@@ -170,7 +170,8 @@ $configName = $config['name'] ?? _T("Unknown", "mobile");
             'config_id': configId,
             'action': action,
             'message_type': messageType,
-            'payload': payload
+            'payload': payload,
+            'auth_token': '<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>'
         };
         
         for (var key in fields) {

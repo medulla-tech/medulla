@@ -129,7 +129,7 @@ if (!empty($global_status)) {
         <h3><?php echo _T('Stats', 'imaging') ?> <?php echo _T('Entity', 'imaging') ?> <?php echo $namelocation; ?> </h3>
         <p class="stat">
             <?php $urlRedirect = urlStrRedirect("imaging/manage/creategroupcustonmenu") . "&location=" . $location; ?>
-            <?php $urlRedirectgroupimaging = urlStrRedirect("imaging/manage/creategroupcustonmenuimaging") . "&location=" . $location; ?>
+            <?php $urlRedirectgroupimaging = urlStrRedirect("imaging/manage/creategroupcustonmenuimaging") . "&location=" . $location . "&auth_token=" . urlencode($_SESSION['auth_token'] ?? ''); ?>
             <img src="img/other/machine_down.svg" width="25" height="25" /> <strong>
                 <?php echo "<span>" . $short_status['total'] . "</span>"; ?></strong> <?php echo _T("client(s) registered", "imaging") ?>
             <?php

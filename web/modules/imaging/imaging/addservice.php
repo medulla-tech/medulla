@@ -28,6 +28,8 @@ require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once('modules/imaging/includes/web_def.inc.php');
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 if (isset($_POST["bconfirm"])) {
+    verifyCSRFToken($_POST);
+
     $params = getParams();
     if(isset($_POST['gid']) && $_POST['gid'] != '') {
         $type = 'group';

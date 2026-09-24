@@ -1671,7 +1671,8 @@ jQuery( "#bvalid").click(function() {
 createCfg = ()=>{
     jQuery.post( "modules/imaging/manage/ajaxgeneratePreseedCfg.php", {
         data:  jQuery('#codeTocopy2').text(),
-        title: jQuery('#Location').val()
+        title: jQuery('#Location').val(),
+        auth_token: <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>
     })
     .done(function( data1 ) {
         var file =  '  <? echo _T('File','imaging'); ?>  ';
