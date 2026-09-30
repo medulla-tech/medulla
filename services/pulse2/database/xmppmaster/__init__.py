@@ -19930,7 +19930,8 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                                     filter="",
                                     start=0,
                                     limit=-1,
-                                    colonne=True):
+                                    colonne=True,
+                                    update_type=""):
         """
             Récupère les détails des machines avec des systèmes d'exploitation Windows ou Windows Server à partir de la base de données XMPPMaster.
 
@@ -19950,6 +19951,7 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                 start (int) : Le décalage pour commencer à retourner les lignes.
                 limit (int) : Le nombre maximum de lignes à retourner. Si -1, pas de limitation.
                 colonne (bool) : Si True, retourne les résultats dans un format en colonnes. La valeur par défaut est True.
+                update_type (str) : "W10to11" ou "W11to11" pour ne garder que ce type de mise à jour. Toute autre valeur : pas de filtre.
 
             Retourne :
                 dict : Un dictionnaire contenant :
@@ -19963,6 +19965,18 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                     - 'W11to11' : Mise à jour entre versions de Windows 11.
                     - 'not update' : Aucune mise à jour majeure nécessaire.
         """
+        update_type_sql = {
+            "W10to11": '''
+                AND TRIM(COALESCE(old_version, '')) = '10'
+                AND TRIM(COALESCE(new_version, '')) = '11'
+            ''',
+            "W11to11": '''
+                AND TRIM(COALESCE(old_version, '')) = '11'
+                AND TRIM(COALESCE(new_version, '')) = '11'
+                AND UPPER(TRIM(COALESCE(oldcode, ''))) != UPPER(TRIM(COALESCE(newcode, '')))
+            ''',
+        }
+
         # Base de la requête SQL
         total_os_sql = '''
             SELECT
@@ -20017,6 +20031,9 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
         # Ajouter le filtre sur le nom de la machine si nécessaire
         if filter:
             total_os_sql += " AND up_mach.hostname LIKE :filter"
+
+        if isinstance(update_type, str):
+            total_os_sql += update_type_sql.get(update_type, "")
 
         # Ajouter ORDER BY et LIMIT/OFFSET si nécessaire
         total_os_sql += " ORDER BY up_mach.hostname "

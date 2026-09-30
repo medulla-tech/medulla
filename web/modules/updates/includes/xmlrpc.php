@@ -205,13 +205,16 @@ function xmlrpc_get_os_update_major_details($entity_id,
                                             $typeaction,
                                             $filter="",
                                             $start=0,
-                                            $limit=-1)
+                                            $limit=-1,
+                                            $update_type="")
 {
     return xmlCall("updates.get_os_update_major_details", [ $entity_id,
                                                             $typeaction,
                                                             $filter,
                                                             $start,
-                                                            $limit]);
+                                                            $limit,
+                                                            true,
+                                                            $update_type]);
 }
 
 /**
