@@ -231,11 +231,17 @@ echo "<table class='listinfos deploy-info-table' cellspacing='0' cellpadding='5'
 echo "<thead>";
 echo "<tr>";
 echo '<td>'._T("Creation Date", "xmppmaster").'</td>';
-echo '<td>'._T("Start Date", "xmppmaster").'</td>';
+if($isconvergence != 0) {
+    echo '<td>'._T("Last renewal", "xmppmaster").'</td>';
+} else {
+    echo '<td>'._T("Start Date", "xmppmaster").'</td>';
+}
 if ($contrainte != "") {
     echo '<td>'._T("contraint slot", "xmppmaster").'</td>';
 }
-echo '<td>'._T("End Date", "xmppmaster").'</td>';
+if($isconvergence == 0) {
+    echo '<td>'._T("End Date", "xmppmaster").'</td>';
+}
 echo '<td>'._T("Creator", "xmppmaster").'</td>';
 if($isconvergence != 0) {
     echo '<td>'._T("Convergence", "xmppmaster").'</td>';
@@ -251,7 +257,9 @@ echo '<td>'. $start_date.'</td>';
 if ($contrainte != "") {
     echo '<td>'.$contrainte.'</td>';
 }
-echo '<td>'.$end_date.'</td>';
+if($isconvergence == 0) {
+    echo '<td>'.$end_date.'</td>';
+}
 echo '<td>'.$creator_user.'</td>';
 if($isconvergence != 0) {
     echo "<td><img class='icon-inline' src='img/other/convergence.svg'/></td>";

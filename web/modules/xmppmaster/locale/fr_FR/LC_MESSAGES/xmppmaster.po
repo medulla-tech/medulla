@@ -1099,6 +1099,9 @@ msgstr "Nom du package"
 msgid "Start Date"
 msgstr "Date de début"
 
+msgid "Last renewal"
+msgstr "Dernière reconduction"
+
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:413
 msgid "Stop Date"
 msgstr "Date de fin"
