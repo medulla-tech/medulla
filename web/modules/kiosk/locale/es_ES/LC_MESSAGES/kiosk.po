@@ -183,6 +183,10 @@ msgstr "Perfil %s eliminado con éxito"
 msgid "Impossible to delete profile %s"
 msgstr "Imposible borrar el perfil %s"
 
+#, php-format
+msgid "Delete the profile %s ?"
+msgstr "¿Eliminar el perfil %s?"
+
 #: modules/kiosk/kiosk/modifyAcknowledge.php:43
 #, php-format
 msgid "%s has been granted the rights %s on package %s (%s) from %s to %s."
@@ -227,3 +231,68 @@ msgstr "Sin perfiles"
 #: modules/kiosk/kiosk/ajaxProfilesList.php
 msgid "Use the sidebar menu to create a new profile."
 msgstr "Utilice el menú lateral para crear un nuevo perfil."
+
+#: modules/kiosk/kiosk/ajaxAddProfile.php
+#: modules/kiosk/kiosk/ajaxEditProfile.php
+msgid "A profile named %s already exists"
+msgstr "Ya existe un perfil llamado %s"
+
+#: modules/kiosk/kiosk/add.php
+#: modules/kiosk/kiosk/editProfile.php
+msgid "Saving the profile may take a few moments."
+msgstr "El guardado del perfil puede tardar unos instantes."
+
+#: modules/kiosk/kiosk/ajaxProfilesList.php
+msgid "Delete selected"
+msgstr "Eliminar la selección"
+
+#: modules/kiosk/kiosk/ajaxProfilesList.php
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: modules/kiosk/kiosk/ajaxProfilesList.php
+msgid "Selection mode"
+msgstr "Modo de selección"
+
+#: modules/kiosk/kiosk/ajaxProfilesList.php
+msgid "Are you sure you want to delete these profiles?"
+msgstr "¿Está seguro de que desea eliminar estos perfiles?"
+
+#: modules/kiosk/kiosk/ajaxProfilesList.php
+msgid "Some profiles could not be deleted:"
+msgstr "Algunos perfiles no se han podido eliminar:"
+
+#: modules/kiosk/kiosk/ajaxProfilesList.php
+msgid "An error occurred while deleting."
+msgstr "Se ha producido un error durante la eliminación."
+
+#: modules/kiosk/kiosk/ajaxProfilesList.php
+msgid "Yes"
+msgstr "Sí"
+
+#: modules/kiosk/kiosk/ajaxProfilesList.php
+msgid "No"
+msgstr "No"
+
+#: modules/kiosk/kiosk/ajaxProfilesList.php
+msgid "Close"
+msgstr "Cerrar"
+
+#: modules/kiosk/kiosk/ajaxProfilesList.php
+#, php-format
+msgid "and %d more"
+msgstr "y %d más"
+
+#: modules/kiosk/kiosk/deleteProfile.php
+#, php-format
+msgid "%d profile(s) could not be deleted"
+msgstr "%d perfil(es) no se han podido eliminar"
+
+#: modules/kiosk/kiosk/deleteProfile.php
+#, php-format
+msgid "%d profile(s) successfully deleted"
+msgstr "%d perfil(es) eliminado(s)"
+
+#: modules/kiosk/kiosk/editProfile.php
+msgid "Profile not found"
+msgstr "Perfil no encontrado"

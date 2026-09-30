@@ -21,14 +21,24 @@
  *
  */
 
+var sending = false;
+var savingModalDelay = 2000;
+
 jQuery("#bvalid").click(function() {
+    if(sending)
+        return;
+
     if(jQuery("#name").val() == "")
         jQuery("#name").focus();
 
     else if(ous.length == 0)
         alert(MSG_OU_REQUIRED, '', 'alert-warning');
     else
+    {
+        sending = true;
+        jQuery("#bvalid").prop("disabled", true);
         sendForm();
+    }
 });
 
 function sendForm(){
@@ -51,9 +61,52 @@ function sendForm(){
     datas['ous'] = ous;
     datas['packages'] = generate_json();
 
-    // Send the infos to ajaxAddProfile.php
-    jQuery.post(url, datas, function(result){
-        // Redirect to the list of profiles
+    var redirect = function() {
         window.location.replace("main.php?module=kiosk&submod=kiosk&action=index");
+    };
+    var modalShown = false;
+
+    var timer = setTimeout(function() {
+        timer = null;
+        modalShown = true;
+        alert(MSG_SAVING_PROFILE, '', 'modal-info');
+        var popup = jQuery("#popup");
+        popup.find(".js-alert-content").append('<div class="kiosk-saving-spinner"><span class="spinner spinner-lg"></span></div>');
+        popup.find(".js-alert-actions").remove();
+        popup.find("a.popup_close_btn").hide();
+        jQuery("#overlay").off("click", closePopup);
+        popup.css("margin-top", -(popup.outerHeight() / 2) + "px");
+    }, savingModalDelay);
+
+    // Send the infos to ajaxAddProfile.php
+    jQuery.post(url, datas, null, "json").done(function(data){
+        if(timer !== null)
+            clearTimeout(timer);
+        if(data && data.status === "exists")
+        {
+            if(modalShown)
+            {
+                jQuery("#popup, #overlay").stop(true, true);
+                jQuery("#popup a.popup_close_btn").show();
+            }
+            alert(data.message);
+            sending = false;
+            jQuery("#bvalid").prop("disabled", false);
+            jQuery("#name").focus();
+            return;
+        }
+        redirect();
+    }).fail(function(){
+        if(timer !== null)
+            clearTimeout(timer);
+        if(modalShown)
+        {
+            closePopup();
+            jQuery("#popup").promise().done(function() {
+                jQuery(this).find("a.popup_close_btn").show();
+            });
+        }
+        sending = false;
+        jQuery("#bvalid").prop("disabled", false);
     });
 }
