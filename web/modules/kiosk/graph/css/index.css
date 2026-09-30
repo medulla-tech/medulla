@@ -260,3 +260,18 @@
 .profile-status-inactive {
     color: var(--color-text-muted, #999);
 }
+
+#bvalid:disabled,
+#bvalid:disabled:hover {
+    background: var(--color-primary);
+    color: var(--color-text-white);
+    border-color: var(--color-primary);
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.kiosk-saving-spinner {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+}
