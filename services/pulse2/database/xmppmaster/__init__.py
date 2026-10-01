@@ -15226,11 +15226,7 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
             scope_sql = """
                 SELECT
                     lm.id AS glpi_id,
-                    lm.entities_id AS entity_id,
-                    CASE
-                        WHEN lm.is_deleted = 0 AND lm.is_template = 0 THEN 1
-                        ELSE 0
-                    END AS is_active
+                    lm.entities_id AS entity_id
                 FROM xmppmaster.local_glpi_machines lm
             """
             if scope_conditions:
@@ -15250,7 +15246,6 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                 {
                     "glpi_id": row.glpi_id,
                     "entity_id": row.entity_id,
-                    "is_active": row.is_active,
                 }
                 for row in session.execute(scope_statement, scope_params)
             ]
@@ -15264,8 +15259,7 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                     """
                     CREATE TEMPORARY TABLE tmp_conformity_scope (
                         glpi_id INT NOT NULL PRIMARY KEY,
-                        entity_id INT NOT NULL,
-                        is_active TINYINT NOT NULL
+                        entity_id INT NOT NULL
                     ) ENGINE=MEMORY
                     """
                 )
@@ -15273,11 +15267,29 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                 session.execute(
                     text(
                         """
-                        INSERT INTO tmp_conformity_scope (glpi_id, entity_id, is_active)
-                        VALUES (:glpi_id, :entity_id, :is_active)
+                        INSERT INTO tmp_conformity_scope (glpi_id, entity_id)
+                        VALUES (:glpi_id, :entity_id)
                         """
                     ),
                     scope,
+                )
+                session.execute(
+                    "DROP TEMPORARY TABLE IF EXISTS tmp_conformity_active_inventory"
+                )
+                session.execute(
+                    """
+                    CREATE TEMPORARY TABLE tmp_conformity_active_inventory (
+                        uuid_inventorymachine VARCHAR(255) NOT NULL PRIMARY KEY
+                    ) ENGINE=MEMORY
+                    """
+                )
+                session.execute(
+                    """
+                    INSERT INTO tmp_conformity_active_inventory (uuid_inventorymachine)
+                    SELECT CONCAT('UUID', lm.id)
+                    FROM xmppmaster.local_glpi_machines lm
+                    WHERE lm.is_deleted = 0 AND lm.is_template = 0
+                    """
                 )
 
                 sql = """
@@ -15289,12 +15301,17 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                     FROM machines m
                     JOIN tmp_conformity_scope scope ON scope.glpi_id = m.id_glpi
                     LEFT JOIN (
-                        SELECT umw.id_machine, umw.update_id
-                        FROM up_machine_windows umw
+                        SELECT candidate.id AS id_machine, umw.update_id
+                        FROM tmp_conformity_scope candidate_scope
+                        JOIN machines candidate ON candidate.id_glpi = candidate_scope.glpi_id
+                        JOIN up_machine_windows umw ON umw.id_machine = candidate.id
+                        JOIN tmp_conformity_active_inventory active_inventory
+                            ON active_inventory.uuid_inventorymachine = candidate.uuid_inventorymachine
                         LEFT JOIN up_white_list uwl ON uwl.updateid = umw.update_id
                         LEFT JOIN up_gray_list ugl ON ugl.updateid = umw.update_id
-                        WHERE ugl.valided = 1 OR uwl.valided = 1
-                    ) uma ON uma.id_machine = m.id AND scope.is_active = 1
+                        WHERE candidate.platform LIKE 'Microsoft Windows%'
+                          AND (ugl.valided = 1 OR uwl.valided = 1)
+                    ) uma ON uma.id_machine = m.id
                     WHERE
                         m.agenttype = 'machine'
                         AND m.platform LIKE 'Microsoft Windows%'
@@ -15305,6 +15322,9 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                 rows = session.execute(sql).fetchall()
             finally:
                 if temporary_table_created:
+                    session.execute(
+                        "DROP TEMPORARY TABLE IF EXISTS tmp_conformity_active_inventory"
+                    )
                     session.execute("DROP TEMPORARY TABLE IF EXISTS tmp_conformity_scope")
 
         return [
@@ -15432,8 +15452,13 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
         where_clauses = ["m.agenttype = 'machine'"]
 
         if location:
+            # The GLPI entity is authoritative after a machine move. The local
+            # XMPP entity mapping can remain stale until the next inventory.
             where_clauses.append(
-                f"m.glpi_entity_id = (SELECT id FROM glpi_entity WHERE glpi_id = {location})"
+                "m.id_glpi IN ("
+                "SELECT lm.id FROM xmppmaster.local_glpi_machines lm "
+                f"WHERE lm.entities_id = {location}"
+                ")"
             )
 
         if criterion:
