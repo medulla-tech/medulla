@@ -440,6 +440,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
                 synchronize_session="fetch"
             )
             session.query(Convergence).filter_by(packageUUID=packageUUID).delete()
+            session.commit()
         return True
 
     def delete_convergence_groups(self, session, parent_id):
