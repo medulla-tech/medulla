@@ -52,16 +52,15 @@ $bulkBar = new BulkSelectBar(
     '0',
     'profile-select',
     [
-        'deleteSelected' => _T("Delete selected", "kiosk"),
-        'cancel'         => _T("Cancel", "kiosk"),
-        'selectionMode'  => _T("Selection mode", "kiosk"),
-        'confirmDelete'  => _T("Are you sure you want to delete these profiles?", "kiosk"),
-        'partialErrors'  => _T("Some profiles could not be deleted:", "kiosk"),
-        'deleteError'    => _T("An error occurred while deleting.", "kiosk"),
-        'yes'            => _T("Yes", "kiosk"),
-        'no'             => _T("No", "kiosk"),
-        'close'          => _T("Close", "kiosk"),
-        'andMore'        => _T("and %d more", "kiosk"),
+        'deleteSelected'    => _T("Delete selected", "kiosk"),
+        'cancel'            => _T("Cancel", "kiosk"),
+        'selectionMode'     => _T("Selection mode", "kiosk"),
+        'confirmDeleteOne'  => _T("Delete this profile?", "kiosk"),
+        'confirmDeleteMany' => _T("Delete %d profiles?", "kiosk"),
+        'confirm'           => _T("Delete", "kiosk"),
+        'partialErrors'     => _T("Some profiles could not be deleted:", "kiosk"),
+        'deleteError'       => _T("An error occurred while deleting.", "kiosk"),
+        'close'             => _T("Close", "kiosk"),
     ]
 );
 

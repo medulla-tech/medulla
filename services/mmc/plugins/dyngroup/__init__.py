@@ -668,6 +668,10 @@ class RpcProxy(RpcProxyI):
         ret = DyngroupDatabase().get_active_convergence_commands(package_id)
         return xmlrpcCleanup(ret)
 
+    def get_active_convergence_counts(self, gids):
+        ret = DyngroupDatabase().get_active_convergence_counts(gids)
+        return xmlrpcCleanup({str(k): v for k, v in ret.items()})
+
     def get_convergence_groups_to_update(self, package_id):
         ret = DyngroupDatabase().get_convergence_groups_to_update(package_id)
         return xmlrpcCleanup(ret)

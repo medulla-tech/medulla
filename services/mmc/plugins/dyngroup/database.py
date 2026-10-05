@@ -10,7 +10,7 @@ Add a specific mmc-agent plugin level
 import logging
 
 # SqlAlchemy
-from sqlalchemy import and_, or_, asc, select
+from sqlalchemy import and_, or_, asc, select, func
 from sqlalchemy.orm import aliased
 from sqlalchemy.orm import create_session
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
@@ -491,12 +491,12 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             # Update the Machines table to remove ghost records
             self.__updateMachinesTable(session.connection(), to_delete)
 
+            # Delete convergence groups for this id
+            self.delete_convergence_groups(session, id)
+
             # Delete the group from the Groups table
             session.query(ProfilesData).filter_by(FK_groups=id).delete()
             session.query(Groups).filter_by(id=id).delete()
-
-            # Delete convergence groups for this id
-            self.delete_convergence_groups(session, id)
 
             session.flush()
             session.commit()
@@ -1270,6 +1270,28 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         for line in query:
             ret.append({"gid": line.parentGroupId, "cmd_id": line.commandId})
         return ret
+
+    @DatabaseHelper._sessionm
+    def get_active_convergence_counts(self, session, gids):
+        ids = set()
+        for gid in gids or []:
+            try:
+                ids.add(int(gid))
+            except (TypeError, ValueError):
+                continue
+        if not ids:
+            return {}
+        query = (
+            session.query(Convergence.parentGroupId, func.count(Convergence.id))
+            .filter(
+                and_(
+                    Convergence.parentGroupId.in_(ids),
+                    Convergence.active == 1,
+                )
+            )
+            .group_by(Convergence.parentGroupId)
+        )
+        return {str(gid): count for gid, count in query if count}
 
     @DatabaseHelper._sessionm
     def get_active_convergences(self, session):

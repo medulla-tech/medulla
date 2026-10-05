@@ -255,8 +255,17 @@ msgid "Selection mode"
 msgstr "Modo de selección"
 
 #: modules/kiosk/kiosk/ajaxProfilesList.php
-msgid "Are you sure you want to delete these profiles?"
-msgstr "¿Está seguro de que desea eliminar estos perfiles?"
+msgid "Delete this profile?"
+msgstr "¿Eliminar este perfil?"
+
+#: modules/kiosk/kiosk/ajaxProfilesList.php
+#, php-format
+msgid "Delete %d profiles?"
+msgstr "¿Eliminar %d perfiles?"
+
+#: modules/kiosk/kiosk/ajaxProfilesList.php
+msgid "Delete"
+msgstr "Eliminar"
 
 #: modules/kiosk/kiosk/ajaxProfilesList.php
 msgid "Some profiles could not be deleted:"
@@ -267,21 +276,8 @@ msgid "An error occurred while deleting."
 msgstr "Se ha producido un error durante la eliminación."
 
 #: modules/kiosk/kiosk/ajaxProfilesList.php
-msgid "Yes"
-msgstr "Sí"
-
-#: modules/kiosk/kiosk/ajaxProfilesList.php
-msgid "No"
-msgstr "No"
-
-#: modules/kiosk/kiosk/ajaxProfilesList.php
 msgid "Close"
 msgstr "Cerrar"
-
-#: modules/kiosk/kiosk/ajaxProfilesList.php
-#, php-format
-msgid "and %d more"
-msgstr "y %d más"
 
 #: modules/kiosk/kiosk/deleteProfile.php
 #, php-format

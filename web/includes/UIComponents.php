@@ -166,16 +166,15 @@ class BulkSelectBar
         $this->itemType = $itemType;
         $this->cssClass = $cssClass;
         $this->i18n = array_merge([
-            'deleteSelected' => _T("Delete selected", "dyngroup"),
-            'cancel'         => _T("Cancel", "dyngroup"),
-            'selectionMode'  => _T("Selection mode", "dyngroup"),
-            'confirmDelete'  => _T("Are you sure you want to delete these items?", "dyngroup"),
-            'partialErrors'  => _T("Some items could not be deleted:", "dyngroup"),
-            'deleteError'    => _T("An error occurred while deleting.", "dyngroup"),
-            'yes'            => _T("Yes", "dyngroup"),
-            'no'             => _T("No", "dyngroup"),
-            'close'          => _T("Close", "dyngroup"),
-            'andMore'        => _T("and %d more", "dyngroup"),
+            'deleteSelected'    => _T("Delete selected", "dyngroup"),
+            'cancel'            => _T("Cancel", "dyngroup"),
+            'selectionMode'     => _T("Selection mode", "dyngroup"),
+            'confirmDeleteOne'  => _T("Delete this item?", "dyngroup"),
+            'confirmDeleteMany' => _T("Delete %d items?", "dyngroup"),
+            'confirm'           => _T("Delete", "dyngroup"),
+            'partialErrors'     => _T("Some items could not be deleted:", "dyngroup"),
+            'deleteError'       => _T("An error occurred while deleting.", "dyngroup"),
+            'close'             => _T("Close", "dyngroup"),
         ], $i18n);
     }
 
@@ -192,10 +191,11 @@ class BulkSelectBar
 
     /**
      * Register a row that should have a checkbox.
+     * $note is shown next to the name in the confirmation popup.
      */
-    public function addItem($id, $name)
+    public function addItem($id, $name, $note = '')
     {
-        $this->items[] = ['id' => (string)$id, 'name' => (string)$name];
+        $this->items[] = ['id' => (string)$id, 'name' => (string)$name, 'note' => (string)$note];
     }
 
     /**
@@ -221,7 +221,7 @@ class BulkSelectBar
         // --- HTML bar ---
         echo '<div id="' . $barId . '" style="display: none; padding: 8px 12px; margin-top: 5px; background: #f5f5f5; border-radius: 4px; align-items: center; gap: 10px;">';
         echo '<button id="' . $btnId . '" class="btnPrimary" type="button" style="display: none;">';
-        echo htmlspecialchars($this->i18n['deleteSelected']) . ' (<span id="' . $countId . '">0</span>)';
+        echo '<span>' . htmlspecialchars($this->i18n['deleteSelected']) . ' (<span id="' . $countId . '">0</span>)</span>';
         echo '</button>';
         echo '<button id="' . $cancelId . '" class="btnSecondary" type="button">';
         echo htmlspecialchars($this->i18n['cancel']);
@@ -239,13 +239,18 @@ class BulkSelectBar
         $jsCancelId    = addslashes($cancelId);
 
         $jsSelectionMode = addslashes($this->i18n['selectionMode']);
-        $jsConfirmDelete = addslashes($this->i18n['confirmDelete']);
         $jsPartialErrors = addslashes($this->i18n['partialErrors']);
         $jsDeleteError   = addslashes($this->i18n['deleteError']);
-        $jsYes           = addslashes($this->i18n['yes']);
-        $jsNo            = addslashes($this->i18n['no']);
         $jsClose         = addslashes($this->i18n['close']);
-        $jsAndMore       = addslashes($this->i18n['andMore']);
+        $jsConfirmTexts  = addslashes(json_encode(
+            [
+                'one'     => $this->i18n['confirmDeleteOne'],
+                'many'    => $this->i18n['confirmDeleteMany'],
+                'confirm' => $this->i18n['confirm'],
+                'cancel'  => $this->i18n['cancel'],
+            ],
+            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+        ));
         // The bar posts to a page that changes data: it must carry the CSRF
         // token, otherwise the target page cannot call verifyCSRFToken().
         $jsAuthToken     = addslashes($_SESSION['auth_token'] ?? '');
@@ -268,6 +273,7 @@ class BulkSelectBar
     var itemType   = '{$jsItemType}';
     var cssClass   = '{$jsCssClass}';
     var items      = JSON.parse('{$jsItemsJson}');
+    var confirmTexts = JSON.parse('{$jsConfirmTexts}');
     var authToken  = '{$jsAuthToken}';
 
     var bulkBar   = document.getElementById('{$jsBarId}');
@@ -294,6 +300,7 @@ class BulkSelectBar
         checkbox.className = cssClass;
         checkbox.value = items[i].id;
         checkbox.setAttribute('data-name', items[i].name);
+        if (items[i].note) checkbox.setAttribute('data-bulk-note', items[i].note);
         var wrapper = document.createElement('span');
         wrapper.className = 'bulk-check-inline';
         wrapper.style.cssText = 'display:none; margin-right:8px; vertical-align:middle;';
@@ -399,23 +406,44 @@ class BulkSelectBar
         xhr.send(params);
     }
 
+    function el(tag, className, text) {
+        var node = document.createElement(tag);
+        if (className) node.className = className;
+        if (text) node.textContent = text;
+        return node;
+    }
+
     if (bulkBtn) {
         bulkBtn.addEventListener('click', function() {
             var checked = document.querySelectorAll('.' + cssClass + ':checked');
             if (!checked.length) return;
-            var names = [], ids = [];
-            for (var j = 0; j < checked.length; j++) { ids.push(checked[j].value); names.push(checked[j].getAttribute('data-name')); }
-            var maxShow = 5;
-            var list = '<ul style="text-align:left;max-height:200px;overflow-y:auto;margin:10px 0">';
-            for (var j = 0; j < Math.min(names.length, maxShow); j++) list += '<li>' + escapeHtml(names[j]) + '</li>';
-            if (names.length > maxShow) list += '<li><em>' + '{$jsAndMore}'.replace('%d', names.length - maxShow) + '</em></li>';
-            list += '</ul>';
-            var confirmId = cssClass + '-confirm-yes';
-            PopupWindow(null, null, 0, null,
-                '<div style="padding:10px"><div class="alert alert-info">{$jsConfirmDelete}' + list + '</div>' +
-                '<div style="text-align:center"><button id="' + confirmId + '" class="btn btn-primary">{$jsYes}</button> ' +
-                '<button class="btn btnSecondary" onclick="closePopup();return false">{$jsNo}</button></div></div>');
-            jQuery(document).off('click','#' + confirmId).on('click','#' + confirmId, function() { doBulkDelete(ids); });
+            var ids = [];
+            var content = document.createDocumentFragment();
+            var question = checked.length === 1 ? confirmTexts.one : confirmTexts.many.replace('%d', checked.length);
+            content.appendChild(el('h2', 'popup-title-danger', question));
+            var body = el('div', 'bulk-confirm');
+            var list = el('ul', 'bulk-confirm-list');
+            for (var j = 0; j < checked.length; j++) {
+                ids.push(checked[j].value);
+                var row = el('li');
+                row.appendChild(el('span', 'bulk-confirm-name', checked[j].getAttribute('data-name')));
+                var note = checked[j].getAttribute('data-bulk-note');
+                if (note) row.appendChild(el('span', 'bulk-confirm-note', note));
+                list.appendChild(row);
+            }
+            body.appendChild(list);
+            var actions = el('div', 'bulk-confirm-actions');
+            var confirmBtn = el('button', 'btnDanger', confirmTexts.confirm);
+            confirmBtn.type = 'button';
+            confirmBtn.addEventListener('click', function() { doBulkDelete(ids); });
+            var cancelPopupBtn = el('button', 'btnSecondary', confirmTexts.cancel);
+            cancelPopupBtn.type = 'button';
+            cancelPopupBtn.addEventListener('click', function() { closePopup(); });
+            actions.appendChild(confirmBtn);
+            actions.appendChild(cancelPopupBtn);
+            body.appendChild(actions);
+            content.appendChild(body);
+            PopupWindow(null, null, 400, null, content);
         });
     }
 })();
