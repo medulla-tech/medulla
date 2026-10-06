@@ -1274,7 +1274,7 @@ class LdapUserGroupControl:
                               created on the filesystem
         @type createHomeDir: bool
         """
-        ident = f"uid={uid},{self.baseUsersDN}"
+        ident = f"uid={ldap.dn.escape_dn_chars(uid)},{self.baseUsersDN}"
         r = AF().log(PLUGIN_NAME, AA.BASE_ADD_USER, [(ident, AT.USER)])
 
         # Get the homeDir path
