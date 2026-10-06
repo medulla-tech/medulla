@@ -26,6 +26,7 @@ require_once("modules/update/includes/xmlrpc.inc.php");
 
 
 if (isset($_POST["bconfirm"], $_POST["id"])) {
+    verifyCSRFToken($_POST);
     // Delete selected rule
     deleteEntityRule($_POST["id"]);
     if (!isXMLRPCError()) new NotifyWidgetSuccess(_T("The entity rule has been deleted successfully.", "glpi"));

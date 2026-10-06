@@ -49,6 +49,7 @@ function urlredirect_group_for_deploy($typegroup, $g_id, $login_deploy, $cmddepl
         "login"=>$login_deploy,
         "cmd_id"=>$cmddeploy_id,
         "type"=>$typegroup,
+        "auth_token"=>$_SESSION['auth_token'] ?? '',
 
     ];
     $urlRedirect1 = urlStrRedirect("base/computers/createMachinesStaticGroupdeploy", $p);

@@ -24,6 +24,7 @@
 
 // Receiving form data
 if (isset($_POST['bconfirm'])){
+    verifyCSRFToken($_POST);
 
     //addEntity($_POST['name'], $_POST['parent'], $_POST['description']);
     if (empty($_GET['id'])){

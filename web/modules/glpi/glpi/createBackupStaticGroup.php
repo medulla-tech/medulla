@@ -26,6 +26,8 @@ require_once("modules/dyngroup/includes/xmlrpc.php");
 require_once("modules/backuppc/includes/xmlrpc.php"); // For get_all_hosts
 require_once("modules/glpi/includes/xmlrpc.php"); // For xmlrpc_get_all_uuids_and_hostnames
 
+verifyCSRFToken($_GET);
+
 // Get all the machines
 $all_machines = xmlrpc_get_all_uuids_and_hostnames();
 

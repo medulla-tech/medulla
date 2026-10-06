@@ -52,7 +52,7 @@ class GlpiPanel extends Panel
         $lessThanText     = json_encode(_T("< %s days: %percent% (%d)", "glpi"));
         $moreThanText     = json_encode(_T("> %s days: %percent% (%d)", "glpi"));
         $unregisteredText = json_encode(_T("Uninventoried machines", "glpi"));
-        $urlRedirect      = json_encode(urlStrRedirect("base/computers/createStaticGroup"));
+        $urlRedirect      = json_encode(urlStrRedirect("base/computers/createStaticGroup", array("auth_token" => $_SESSION['auth_token'] ?? '')));
         $urlPhones        = json_encode(urlStrRedirect("mobile/mobile/glpiPhonesList"));
 
         $computersSectionTitle = _T("Computers", "glpi");

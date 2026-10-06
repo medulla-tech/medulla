@@ -29,6 +29,8 @@ require_once("modules/dyngroup/includes/xmlrpc.php");
 require_once("modules/medulla_server/includes/locations_xmlrpc.inc.php");
 require_once("modules/base/includes/computers.inc.php");
 
+verifyCSRFToken($_GET);
+
 $requestedOS = $_GET['os'];
 
 // Get user locations
