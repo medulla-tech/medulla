@@ -30,6 +30,8 @@ $client_name = htmlspecialchars($_GET["clientname"]);
 $groupe_name = htmlspecialchars($_GET["groupname"]);
 $jid_machine = htmlspecialchars($_GET["jidmachine"]);
 
+verifyCSRFToken($_GET);
+
 $p = new PageGenerator(_T("Start ".$type_backup." backup", 'urbackup'));
 $p->setSideMenu($sidemenu);
 $p->display();

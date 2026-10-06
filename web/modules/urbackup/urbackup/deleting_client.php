@@ -11,6 +11,8 @@ $clientname = htmlspecialchars($_GET["clientname"]);
 $editclient = htmlspecialchars($_GET["editclient"]);
 $authkey = htmlspecialchars($_GET["authkey"]);
 
+verifyCSRFToken($_GET);
+
 $p = new PageGenerator(_T("Enable or disable client", 'urbackup'));
 $p->setSideMenu($sidemenu);
 $p->display();

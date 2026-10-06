@@ -29,6 +29,8 @@ $group_id = htmlspecialchars($_GET["groupid"]);
 $client_id = $_POST['client'];
 if ($client_id == "")
     $client_id = htmlspecialchars($_GET["clientid"]);
+else
+    verifyCSRFToken($_POST);
 
 $group_name = htmlspecialchars($_GET["groupname"]);
 

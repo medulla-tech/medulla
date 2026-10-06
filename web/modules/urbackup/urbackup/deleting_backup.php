@@ -27,6 +27,8 @@ require_once("modules/urbackup/includes/xmlrpc.php");
 $clientid = htmlspecialchars($_GET["clientid"]);
 $backupid = htmlspecialchars($_GET["backupid"]);
 
+verifyCSRFToken($_GET);
+
 $p = new PageGenerator(_T("Delete backup", 'urbackup'));
 $p->setSideMenu($sidemenu);
 $p->display();

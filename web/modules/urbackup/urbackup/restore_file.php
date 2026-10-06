@@ -28,6 +28,8 @@ $p = new PageGenerator(_T("Restore file", 'urbackup'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
+verifyCSRFToken($_GET);
+
 $client_id = htmlspecialchars($_GET["clientid"]);
 $backup_id = htmlspecialchars($_GET["backupid"]);
 $volume_name = htmlspecialchars($_GET["volumename"]);

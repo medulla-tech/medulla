@@ -26,6 +26,8 @@ require_once("modules/urbackup/includes/xmlrpc.php");
 
 $group_id = htmlspecialchars($_GET["groupid"]);
 
+verifyCSRFToken($_GET);
+
 $p = new PageGenerator(_T("Delete group", 'urbackup'));
 $p->setSideMenu($sidemenu);
 $p->display();

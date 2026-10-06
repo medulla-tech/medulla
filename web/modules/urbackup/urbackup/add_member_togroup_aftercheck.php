@@ -25,6 +25,7 @@ require("localSidebar.php");
 require_once("modules/urbackup/includes/xmlrpc.php");
 
 $group_id = $_POST['group'];
+verifyCSRFToken($_POST);
 $client_id = htmlspecialchars($_GET["clientid"]);
 $clientname = htmlspecialchars($_GET["clientname"]);
 $jidMachine = htmlspecialchars($_GET["jidmachine"]);

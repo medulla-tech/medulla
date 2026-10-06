@@ -29,6 +29,8 @@ $client_name = htmlspecialchars($_GET["clientname"]);
 $groupe_name = htmlspecialchars($_GET["groupname"]);
 $jidMachine = htmlspecialchars($_GET["jidmachine"]);
 
+verifyCSRFToken($_GET);
+
 $p = new PageGenerator(_T("Restart service", 'urbackup'));
 $p->setSideMenu($sidemenu);
 $p->display();

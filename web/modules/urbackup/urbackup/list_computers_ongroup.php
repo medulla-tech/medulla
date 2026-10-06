@@ -121,6 +121,7 @@ $clients = $array['navitems']['clients'];
 <h2><?php echo _T("Add member to this profile", 'urbackup'); ?></h2>
 <br>
 <form name="form" action="main.php?module=urbackup&amp;submod=urbackup&amp;action=add_member_togroup&amp;groupname=<?php echo $group_name; ?>&amp;groupid=<?php echo $group_id; ?>" method="post">
+    <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
     <select name="client">
         <?php
         foreach($clients as $client)
