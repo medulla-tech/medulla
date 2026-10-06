@@ -420,8 +420,8 @@ function item_list() {
         $module = "base";
         $submod = "computers";
     }
-    $upAction = new ActionItem(_T("Move Up"), $type."imgtabs", "up", "item", $module, $submod, $type."tabbootmenu", "up");
-    $downAction = new ActionItem(_T("Move down"), $type."imgtabs", "down", "item", $module, $submod, $type."tabbootmenu", "down");
+    $upAction = new ActionItem(_T("Move Up"), $type."imgtabs", "up", "item", $module, $submod, $type."tabbootmenu", "up", array("auth_token" => $_SESSION['auth_token'] ?? ''));
+    $downAction = new ActionItem(_T("Move down"), $type."imgtabs", "down", "item", $module, $submod, $type."tabbootmenu", "down", array("auth_token" => $_SESSION['auth_token'] ?? ''));
     $editAction = new ActionItem(_T("Edit"), $type."imgtabs", "edit", "item", $module, $submod, $type."tabbootmenu", "edit");
     $deleteAction = new ActionPopupItem(_T("Delete"), $type."bootmenu_remove", "delete", "item", $module, $submod, $type."tabbootmenu", 300, "delete");
 
@@ -543,9 +543,13 @@ if (($type == '' && (xmlrpc_isComputerRegistered($target_uuid) || xmlrpc_isCompu
 
     switch($mod) {
         case 'up':
+            verifyCSRFToken($_GET);
+
             item_up();
             break;
         case 'down':
+            verifyCSRFToken($_GET);
+
             item_down();
             break;
         case 'edit':

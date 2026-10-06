@@ -45,14 +45,14 @@ foreach ($rules as $index => $rule) {
         $dates[] = '-';
     }
 
-    $toggleUrl = 'main.php?module=mobile&amp;submod=mobile&amp;action=netfilterRuleAction'
-               . '&amp;rule_id=' . $ruleId
-               . '&amp;action_type=' . ($enabled ? 'disable' : 'enable');
+    $toggleTarget = urlStrRedirect("mobile/mobile/netfilterRuleAction");
     $checked = $enabled ? ' checked' : '';
     $toggles[] = sprintf(
-        '<input type="checkbox"%s onchange="window.location=\'%s\'" style="cursor:pointer;" title="%s">',
+        '<input type="checkbox"%s onchange="mobileToggleNetfilterRule(%d, \'%s\', \'%s\')" style="cursor:pointer;" title="%s">',
         $checked,
-        $toggleUrl,
+        $ruleId,
+        $enabled ? 'disable' : 'enable',
+        htmlspecialchars($toggleTarget, ENT_QUOTES),
         $enabled ? _T('Disable', 'mobile') : _T('Enable', 'mobile')
     );
 
@@ -88,3 +88,24 @@ $n->start = 0;
 $n->display();
 echo '<script>(function(){var $tb=jQuery(".listinfos:last tbody");if(!$tb.children("tr").length){$tb.append("<tr><td colspan=\"20\" style=\"text-align:center;color:#888;padding:20px;font-style:italic;\">" + ' . json_encode(_T("No rules found", "mobile")) . ' + "</td></tr>");}})();</script>';
 ?>
+<script>
+function mobileToggleNetfilterRule(ruleId, actionType, targetUrl) {
+    var form = document.createElement('form');
+    form.method = 'POST';
+    form.action = targetUrl;
+    var fields = {
+        'rule_id': ruleId,
+        'action_type': actionType,
+        'auth_token': '<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>'
+    };
+    for (var key in fields) {
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = fields[key];
+        form.appendChild(input);
+    }
+    document.body.appendChild(form);
+    form.submit();
+}
+</script>

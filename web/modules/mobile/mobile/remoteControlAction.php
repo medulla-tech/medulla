@@ -20,7 +20,8 @@ $token = $session['token'];
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 $host = $_SERVER['HTTP_HOST'];
 $embed_url = $protocol . '://' . $host . '/hmdm/remotecontrol-embed.html?sessionId=' . urlencode($session_id) . '&token=' . urlencode($token);
-$stop_url = 'main.php?module=mobile&submod=mobile&action=remoteControlStop&session_id=' . urlencode($session_id);
+$stop_url = 'main.php?module=mobile&submod=mobile&action=remoteControlStop';
+$auth_token = htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8');
 ?>
 <!DOCTYPE html>
 <html>
@@ -44,17 +45,29 @@ body { background: #1a1a1a; display: flex; flex-direction: column; height: 100vh
 <iframe id="rc-frame" src="<?php echo htmlspecialchars($embed_url); ?>" allowfullscreen></iframe>
 <script>
 var sessionStopped = false;
+var rcSessionId = <?php echo json_encode($session_id); ?>;
+var rcAuthToken = <?php echo json_encode($auth_token); ?>;
 
 function stopSession() {
     if (sessionStopped) return;
     sessionStopped = true;
-    fetch('<?php echo $stop_url; ?>', { method: 'GET', keepalive: true });
+    var body = 'session_id=' + encodeURIComponent(rcSessionId) + '&auth_token=' + encodeURIComponent(rcAuthToken);
+    fetch('<?php echo $stop_url; ?>', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body,
+        keepalive: true
+    });
     window.close();
 }
 
 window.addEventListener('beforeunload', function() {
     if (!sessionStopped) {
-        navigator.sendBeacon('<?php echo $stop_url; ?>');
+        var blob = new Blob(
+            ['session_id=' + encodeURIComponent(rcSessionId) + '&auth_token=' + encodeURIComponent(rcAuthToken)],
+            { type: 'application/x-www-form-urlencoded' }
+        );
+        navigator.sendBeacon('<?php echo $stop_url; ?>', blob);
     }
 });
 </script>

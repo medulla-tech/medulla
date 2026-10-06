@@ -108,6 +108,7 @@ $n->disableFirstColumnActionLink();
 $n->display($navbar = 0, $header = 0);
 // Bouton de validation
 echo '<input type="hidden" name="form_name" value="montableau">';
+echo '<input type="hidden" name="auth_token" value="'.htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8').'">';
 echo '<input type="hidden" name="entityid" value="'.$_GET['selected_location']['uuid'].'">';
 echo '<input type="hidden" name="entityname" value="'.$_GET['selected_location']['name'].'">';
 echo '<div class="approval-form-actions">';

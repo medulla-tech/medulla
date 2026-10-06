@@ -30,6 +30,7 @@
     require_once("../../../includes/i18n.inc.php");
     require_once("../../../includes/acl.inc.php");
     require_once("../../../includes/session.inc.php");
+    require_once("../../../includes/utils.inc.php");
     extract($_POST);
 
     switch($action){
@@ -43,6 +44,8 @@
             echo json_encode($result);
             break;
         case "save":
+            verifyCSRFToken($_POST);
+
             $data = array('action' => $action, 'file' => $file, 'content' => $content);
             $result = xmlrpc_remotefileeditaction($machine, $data);
             echo json_encode($data);

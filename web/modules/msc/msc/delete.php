@@ -24,6 +24,8 @@
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 
 if (isset($_POST["bconfirm"])) {
+    verifyCSRFToken($_POST);
+
     $from = $_POST['from'];
     $path =  explode('|', $from);
     $module = $path[0];

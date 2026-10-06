@@ -144,7 +144,8 @@ foreach ($merged_array as $index_tab => $entitycompliance) {
     $params[] = array(
         'entity' => $entitycompliance['uuid'],// $transformed_uuid, //
         'completename' => $entitycompliance['completename'],
-        'source' => $source
+        'source' => $source,
+        'history_type' => 'windows_updates'
     );
 }
 
@@ -181,11 +182,14 @@ $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($params);
 
-$n->addActionItemArray($actionHistories);
-$n->addActionItemArray($actiondetailsByMachs);
-$n->addActionItemArray($actiondetailsByUpds);
+// Ordre : deploiements, puis consultation, puis historique.
 //$n->addActionItemArray($actiondeployAlls);
 $n->addActionItemArray($actiondeploySpecifics);
+
+$n->addActionItemArray($actiondetailsByMachs);
+$n->addActionItemArray($actiondetailsByUpds);
+
+$n->addActionItemArray($actionHistories);
 $n->start = 0;
 $n->end = $count;
 $n->setEmptyState(_T("No entities found", "updates"), _T("No entities match the current filter.", "updates"));

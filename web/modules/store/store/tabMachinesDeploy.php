@@ -10,13 +10,15 @@ $packageUuid = $_GET['packageUuid'] ?? '';
 $pid = $_GET['pid'] ?? '';
 $packageName = $_GET['packageName'] ?? '';
 $packageVersion = $_GET['packageVersion'] ?? '';
+$os = $_GET['os'] ?? '';
 
 // AjaxFilter for machines search
 $ajax = new AjaxFilter(urlStrRedirect("store/store/ajaxMachinesListForDeploy") .
     "&packageUuid=" . urlencode($packageUuid) .
     "&pid=" . urlencode($pid) .
     "&packageName=" . urlencode($packageName) .
-    "&packageVersion=" . urlencode($packageVersion));
+    "&packageVersion=" . urlencode($packageVersion) .
+    "&os=" . urlencode($os));
 $ajax->display();
 ?>
 

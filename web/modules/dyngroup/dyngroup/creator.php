@@ -291,7 +291,8 @@ if (quickGet('add_param')) {
                 $module = clean(quickGet('req'));
                 $criterion = clean(quickGet('add_param'));
                 include("modules/dyngroup/includes/double.php");
-                $auto = new DoubleAutocomplete($module, $criterion, quickGet('value'), $subedition);
+                $value = (isset($_GET['value']) && is_array($_GET['value'])) ? $_GET['value'] : quickGet('value');
+                $auto = new DoubleAutocomplete($module, $criterion, $value, $subedition);
                 $auto->display();
                 break;
             case 'halfstatic':

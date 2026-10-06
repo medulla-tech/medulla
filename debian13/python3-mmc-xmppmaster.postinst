@@ -7,9 +7,13 @@ case "$1" in
             echo -n "Adding user pulsetransfert..."
             adduser --system --quiet \
                     --home /var/lib/pulse2/file-transfer \
-                    --shell /bin/rbash \
+                    --shell /usr/sbin/nologin \
                     --disabled-password \
                     pulsetransfert
+            echo "..done"
+        else
+            echo "User pulsetransfert already exists. Updating shell to nologin..."
+            usermod -s /usr/sbin/nologin pulsetransfert
             echo "..done"
         fi
         ;;

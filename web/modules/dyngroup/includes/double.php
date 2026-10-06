@@ -41,11 +41,20 @@ class DoubleAutocomplete {
     }
 
     function display() {
+        if (is_array($this->val)) {
+            $val1 = $this->val[0] ?? '';
+            $val2 = $this->val[1] ?? '';
+        } else {
+            $val1 = $this->val ?? '';
+            $val2 = '';
+        }
+        $val1 = htmlspecialchars((string)$val1, ENT_QUOTES | ENT_SUBSTITUTE);
+        $val2 = htmlspecialchars((string)$val2, ENT_QUOTES | ENT_SUBSTITUTE);
     ?>
 
     <td style="text-align:right;"><?php echo  $this->field1; ?> : </td>
     <td>
-        <input type="text" id="autocomplete" name="value" size="23" value="<?php echo $this->val ?>" />
+        <input type="text" id="autocomplete" name="value" size="23" value="<?php echo $val1 ?>" />
     </td>
     <td id='secondButton'>
         <input name="next" type="button" class="btnPrimary" value="<?php echo  _T("->", "dyngroup"); ?>" onClick="addSlave('autocomplete'); return false;"/>
@@ -57,7 +66,7 @@ class DoubleAutocomplete {
         <table><tr>
         <td id='secondPart1' style="text-align:right;"><?php echo  $this->field2; ?> : </td>
         <td id='secondPart2'>
-            <input type="text" id="autocomplete2" name="value2" size="23" />
+            <input type="text" id="autocomplete2" name="value2" size="23" value="<?php echo $val2 ?>" />
         </td>
         <td id='secondPart3'>
             <input name="buser" type="submit" class="btnPrimary" value="<?php echo  $this->b_label; ?>" />

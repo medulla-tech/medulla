@@ -222,14 +222,18 @@
 .popup:has(#__popup_container > h2:first-child) #__popup_container form {
   text-align: center;
   padding: 25px 30px 30px 30px;
-  font-size: var(--text-lg);
+  font-size: var(--text-md);
   line-height: 1.6;
 }
 
 .popup:has(#__popup_container > h2:first-child) #__popup_container form p {
   margin-bottom: 20px;
   color: var(--color-text-medium);
-  font-size: var(--text-lg);
+  font-size: var(--text-md);
+}
+
+.popup:has(#__popup_container > h2:first-child) #__popup_container form p * {
+  font-size: inherit;
 }
 
 .popup:has(#__popup_container > h2:first-child) #__popup_container form p:empty {
@@ -910,4 +914,56 @@
 #__popup_container h2.popup-title-warning {
   background: var(--color-bg-white) !important;
   color: var(--color-warning) !important;
+}
+
+/* ---------------------------------------- */
+/* Bulk delete confirmation (BulkSelectBar) */
+/* ---------------------------------------- */
+
+.bulk-confirm {
+  padding: 20px 30px 25px;
+  text-align: center;
+}
+
+.bulk-confirm-list {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+  max-height: 310px;
+  overflow-y: auto;
+  text-align: left;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.bulk-confirm-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0;
+  padding: 6px 12px;
+  line-height: 18px;
+  border-top: 1px solid var(--gray-200);
+}
+
+.bulk-confirm-list li:first-child {
+  border-top: none;
+}
+
+.bulk-confirm-name {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--color-text-dark);
+}
+
+.bulk-confirm-note {
+  flex-shrink: 0;
+  color: var(--color-text-medium);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+.bulk-confirm-actions {
+  display: flex;
+  justify-content: center;
 }

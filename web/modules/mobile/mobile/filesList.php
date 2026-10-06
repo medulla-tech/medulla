@@ -203,6 +203,7 @@ function submitAddFile() {
     formData.append('description', jQuery('#modal_file_desc').val().trim());
     formData.append('path_device', jQuery('#modal_file_path').val().trim());
     formData.append('variable_content', jQuery('#modal_file_variable').is(':checked') ? '1' : '0');
+    formData.append('auth_token', '<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>');
     jQuery('.modal_file_config:checked').each(function() {
         formData.append('configs[]', jQuery(this).val());
     });

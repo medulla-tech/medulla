@@ -47,6 +47,8 @@ $p->display();
 
 if(!empty($_POST)){
     if(!empty($_POST['add'])){
+        verifyCSRFToken($_POST);
+
         $location = htmlentities($_POST['location']);
 	if(!empty($_SESSION['location']) && $_SESSION['location'] != $location){
 		$_SESSION['location'] = $location;

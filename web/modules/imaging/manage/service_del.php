@@ -32,12 +32,9 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 $location = getCurrentLocation();
 
 if (isset($_POST["bconfirm"])) {
+    verifyCSRFToken($_POST);
+
     $params = getParams();
-
-    $item_uuid = $_POST['itemid'];
-    $label = urldecode($_POST['itemlabel']);
-
-    $ret = xmlrpc_delServiceToLocation($item_uuid, $location, $params);
 
     // goto images list
     if ($ret[0] and !isXMLRPCError()) {

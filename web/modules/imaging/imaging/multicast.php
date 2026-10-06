@@ -39,6 +39,7 @@ if (isset($_GET['gid'])) {
 $label = urldecode($_GET['itemlabel']);
 $params = getParams();
 if ($_POST) {
+    verifyCSRFToken($_POST);
     $nb = extract($_POST);
     $location = xmlrpc_getGroupLocation($gid);
     $list = getRestrictedComputersList(0, -1, array('gid' => $gid, 'hostname' => '', 'location' => $location), false);
@@ -368,6 +369,7 @@ jQuery('#checkbox1').click(function() {
 </h2>
 <form action="<?php echo urlStr("base/computers/multicast", $params) ?>" method="post">
 
+    <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
     <table id="tableoptionmulticast">
         <tr>
             <td>

@@ -32,6 +32,8 @@ $label = urldecode($_GET['itemlabel']);
 $params = getParams();
 
 if ($_POST) {
+    verifyCSRFToken($_POST);
+
     $isopath = "/tmp";
     $label = $_POST['label'];
     $title = $_POST['title'];
@@ -85,6 +87,7 @@ if ($_POST) {
 }
 ?>
 <form action="<?php echo urlStr("imaging/manage/master_iso") ?>" method="post">
+<input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
     <h2><?php echo sprintf(_T("Create iso for <strong>%s</strong>", "imaging"), $label) ?></h2>
     <table>
         <tr><td><?php echo _T('Title', 'imaging'); ?></td><td> <input name="title" type="text" value="" /></td></tr>

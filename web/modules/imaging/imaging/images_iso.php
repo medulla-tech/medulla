@@ -36,6 +36,7 @@ else
     $type = '';
 
 if ($_POST) {
+    verifyCSRFToken($_POST);
     $label = $_POST['label'];
     $title = trim($_POST['title']);
     $size = $_POST['media'];
@@ -89,6 +90,7 @@ if ($_POST) {
 ?>
 <h2><?php echo sprintf(_T("Generate ISO for <strong>%s</strong>", "imaging"), $label) ?></h2>
 <form action="<?php echo urlStr("base/computers/images_iso", $params) ?>" method="post">
+    <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
     <table>
         <tr><td><?php echo _T('Title', 'imaging'); ?></td><td> <input name="title" type="text" value="" /></td></tr>
         <tr><td colspan="2">

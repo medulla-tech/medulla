@@ -1,7 +1,7 @@
 <?php
 require_once("modules/mobile/includes/xmlrpc.php");
 
-$configId = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$configId = isset($_GET['id']) ? intval($_GET['id']) : (isset($_POST['id']) ? intval($_POST['id']) : 0);
 if ($configId <= 0) {
     $f = new PopupForm(_T("Contacts Sync", "mobile"));
     $f->setLevel('danger');
@@ -10,6 +10,20 @@ if ($configId <= 0) {
     $f->display();
     exit;
 }
+
+if (!isset($_POST['bconfirm'])) {
+    $f = new PopupForm(_T("Sync contacts now?", "mobile"));
+    $f->setLevel('default');
+    $f->addText(_T("This will send a syncContacts push to all devices in this configuration.", "mobile"));
+    $hidden = new HiddenTpl("id");
+    $f->add($hidden, array("value" => $configId, "hide" => true));
+    $f->addValidateButton("bconfirm");
+    $f->addCancelButton("bback");
+    $f->display();
+    exit;
+}
+
+verifyCSRFToken($_POST);
 
 $result = xmlrpc_send_hmdm_push_message('configuration', 'syncContacts', '', '', '', $configId);
 

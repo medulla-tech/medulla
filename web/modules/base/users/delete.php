@@ -28,6 +28,8 @@ if (isset($_GET["user"])) $user = urldecode($_GET["user"]);
 if (isset($_POST["user"])) $user = $_POST["user"];
 
 if (isset($_POST["bdeluser"])) {
+    verifyCSRFToken($_POST);
+
     del_user($user, $_POST["delfiles"]);
     if (!isXMLRPCError()) {
         new NotifyWidgetSuccess(sprintf(_("User %s has been successfully deleted"), $user));

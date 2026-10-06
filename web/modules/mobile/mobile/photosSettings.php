@@ -29,6 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (isset($_POST['bsave']) || isset($_POST['bsaveexit'])) {
+        verifyCSRFToken($_POST);
+
         $transferOn = (($_POST['transfer_photos'] ?? '0') === '1');
         $settings['transferPhotos']        = $transferOn;
         $settings['imageLocation']         = $transferOn ? (($_POST['image_location'] ?? '0') === '1') : false;

@@ -29,6 +29,8 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/base/includes/users-xmlrpc.inc.php");
 
 if (isset($_POST['bcreate'])){
+  verifyCSRFToken($_POST);
+
   $json = json_decode($_POST['jsonDatas'], true);
   if (!is_array($json)) { $json = array(); }
   // 'users' is already an array after the decode above; decode again only if it came as a JSON string

@@ -2,8 +2,6 @@
 /*
  * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
- * $Id$
- *
  * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
@@ -18,7 +16,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
- *
  */
 // modules/admin/admin/manage_entity.php
 require("localSidebar.php");
@@ -36,6 +33,8 @@ if (
     isset($_POST['form_name']) &&
     $_POST['form_name'] === 'montableau'
 ) {
+    verifyCSRFToken($_POST);
+
     $submittedCheckValues = $_POST['check'] ?? []; // Valeurs cochées ou non
 
     $result = [];
@@ -103,5 +102,7 @@ $ajax->display();
 $ajax->displayDivToUpdate();
 
 
+// Page fusionnee dans "automation", onglet Windows.
+header("Location: " . urlStrRedirect("updates/updates/automation&tab=tabwin"));
+exit;
 ?>
-

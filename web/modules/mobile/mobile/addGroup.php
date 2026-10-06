@@ -100,6 +100,8 @@ if (isset($_POST['baddmachine_x'])) {
         }
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
+    verifyCSRFToken($_POST);
+
     if ($values['name'] === '') {
         $errors['name'] = _T("Group name is required", "mobile");
     } elseif (!preg_match('/^[a-zA-Z0-9\s\-_]+$/', $values['name'])) {

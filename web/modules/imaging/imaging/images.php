@@ -140,6 +140,8 @@ function image_edit($target_uuid, $type, $item_uuid)
         $params['name'] = stripslashes($_POST['image_label']);
         $params['desc'] = stripslashes($_POST['image_description']);
         if (isset($_POST['bvalid'])) {
+            verifyCSRFToken($_POST);
+
             $params['post_install_scripts'] = $p_order;
             $params['is_master'] = $image['is_master'];
             $ret = xmlrpc_editImage($item_uuid, $target_uuid, $params, $type);

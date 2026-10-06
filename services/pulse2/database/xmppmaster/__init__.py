@@ -808,13 +808,23 @@ class XmppMasterDatabase(DatabaseHelper):
                     is_latest_major_version.
         """
         try:
-            if entity_id:
-                entity_id = int(entity_id)
+            # L'entite racine porte l'id 0 : seule une valeur absente ou non
+            # numerique vaut absence d'entite.
+            normalized_entity_id = None
+            if entity_id is not None and str(entity_id).strip() != "":
+                try:
+                    normalized_entity_id = int(entity_id)
+                except (TypeError, ValueError):
+                    normalized_entity_id = None
+
+            if normalized_entity_id is not None:
+                entity_id = normalized_entity_id
                 self._sync_linux_approved_releases_entities(
                     session,
                     entity_id=entity_id,
                     actor="system-sync"
                 )
+                session.commit()
 
                 # Récupération avec les selections de l'entité
                 query = text("""
@@ -1082,6 +1092,7 @@ class XmppMasterDatabase(DatabaseHelper):
             if not entity_ids:
                 return []
             self._sync_linux_auto_update_policy_entities(session, entity_ids)
+            session.commit()
             placeholders = ",".join([":eid_{}".format(i) for i in range(len(entity_ids))])
             params = {"eid_{}".format(i): eid for i, eid in enumerate(entity_ids)}
             query = text("""
@@ -8875,6 +8886,19 @@ class XmppMasterDatabase(DatabaseHelper):
                     else:
                         recherchefild = _likecriterium(
                             ctx["field"], ctx["filter"])
+        # Filtre optionnel par famille d'OS (opt-in : seuls les appelants qui le passent sont impactes)
+        if "osfamily" in ctx and str(ctx["osfamily"]).strip() != "":
+            osfam = str(ctx["osfamily"]).strip().lower()
+            if osfam in ("win", "windows"):
+                recherchefild += " AND mach.platform LIKE '%Windows%'"
+            elif osfam in ("mac", "macos", "darwin"):
+                recherchefild += " AND (mach.platform LIKE '%Mac%' OR mach.platform LIKE '%Darwin%')"
+            elif osfam == "linux":
+                recherchefild += (
+                    " AND mach.platform NOT LIKE '%Windows%'"
+                    " AND mach.platform NOT LIKE '%Mac%'"
+                    " AND mach.platform NOT LIKE '%Darwin%'"
+                )
         r = re.compile(r"reg_key_.*")
         regs = list(filter(r.search, self.config.summary))
         list_reg_columns_name = [
@@ -15098,8 +15122,10 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
         """
         Récupère les statistiques de conformité des mises à jour Windows par entité (version SQL optimisée).
 
-        Cette fonction consolide les informations de conformité des machines Windows
-        au niveau de chaque entité GLPI, en utilisant la table `local_glpi_machines`.
+        Cette fonction matérialise d'abord le périmètre des machines GLPI, puis
+        agrège localement les mises à jour Windows par entité. Cette séparation
+        conserve l'entité GLPI comme source de vérité sans joindre les tables
+        FEDERATED pendant le comptage coûteux.
 
         Args:
             session (Session):
@@ -15130,69 +15156,193 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                 - `totalmach` (int) : Nombre total de machines Windows enregistrées.
         """
 
-        # Construction dynamique des filtres
-        filter_sql = []
-        filter_noncompliant_sql = []
-
-        if config is not None and getattr(config, "filter_on", None) is not None:
-            for key, values in config.filter_on.items():
-                if not values:
+        def normalize_entity_ids(values):
+            normalized_ids = []
+            for value in values or []:
+                try:
+                    entity_id = int(value)
+                except (TypeError, ValueError):
                     continue
-                if key == "entity":
-                    filter_sql.append(f"lm.entities_id IN ({','.join(map(str, values))})")
-                elif key == "state":
-                    filter_noncompliant_sql.append(f"lgf.states_id IN ({','.join(map(str, values))})")
-                elif key == "type":
-                    filter_noncompliant_sql.append(f"lgf.computertypes_id IN ({','.join(map(str, values))})")
+                if entity_id not in normalized_ids:
+                    normalized_ids.append(entity_id)
+            return normalized_ids
 
-        # Clause WHERE commune
-        where_conditions = [
-            "m.agenttype = 'machine'",
-            "m.platform LIKE 'Microsoft Windows%'",
-        ]
-        if entities:
-            where_conditions.append(f"lm.entities_id IN ({','.join(map(str, entities))})")
-        if filter_sql:
-            where_conditions.extend(filter_sql)
+        filters = getattr(config, "filter_on", {}) if config is not None else {}
+        filters = filters or {}
+        requested_entities = normalize_entity_ids(entities)
+        filtered_entities = normalize_entity_ids(filters.get("entity"))
+        state_filters = normalize_entity_ids(filters.get("state"))
+        type_filters = normalize_entity_ids(filters.get("type"))
 
-        # Clause WHERE spécifique non-conformité
-        where_noncompliant = ""
-        if filter_noncompliant_sql:
-            where_noncompliant = " AND " + " AND ".join(filter_noncompliant_sql)
+        if (entities and not requested_entities) or (
+            filters.get("entity") and not filtered_entities
+        ):
+            return []
 
-        # Requête SQL unifiée
-        sql = f"""
-            SELECT
-                lm.entities_id AS entity_id,
-                COUNT(DISTINCT m.id) AS totalmach,
-                COUNT(DISTINCT uma.id_machine) AS nbmachines,
-                COUNT(DISTINCT uma.update_id) AS nbupdates
-            FROM
-                machines m
+        # State and type filters historically apply through local_glpi_filters
+        # after updates are joined. Keep this path unchanged until their GLPI
+        # data is materialized locally too.
+        if state_filters or type_filters:
+            where_conditions = [
+                "m.agenttype = 'machine'",
+                "m.platform LIKE 'Microsoft Windows%'",
+            ]
+            if requested_entities:
+                where_conditions.append(
+                    f"lm.entities_id IN ({','.join(map(str, requested_entities))})"
+                )
+            if filtered_entities:
+                where_conditions.append(
+                    f"lm.entities_id IN ({','.join(map(str, filtered_entities))})"
+                )
+            if state_filters:
+                where_conditions.append(
+                    f"lgf.states_id IN ({','.join(map(str, state_filters))})"
+                )
+            if type_filters:
+                where_conditions.append(
+                    f"lgf.computertypes_id IN ({','.join(map(str, type_filters))})"
+                )
+
+            sql = f"""
+                SELECT
+                    lm.entities_id AS entity_id,
+                    COUNT(DISTINCT m.id) AS totalmach,
+                    COUNT(DISTINCT uma.id_machine) AS nbmachines,
+                    COUNT(DISTINCT uma.update_id) AS nbupdates
+                FROM machines m
                 JOIN xmppmaster.local_glpi_machines lm ON lm.id = m.id_glpi
                 LEFT JOIN up_machine_activated uma ON uma.id_machine = m.id
                 LEFT JOIN local_glpi_filters lgf ON lgf.id = uma.glpi_id
-            WHERE
-                {' AND '.join(where_conditions)}
-                {where_noncompliant}
-            GROUP BY
-                lm.entities_id
-            ORDER BY
-                lm.entities_id;
-        """
+                WHERE {' AND '.join(where_conditions)}
+                GROUP BY lm.entities_id
+                ORDER BY lm.entities_id;
+            """
+            logger.debug("SQL conformité Windows avec filtres GLPI : %s", sql)
+            rows = session.execute(sql)
+        else:
+            scope_conditions = []
+            scope_params = {}
+            if requested_entities:
+                scope_conditions.append("lm.entities_id IN :requested_entities")
+                scope_params["requested_entities"] = requested_entities
+            if filtered_entities:
+                scope_conditions.append("lm.entities_id IN :filtered_entities")
+                scope_params["filtered_entities"] = filtered_entities
 
-        logger.debug("SQL conformité Windows : %s", sql)
+            scope_sql = """
+                SELECT
+                    lm.id AS glpi_id,
+                    lm.entities_id AS entity_id
+                FROM xmppmaster.local_glpi_machines lm
+            """
+            if scope_conditions:
+                scope_sql += " WHERE " + " AND ".join(scope_conditions)
 
-        result = []
-        for row in session.execute(sql):
-            result.append({
+            scope_statement = text(scope_sql)
+            if requested_entities:
+                scope_statement = scope_statement.bindparams(
+                    bindparam("requested_entities", expanding=True)
+                )
+            if filtered_entities:
+                scope_statement = scope_statement.bindparams(
+                    bindparam("filtered_entities", expanding=True)
+                )
+
+            scope = [
+                {
+                    "glpi_id": row.glpi_id,
+                    "entity_id": row.entity_id,
+                }
+                for row in session.execute(scope_statement, scope_params)
+            ]
+            if not scope:
+                return []
+
+            temporary_table_created = False
+            try:
+                session.execute("DROP TEMPORARY TABLE IF EXISTS tmp_conformity_scope")
+                session.execute(
+                    """
+                    CREATE TEMPORARY TABLE tmp_conformity_scope (
+                        glpi_id INT NOT NULL PRIMARY KEY,
+                        entity_id INT NOT NULL
+                    ) ENGINE=MEMORY
+                    """
+                )
+                temporary_table_created = True
+                session.execute(
+                    text(
+                        """
+                        INSERT INTO tmp_conformity_scope (glpi_id, entity_id)
+                        VALUES (:glpi_id, :entity_id)
+                        """
+                    ),
+                    scope,
+                )
+                session.execute(
+                    "DROP TEMPORARY TABLE IF EXISTS tmp_conformity_active_inventory"
+                )
+                session.execute(
+                    """
+                    CREATE TEMPORARY TABLE tmp_conformity_active_inventory (
+                        uuid_inventorymachine VARCHAR(255) NOT NULL PRIMARY KEY
+                    ) ENGINE=MEMORY
+                    """
+                )
+                session.execute(
+                    """
+                    INSERT INTO tmp_conformity_active_inventory (uuid_inventorymachine)
+                    SELECT CONCAT('UUID', lm.id)
+                    FROM xmppmaster.local_glpi_machines lm
+                    WHERE lm.is_deleted = 0 AND lm.is_template = 0
+                    """
+                )
+
+                sql = """
+                    SELECT
+                        scope.entity_id AS entity_id,
+                        COUNT(DISTINCT m.id) AS totalmach,
+                        COUNT(DISTINCT uma.id_machine) AS nbmachines,
+                        COUNT(DISTINCT uma.update_id) AS nbupdates
+                    FROM machines m
+                    JOIN tmp_conformity_scope scope ON scope.glpi_id = m.id_glpi
+                    LEFT JOIN (
+                        SELECT candidate.id AS id_machine, umw.update_id
+                        FROM tmp_conformity_scope candidate_scope
+                        JOIN machines candidate ON candidate.id_glpi = candidate_scope.glpi_id
+                        JOIN up_machine_windows umw ON umw.id_machine = candidate.id
+                        JOIN tmp_conformity_active_inventory active_inventory
+                            ON active_inventory.uuid_inventorymachine = candidate.uuid_inventorymachine
+                        LEFT JOIN up_white_list uwl ON uwl.updateid = umw.update_id
+                        LEFT JOIN up_gray_list ugl ON ugl.updateid = umw.update_id
+                        WHERE candidate.platform LIKE 'Microsoft Windows%'
+                          AND (ugl.valided = 1 OR uwl.valided = 1)
+                    ) uma ON uma.id_machine = m.id
+                    WHERE
+                        m.agenttype = 'machine'
+                        AND m.platform LIKE 'Microsoft Windows%'
+                    GROUP BY scope.entity_id
+                    ORDER BY scope.entity_id;
+                """
+                logger.debug("SQL conformité Windows locale : %s", sql)
+                rows = session.execute(sql).fetchall()
+            finally:
+                if temporary_table_created:
+                    session.execute(
+                        "DROP TEMPORARY TABLE IF EXISTS tmp_conformity_active_inventory"
+                    )
+                    session.execute("DROP TEMPORARY TABLE IF EXISTS tmp_conformity_scope")
+
+        return [
+            {
                 "entity": str(row.entity_id),
                 "nbmachines": row.nbmachines or 0,
                 "nbupdates": row.nbupdates or 0,
                 "totalmach": row.totalmach or 0,
-            })
-
-        return result
+            }
+            for row in rows
+        ]
 
 
     @DatabaseHelper._sessionm
@@ -15309,8 +15459,13 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
         where_clauses = ["m.agenttype = 'machine'"]
 
         if location:
+            # The GLPI entity is authoritative after a machine move. The local
+            # XMPP entity mapping can remain stale until the next inventory.
             where_clauses.append(
-                f"m.glpi_entity_id = (SELECT id FROM glpi_entity WHERE glpi_id = {location})"
+                "m.id_glpi IN ("
+                "SELECT lm.id FROM xmppmaster.local_glpi_machines lm "
+                f"WHERE lm.entities_id = {location}"
+                ")"
             )
 
         if criterion:
@@ -16227,22 +16382,37 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
 
     @DatabaseHelper._sessionm
     def get_updates_by_machineids(
-        self, session, machineids, start=0, limit=-1, filter=""
+        self, session, machineids, start=0, limit=-1, filter="", state="available"
     ):
+        if state == "required":
+            deploy_filters = [
+                Up_machine_activated.required_deploy == 1,
+                or_(
+                    Up_machine_activated.curent_deploy == None,
+                    Up_machine_activated.curent_deploy == 0,
+                ),
+            ]
+        elif state == "current":
+            deploy_filters = [Up_machine_activated.curent_deploy == 1]
+        else:
+            deploy_filters = [
+                or_(
+                    Up_machine_activated.curent_deploy == None,
+                    Up_machine_activated.curent_deploy == 0,
+                ),
+                or_(
+                    Up_machine_activated.required_deploy == None,
+                    Up_machine_activated.required_deploy == 0,
+                ),
+            ]
+
         query = (
             session.query(Up_machine_activated, Update_data)
             .join(Update_data, Update_data.updateid == Up_machine_activated.update_id)
             .filter(
                 and_(
                     Up_machine_activated.id_machine.in_(machineids),
-                    or_(
-                        Up_machine_activated.curent_deploy == None,
-                        Up_machine_activated.curent_deploy == 0,
-                    ),
-                    or_(
-                        Up_machine_activated.required_deploy == None,
-                        Up_machine_activated.required_deploy == 0,
-                    ),
+                    *deploy_filters,
                 )
             )
             .order_by(
@@ -17687,14 +17857,17 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
             valid_actions = {
                 "require_kernel": {
                     "fields": ["kernel_require"],
+                    "reset_fields": ["kernel_current"],
                     "date_fields": ["kernel_start", "kernel_stop", "kernel_interval"]
                 },
                 "require_security": {
                     "fields": ["security_require"],
+                    "reset_fields": ["security_curent"],
                     "date_fields": ["security_start", "security_stop", "security_interval"]
                 },
                 "require_other": {
                     "fields": ["other_require"],
+                    "reset_fields": ["other_current"],
                     "date_fields": ["other_start", "other_stop", "other_interval"]
                 },
                 "current_kernel": {
@@ -17711,6 +17884,7 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                 },
                 "require_all": {
                     "fields": ["kernel_require", "security_require", "other_require"],
+                    "reset_fields": ["kernel_current", "security_curent", "other_current"],
                     "date_fields": [
                         "kernel_start", "kernel_stop", "kernel_interval",
                         "security_start", "security_stop", "security_interval",
@@ -17749,6 +17923,10 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
             date_fields = valid_actions[action]["date_fields"]
 
             set_clauses = [f"{field} = :value" for field in fields]
+            set_clauses.extend(
+                f"{field} = 0"
+                for field in valid_actions[action].get("reset_fields", [])
+            )
 
             # Ajout des dates si elles sont fournies
             if date_start is not None:
@@ -17785,6 +17963,13 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                     return ("error: La liste des distributor_ids ne peut pas être vide.", 0)
                 conditions.append("distributor_id IN :distributor_ids")
                 params["distributor_ids"] = tuple(distributor_ids_list)
+
+            # A deployment request must target a machine still present in XMPP.
+            conditions.append(
+                "EXISTS (SELECT 1 FROM machines ma "
+                "WHERE ma.uuid_serial_machine = up_machine_linux.harduuid "
+                "AND ma.agenttype = 'machine')"
+            )
 
             if not conditions:
                 logger.warning("Aucun filtre appliqué : la requête mettra à jour TOUTES les lignes de la table.")
@@ -17881,7 +18066,10 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                 ROUND(SUM(CASE WHEN security_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_security_percent,
                 ROUND(SUM(CASE WHEN kernel_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_kernel_percent,
                 ROUND(SUM(CASE WHEN other_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_other_percent
-            FROM up_machine_linux
+            FROM up_machine_linux AS up
+            INNER JOIN machines AS ma
+                ON ma.uuid_serial_machine = up.harduuid
+               AND ma.agenttype = 'machine'
         """
 
         params = {}
@@ -18017,30 +18205,31 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
         sql = """
             SELECT
                 SQL_CALC_FOUND_ROWS
-                distributor_id,
+                up.distributor_id,
                 COUNT(*) AS total_machines,
-                SUM(CASE WHEN total_count <> 0 THEN 1 ELSE 0 END) AS machines_not_up_to_date,
-                SUM(CASE WHEN total_count = 0 THEN 1 ELSE 0 END) AS machines_up_to_date,
-                SUM(CASE WHEN security_count <> 0 THEN 1 ELSE 0 END) AS machines_security_not_ok,
-                SUM(CASE WHEN kernel_count <> 0 THEN 1 ELSE 0 END) AS machines_kernel_not_ok,
-                SUM(CASE WHEN other_count <> 0 THEN 1 ELSE 0 END) AS machines_other_not_ok,
-                ROUND(SUM(CASE WHEN total_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_total_percent,
-                ROUND(SUM(CASE WHEN security_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_security_percent,
-                ROUND(SUM(CASE WHEN kernel_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_kernel_percent,
-                ROUND(SUM(CASE WHEN other_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_other_percent
-            FROM up_machine_linux
-            WHERE entity_id = :entity_id
+                SUM(CASE WHEN up.total_count <> 0 THEN 1 ELSE 0 END) AS machines_not_up_to_date,
+                SUM(CASE WHEN up.total_count = 0 THEN 1 ELSE 0 END) AS machines_up_to_date,
+                SUM(CASE WHEN up.security_count <> 0 THEN 1 ELSE 0 END) AS machines_security_not_ok,
+                SUM(CASE WHEN up.kernel_count <> 0 THEN 1 ELSE 0 END) AS machines_kernel_not_ok,
+                SUM(CASE WHEN up.other_count <> 0 THEN 1 ELSE 0 END) AS machines_other_not_ok,
+                ROUND(SUM(CASE WHEN up.total_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_total_percent,
+                ROUND(SUM(CASE WHEN up.security_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_security_percent,
+                ROUND(SUM(CASE WHEN up.kernel_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_kernel_percent,
+                ROUND(SUM(CASE WHEN up.other_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_other_percent
+            FROM up_machine_linux AS up
+            INNER JOIN machines AS ma ON ma.uuid_serial_machine = up.harduuid
+            WHERE up.entity_id = :entity_id
         """
 
         params = {"entity_id": entity_id_int}
 
         # Filtre optionnel sur distributor_id
         if filter not in (None, ""):
-            sql += " AND distributor_id REGEXP :filter"
+            sql += " AND up.distributor_id REGEXP :filter"
             params["filter"] = filter
 
         # GROUP BY par distribution
-        sql += " GROUP BY distributor_id ORDER BY distributor_id"
+        sql += " GROUP BY up.distributor_id ORDER BY up.distributor_id"
 
         # LIMIT / OFFSET
         if start != -1 and limit != -1:
@@ -19773,7 +19962,8 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                                     filter="",
                                     start=0,
                                     limit=-1,
-                                    colonne=True):
+                                    colonne=True,
+                                    update_type=""):
         """
             Récupère les détails des machines avec des systèmes d'exploitation Windows ou Windows Server à partir de la base de données XMPPMaster.
 
@@ -19793,6 +19983,7 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                 start (int) : Le décalage pour commencer à retourner les lignes.
                 limit (int) : Le nombre maximum de lignes à retourner. Si -1, pas de limitation.
                 colonne (bool) : Si True, retourne les résultats dans un format en colonnes. La valeur par défaut est True.
+                update_type (str) : "W10to11" ou "W11to11" pour ne garder que ce type de mise à jour. Toute autre valeur : pas de filtre.
 
             Retourne :
                 dict : Un dictionnaire contenant :
@@ -19806,6 +19997,18 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                     - 'W11to11' : Mise à jour entre versions de Windows 11.
                     - 'not update' : Aucune mise à jour majeure nécessaire.
         """
+        update_type_sql = {
+            "W10to11": '''
+                AND TRIM(COALESCE(old_version, '')) = '10'
+                AND TRIM(COALESCE(new_version, '')) = '11'
+            ''',
+            "W11to11": '''
+                AND TRIM(COALESCE(old_version, '')) = '11'
+                AND TRIM(COALESCE(new_version, '')) = '11'
+                AND UPPER(TRIM(COALESCE(oldcode, ''))) != UPPER(TRIM(COALESCE(newcode, '')))
+            ''',
+        }
+
         # Base de la requête SQL
         total_os_sql = '''
             SELECT
@@ -19860,6 +20063,9 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
         # Ajouter le filtre sur le nom de la machine si nécessaire
         if filter:
             total_os_sql += " AND up_mach.hostname LIKE :filter"
+
+        if isinstance(update_type, str):
+            total_os_sql += update_type_sql.get(update_type, "")
 
         # Ajouter ORDER BY et LIMIT/OFFSET si nécessaire
         total_os_sql += " ORDER BY up_mach.hostname "
@@ -20296,6 +20502,8 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                     not_(Deploy.title.contains("--@upd@--")),
                 )
             )
+        elif history_type == "windows_updates":
+            query = query.filter(not_(Deploy.pathpackage.startswith("linux")))
 
         if filter != "":
             query = query.filter(

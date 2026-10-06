@@ -56,13 +56,18 @@ function xmlrpc_create_profile($name, $login, $ou, $active, $packages = [], $sou
 function xmlrpc_delete_profile($id)
 {
     // Delete $id form the table of profiles and the assiociates packages.
-    return xmlCall("kiosk.delete_profile", [$id]);
+    return xmlCall("kiosk.delete_profile", [$_SESSION['login'], $id]);
+}
+
+function xmlrpc_delete_profiles($ids)
+{
+    return xmlCall("kiosk.delete_profiles", [$_SESSION['login'], $ids]);
 }
 
 function xmlrpc_get_profile_by_id($id)
 {
     // Return the simplified list of the profiles
-    return xmlCall("kiosk.get_profile_by_id", array($id));
+    return xmlCall("kiosk.get_profile_by_id", [$_SESSION['login'], $id]);
 }
 
 function xmlrpc_update_profile($login, $id, $name, $ous, $active, $packages = [], $source)

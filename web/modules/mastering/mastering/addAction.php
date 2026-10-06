@@ -4,6 +4,8 @@ require_once("modules/mastering/includes/xmlrpc.php");
 $workflow = "";
 // Here add new action for master
 if(isset($_POST["add"], $_POST["Confirm"])){
+    verifyCSRFToken($_POST);
+
     // META
     // meta default action (used if no workflow)
     $action = htmlentities($_POST["add"]);

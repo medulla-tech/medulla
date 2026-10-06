@@ -32,6 +32,8 @@ if(isset($_GET['id']))
     $params['name'] = $rule['rule_name'];
     if(isset($_POST['bconfirm']) && $_POST['bconfirm'])
     {
+      verifyCSRFToken($_POST);
+
       delete_extension($id);
       header('location: '.urlStrRedirect("pkgs/pkgs/rulesList", ["success"=>1, "name"=>$rule['rule_name']]));
     }

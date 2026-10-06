@@ -7,6 +7,7 @@ require("localSidebar.php");
 require_once("modules/mastering/includes/xmlrpc.php");
 
 if($_POST != [] && isset($_POST["bconfirm"])){
+    verifyCSRFToken($_POST);
 
     $ignoredKeys = ["codeToCopy", "old_", "auth_token", "bconfirm", "entity", "server", "name","description", "content"];
     $ignoredKeysRegex = "";

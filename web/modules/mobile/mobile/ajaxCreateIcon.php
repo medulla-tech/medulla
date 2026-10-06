@@ -13,6 +13,7 @@ if ($WEBROOT === false) {
 }
 require_once($WEBROOT . '/includes/session.inc.php');
 require_once($WEBROOT . '/includes/xmlrpc.inc.php');
+require_once($WEBROOT . '/includes/utils.inc.php');
 require_once(__DIR__ . '/../includes/xmlrpc.php');
 
 if (!function_exists('xmlCall')) {
@@ -31,6 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode($response);
     exit;
 }
+
+verifyCSRFToken($_POST);
 
 $name = trim($_POST['name'] ?? '');
 $fileId = trim($_POST['fileId'] ?? '');

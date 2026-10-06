@@ -36,11 +36,15 @@ $relayserverlist =  $infopackage[1];
 
 if(isset($_POST['package']))
 {
+  verifyCSRFToken($_POST);
+
   xmlrpc_delete_from_pending($packageuuid, []);
   header("Location: " . urlStrRedirect("pkgs/pkgs/pending", array('deletependingsuccess' => 'package', 'name'=>$label)));
 }
 else if(isset($_POST['jid']))
 {
+  verifyCSRFToken($_POST);
+
   xmlrpc_delete_from_pending($packageuuid, $_POST['relays']);
 
   $relaylist = [];

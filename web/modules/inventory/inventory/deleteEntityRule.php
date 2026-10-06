@@ -25,6 +25,8 @@ require_once("modules/inventory/includes/xmlrpc.php");
 
 
 if (isset($_POST["bconfirm"], $_POST["numRule"])) {
+    verifyCSRFToken($_POST);
+
     // Delete selected rule
     deleteEntityRule($_POST["numRule"]);
     if (!isXMLRPCError()) new NotifyWidgetSuccess(_T("The entity rule has been deleted successfully.", "inventory"));

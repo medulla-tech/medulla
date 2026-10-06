@@ -30,6 +30,8 @@
 require_once("modules/pkgs/includes/xmlrpc.php");
 
 if (isset($_POST["bconfirm"])) {
+    verifyCSRFToken($_POST);
+
     activateAppstreamFlow($_POST['id'], $_POST['package_name'], $_POST['package_label'], $_POST['duration']);
 
     //ICI

@@ -1,0 +1,195 @@
+name: Security Scan
+
+on:
+  pull_request:
+  push:
+    branches:
+      - integration
+      - dev
+      - master
+permissions:
+  contents: write
+
+jobs:
+  security:
+    name: SBOM and vulnerability scan
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-actions[bot]'
+ 
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Prepare Python dependencies for SBOM
+        run: |
+          python3 - <<'PY'
+          import re
+          import json
+          from pathlib import Path
+
+          control = Path("debian/control").read_text()
+
+          packages = sorted(set(
+              re.findall(r'\bpython3-[a-zA-Z0-9.+-]+', control)
+          ))
+
+          # Exclude internal Medulla packages and generic/system packages
+          packages = [
+              p for p in packages
+              if not re.match(r'^python3-(mmc-|pulse2-)', p)
+              and p not in {
+                  "python3-all",
+                  "python3-gi",
+              }
+          ]
+
+          Path("python-dependencies.json").write_text(
+              json.dumps(packages, indent=2)
+          )
+
+          print("Python dependencies found:")
+          for package in packages:
+              print(f"- {package}")
+          PY
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          path: .
+          format: cyclonedx-json
+          output-file: sbom.cdx.json
+          upload-artifact: false
+
+      - name: Add Python dependencies to SBOM
+        run: |
+          python3 - <<'PY'
+          import json
+
+          with open("sbom.cdx.json") as f:
+              sbom = json.load(f)
+
+          with open("python-dependencies.json") as f:
+              packages = json.load(f)
+
+          components = sbom.setdefault("components", [])
+
+          existing = {
+              component.get("name")
+              for component in components
+          }
+
+          for package in packages:
+              if package not in existing:
+                  components.append({
+                      "type": "library",
+                      "name": package
+                  })
+
+          with open("sbom.cdx.json", "w") as f:
+              json.dump(sbom, f, indent=2)
+
+          print(f"Added {len(packages)} Python dependencies to SBOM.")
+          PY
+
+      - name: Scan SBOM
+        uses: anchore/scan-action@v7
+        with:
+          sbom: sbom.cdx.json
+          output-format: json
+          output-file: grype-report.json
+          fail-build: false
+
+      - name: Format Grype report
+        run: |
+          jq '.' grype-report.json > grype-report-formatted.json
+          mv grype-report-formatted.json grype-report.json
+
+      - name: Check vulnerabilities
+        id: vulnerability_check
+        run: |
+          HIGH=$(jq '[.matches[] | select(.vulnerability.severity == "High")] | length' grype-report.json)
+          CRITICAL=$(jq '[.matches[] | select(.vulnerability.severity == "Critical")] | length' grype-report.json)
+
+          echo "HIGH vulnerabilities: $HIGH"
+          echo "CRITICAL vulnerabilities: $CRITICAL"
+          echo "high=$HIGH" >> "$GITHUB_OUTPUT"
+          echo "critical=$CRITICAL" >> "$GITHUB_OUTPUT"
+
+          if [ "$HIGH" -gt 0 ] || [ "$CRITICAL" -gt 0 ]; then
+            echo "alert=true" >> "$GITHUB_OUTPUT"
+            echo "HIGH/CRITICAL vulnerabilities detected!"
+          else
+            echo "alert=false" >> "$GITHUB_OUTPUT"
+            echo "No HIGH/CRITICAL vulnerabilities detected."
+          fi
+
+      - name: Alert Basecamp
+        if: steps.vulnerability_check.outputs.alert == 'true'
+        env:
+          BASECAMP_ACCESS_TOKEN: ${{ secrets.BASECAMP_ACCESS_TOKEN }}
+          BASECAMP_ACCOUNT_ID: ${{ secrets.BASECAMP_ACCOUNT_ID }}
+          BASECAMP_TODOLIST_ID: ${{ secrets.BASECAMP_TODOLIST_ID }}
+          HIGH: ${{ steps.vulnerability_check.outputs.high }}
+          CRITICAL: ${{ steps.vulnerability_check.outputs.critical }}
+        run: |
+          TITLE="🔴 Security Alert - ${{ github.repository }} - ${{ github.ref_name }}"
+
+          DESCRIPTION="<p><strong>Security vulnerabilities detected.</strong></p>
+          <p><strong>Repository:</strong> ${{ github.repository }}</p>
+          <p><strong>Branch:</strong> ${{ github.ref_name }}</p>
+          <p><strong>Commit:</strong> ${{ github.sha }}</p>
+          <p><strong>HIGH:</strong> ${HIGH}</p>
+          <p><strong>CRITICAL:</strong> ${CRITICAL}</p>
+          <p><strong>Workflow:</strong>
+          <a href=\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\">
+          View GitHub Actions
+          </a></p>"
+
+          jq -n \
+            --arg content "$TITLE" \
+            --arg description "$DESCRIPTION" \
+            '{
+              content: $content,
+              description: $description
+            }' > basecamp-alert.json
+
+          curl --fail-with-body -sS -X POST \
+            -H "Authorization: Bearer ${BASECAMP_ACCESS_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -H "User-Agent: Medulla Security Alerts" \
+            --data @basecamp-alert.json \
+            "https://3.basecampapi.com/${BASECAMP_ACCOUNT_ID}/todolists/${BASECAMP_TODOLIST_ID}/todos.json"
+
+      - name: Display vulnerability summary
+        if: always()
+        run: |
+          echo "=== Vulnerability summary ==="
+          jq -r '
+            .matches[]
+            | [
+                .vulnerability.id,
+                .vulnerability.severity,
+                .artifact.name,
+                .artifact.version,
+                .artifact.locations[0].path
+              ]
+            | @tsv
+          ' grype-report.json | sort -u
+
+      - name: Commit security reports
+        if: github.event_name == 'push'
+        run: |
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add sbom.cdx.json grype-report.json
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git commit -m "ci: update security reports"
+          git push
+

@@ -29,6 +29,8 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 if (isset($_POST['badd_rule'])) {
+    verifyCSRFToken($_POST);
+
     $domain = trim($_POST['domain'] ?? '');
     if ($domain !== '') {
         $result = xmlrpc_add_netfilter_profile_rule($profile_id, $domain, $profile_rule_type);

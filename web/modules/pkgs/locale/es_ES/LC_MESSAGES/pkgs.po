@@ -1541,3 +1541,44 @@ msgstr "Los relés <b>"
 #: modules/pkgs/pkgs/addXMPP.php
 msgid "%s only"
 msgstr "Solo %s"
+
+#: modules/pkgs/pkgs/remove.php
+msgid "Delete the package <b>%s</b>%s?"
+msgstr "¿Eliminar el paquete <b>%s</b>%s?"
+
+#: modules/pkgs/pkgs/remove.php
+msgid "Its active convergence will also be deleted."
+msgstr "Su convergencia activa también se eliminará."
+
+#: modules/pkgs/pkgs/remove.php
+msgid "Its %d active convergences will also be deleted."
+msgstr "Sus %d convergencias activas también se eliminarán."
+
+#: modules/pkgs/pkgs/ajaxPackageList.php
+msgid "Delete selected"
+msgstr "Eliminar selección"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php
+msgid "Selection mode"
+msgstr "Modo de selección"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php
+msgid "Delete this package?"
+msgstr "¿Eliminar este paquete?"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php
+#, php-format
+msgid "Delete %d packages?"
+msgstr "¿Eliminar %d paquetes?"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php
+msgid "Some packages could not be deleted:"
+msgstr "Algunos paquetes no se han podido eliminar:"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php
+msgid "An error occurred while deleting."
+msgstr "Se ha producido un error durante la eliminación."
+
+#: modules/pkgs/pkgs/ajaxPackageList.php
+msgid "Close"
+msgstr "Cerrar"

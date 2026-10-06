@@ -252,8 +252,8 @@ msgstr "Borrar grupo de imágenes"
 
 #: modules/dyngroup/dyngroup/delete_group.php:43
 #, php-format
-msgid "Are you sure you want to delete imaging group <b>%s</b>?<br/>"
-msgstr "¿Está seguro de que desea eliminar el grupo de imágenes <b>%s</b>?<br/>"
+msgid "Delete the imaging group <b>%s</b>?"
+msgstr "¿Eliminar el grupo de imágenes <b>%s</b>?"
 
 #: modules/dyngroup/dyngroup/delete_group.php:48
 #: modules/dyngroup/dyngroup/delete_group.php:50
@@ -262,8 +262,8 @@ msgstr "Eliminar grupo"
 
 #: modules/dyngroup/dyngroup/delete_group.php:49
 #, php-format
-msgid "Are you sure you want to delete group <b>%s</b>?<br/> (it can be used in an other group)."
-msgstr "¿Estás seguro de que quieres borrar el grupo <b>%s</b>?<br/> (se puede utilizar en otro grupo)."
+msgid "Delete the group <b>%s</b>?"
+msgstr "¿Eliminar el grupo <b>%s</b>?"
 
 #: modules/dyngroup/dyngroup/delete_group.php:64
 msgid "The group cannot be deleted as a multicast deployment is currently running."
@@ -893,3 +893,74 @@ msgstr "Sin grupos"
 #: modules/dyngroup/dyngroup/ajaxListGroups.php
 msgid "Create a group to get started."
 msgstr "Cree un grupo para comenzar."
+
+#: modules/dyngroup/dyngroup/delete_group.php
+msgid "Convergence deleted along with the group: %s"
+msgstr "Convergencia eliminada junto con el grupo: %s"
+
+#: modules/dyngroup/dyngroup/delete_group.php
+msgid "Convergences deleted along with the group: %s"
+msgstr "Convergencias eliminadas junto con el grupo: %s"
+
+#: modules/dyngroup/dyngroup/delete_group.php
+msgid "%s and 1 other"
+msgstr "%s y 1 más"
+
+#: modules/dyngroup/dyngroup/delete_group.php
+msgid "%s and %d others"
+msgstr "%s y %d más"
+
+#: modules/dyngroup/dyngroup/delete_group.php
+msgid "1 active convergence will be deleted along with the group."
+msgstr "1 convergencia activa se eliminará junto con el grupo."
+
+#: modules/dyngroup/dyngroup/delete_group.php
+msgid "%d active convergences will be deleted along with the group."
+msgstr "%d convergencias activas se eliminarán junto con el grupo."
+
+#: includes/UIComponents.php
+msgid "Delete selected"
+msgstr "Eliminar selección"
+
+#: includes/UIComponents.php
+msgid "Selection mode"
+msgstr "Modo de selección"
+
+#: includes/UIComponents.php
+msgid "Delete this item?"
+msgstr "¿Eliminar este elemento?"
+
+#: includes/UIComponents.php
+#, php-format
+msgid "Delete %d items?"
+msgstr "¿Eliminar %d elementos?"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php
+msgid "Delete this group?"
+msgstr "¿Eliminar este grupo?"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php
+#, php-format
+msgid "Delete %d groups?"
+msgstr "¿Eliminar %d grupos?"
+
+#: includes/UIComponents.php
+msgid "Some items could not be deleted:"
+msgstr "Algunos elementos no se han podido eliminar:"
+
+#: includes/UIComponents.php
+msgid "An error occurred while deleting."
+msgstr "Se ha producido un error durante la eliminación."
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php
+msgid "with 1 convergence"
+msgstr "con 1 convergencia"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php
+#, php-format
+msgid "with %d convergences"
+msgstr "con %d convergencias"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php
+msgid "Some groups could not be deleted:"
+msgstr "Algunos grupos no se han podido eliminar:"

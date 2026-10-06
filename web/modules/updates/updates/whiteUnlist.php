@@ -28,6 +28,8 @@ $title = htmlentities($_GET['title']);
 
 $paramquit = $_GET;
 if(isset($_POST['bconfirm'])){
+    verifyCSRFToken($_POST);
+
     $result = xmlrpc_white_unlist_update($updateid, $_GET['entityid'] );
     if($result){
         $str = sprintf(_T("The update %s (%s) has been unlisted.", "updates"), $title, $updateid);

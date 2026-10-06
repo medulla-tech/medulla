@@ -4,6 +4,8 @@ require_once 'modules/msc/includes/scheduler_xmlrpc.php';
 $input = file_get_contents('php://input');
 $data = json_decode($input, true);
 
+verifyCSRFToken(is_array($data) ? $data : []);
+
 // This ajax page permits to deploy a package using params from POST
 $pid = $data['pid'];
 $uuids = $data['uuids'];

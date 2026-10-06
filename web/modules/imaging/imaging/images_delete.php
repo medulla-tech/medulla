@@ -36,6 +36,7 @@ else
     $type = '';
 
 if ($_POST) {
+    verifyCSRFToken($_POST);
     $id = $_POST['itemid'];
     $ret = xmlrpc_imagingServerImageDelete($id);
     if ($ret[0] && !isXMLRPCError()) {
@@ -68,6 +69,7 @@ $params['mod'] = 'delete';
 ?>
 <h2><?php echo _T("Delete image", "imaging") ?></h2>
 <form action="<?php echo urlStr("base/computers/images_delete", $params) ?>" method="post">
+    <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
     <p><?php printf(_T("Are you sure you want to delete <b>%s</b> image ?", "imaging"), $label); ?></p>
     <input name='itemid' type='hidden' value='<?php echo $id; ?>' />
     <input name='valid' type="submit" class="btnPrimary" value="<?php echo _T("Remove", "imaging"); ?>" />

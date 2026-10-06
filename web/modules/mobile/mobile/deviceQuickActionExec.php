@@ -1,6 +1,8 @@
 <?php
 require_once("modules/mobile/includes/xmlrpc.php");
 
+verifyCSRFToken($_POST);
+
 // Get parameters
 $deviceId = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';

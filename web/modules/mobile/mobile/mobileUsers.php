@@ -387,7 +387,7 @@ function submitConfigureUser() {
     jQuery.ajax({
         url: 'modules/mobile/mobile/configureMdmUserAjax.php',
         method: 'POST',
-        data: { login: login, user_id: userId, role_id: roleId, all_devices: allDev, all_configs: allConf, device_groups: devGroups, config_ids: confIds },
+        data: { login: login, user_id: userId, role_id: roleId, all_devices: allDev, all_configs: allConf, device_groups: devGroups, config_ids: confIds, auth_token: '<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>' },
         dataType: 'json',
         success: function(resp) {
             if (resp.status === 'ok') {

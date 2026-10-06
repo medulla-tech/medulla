@@ -36,6 +36,8 @@ function redirectToRelays(){
 // Some information are missing
 if(isset($_POST['jid'], $_POST['qa_relay_id']))
 {
+  verifyCSRFToken($_POST);
+
   $jid = htmlentities($_POST['jid']);
   $qa_relay_id = htmlentities($_POST['qa_relay_id']);
   $launch_relay_qa = (isset($_POST['launch_relay_qa'])) ? true : false;

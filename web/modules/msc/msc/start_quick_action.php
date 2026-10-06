@@ -120,6 +120,8 @@ function action($action, $target, $is_advanced) {
 $action = $_GET['launchAction'];
 
 if (isset($_POST["bconfirm"]) || isset($_POST["badvanced"])) {
+    verifyCSRFToken($_POST);
+
     $is_advanced = isset($_POST["badvanced"]);
     /* quick action on a single target */
     if (isset($_GET['uuid'])) {

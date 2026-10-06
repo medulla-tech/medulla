@@ -128,6 +128,8 @@ $aclString = getAcl($_GET["user"]);
 list($acl, $acltab, $aclattr) = createAclArray($aclString);
 
 if (isset($_POST["buser"])) {
+    verifyCSRFToken($_POST);
+
     foreach ($_SESSION['supportModList'] as $mod) {
         unset($acl[$mod]);
     }

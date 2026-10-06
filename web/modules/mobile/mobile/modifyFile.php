@@ -33,6 +33,8 @@ $devicePath = $file['devicePath'] ?? '';
 $variableContent = !empty($file['replaceVariables']);
 
 if (isset($_POST['bconfirm'])) {
+    verifyCSRFToken($_POST);
+
     // Get the updated filename/URL
     $newFileName = $_POST['file_name'] ?? '';
     $filePath = !empty($newFileName) ? $newFileName : $file['filePath'];

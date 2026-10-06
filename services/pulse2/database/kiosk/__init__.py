@@ -6,13 +6,13 @@
 kiosk database handler
 """
 # SqlAlchemy
-from sqlalchemy import create_engine, MetaData, select, func, and_, desc, or_, distinct
+from sqlalchemy import create_engine, MetaData, select, func, and_, desc, or_, distinct, text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.automap import automap_base
 
 Session = sessionmaker()
 from sqlalchemy.exc import DBAPIError
-from sqlalchemy import update, or_
+from sqlalchemy import update, or_, literal
 from datetime import date, datetime, timedelta
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
@@ -326,6 +326,21 @@ AND kiosk.profiles.active = 1
         return lines
 
     @DatabaseHelper._sessionm
+    def profile_name_exists(self, session, name, owners_patterns, exclude_id=None):
+        """
+        Tell whether a profile with this name exists among the profiles
+        whose owner matches owners_patterns (None means all profiles).
+        """
+        query = session.query(Profiles.id).filter(Profiles.name == name)
+        if owners_patterns is not None:
+            query = query.filter(
+                or_(*[Profiles.owner.op('REGEXP')(pattern) for pattern in owners_patterns])
+            )
+        if exclude_id is not None:
+            query = query.filter(Profiles.id != exclude_id)
+        return query.first() is not None
+
+    @DatabaseHelper._sessionm
     def create_profile(self, session, name, login, ous, active, packages, source):
         """
         Create a new profile for kiosk with the elements send.
@@ -517,6 +532,49 @@ AND kiosk.profiles.active = 1
             return False
 
     @DatabaseHelper._sessionm
+    def filter_profile_ids(self, session, ids, owners_patterns):
+        """
+        Return the ids from the given list which exist and whose owner
+        matches owners_patterns (None means all profiles).
+        """
+        if not ids:
+            return []
+        query = session.query(Profiles.id).filter(Profiles.id.in_(ids))
+        if owners_patterns is not None:
+            query = query.filter(
+                or_(*[Profiles.owner.op('REGEXP')(pattern) for pattern in owners_patterns])
+            )
+        return [row.id for row in query.all()]
+
+    @DatabaseHelper._sessionm
+    def delete_profiles(self, session, ids):
+        """
+        Delete the profiles of the given list of ids with their packages
+        and OUs associations.
+
+        Returns:
+            List of the ids actually deleted
+        """
+        deleted = []
+        for id in ids:
+            try:
+                session.query(Profile_has_package).filter(
+                    Profile_has_package.profil_id == id
+                ).delete()
+                session.query(Profile_has_ou).filter(
+                    Profile_has_ou.profile_id == id
+                ).delete()
+
+                count = session.query(Profiles).filter(Profiles.id == id).delete()
+                session.commit()
+                session.flush()
+                if count:
+                    deleted.append(id)
+            except Exception:
+                session.rollback()
+        return deleted
+
+    @DatabaseHelper._sessionm
     def get_profile_by_id(self, session, id):
         """
         Return the profile datas and it's associated packages. This function create a view of the profile.
@@ -554,26 +612,31 @@ AND kiosk.profiles.active = 1
                 'name': 'qq'
              }
         """
+        try:
+            id = int(id)
+        except (TypeError, ValueError):
+            return False
+
         self.refresh_package_list()
 
         # get the profile row
 
         profile = session.query(Profiles).filter(Profiles.id == id).first()
+        if profile is None:
+            return False
 
-        sql = """select \
+        sql = text("""select \
         pkgs.packages.label as package_name,
         pkgs.packages.uuid as package_uuid,
         package_status
         from pkgs.packages \
         left join package_has_profil on pkgs.packages.uuid = package_has_profil.package_uuid \
         left join profiles on profiles.id = package_has_profil.profil_id\
-        WHERE profiles.id = '%s';""" % (
-            id
-        )
+        WHERE profiles.id = :id;""")
 
-        sql_ou = """SELECT ou FROM profile_has_ous WHERE profile_id = %s""" % (id)
+        sql_ou = text("""SELECT ou FROM profile_has_ous WHERE profile_id = :id""")
 
-        response = session.execute(sql)
+        response = session.execute(sql, {"id": id})
         result = [
             {
                 "uuid": element.package_uuid,
@@ -583,7 +646,7 @@ AND kiosk.profiles.active = 1
             for element in response
         ]
 
-        response_ou = session.execute(sql_ou)
+        response_ou = session.execute(sql_ou, {"id": id})
         dict = {}
 
         for column in profile.__table__.columns:
@@ -634,17 +697,24 @@ AND kiosk.profiles.active = 1
         """
 
         # Update the profile
-        sql = (
-            "UPDATE profiles SET name='%s', active='%s', source='%s' WHERE id='%s';"
-            % (name, active, source, id)
+        session.query(Profiles).filter(Profiles.id == id).update(
+            {
+                Profiles.name: name,
+                Profiles.active: active,
+                Profiles.source: source,
+            },
+            synchronize_session=False,
         )
-        session.execute(sql)
         session.commit()
         session.flush()
 
         # Remove all packages associations concerning this profile
-        sql = "SELECT package_uuid FROM package_has_profil WHERE profil_id = %s" % id
-        current_packages = {pkg[0] for pkg in session.execute(sql).fetchall()}
+        current_packages = {
+            pkg[0]
+            for pkg in session.query(Profile_has_package.package_uuid)
+            .filter(Profile_has_package.profil_id == id)
+            .all()
+        }
 
         # Retrieve the packages visible to the user
         sharing = PkgsDatabase().pkgs_search_share({"login": login})
@@ -659,17 +729,19 @@ AND kiosk.profiles.active = 1
                 for uuid in package_list:
                     updated_packages.add(uuid)
                     if uuid in visible_uuids and uuid not in current_packages:
-                        sql = (
-                            "INSERT INTO package_has_profil (profil_id, package_uuid, package_status) VALUES (%s, '%s', '%s')"
-                            % (id, uuid, status)
-                        )
-                        session.execute(sql)
+                        profile_package = Profile_has_package()
+                        profile_package.profil_id = id
+                        profile_package.package_uuid = uuid
+                        profile_package.package_status = status
+                        session.add(profile_package)
                     elif uuid in visible_uuids and uuid in current_packages:
-                        sql = (
-                            "UPDATE package_has_profil SET package_status = '%s' WHERE profil_id = %s AND package_uuid = '%s'"
-                            % (status, id, uuid)
+                        session.query(Profile_has_package).filter(
+                            Profile_has_package.profil_id == id,
+                            Profile_has_package.package_uuid == uuid,
+                        ).update(
+                            {Profile_has_package.package_status: status},
+                            synchronize_session=False,
                         )
-                        session.execute(sql)
 
             session.commit()
             session.flush()
@@ -680,11 +752,10 @@ AND kiosk.profiles.active = 1
         packages_to_remove = current_packages - updated_packages
         for uuid in packages_to_remove:
             if uuid in visible_uuids:
-                sql = (
-                    "DELETE FROM package_has_profil WHERE profil_id = %s AND package_uuid = '%s'"
-                    % (id, uuid)
-                )
-                session.execute(sql)
+                session.query(Profile_has_package).filter(
+                    Profile_has_package.profil_id == id,
+                    Profile_has_package.package_uuid == uuid,
+                ).delete(synchronize_session=False)
 
         session.commit()
         session.flush()
@@ -711,42 +782,49 @@ AND kiosk.profiles.active = 1
 
     @DatabaseHelper._sessionm
     def get_acknowledges_for_sharings(
-        self, session, sharings, start=0, end=-1, filter=""
+        self, session, sharings, start=0, limit=-1, filter=""
     ):
         try:
             start = int(start)
-        except:
+        except (TypeError, ValueError):
             start = 0
         try:
             limit = int(limit)
-        except:
+        except (TypeError, ValueError):
             limit = -1
+        if start < 0:
+            start = 0
 
+        params = {}
         sqlfilter = ""
-        if filter != "":
-            sqlfilter = """ WHERE pkgs.packages.label like "%%%s%%"
-                OR pkgs.packages.uuid like "%%%s%%"
-                OR profiles.name like "%%%s%%"
-                OR acknowledgements.askuser like "%%%s%%"
-                OR acknowledgements.askdate like "%%%s%%"
-                OR acknowledgements.acknowledgedbyuser like "%%%s%%"
-                OR acknowledgements.startdate like "%%%s%%"
-                OR acknowledgements.enddate like "%%%s%%"
-                OR acknowledgements.status like "%%%s%%" """ % (
-                filter,
-                filter,
-                filter,
-                filter,
-                filter,
-                filter,
-                filter,
-                filter,
-                filter,
+        if filter:
+            escaped = (
+                str(filter)
+                .replace("\\", "\\\\")
+                .replace("%", "\\%")
+                .replace("_", "\\_")
+            )
+            params["pattern"] = "%" + escaped + "%"
+            columns = [
+                "pkgs.packages.label",
+                "pkgs.packages.uuid",
+                "profiles.name",
+                "acknowledgements.askuser",
+                "acknowledgements.askdate",
+                "acknowledgements.acknowledgedbyuser",
+                "acknowledgements.startdate",
+                "acknowledgements.enddate",
+                "acknowledgements.status",
+            ]
+            sqlfilter = "WHERE " + " OR ".join(
+                r"%s LIKE :pattern ESCAPE '\\'" % column for column in columns
             )
 
         sqllimit = ""
-        if limit != -1:
-            sqllimit = "LIMIT %s, %s" % (start, limit)
+        if limit >= 0:
+            sqllimit = "LIMIT :start, :limit"
+            params["start"] = start
+            params["limit"] = limit
 
         sql = """SELECT SQL_CALC_FOUND_ROWS
             pkgs.packages.label,
@@ -764,15 +842,15 @@ AND kiosk.profiles.active = 1
         JOIN profiles ON profiles.id = package_has_profil.profil_id
         LEFT JOIN pkgs.packages ON pkgs.packages.uuid = package_has_profil.package_uuid
         %s
-        %s
-        ORDER BY askdate DESC; """ % (
+        ORDER BY askdate DESC
+        %s""" % (
             sqlfilter,
             sqllimit,
         )
 
         sql_count = "SELECT FOUND_ROWS();"
-        query = session.execute(sql)
-        ret_count = session.execute(sql_count)
+        query = session.execute(text(sql), params)
+        ret_count = session.execute(text(sql_count))
         count = ret_count.first()[0]
         result = {"total": count, "datas": []}
 
@@ -849,9 +927,18 @@ AND kiosk.profiles.active = 1
 
         filters = []
         for source in sources:
+            if source == "entity":
+                value = sources[source]
+                ou_condition = or_(
+                    Profile_has_ou.ou == value,
+                    func.left(literal(value), func.char_length(Profile_has_ou.ou) + 2)
+                    == func.concat(Profile_has_ou.ou, ">>"),
+                )
+            else:
+                ou_condition = Profile_has_ou.ou.like("%s%%" % sources[source])
             filters.append(and_(
                 Profiles.source == source,
-                Profile_has_ou.ou.like("%s%%" % sources[source]),
+                ou_condition,
             ))
 
         query = query.filter(or_(*filters))

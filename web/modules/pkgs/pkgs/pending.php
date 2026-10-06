@@ -33,6 +33,8 @@ $p->setSideMenu($sidemenu);
 
 if(isset($_GET['delete']) && $_GET['delete'] == 'all')
 {
+  verifyCSRFToken($_GET);
+
   xmlrpc_delete_from_pending('', []);
   header("Location: " . urlStrRedirect("pkgs/pkgs/pending", array('deletependingsuccess' => 'all')));
 }

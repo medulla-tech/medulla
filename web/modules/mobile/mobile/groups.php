@@ -137,7 +137,7 @@ function submitAddGroup() {
     jQuery.ajax({
         url: 'modules/mobile/mobile/addGroupAjax.php',
         method: 'POST',
-        data: { 'name': name, 'devices': devices },
+        data: { 'name': name, 'devices': devices, 'auth_token': '<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>' },
         dataType: 'json',
         success: function(resp) {
             if (resp.status === 'ok') {

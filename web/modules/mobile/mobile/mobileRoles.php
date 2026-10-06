@@ -209,7 +209,8 @@ function submitRole() {
             role_id: roleId,
             name: name,
             description: description,
-            permission_ids: permissionIds
+            permission_ids: permissionIds,
+            auth_token: '<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>'
         },
         dataType: 'json',
         success: function(resp) {
@@ -238,7 +239,7 @@ function deleteRole(roleId, roleName) {
     jQuery.ajax({
         url: 'modules/mobile/mobile/configureMdmRoleAjax.php',
         method: 'POST',
-        data: { action: 'delete', role_id: roleId },
+        data: { action: 'delete', role_id: roleId, auth_token: '<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>' },
         dataType: 'json',
         success: function(resp) {
             if (resp.status === 'ok' || resp.status === 'OK') {

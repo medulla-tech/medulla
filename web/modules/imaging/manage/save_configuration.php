@@ -42,6 +42,8 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
     $imaging_server = $config[0];
     $default_menu = $config[1];
     if (isset($_POST["bvalid"])) {
+        verifyCSRFToken($_POST);
+
         $loc_name = (!empty($_POST['loc_name'])) ? $_POST['loc_name'] : "";
         $item_uuid = (!empty($_POST['itemid'])) ? $_POST['itemid'] : "";
 

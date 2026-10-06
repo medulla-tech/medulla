@@ -39,6 +39,8 @@ if (in_array("xmppmaster", $_SESSION["supportModList"])) {
 }
 
 if (isset($_POST["bconfirm"])) {
+    verifyCSRFToken($_POST);
+
     // if checkbox is not checked, don't delete computer
     if (!isset($_POST["imageWarning"])) {
         new NotifyWidgetFailure(_("You have to check the box <b>\"I am aware that all related images (non-master) will be deleted\"</b> if you want to remove this computer."));

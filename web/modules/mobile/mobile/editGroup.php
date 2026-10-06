@@ -73,6 +73,8 @@ $currentMembers = $initialMembers;
 $currentNonMembers = $initialNonMembers;
 
 if (isset($_POST['bconfirm'])) {
+    verifyCSRFToken($_POST);
+
     $newGroupName = isset($_POST['group_name']) ? trim($_POST['group_name']) : '';
     
     if (empty($newGroupName)) {

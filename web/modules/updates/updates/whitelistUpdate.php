@@ -27,6 +27,8 @@ require_once("modules/updates/includes/xmlrpc.php");
 
 if(isset($_POST['bconfirm'])) {
     $updateid = $_GET['updateid'];
+    verifyCSRFToken($_POST);
+
     $retour = xmlrpc_approve_update($updateid);
     // Si retour est True, cela signifie que le packet a bien change de liste
     if($retour == true) {

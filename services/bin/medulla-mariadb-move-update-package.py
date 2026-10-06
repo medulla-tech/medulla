@@ -735,9 +735,13 @@ class synch_packages:
                         "actionlabel": "scriptfile_48160aed",
                         "typescript": "Batch",
                         "script": "%s",
-                        "timeout": "360",
+                        "timeout": "900",
                         "30@lastlines": "30@lastlines",
-                        "gotoreturncode@=3010": "REBOOTREQUIRED"
+                        "gotoreturncode@=3010": "REBOOTREQUIRED",
+                        "gotoreturncode@=1641": "REBOOTREQUIRED",
+                        "gotoreturncode@=2359302": "END_SUCCESS",
+                        "gotoreturncode@=0": "END_SUCCESS",
+                        "gotoreturncode@!=0": "END_ERROR"
                     },
                     {
                         "action": "actionwaitandgoto",
@@ -771,22 +775,27 @@ class synch_packages:
                         "actionlabel": "label_section_uninstall"
                     },
                     {
-                        "action": "actionwaitandgoto",
-                        "step": 6,
-                        "codereturn": "",
-                        "actionlabel": "wait_60813b17",
-                        "waiting": "1",
-                        "goto": "END_SUCCESS"
-                    },
-                    {
                         "action": "actionprocessscriptfile",
-                        "step": 7,
+                        "step": 6,
                         "codereturn": "",
                         "actionlabel": "scriptfile_4f3139ba",
                         "typescript": "Batch",
                         "script": "%s",
+                        "timeout": "900",
                         "30@lastlines": "30@lastlines",
-                        "gotoreturncode@!=0": "UNINSTALLREBOOTREQUIRED"
+                        "gotoreturncode@=3010": "UNINSTALLREBOOTREQUIRED",
+                        "gotoreturncode@=1641": "UNINSTALLREBOOTREQUIRED",
+                        "gotoreturncode@=2359302": "END_SUCCESS",
+                        "gotoreturncode@=0": "END_SUCCESS",
+                        "gotoreturncode@!=0": "END_ERROR"
+                    },
+                    {
+                        "action": "actionwaitandgoto",
+                        "step": 7,
+                        "codereturn": "",
+                        "actionlabel": "wait_60813b17",
+                        "waiting": "1",
+                        "goto": "END_SUCCESS"
                     },
                     {
                         "action": "actionwaitandgoto",
@@ -837,8 +846,8 @@ class synch_packages:
                         "REBOOTREQUIRED": 3,
                         "notif_0f19ca4e": 4,
                         "label_section_uninstall": 5,
-                        "wait_60813b17": 6,
-                        "scriptfile_4f3139ba": 7,
+                        "scriptfile_4f3139ba": 6,
+                        "wait_60813b17": 7,
                         "wait_ad624d44": 8,
                         "UNINSTALLREBOOTREQUIRED": 9,
                         "notif_986b47ff": 10,

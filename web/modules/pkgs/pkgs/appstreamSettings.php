@@ -46,6 +46,8 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 
 $json = getAppstreamJSON();
 if (isset($_POST['bconfirm'])){
+    verifyCSRFToken($_POST);
+
     $json['my_username'] = $_POST['my_username'];
     $json['my_password'] = $_POST['my_password'];
     if (setAppstreamJSON($json)){

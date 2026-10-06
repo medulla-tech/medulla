@@ -390,6 +390,8 @@ if (isset($_POST["bunregister"])) {
 }
 // Step 2: unregister computer
 elseif (isset($_POST["bunregister2"])) {
+    verifyCSRFToken($_POST);
+
     $type = $_POST["type"];
     $target_uuid = $_POST['target_uuid'];
     $target_name = $_POST['target_name'];

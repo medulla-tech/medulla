@@ -100,7 +100,7 @@ loadSize = () =>{
         url:"modules/mastering/mastering/ajaxServerSize.php",
         global:false,
         method:"POST",
-        data:{"server": "<?php echo $server;?>"},
+        data:{"server": "<?php echo $server;?>", "auth_token": "<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"},
         success: (html)=>{
             console.log(html)
             jQuery("#size-container").html(html)

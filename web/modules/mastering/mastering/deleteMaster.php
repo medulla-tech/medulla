@@ -11,6 +11,8 @@ $masterId = (isset($_GET["id"])) ? htmlentities($_GET["id"]) : "";
 $masterName = (isset($_GET["name"])) ? htmlentities($_GET["name"]) : "";
 
 if(isset($_POST["bconfirm"])){
+    verifyCSRFToken($_POST);
+
     $result = (array)xmlrpc_delete_master($server, $entity, $masterId);
 
 

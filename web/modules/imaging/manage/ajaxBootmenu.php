@@ -27,8 +27,8 @@ require("../includes/ajaxcommon.inc.php");
 
     list($count, $menu) = xmlrpc_getLocationBootMenu($location);
 
-    $upAction = new ActionItem(_T("Move Up"), "bootmenu_up", "up", "item", "imaging", "manage");
-    $downAction = new ActionItem(_T("Move down"), "bootmenu_down", "down", "item", "imaging", "manage");
+    $upAction = new ActionItem(_T("Move Up"), "bootmenu_up", "up", "item", "imaging", "manage", null, false, array("auth_token" => $_SESSION['auth_token'] ?? ''));
+    $downAction = new ActionItem(_T("Move down"), "bootmenu_down", "down", "item", "imaging", "manage", null, false, array("auth_token" => $_SESSION['auth_token'] ?? ''));
     $emptyAction = new EmptyActionItem();
     $actionUp = array();
     $actionDown = array();

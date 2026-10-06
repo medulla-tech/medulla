@@ -75,6 +75,7 @@ if (!isset($_POST['btnPrimary']) || $name_exists || !$check || isset($_POST['che
     if (hasCorrectAcl("base", "computers", "save")) {
         $_SESSION['request'] = $request;
         print "<form method='POST' action='".urlStr("base/computers/save", array('request'=>'stored_in_session', 'id'=>$id, 'is_group'=>$is_group, 'imaging_server'=>$imaging_server)).  "' >".
+            "<input type='hidden' name='auth_token' value='" . htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8') . "' />".
             "<td>"._T('Name :', 'dyngroup')." <input name='name' type='text' value=\"" . htmlspecialchars($name) . "\" /></td>";
             if ($is_group) {
                 print "<td>"._T('save as', 'dyngroup')." <select name='save_type'><option value='1' ".($save_type == 1 ? 'selected' : '').">"._T("query", "dyngroup")."</option><option value='2' ".($save_type == 2 ? 'selected' : '').">"._T('result', 'dyngroup')."</option></select></td>";
@@ -102,6 +103,8 @@ if (!isset($_POST['btnPrimary']) || $name_exists || !$check || isset($_POST['che
         new NotifyWidgetFailure(_T("You must specify a group name", "dyngroup"));
     }
 } else {
+    verifyCSRFToken($_POST);
+
     if ($id) {
         $group = getPGobject($id, true);
         $group->setVisibility($visible);
