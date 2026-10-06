@@ -25,10 +25,10 @@ include("modules/services/includes/services-xmlrpc.inc.php");
 $filter = $_GET["filter"];
 $list = listOthersServices($filter);
 
-$startAction = new ActionItem(_T("Start service"), "start", "start", "");
-$stopAction = new ActionItem(_T("Stop service"),"stop", "stop", "");
-$reloadAction = new ActionItem(_T("Reload service"), "reload", "reload", "");
-$restartAction = new ActionItem(_T("Restart service"), "restart", "restart", "");
+$startAction = new ActionItem(_T("Start service"), "start", "start", "", null, null, null, false, array("auth_token" => $_SESSION['auth_token'] ?? ''));
+$stopAction = new ActionItem(_T("Stop service"),"stop", "stop", "", null, null, null, false, array("auth_token" => $_SESSION['auth_token'] ?? ''));
+$reloadAction = new ActionItem(_T("Reload service"), "reload", "reload", "", null, null, null, false, array("auth_token" => $_SESSION['auth_token'] ?? ''));
+$restartAction = new ActionItem(_T("Restart service"), "restart", "restart", "", null, null, null, false, array("auth_token" => $_SESSION['auth_token'] ?? ''));
 $logAction = new ActionItem(_T("View log"), "log", "display", "");
 $emptyAction = new EmptyActionItem();
 
