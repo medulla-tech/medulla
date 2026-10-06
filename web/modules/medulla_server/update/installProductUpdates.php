@@ -26,6 +26,8 @@
 
 require_once("modules/medulla_server/includes/xmlrpc.inc.php");
 
+verifyCSRFToken($_GET);
+
 // AJAX mode: return JSON response
 if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
     header('Content-Type: application/json');
