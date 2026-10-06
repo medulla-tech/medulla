@@ -1218,6 +1218,11 @@ def convergence_reschedule(all=False):
                     "Error while fetching deploy_group_id and user for command %s: %s"
                     % (cmd_id, e)
                 )
+            except Exception as e:
+                logger.error(
+                    "Convergence cron: error while rescheduling command %s: %s: %s"
+                    % (cmd_id, type(e).__name__, e)
+                )
     else:
         logger.info("Convergence cron: no convergence commands will be rescheduled")
 
@@ -1263,3 +1268,5 @@ def convergence_reschedule_one(cmd_id):
         _update_convergence_dates(cmd_id)
     except TypeError as e:
         logger.warn("Error when recovering the deployment group and the user for the order %s: %s" % (cmd_id, e))
+    except Exception as e:
+        logger.error("Cron convergence: error while rescheduling command %s: %s: %s" % (cmd_id, type(e).__name__, e))

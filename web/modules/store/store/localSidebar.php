@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2024-2025 Medulla, http://www.medulla-tech.io
+ * (c) 2024-2026 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
@@ -28,8 +28,8 @@ $contractStatusReason = isset($contractStatus['reason']) ? $contractStatus['reas
 
 $sidemenu = new SideMenu();
 $sidemenu->setClass("store");
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Medulla Store", 'store'), "store", "store", "index"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("My Software", 'store'), "store", "store", "index"));
 if ($hasContract) {
-    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Update Subscription", 'store'), "store", "store", "subscribe"));
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Catalog", 'store'), "store", "store", "subscribe"));
 }
 ?>

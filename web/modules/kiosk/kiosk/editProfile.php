@@ -28,6 +28,13 @@ require_once("modules/kiosk/includes/functions.php");
 require_once("modules/kiosk/includes/html.inc.php");
 require_once("modules/imaging/includes/class_form.php");
 
+$profile = xmlrpc_get_profile_by_id($_GET['id']);
+if (!is_array($profile)) {
+    new NotifyWidgetFailure(_T("Profile not found", "kiosk"));
+    header("Location: " . urlStrRedirect("kiosk/kiosk/index"));
+    exit;
+}
+
 require("graph/navbar.inc.php");
 require("modules/kiosk/kiosk/localSidebar.php");
 ?>
@@ -48,7 +55,6 @@ if(isset($_SESSION['sharings'])) {
       $packages = xmlrpc_xmppGetAllPackages($filter, -1, -1);
   }
 
-$profile = xmlrpc_get_profile_by_id($_GET['id']);
 // Get the list of the packages
 $available_packages_str = "";
 $restricted_packages_str = "";
@@ -199,6 +205,7 @@ $f->display(); // display the form
 <script src="modules/kiosk/graph/js/sources.js"></script>
 <script src="modules/kiosk/graph/js/validate.js"></script>
 <script>
+var MSG_SAVING_PROFILE = <?php echo json_encode(_T("Saving the profile may take a few moments.", "kiosk")); ?>;
 jQuery(document).ready(function(){
     function applyFilter(filterSelector, targetSelector) {
         let value = jQuery(filterSelector).val().toLowerCase();

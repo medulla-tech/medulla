@@ -136,11 +136,6 @@ $page = new Page("activateAppstreamFlow" ,_T("Activate Appstream Stream", 'pkgs'
 $page->setFile("modules/pkgs/pkgs/activateAppstreamFlow.php", array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
 
-$page = new Page("ajaxXMLRPCCall");
-$page->setFile("modules/pkgs/pkgs/ajaxXMLRPCCall.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True));
-$submod->addPage($page);
-
 $page = new Page("ajaxPendingPackageList");
 $page->setFile("modules/pkgs/pkgs/ajaxPendingPackageList.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));

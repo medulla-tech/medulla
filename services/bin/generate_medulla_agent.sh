@@ -55,7 +55,7 @@ for tag_name in ${agents}; do
     # Remove old files if still present
     rm -f /var/lib/pulse2/clients/win/Medulla-Agent-windows-*.exe
     rm -f /var/lib/pulse2/clients/lin/Medulla-Agent-linux-*.sh
-    rm -f /var/lib/pulse2/clients/mac/Medulla-Agent-mac-*.pkg.tar.gz
+    rm -f /var/lib/pulse2/clients/mac/Medulla-Agent-mac-*.pkg
     # Get download tag
     dl_tag=$(mysql -u${DBUSER} -p${DBPASS} -h${DBHOST} -P${DBPORT} -D${DBNAME} -Bse "SELECT dl_tag FROM saas_organisations WHERE tag_name=\"${tag_name}\";")
     # Create directory if it does not exist
@@ -81,9 +81,12 @@ for tag_name in ${agents}; do
         mv /var/lib/pulse2/clients/lin/Medulla-Agent-linux-MINIMAL-*-${tag_name}.sh ${DEST}/${dl_tag}/Medulla-Agent-linux-MINIMAL-latest.sh
         chown syncthing:nogroup ${DEST}/${dl_tag}/Medulla-Agent-linux-MINIMAL-latest.sh
         chmod 666 ${DEST}/${dl_tag}/Medulla-Agent-linux-MINIMAL-latest.sh
+        mv /var/lib/pulse2/clients/mac/Medulla-Agent-mac-arm64-*-${tag_name}.pkg ${DEST}/${dl_tag}/Medulla-Agent-mac-arm64-latest.pkg
+        chown syncthing:nogroup ${DEST}/${dl_tag}/Medulla-Agent-mac-arm64-latest.pkg
+        chmod 666 ${DEST}/${dl_tag}/Medulla-Agent-mac-arm64-latest.pkg
     fi
     # Remove generated files from temp directory
     rm -f /var/lib/pulse2/clients/win/Medulla-Agent-windows-*.exe
     rm -f /var/lib/pulse2/clients/lin/Medulla-Agent-linux-*.sh
-    rm -f /var/lib/pulse2/clients/mac/Medulla-Agent-mac-*.pkg.tar.gz
+    rm -f /var/lib/pulse2/clients/mac/Medulla-Agent-mac-*.pkg
 done

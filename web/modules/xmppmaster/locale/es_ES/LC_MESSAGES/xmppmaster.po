@@ -1067,6 +1067,9 @@ msgstr "Nombre del paquete"
 msgid "Start Date"
 msgstr "Fecha de inicio"
 
+msgid "Last renewal"
+msgstr "Última renovación"
+
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:413
 msgid "Stop Date"
 msgstr "Fecha tope"

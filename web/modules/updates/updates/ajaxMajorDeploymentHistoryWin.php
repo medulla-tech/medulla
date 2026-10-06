@@ -30,7 +30,6 @@ if (!is_array($result)) {
 $datas = isset($result['datas']) && is_array($result['datas']) ? $result['datas'] : array();
 $count = isset($result['count']) ? (int) $result['count'] : count($datas);
 
-
 $detailAction = new ActionItem(
     _T("View deployment details", "xmppmaster"),
     "viewlogs",
