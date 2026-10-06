@@ -38,6 +38,7 @@ require_once("modules/backuppc/includes/functions.php");
 $ID = intval(@max($_GET['id'],$_POST['id']));
 
 if (isset($_POST['bconfirm'])){
+    verifyCSRFToken($_POST);
     $cfg = array(
         'profilename' => $_POST['profilename'],
         'encoding' => $_POST['encoding'],

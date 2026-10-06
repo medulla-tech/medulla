@@ -28,6 +28,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 $cn = "";
 if (isset( $_POST["uuid"])) {
+    verifyCSRFToken($_POST);
     $filter = array('hostname' => $_POST["uuid"]);
     $cl = getRestrictedComputersList(0, -1, $filter, False);
     foreach ($cl as $k => $v) {

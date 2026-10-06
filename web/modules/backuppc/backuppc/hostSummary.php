@@ -32,6 +32,7 @@ $uuid = $_GET['objectUUID'];
 // ==========================================================
 
 if (isset($_POST['startFullBackup'])) {
+    verifyCSRFToken($_POST);
     $response = start_full_backup($_POST['host']);
     xmlrpc_setfromxmppmasterlogxmpp("Start full backup on machine $computer_name",
                                     "BPC",
@@ -46,6 +47,7 @@ if (isset($_POST['startFullBackup'])) {
                                     'Backup | Full backup requested | Manual');
     sleep(2);
 } elseif (isset($_POST['startIncrBackup'])) {
+    verifyCSRFToken($_POST);
     $response = start_incr_backup($_POST['host']);
     xmlrpc_setfromxmppmasterlogxmpp("Start incremental backup on machine $computer_name",
                                                 "BPC",
@@ -61,6 +63,7 @@ if (isset($_POST['startFullBackup'])) {
 
     sleep(2);
 } elseif (isset($_POST['stopBackup'])) {
+    verifyCSRFToken($_POST);
     $response = stop_backup($_POST['host']);
     xmlrpc_setfromxmppmasterlogxmpp("Stop backup on machine $computer_name",
                                                 "BPC",

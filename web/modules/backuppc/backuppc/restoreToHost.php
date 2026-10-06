@@ -25,6 +25,8 @@
 require_once("includes/xmlrpc.inc.php");
 require_once('modules/backuppc/includes/xmlrpc.php');
 
+verifyCSRFToken($_POST);
+
 $host = $_POST['host'];
 $backupnum = $_POST['backupnum'];
 $sharename = $_POST['sharename'];

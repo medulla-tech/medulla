@@ -27,6 +27,7 @@ require_once("modules/backuppc/includes/xmlrpc.php");
 
 
 if (isset($_POST["bconfirm"])) {
+    verifyCSRFToken($_POST);
     $id = intval($_POST["id"]);
     $type = $_POST["type"];
 
