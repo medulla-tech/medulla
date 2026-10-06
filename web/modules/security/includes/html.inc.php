@@ -62,6 +62,7 @@ class AddItemForm
         ?>
         <div class="add-item-form">
             <form method="POST" action="">
+                <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
                 <?php if (!empty($this->label)): ?>
                 <label for="<?php echo htmlspecialchars($this->inputName); ?>"><?php echo htmlspecialchars($this->label); ?></label>
                 <?php endif; ?>

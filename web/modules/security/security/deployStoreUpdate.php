@@ -43,6 +43,7 @@ $store_package_uuid = isset($_POST['store_package_uuid']) ? $_POST['store_packag
 
 // Handle form submission - BEFORE displaying the page
 if (isset($_POST['bconfirm'])) {
+    verifyCSRFToken($_POST);
     $selectedMachines = isset($_POST['machines']) ? $_POST['machines'] : array();
 
     if (empty($selectedMachines)) {
@@ -299,6 +300,7 @@ $machines = xmlrpc_get_machines_for_vulnerable_software($software_name, $softwar
 <?php endif; ?>
 
 <form method="post" action="">
+    <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
     <input type="hidden" name="software_name" value="<?php echo htmlspecialchars($software_name); ?>" />
     <input type="hidden" name="software_version" value="<?php echo htmlspecialchars($software_version); ?>" />
     <input type="hidden" name="store_version" value="<?php echo htmlspecialchars($store_version); ?>" />

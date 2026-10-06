@@ -26,6 +26,7 @@ $id_glpi = isset($_GET['id_glpi']) ? intval($_GET['id_glpi']) : (isset($_POST['i
 $hostname = isset($_GET['hostname']) ? $_GET['hostname'] : (isset($_POST['hostname']) ? $_POST['hostname'] : '');
 
 if (isset($_POST['bconfirm'])) {
+    verifyCSRFToken($_POST);
     // Check if a global scan is running before starting
     $summary = xmlrpc_get_dashboard_summary('');
     if (isset($summary['last_scan']['status']) && $summary['last_scan']['status'] === 'running') {

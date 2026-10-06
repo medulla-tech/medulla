@@ -28,6 +28,7 @@ $currentUser = $_SESSION['login'] ?? 'unknown';
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['bsave'])) {
+        verifyCSRFToken($_POST);
         // Get current policies to preserve exclusions
         $currentPolicies = xmlrpc_get_policies();
 

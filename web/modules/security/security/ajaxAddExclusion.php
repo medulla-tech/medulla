@@ -77,6 +77,7 @@ foreach ($exclusionTypes as $key => $cfg) {
 $currentUser = $_SESSION['login'] ?? 'unknown';
 
 if (isset($_POST['bconfirm']) && $config) {
+    verifyCSRFToken($_POST);
     $value = isset($config['isInt']) ? intval($config['param']) : $config['param'];
     $itemName = isset($config['name']) && !empty($config['name']) ? $config['name'] : $config['param'];
 
