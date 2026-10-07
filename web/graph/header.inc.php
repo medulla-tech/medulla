@@ -224,6 +224,25 @@ $root = $conf["global"]["root"];
                 });
             }
 
+            // submits get link style to post request
+            function postAction(url) {
+                var parts = url.split('?');
+                var path = parts[0];
+                var params = new URLSearchParams(parts[1] || '');
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = path;
+                params.forEach(function(value, key) {
+                    var input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = value;
+                    form.appendChild(input);
+                });
+                document.body.appendChild(form);
+                form.submit();
+            }
+
             function showPopupUp(evt, url) {
                 PopupWindow(evt, url, 0, function(evt) {
                     var left = Math.max(0, evt.clientX - jQuery('#popup').outerWidth() + jQuery(window).scrollLeft());
