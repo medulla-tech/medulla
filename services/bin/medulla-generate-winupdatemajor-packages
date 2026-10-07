@@ -312,39 +312,59 @@ generate_package() {
                 "actionlabel": "upd_70a70cc9"
             }, 
             {
+                "action": "action_loop_question",
                 "step": 1,
+                "codereturn": "",
+                "actionlabel": "QUESTION_RELEASE_UPDATE",
+                "titlemessage": "$(printf '%s' 'Windows Release Update' | base64 -w0)",
+                "sizeheader": "15",
+                "message": "$(printf '%s' 'A Windows release update is ready to install. Do you want to start it now?' | base64 -w0)",
+                "sizemessage": "10",
+                "textbuttonyes": "Yes",
+                "textbuttonno": "No",
+                "gotoyes": "INSTALL",
+                "gotolookterminate": "ABORT_BY_USER",
+                "gotonouser": "INSTALL",
+                "gototimeout": "ABORT_BY_TIMEOUT",
+                "timeout": "800",
+                "loopnumber": "1",
+                "timeloop": "900"
+            },
+            {
+                "step": 2,
                 "action": "action_comment",
-                "actionlabel": "release_user_context",
-                "comment": "@@@IF|@@@USER_CONNECTED@@@|Windows release update: connected user=@@@CONNECTED_USER@@@; target release=@@@TARGET_RELEASE@@@|Windows release update: no connected user; target release=@@@TARGET_RELEASE@@@@@@"
+                "actionlabel": "INSTALL",
+                "comment": "Windows release update execution confirmed: ISO control started"
             },
             {
                 "command": "$(echo $COMMAND | base64 -w0)",
                 "30@lastlines": "30@lastlines",
-                "actionlabel": "02d57e96",
+                "actionlabel": "RUN_UPDATE_ISO",
                 "codereturn": "",
-                "step": 2,
-                "error": 7,
+                "step": 3,
                 "action": "actionprocessscript",
                 "timeout": "3600",
-                "gotoreturncode@3010": "REBOOTREQUIRED"
+                "error": 12,
+                "gotoreturncode@3010": "REBOOTREQUIRED",
+                "gotoreturncode@!=0": "END_ERROR"
             },
             {
                 "action": "actionwaitandgoto",
-                "step": 3,
+                "step": 4,
                 "codereturn": "",
                 "actionlabel": "wait_cc66c870",
                 "waiting": "1",
                 "goto": "END_SUCCESS"
             },
             {
-                "step": 4,
+                "step": 5,
                 "action": "action_comment",
                 "actionlabel": "REBOOTREQUIRED",
                 "comment": "The update has been installed but a reboot is required to apply it."
             },
             {
                 "action": "action_notification",
-                "step": 5,
+                "step": 6,
                 "codereturn": "",
                 "actionlabel": "notif_ee9943f2",
                 "titlemessage": "V2luZG93cyBVcGRhdGUgLSBSZWJvb3Q=",
@@ -355,15 +375,43 @@ generate_package() {
                 "timeout": "800"
             },
             {
+                "step": 7,
                 "action": "actionsuccescompletedend",
-                "step": 6,
                 "actionlabel": "END_SUCCESS",
                 "clear": "False",
                 "inventory": "noforced"
             },
             {
+                "step": 8,
+                "action": "action_comment",
+                "actionlabel": "ABORT_BY_TIMEOUT",
+                "comment": "Windows release update aborted: user response timed out @@@CONNECTED_USER@@@"
+            },
+            {
+                "action": "actionwaitandgoto",
+                "step": 9,
+                "codereturn": "",
+                "actionlabel": "wait_abort_by_timeout",
+                "waiting": "1",
+                "goto": "END_ERROR"
+            },
+            {
+                "step": 10,
+                "action": "action_comment",
+                "actionlabel": "ABORT_BY_USER",
+                "comment": "Windows release update aborted by user @@@CONNECTED_USER@@@"
+            },
+            {
+                "action": "actionwaitandgoto",
+                "step": 11,
+                "codereturn": "",
+                "actionlabel": "wait_abort_by_user",
+                "waiting": "1",
+                "goto": "END_ERROR"
+            },
+            {
                 "action": "actionerrorcompletedend",
-                "step": 7,
+                "step": 12,
                 "actionlabel": "END_ERROR"
             }
         ]
@@ -372,13 +420,18 @@ generate_package() {
         "win": {
             "label": {
                 "upd_70a70cc9": 0,
-                "release_user_context": 1,
-                "02d57e96": 2,
-                "wait_cc66c870": 3,
-                "REBOOTREQUIRED": 4,
-                "notif_ee9943f2": 5,
-                "END_SUCCESS": 6,
-                "END_ERROR": 7
+                "QUESTION_RELEASE_UPDATE": 1,
+                "INSTALL": 2,
+                "RUN_UPDATE_ISO": 3,
+                "wait_cc66c870": 4,
+                "REBOOTREQUIRED": 5,
+                "notif_ee9943f2": 6,
+                "END_SUCCESS": 7,
+                "ABORT_BY_TIMEOUT": 8,
+                "wait_abort_by_timeout": 9,
+                "ABORT_BY_USER": 10,
+                "wait_abort_by_user": 11,
+                "END_ERROR": 12
             }
         },
         "os": [
