@@ -147,9 +147,7 @@ $p = new PageGenerator(sprintf(_T("Deploy Update: %s", 'security'), htmlspecialc
 $p->setSideMenu($sidemenu);
 $p->display();
 
-// Get user's accessible entities for filtering
-list($listEntities, $valuesEntities) = getEntitiesSelectableElements();
-$location = isset($_GET['location']) ? $_GET['location'] : (count($valuesEntities) > 0 ? implode(',', $valuesEntities) : '');
+$location = SecurityFilter::location();
 
 // Get affected machines
 $machines = xmlrpc_get_machines_for_vulnerable_software($software_name, $software_version, $location);
@@ -268,9 +266,7 @@ $machines = xmlrpc_get_machines_for_vulnerable_software($software_name, $softwar
 }
 </style>
 
-<a href="<?php echo urlStrRedirect('security/security/index'); ?>" class="back-link">
-    &larr; <?php echo _T("Back to CVE Summary", "security"); ?>
-</a>
+<?php SecurityFilter::backLink('index', _T("Back to CVE Summary", "security")); ?>
 
 <div class="deploy-header">
     <h4><?php echo _T("Update Information", "security"); ?></h4>
@@ -305,13 +301,13 @@ $machines = xmlrpc_get_machines_for_vulnerable_software($software_name, $softwar
     <input type="hidden" name="store_package_uuid" value="<?php echo htmlspecialchars($store_package_uuid); ?>" />
 
     <div class="machines-section">
-        <h4><?php echo sprintf(_T("Select machines to update (%d affected)", "security"), $machines['total']); ?></h4>
+        <h4><?php echo sprintf(_T("Select machines to update (%d affected)", "security"), intval($machines['total'] ?? 0)); ?></h4>
 
         <div class="select-actions">
             <a onclick="selectAllMachines()"><?php echo _T("Select all", "security"); ?></a>
             <a onclick="selectNoneMachines()"><?php echo _T("Select none", "security"); ?></a>
             <span style="color: #666; margin-left: 20px;">
-                <span id="selectedCount"><?php echo $machines['total']; ?></span> <?php echo _T("selected", "security"); ?>
+                <span id="selectedCount"><?php echo intval($machines['total'] ?? 0); ?></span> <?php echo _T("selected", "security"); ?>
             </span>
         </div>
 

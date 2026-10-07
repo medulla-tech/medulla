@@ -87,7 +87,7 @@ $params = array();
 
 foreach ($pagedData as $item) {
     $cveIds[] = htmlspecialchars($item['cve_id']);
-    $softwares[] = $item['software_list'] ?: '<i style="color:#999">' . _T("Unknown", "security") . '</i>';
+    $softwares[] = htmlspecialchars($item['software_list']) ?: '<i style="color:#999">' . _T("Unknown", "security") . '</i>';
     $params[] = array(
         'name' => $item['cve_id'],
         'type' => 'cve'

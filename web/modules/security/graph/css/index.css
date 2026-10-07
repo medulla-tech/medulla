@@ -125,10 +125,11 @@
    ============================================================================= */
 .badge {
     display: inline-block;
-    padding: 4px 10px;
+    padding: 3px 8px;
     border-radius: 3px;
-    font-size: 0.9em;
+    font-size: var(--text-sm);
     font-weight: bold;
+    text-transform: uppercase;
     color: var(--color-text-white);
 }
 
@@ -138,6 +139,11 @@
 .badge-low { background-color: var(--severity-low); }
 .badge-none { background-color: var(--severity-none); }
 .badge-na { background-color: var(--severity-na); color: var(--color-text-dark); }
+.badge-fix-available { background-color: var(--severity-low); }
+.badge-fix-none { background-color: var(--color-warning); color: var(--color-text-dark); }
+.badge-type-software { background-color: var(--severity-none); }
+.badge-type-extension { background-color: var(--color-info); }
+.badge + .badge { margin-left: 4px; }
 
 /* =============================================================================
    Dashboard Cards (index.php)
@@ -187,6 +193,8 @@
 .security-card.medium { border-left: 4px solid var(--severity-medium); }
 .security-card.low { border-left: 4px solid var(--severity-low); }
 .security-card.info { border-left: 4px solid var(--color-info); }
+.security-card.exploited { border-left: 4px solid var(--color-bg-dark); }
+.security-card.clickable.exploited:hover { border-color: var(--color-bg-dark); }
 
 .security-card .card-value {
     font-size: 1.8em;
@@ -299,45 +307,6 @@
 
 .software-list li:hover {
     background: var(--gray-100);
-}
-
-.machines-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-.machines-table th,
-.machines-table td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid var(--color-border-light);
-}
-
-.machines-table th {
-    background: var(--gray-50);
-    font-weight: bold;
-}
-
-.machines-table tr:hover {
-    background: var(--gray-50);
-}
-
-.machines-table a {
-    color: var(--color-primary);
-}
-
-.external-link {
-    margin-top: 15px;
-}
-
-.external-link a {
-    color: var(--color-primary);
-    text-decoration: none;
-}
-
-.external-link a:hover {
-    text-decoration: underline;
 }
 
 /* =============================================================================
@@ -591,32 +560,6 @@ tr.severity-na td:first-child { border-left: 3px solid var(--severity-na); }
     white-space: nowrap;
 }
 
-/* =============================================================================
-   Store Update Badges (ajaxSoftwaresList.php)
-   ============================================================================= */
-.badge-store-update {
-    background-color: var(--severity-low);
-    color: var(--color-text-white);
-    font-weight: bold;
-    animation: pulse-green 2s infinite;
-}
-
-.badge-store-current {
-    background-color: var(--severity-none);
-    color: var(--color-text-white);
-}
-
-.badge-store-none {
-    background-color: var(--gray-100);
-    color: var(--severity-none);
-}
-
-@keyframes pulse-green {
-    0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); }
-    70% { box-shadow: 0 0 0 6px rgba(40, 167, 69, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
-}
-
 /* CVE ID (first column): never break, always readable */
 .security-table td:first-child {
     white-space: nowrap;
@@ -632,3 +575,69 @@ tr.severity-na td:first-child { border-left: 3px solid var(--severity-na); }
 .security-table td.action li.empty.inactive a {
     padding-left: 22px;
 }
+
+/* =============================================================================
+   Compact columns (SecurityColumns / SecurityLists)
+   ============================================================================= */
+.exploited-flag {
+    color: var(--severity-critical);
+    font-weight: bold;
+    white-space: nowrap;
+    cursor: help;
+}
+
+.cell-sub {
+    color: var(--color-text-light);
+    font-size: var(--text-sm);
+}
+
+.cve-count {
+    cursor: help;
+    border-bottom: 1px dotted var(--color-text-light);
+}
+
+.cve-table td:first-child,
+.cve-table th:first-child {
+    width: 90px;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.security-card .card-value.card-date {
+    font-size: 1.2em;
+}
+
+.priority-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+a.security-card {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+.filters-row,
+.filters-left {
+    flex-wrap: wrap;
+    gap: 10px 15px;
+}
+
+.list-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin: 0 0 10px;
+}
+
+.list-actions .btn {
+    white-space: nowrap;
+}
+
+/* Type badge after a software name */
+.security-table td .badge-type-extension {
+    margin-left: 8px;
+}
+

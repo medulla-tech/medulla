@@ -39,7 +39,7 @@ $excludedGroups = $policies['exclusions']['groups_ids'] ?? array();
 if (empty($excludedGroups)) {
     EmptyStateBox::show(
         _T("No excluded groups", "security"),
-        _T("Groups can be excluded directly from the 'Results by Group' view using the exclude action.", "security")
+        _T("Use the form above to add groups to the exclusion list.", "security")
     );
 } else {
     // Build group data with info from dyngroup

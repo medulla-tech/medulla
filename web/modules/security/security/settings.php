@@ -31,6 +31,8 @@ require("localSidebar.php");
 $p = new PageGenerator(_T("Settings", "security"));
 $p->setSideMenu($sidemenu);
 $p->display();
+require_once("modules/security/includes/html.inc.php");
+SecurityFilter::script();
 
 // Create tabbed page
 $p = new TabbedPageGenerator();

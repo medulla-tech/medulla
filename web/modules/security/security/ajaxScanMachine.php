@@ -38,7 +38,7 @@ if (isset($_POST['bconfirm'])) {
     $scan_id = xmlrpc_scan_machine($id_glpi);
 
     if ($scan_id) {
-        $msg = sprintf(_T("CVE scan started for '%s' (ID: %s). The scan runs in background.", "security"), htmlspecialchars($hostname), $scan_id);
+        $msg = sprintf(_T("CVE scan started for '%s' (ID: %s). The scan runs in background.", "security"), htmlspecialchars($hostname), htmlspecialchars((string)$scan_id));
         new NotifyWidgetSuccess($msg);
     } else {
         new NotifyWidgetFailure(sprintf(_T("Failed to start scan for %s.", "security"), htmlspecialchars($hostname)));
@@ -59,7 +59,7 @@ $f->add(new HiddenTpl("hostname"), array("value" => htmlspecialchars($hostname),
 $f->addText("<br/>" . _T("Start a CVE vulnerability scan on this machine?", "security"));
 $f->addText("<br/><br/><em>" . _T("The scan runs in background.", "security") . "</em><br/>");
 
-$f->addValidateButton("bconfirm", _T("Start Scan", "security"));
+$f->addValidateButtonWithValue("bconfirm", _T("Start Scan", "security"));
 $f->addCancelButton("bback");
 $f->display();
 ?>

@@ -2,18 +2,16 @@
 # SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from pulse2.version import getVersion, getRevision
-from mmc.support.config import PluginConfig, PluginConfigFactory
+from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.plugins.security.config import SecurityConfig
 from pulse2.database.security import SecurityDatabase
+from pulse2.managers.location import ComputerLocationManager
 import logging
 
 VERSION = "1.0.0"
 APIVERSION = "1:0:0"
 logger = logging.getLogger()
-
-# Global config instance (initialized in activate())
-config = None
 
 
 def getApiVersion():
@@ -21,232 +19,41 @@ def getApiVersion():
 
 
 def activate():
-    global config
-    logger = logging.getLogger()
     config = SecurityConfig("security")
     if config.disable:
         logger.warning("Plugin security: disabled by configuration.")
         return False
     if not SecurityDatabase().activate(config):
-        logger.error(
-            "Plugin security: an error occurred during the database initialization")
+        logger.error("Plugin security: an error occurred during the database initialization")
         return False
     logger.info("Plugin security: activated successfully")
     return True
 
 
-# =============================================================================
-# Legacy test function
-# =============================================================================
-def tests():
-    return SecurityDatabase().tests()
+def _ids(location):
+    """'UUID1,UUID2' (or a list) -> [1, 2]; None when empty (no filter)."""
+    items = location.split(',') if isinstance(location, str) else location or []
+    ids = []
+    for item in items:
+        item = str(item).strip()
+        item = item[4:] if item.startswith('UUID') else item
+        if item.isdigit():
+            ids.append(int(item))
+    return ids or None
 
 
-# =============================================================================
-# Dashboard
-# =============================================================================
-def get_dashboard_summary(location=''):
-    """Get summary for dashboard display, filtered by entity and policies"""
-    from mmc.plugins.security.config import SecurityConfig
-    cfg = SecurityConfig("security")
-
-    return SecurityDatabase().get_dashboard_summary(
-        location=location,
-        min_cvss=cfg.display_min_cvss,
-        min_severity=cfg.display_min_severity,
-        excluded_vendors=cfg.excluded_vendors,
-        excluded_names=cfg.excluded_names,
-        excluded_cve_ids=cfg.excluded_cve_ids,
-        excluded_machines_ids=cfg.excluded_machines_ids,
-        excluded_groups_ids=cfg.excluded_groups_ids
-    )
+def _bool(value):
+    return value in (True, 1, '1', 'true', 'True', 'on')
 
 
-# =============================================================================
-# CVE List
-# =============================================================================
-def get_cves(start=0, limit=50, filter_str='', severity=None, location='',
-             sort_by='cvss_score', sort_order='desc'):
-    """Get paginated list of CVEs, filtered by entity and local policies"""
-    from mmc.plugins.security.config import SecurityConfig
-    cfg = SecurityConfig("security")
-
-    # If user selected a specific severity, use exact filter
-    # Otherwise, use min_severity from config as threshold
-    if severity:
-        exact_severity = severity
-        effective_severity = None
-    else:
-        exact_severity = None
-        effective_severity = cfg.display_min_severity
-
-    result = SecurityDatabase().get_cves(
-        start=int(start),
-        limit=int(limit),
-        filter_str=filter_str,
-        severity=effective_severity,
-        exact_severity=exact_severity,
-        location=location,
-        sort_by=sort_by,
-        sort_order=sort_order,
-        min_cvss=cfg.display_min_cvss,
-        excluded_vendors=cfg.excluded_vendors,
-        excluded_names=cfg.excluded_names,
-        excluded_cve_ids=cfg.excluded_cve_ids,
-        excluded_machines_ids=cfg.excluded_machines_ids,
-        excluded_groups_ids=cfg.excluded_groups_ids
-    )
-
-    # Apply local policies filtering (for exclusions, etc.)
-    if result.get('data'):
-        filtered_data = [cve for cve in result['data'] if cfg.should_display_cve(cve)]
-        result['data'] = filtered_data
-
-    return result
-
-
-def get_cve_details(cve_id, location=''):
-    """Get details of a CVE including affected machines, filtered by entity"""
-    return SecurityDatabase().get_cve_details(cve_id, location=location)
-
-
-# =============================================================================
-# Machine-centric view
-# =============================================================================
-def get_machines_summary(start=0, limit=50, filter_str='', location=''):
-    """Get list of machines with CVE counts, filtered by entity and policies"""
-    from mmc.plugins.security.config import SecurityConfig
-    cfg = SecurityConfig("security")
-
-    return SecurityDatabase().get_machines_summary(
-        start=int(start),
-        limit=int(limit),
-        filter_str=filter_str,
-        location=location,
-        min_cvss=cfg.display_min_cvss,
-        min_severity=cfg.display_min_severity,
-        excluded_vendors=cfg.excluded_vendors,
-        excluded_names=cfg.excluded_names,
-        excluded_cve_ids=cfg.excluded_cve_ids,
-        excluded_machines_ids=cfg.excluded_machines_ids,
-        excluded_groups_ids=cfg.excluded_groups_ids
-    )
-
-
-def get_machine_cves(id_glpi, start=0, limit=50, filter_str='', severity=None):
-    """Get all CVEs affecting a specific machine with pagination and filtering."""
-    from mmc.plugins.security.config import SecurityConfig
-    cfg = SecurityConfig("security")
-
-    result = SecurityDatabase().get_machine_cves(
-        int(id_glpi),
-        start=int(start),
-        limit=int(limit),
-        filter_str=filter_str,
-        severity=severity,
-        min_cvss=cfg.display_min_cvss,
-        excluded_vendors=cfg.excluded_vendors,
-        excluded_names=cfg.excluded_names,
-        excluded_cve_ids=cfg.excluded_cve_ids,
-        excluded_machines_ids=cfg.excluded_machines_ids,
-        excluded_groups_ids=cfg.excluded_groups_ids
-    )
-
-    # Apply local policies filtering
-    if result.get('data'):
-        filtered_data = [cve for cve in result['data'] if cfg.should_display_cve(cve)]
-        result['data'] = filtered_data
-
-    return result
-
-
-def get_machine_softwares_summary(id_glpi, start=0, limit=50, filter_str='', category_filter=''):
-    """Get vulnerable software summary for a machine, grouped by software."""
-    from mmc.plugins.security.config import SecurityConfig
-    cfg = SecurityConfig("security")
-
-    return SecurityDatabase().get_machine_softwares_summary(
-        int(id_glpi),
-        start=int(start),
-        limit=int(limit),
-        filter_str=filter_str,
-        min_cvss=cfg.display_min_cvss,
-        excluded_vendors=cfg.excluded_vendors,
-        excluded_names=cfg.excluded_names,
-        excluded_cve_ids=cfg.excluded_cve_ids,
-        excluded_machines_ids=cfg.excluded_machines_ids,
-        excluded_groups_ids=cfg.excluded_groups_ids,
-        category_filter=category_filter
-    )
-
-
-def scan_machine(id_glpi):
-    """Scan a specific machine asynchronously"""
-    from mmc.plugins.security.scanner import run_cve_scan, get_glpi_db_url
-    from pulse2.database.security import SecurityDatabase
-    from threading import Thread
-    from sqlalchemy import text, create_engine
-
-    id_glpi = int(id_glpi)
-
-    # Get machine hostname for logging
-    try:
-        engine = create_engine(get_glpi_db_url())
-        with engine.connect() as conn:
-            result = conn.execute(text("SELECT name FROM glpi_computers WHERE id = :id"), {'id': id_glpi})
-            row = result.fetchone()
-            hostname = row[0] if row else f"ID:{id_glpi}"
-        engine.dispose()
-    except Exception:
-        hostname = f"ID:{id_glpi}"
-
-    # Start scan in background thread
-    scan_id = SecurityDatabase().create_scan()
-    thread = Thread(target=run_cve_scan, args=(scan_id, None, None, id_glpi, hostname), daemon=True)
-    thread.start()
-
-    logger.info(f"Started CVE scan for machine '{hostname}' (id_glpi={id_glpi}) with scan ID: {scan_id}")
-    return scan_id
-
-
-# =============================================================================
-# Scans
-# =============================================================================
-def get_scans(start=0, limit=20):
-    """Get scan history"""
-    return SecurityDatabase().get_scans(int(start), int(limit))
-
-
-# =============================================================================
-# Configuration
-# =============================================================================
-def get_config(key=None):
-    """Get scanner configuration from ini file"""
-    from mmc.plugins.security.config import SecurityConfig
-    config = SecurityConfig("security")
-
-    config_dict = {
-        'cve_central_url': config.cve_central_url,
-        'cve_central_server_id': config.cve_central_server_id,
-        'cve_central_configured': config.is_cve_central_configured(),
-    }
-
-    if key:
-        return config_dict.get(key, '')
-    return config_dict
+def _filters():
+    return SecurityConfig("security").filters()
 
 
 def get_contract_status():
-    """Return effective access status for Security module.
+    """Effective access status: {'configured', 'has_access', 'reason'}.
 
-    Reads the .ini file directly on each call so configuration changes
-    (notably the AES key) are picked up without restarting mmc-agent.
-
-    Returns:
-        dict with:
-          - configured (bool)
-          - has_access (bool)
-          - reason (str)
+    The .ini is read on each call so that a new AES key is used without restarting mmc-agent.
     """
     import configparser
     from mmc.plugins.security.scanner import CVECentralClient
@@ -263,19 +70,18 @@ def get_contract_status():
 
     if not all([url, server_id, aes_key]):
         return {'configured': False, 'has_access': False, 'reason': 'not_configured'}
+    if len(aes_key.encode('utf-8')) != 32:
+        logger.warning("[cve_central] keyAES32 must be 32 characters")
+        return {'configured': True, 'has_access': False, 'reason': 'contract_required'}
 
     try:
-        client = CVECentralClient(url, server_id, aes_key)
+        client = CVECentralClient(url, server_id, aes_key,
+                                  parser.getboolean('cve_central', 'ssl_verify', fallback=True))
         runtime_status = client.get_access_status()
         reason = runtime_status.get('reason', 'access_denied')
-
-        # Business mapping:
-        # Treat any credential issue as a missing contract so the user is
-        # prompted to contact support rather than seeing a generic "service
-        # unavailable" message that suggests a transient outage.
+        # A credential issue means a missing contract, not a transient outage.
         if reason in ('unknown_server', 'decrypt_failed', 'server_mismatch'):
             reason = 'contract_required'
-
         return {
             'configured': True,
             'has_access': bool(runtime_status.get('authorized')),
@@ -283,341 +89,148 @@ def get_contract_status():
         }
     except Exception as e:
         logger.warning(f"Unable to evaluate contract status: {e}")
-        return {
-            'configured': True,
-            'has_access': False,
-            'reason': 'service_unreachable'
-        }
+        return {'configured': True, 'has_access': False, 'reason': 'service_unreachable'}
 
 
 def get_policies():
-    """Get current policies (merged from DB + ini files).
-
-    Returns effective policies after DB overrides are applied.
-    Always reloads from DB to get fresh values.
-    """
-    from mmc.plugins.security.config import SecurityConfig
-    config = SecurityConfig("security")
-
-    # Force reload from DB to get fresh values
-    config._db_policies_loaded = False
-    config._ensure_db_policies_loaded()
-
-    return {
-        'display': config.get_display_policies(),
-        'exclusions': config.get_exclusion_policies()
-    }
-
-
-def get_policies_raw():
-    """Get raw policies from database only (for editing UI).
-
-    Returns only values stored in DB, not merged with ini defaults.
-    """
-    return SecurityDatabase().get_all_policies()
-
-
-def set_policies(policies, user=None):
-    """Set policies in database.
-
-    Args:
-        policies: dict like {
-            'display': {'min_cvss': 4.0, 'min_severity': 'High'},
-            'exclusions': {'cve_ids': ['CVE-2024-1234']}
-        }
-        user: username making the change
-
-    Returns:
-        bool: True on success
-    """
-    result = SecurityDatabase().set_policies_bulk(policies, user)
-    if result:
-        # Reload config to reflect new policies
-        from mmc.plugins.security.config import SecurityConfig
-        SecurityConfig("security").reload_policies()
-    return result
-
-
-def set_policies_json(policies_json, user=None):
-    """Set policies in database from JSON string.
-
-    This function is used by PHP XMLRPC to avoid nested array issues.
-
-    Args:
-        policies_json: JSON string of policies dict
-        user: username making the change
-
-    Returns:
-        bool: True on success
-    """
-    import json
-    try:
-        policies = json.loads(policies_json)
-        logger.debug(f"set_policies_json received: {policies}")
-        result = SecurityDatabase().set_policies_bulk(policies, user)
-        if result:
-            # Reload config to reflect new policies
-            from mmc.plugins.security.config import SecurityConfig
-            SecurityConfig("security").reload_policies()
-        return result
-    except json.JSONDecodeError as e:
-        logger.error(f"Invalid JSON in set_policies_json: {e}")
-        return False
-
-
-def set_policy(category, key, value, user=None):
-    """Set a single policy value.
-
-    Args:
-        category: 'display' or 'exclusions'
-        key: policy key (e.g., 'min_cvss', 'vendors')
-        value: the value to set
-        user: username making the change
-
-    Returns:
-        bool: True on success
-    """
-    result = SecurityDatabase().set_policy(category, key, value, user)
-    if result:
-        # Reload config to reflect new policies
-        from mmc.plugins.security.config import SecurityConfig
-        SecurityConfig("security").reload_policies()
-    return result
-
-
-def reset_policies(user=None):
-    """Reset all policies to default values.
-
-    Reinserts values from the policies_defaults table.
-
-    Args:
-        user: username making the change (optional)
-
-    Returns:
-        bool: True on success
-    """
-    result = SecurityDatabase().reset_all_policies(user=user)
-    if result:
-        # Reload config to reflect new policies
-        from mmc.plugins.security.config import SecurityConfig
-        SecurityConfig("security").reload_policies()
-    return result
-
-
-def reset_display_policies(user=None):
-    """Reset only display policies to default values, keeping exclusions intact.
-
-    Args:
-        user: username making the change (optional)
-
-    Returns:
-        bool: True on success
-    """
-    result = SecurityDatabase().reset_display_policies(user=user)
-    if result:
-        # Reload config to reflect new policies
-        from mmc.plugins.security.config import SecurityConfig
-        SecurityConfig("security").reload_policies()
-    return result
-
-
-def set_config(key, value):
-    """
-    Configuration is read-only from ini file.
-    To change configuration, edit /etc/mmc/plugins/security.ini.local
-    """
-    logger.warning(f"set_config called for {key} but config is read-only from ini file")
-    return False
-
-
-# =============================================================================
-# Exclusions
-# =============================================================================
-def get_exclusions():
-    """Get list of excluded CVEs"""
-    return SecurityDatabase().get_exclusions()
-
-
-def add_exclusion(cve_id, reason, user, expires_at=None):
-    """Add a CVE to exclusion list"""
-    return SecurityDatabase().add_exclusion(cve_id, reason, user, expires_at)
-
-
-def remove_exclusion(cve_id):
-    """Remove a CVE from exclusion list"""
-    return SecurityDatabase().remove_exclusion(cve_id)
-
-
-def is_excluded(cve_id):
-    """Check if a CVE is excluded"""
-    return SecurityDatabase().is_excluded(cve_id)
-
-
-# =============================================================================
-# Software-centric view
-# =============================================================================
-def get_softwares_summary(start=0, limit=50, filter_str='', location='', category_filter=''):
-    """Get list of softwares with CVE counts, filtered by entity and policies"""
-    from mmc.plugins.security.config import SecurityConfig
+    """Effective display and exclusion policies."""
     cfg = SecurityConfig("security")
-
-    return SecurityDatabase().get_softwares_summary(
-        start=int(start),
-        limit=int(limit),
-        filter_str=filter_str,
-        location=location,
-        min_cvss=cfg.display_min_cvss,
-        min_severity=cfg.display_min_severity,
-        excluded_vendors=cfg.excluded_vendors,
-        excluded_names=cfg.excluded_names,
-        excluded_cve_ids=cfg.excluded_cve_ids,
-        excluded_machines_ids=cfg.excluded_machines_ids,
-        excluded_groups_ids=cfg.excluded_groups_ids,
-        category_filter=category_filter
-    )
+    return {'display': cfg.get_display_policies(), 'exclusions': cfg.get_exclusion_policies()}
 
 
-def get_software_cves(software_name, software_version, start=0, limit=50,
-                      filter_str='', severity=None):
-    """Get all CVEs affecting a specific software version"""
-    from mmc.plugins.security.config import SecurityConfig
-    cfg = SecurityConfig("security")
-
-    result = SecurityDatabase().get_software_cves(
-        software_name=software_name,
-        software_version=software_version,
-        start=int(start),
-        limit=int(limit),
-        filter_str=filter_str,
-        severity=severity,
-        min_cvss=cfg.display_min_cvss
-    )
-
-    # Apply local policies filtering
-    if result.get('data'):
-        filtered_data = [cve for cve in result['data'] if cfg.should_display_cve(cve)]
-        result['data'] = filtered_data
-
-    return result
+def get_software_cves(software_name, software_version, start=0, limit=50, filter_str='', severity=None):
+    """CVEs of a software version (no machine listed: not restricted by entity)."""
+    return SecurityDatabase().get_software_cves(
+        software_name, software_version, int(start), int(limit), filter_str, severity or None,
+        policy=_filters())
 
 
-# =============================================================================
-# Entity-centric view
-# =============================================================================
-def get_entities_summary(start=0, limit=50, filter_str='', user_entities=''):
-    """Get list of entities with CVE counts, filtered by user's accessible entities"""
-    from mmc.plugins.security.config import SecurityConfig
-    cfg = SecurityConfig("security")
-
-    return SecurityDatabase().get_entities_summary(
-        start=int(start),
-        limit=int(limit),
-        filter_str=filter_str,
-        user_entities=user_entities,
-        min_cvss=cfg.display_min_cvss,
-        min_severity=cfg.display_min_severity,
-        excluded_vendors=cfg.excluded_vendors,
-        excluded_names=cfg.excluded_names,
-        excluded_cve_ids=cfg.excluded_cve_ids,
-        excluded_machines_ids=cfg.excluded_machines_ids,
-        excluded_groups_ids=cfg.excluded_groups_ids
-    )
+class ContextMaker(ContextMakerI):
+    def getContext(self):
+        ctx = SecurityContext()
+        ctx.userid = self.userid
+        return ctx
 
 
-# =============================================================================
-# Group-centric view
-# =============================================================================
-def get_groups_summary(start=0, limit=50, filter_str='', user_login=''):
-    """Get list of groups with CVE counts, filtered by ShareGroup for this user"""
-    from mmc.plugins.security.config import SecurityConfig
-    cfg = SecurityConfig("security")
+class RpcProxy(RpcProxyI):
+    """Reads restricted to the entities of the logged user (session), whatever the PHP sends."""
 
-    return SecurityDatabase().get_groups_summary(
-        start=int(start),
-        limit=int(limit),
-        filter_str=filter_str,
-        user_login=user_login,
-        min_cvss=cfg.display_min_cvss,
-        min_severity=cfg.display_min_severity,
-        excluded_vendors=cfg.excluded_vendors,
-        excluded_names=cfg.excluded_names,
-        excluded_cve_ids=cfg.excluded_cve_ids,
-        excluded_machines_ids=cfg.excluded_machines_ids,
-        excluded_groups_ids=cfg.excluded_groups_ids
-    )
+    def _allowed(self):
+        """Entity ids visible to the session user, None when unrestricted.
+        Kept in the proxy: a module function would be callable over XML-RPC for any login."""
+        ctx = self.currentContext or SecurityContext()
+        if not hasattr(ctx, 'entity_ids'):
+            manager = ComputerLocationManager()
+            if self.userid == 'root' or manager.main not in manager.components:
+                ctx.entity_ids = None
+            else:
+                try:
+                    ctx.entity_ids = _ids([loc['uuid'] for loc in manager.getUserLocations(self.userid) or []]) or []
+                except Exception as e:
+                    logger.error(f"Security: cannot get the entities of {self.userid}: {e}")
+                    ctx.entity_ids = []
+        return ctx.entity_ids
 
+    def _entities(self, location=''):
+        """Requested entities within the allowed ones; None = all."""
+        allowed, requested = self._allowed(), _ids(location)
+        if allowed is None or requested is None:
+            return requested if allowed is None else allowed
+        return [e for e in requested if e in allowed]
 
-def get_group_machines(group_id, start=0, limit=50, filter_str=''):
-    """Get machines in a group with CVE counts"""
-    from mmc.plugins.security.config import SecurityConfig
-    cfg = SecurityConfig("security")
+    def _login(self):
+        return None if self.userid == 'root' else self.userid
 
-    return SecurityDatabase().get_group_machines(
-        group_id=int(group_id),
-        start=int(start),
-        limit=int(limit),
-        filter_str=filter_str,
-        min_cvss=cfg.display_min_cvss,
-        min_severity=cfg.display_min_severity,
-        excluded_vendors=cfg.excluded_vendors,
-        excluded_names=cfg.excluded_names,
-        excluded_cve_ids=cfg.excluded_cve_ids,
-        excluded_machines_ids=cfg.excluded_machines_ids,
-        excluded_groups_ids=cfg.excluded_groups_ids
-    )
+    def get_dashboard_summary(self, location='', platform='', exploited_only=False):
+        return SecurityDatabase().get_dashboard_summary(
+            self._entities(location), _filters(), platform, _bool(exploited_only))
 
+    def get_cves(self, start=0, limit=50, filter_str='', severity=None, location='',
+                 sort_by='cvss_score', sort_order='desc', platform='', exploited_only=False):
+        """sort_by/sort_order are ignored: exploited CVEs first, then CVSS."""
+        return SecurityDatabase().get_cves(
+            int(start), int(limit), filter_str, severity or None, self._entities(location), _filters(),
+            platform, _bool(exploited_only))
 
-# =============================================================================
-# Group creation helpers
-# =============================================================================
-def get_machines_by_severity(severity, location=''):
-    """Get list of machine UUIDs affected by CVEs of a given severity.
+    def get_cve_details(self, cve_id, location=''):
+        return SecurityDatabase().get_cve_details(cve_id, self._entities(location), _filters())
 
-    Args:
-        severity: CVE severity level (Critical, High, Medium, Low)
-        location: Entity filter (optional)
+    def get_machines_summary(self, start=0, limit=50, filter_str='', location='', platform='',
+                             exploited_only=False, group_id=''):
+        """group_id: only the machines of this group, if visible to the logged user."""
+        return SecurityDatabase().get_machines_summary(
+            int(start), int(limit), filter_str, self._entities(location), _filters(), platform,
+            _bool(exploited_only), int(group_id) if str(group_id).isdigit() else None, self._login())
 
-    Returns:
-        List of machine UUIDs in format 'UUID<id>'
-    """
-    return SecurityDatabase().get_machines_by_severity(severity, location)
+    def get_machine_cves(self, id_glpi, start=0, limit=50, filter_str='', severity=None):
+        return SecurityDatabase().get_machine_cves(
+            int(id_glpi), int(start), int(limit), filter_str, severity or None, self._allowed(), _filters())
 
+    def get_machine_softwares_summary(self, id_glpi, start=0, limit=50, filter_str='', category_filter=''):
+        return SecurityDatabase().get_machine_softwares_summary(
+            int(id_glpi), int(start), int(limit), filter_str, category_filter, self._allowed(), _filters())
 
-# =============================================================================
-# Store integration - Deploy updates for vulnerable software
-# =============================================================================
-def get_store_software_info(software_name):
-    """Get store information for a specific software.
+    def get_softwares_summary(self, start=0, limit=50, filter_str='', location='', category_filter='',
+                              platform='', exploited_only=False):
+        return SecurityDatabase().get_softwares_summary(
+            int(start), int(limit), filter_str, self._entities(location), category_filter, _filters(),
+            platform, _bool(exploited_only))
 
-    Args:
-        software_name: Name of the software (e.g., "Python")
+    def get_entities_summary(self, start=0, limit=50, filter_str='', user_entities='', platform='',
+                             exploited_only=False):
+        """user_entities: optional entity filter (UUIDs), restricted to the allowed ones."""
+        return SecurityDatabase().get_entities_summary(
+            int(start), int(limit), filter_str, self._entities(user_entities), _filters(), platform,
+            _bool(exploited_only))
 
-    Returns:
-        dict with store info or None if not found
-    """
-    return SecurityDatabase().get_store_software_info(software_name)
+    def get_groups_summary(self, start=0, limit=50, filter_str='', user_login='', platform='',
+                           exploited_only=False):
+        """user_login is ignored: the groups are the ones of the logged user."""
+        return SecurityDatabase().get_groups_summary(
+            int(start), int(limit), filter_str, self._login(), self._allowed(), _filters(), platform,
+            _bool(exploited_only))
 
+    def get_groups_list(self):
+        """[{id, name}] of the groups visible to the logged user, for a selector."""
+        return SecurityDatabase().get_groups_list(self._login(), _filters())
 
-def get_machines_for_vulnerable_software(software_name, software_version,
-                                          location='', start=0, limit=100, filter_str=''):
-    """Get machines that have a specific vulnerable software installed.
+    def get_group_machines(self, group_id, start=0, limit=50, filter_str=''):
+        return SecurityDatabase().get_group_machines(
+            int(group_id), int(start), int(limit), filter_str, self._login(), self._allowed(), _filters())
 
-    Args:
-        software_name: Normalized software name (e.g., "Python")
-        software_version: Vulnerable version (e.g., "3.11.9")
-        location: Entity filter (comma-separated entity IDs)
-        start: Pagination offset
-        limit: Pagination limit
-        filter_str: Search filter on hostname
+    def get_machines_by_severity(self, severity, location=''):
+        """UUID and hostname of the machines affected by a CVE of this severity."""
+        return SecurityDatabase().get_machines_by_severity(severity, self._entities(location), _filters())
 
-    Returns:
-        dict with 'total' count and 'data' list of machines
-    """
-    return SecurityDatabase().get_machines_for_vulnerable_software(
-        software_name=software_name,
-        software_version=software_version,
-        location=location,
-        start=int(start),
-        limit=int(limit),
-        filter_str=filter_str
-    )
+    def get_machines_for_vulnerable_software(self, software_name, software_version, location='',
+                                             start=0, limit=100, filter_str=''):
+        return SecurityDatabase().get_machines_for_vulnerable_software(
+            software_name, software_version, self._entities(location), int(start), int(limit), filter_str)
+
+    def scan_machine(self, id_glpi):
+        """Scan a machine in background; scan id, 0 when the machine is out of scope."""
+        from threading import Thread
+        from mmc.plugins.security.scanner import run_cve_scan
+
+        id_glpi = int(id_glpi)
+        hostname = SecurityDatabase.machine_name(id_glpi, self._allowed())
+        if hostname is None:
+            logger.warning(f"Security: {self.userid} cannot scan machine id_glpi={id_glpi}")
+            return 0
+        scan_id = SecurityDatabase().create_scan()
+        Thread(target=run_cve_scan, args=(scan_id, None, None, id_glpi, hostname), daemon=True).start()
+        logger.info(f"Started CVE scan for machine '{hostname}' (id_glpi={id_glpi}) with scan ID: {scan_id}")
+        return scan_id
+
+    def set_policies_json(self, policies_json, user=None):
+        """Store policies given as a JSON string (nested arrays break PHP XML-RPC); user is ignored."""
+        import json
+        try:
+            return SecurityDatabase().set_policies_bulk(json.loads(policies_json), self.userid)
+        except json.JSONDecodeError as e:
+            logger.error(f"Invalid JSON in set_policies_json: {e}")
+            return False
+
+    def reset_display_policies(self, user=None):
+        """Reset the display policies to their defaults, exclusions kept; user is ignored."""
+        return SecurityDatabase().reset_display_policies(user=self.userid)

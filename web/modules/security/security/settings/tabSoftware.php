@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['badd_software'])) {
 
     if (!empty($softwareName)) {
         if (ExclusionHelper::addExclusion('names', $softwareName, $currentUser)) {
-            new NotifyWidgetSuccess(sprintf(_T("'%s' added to excluded software", "security"), $softwareName));
+            new NotifyWidgetSuccess(sprintf(_T("'%s' added to excluded software", "security"), htmlspecialchars($softwareName)));
         } else {
             new NotifyWidgetFailure(_T("Failed to add software exclusion", "security"));
         }
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['badd_software'])) {
 
 <h3><?php echo _T("Excluded Software", "security"); ?></h3>
 <p style="color:#666; font-size:0.9em; margin-bottom:15px;">
-    <?php echo _T("Software listed here will not appear in CVE reports. You can also exclude software directly from the CVE Summary page.", "security"); ?>
+    <?php echo _T("Software listed here will not appear in CVE reports. You can also exclude software directly from the Software page.", "security"); ?>
 </p>
 
 <?php

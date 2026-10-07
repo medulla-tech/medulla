@@ -22,48 +22,32 @@
 
 require_once("modules/security/includes/xmlrpc.php");
 
-// Get current user for audit
 $currentUser = $_SESSION['login'] ?? 'unknown';
+$severityOptions = array('None', 'Low', 'Medium', 'High', 'Critical');
 
-// Handle form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['bsave'])) {
-        // Get current policies to preserve exclusions
-        $currentPolicies = xmlrpc_get_policies();
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bsave'])) {
+    // Merge into the stored policies so keys not edited here are kept
+    $policies = xmlrpc_get_policies();
+    $display = array_merge($policies['display'] ?? array(), array(
+        'min_severity' => in_array($_POST['display_min_severity'] ?? '', $severityOptions, true) ? $_POST['display_min_severity'] : 'None',
+        'show_unfixed' => ($_POST['display_show_unfixed'] ?? '') === 'on',
+        'max_age_days' => strval(max(0, intval($_POST['display_max_age_days'] ?? 0))),
+        'min_published_year' => strval(max(0, intval($_POST['display_min_published_year'] ?? 0)))
+    ));
+    $policies['display'] = $display;
 
-        // Build policies array from form data
-        $policies = array(
-            'display' => array(
-                'min_cvss' => strval($_POST['display_min_cvss'] ?? '0'),
-                'min_severity' => $_POST['display_min_severity'] ?? 'None',
-                'show_patched' => isset($_POST['display_show_patched']) && $_POST['display_show_patched'] === 'on',
-                'max_age_days' => strval($_POST['display_max_age_days'] ?? '0'),
-                'min_published_year' => strval($_POST['display_min_published_year'] ?? '2000')
-            ),
-            'exclusions' => $currentPolicies['exclusions'] ?? array(
-                'vendors' => array(),
-                'names' => array(),
-                'cve_ids' => array()
-            )
-        );
-
-        $result = xmlrpc_set_policies($policies, $currentUser);
-        if ($result === true || $result === 1) {
-            new NotifyWidgetSuccess(_T("Display filters saved successfully", "security"));
-        } else {
-            new NotifyWidgetFailure(_T("Failed to save display filters", "security"));
-        }
-        header("Location: " . urlStrRedirect("security/security/settings", array("tab" => "tabfilters")));
-        exit;
+    $result = xmlrpc_set_policies($policies, $currentUser);
+    if ($result === true || $result === 1) {
+        new NotifyWidgetSuccess(_T("Display filters saved successfully", "security"));
+    } else {
+        new NotifyWidgetFailure(_T("Failed to save display filters", "security"));
     }
+    header("Location: " . urlStrRedirect("security/security/settings", array("tab" => "tabfilters")));
+    exit;
 }
 
-// Get current policies
 $policies = xmlrpc_get_policies();
 $display = $policies['display'] ?? array();
-
-// Severity options
-$severityOptions = array('None', 'Low', 'Medium', 'High', 'Critical');
 ?>
 
 <script>
@@ -74,7 +58,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <?php
-// Build the form using ValidatingForm
 $f = new ValidatingForm(array('method' => 'POST'));
 
 $f->add(new TitleElement(_T("Display Filters", "security")));
@@ -82,31 +65,25 @@ $f->add(new SpanElement('<p>' . _T("Control which CVEs are shown in the interfac
 
 $f->push(new Table());
 
-// Minimum CVSS
-$f->add(
-    new TrFormElement(_T("Minimum CVSS", "security"), new multifieldTpl(array(
-        new InputTpl('display_min_cvss', '/^[0-9](\.[0-9])?$|^10(\.0)?$/', htmlspecialchars($display['min_cvss'] ?? 0)),
-        new TextTpl('<i style="color:#999999">' . _T("0.0 - 10.0", "security") . '</i>')
-    )))
-);
-
-// Minimum Severity
+// La sévérité est une tranche de score CVSS : la correspondance est donnée dans chaque option
+$cvssFloor = array('Low' => '0.1', 'Medium' => '4.0', 'High' => '7.0', 'Critical' => '9.0');
 $severitySelect = new SelectItem("display_min_severity");
-$severitySelect->setElements($severityOptions);
+$severitySelect->setElements(array_map(function ($severity) use ($cvssFloor) {
+    return htmlspecialchars(isset($cvssFloor[$severity])
+        ? sprintf(_T("%s (CVSS %s and above)", "security"), _T($severity, "security"), $cvssFloor[$severity])
+        : _T("All severities", "security"));
+}, $severityOptions));
 $severitySelect->setElementsVal($severityOptions);
 $f->add(
     new TrFormElement(_T("Minimum Severity", "security"), $severitySelect),
     array("value" => $display['min_severity'] ?? 'None')
 );
 
-// Show patched CVEs
-$showPatchedCb = new CheckboxTpl("display_show_patched");
 $f->add(
-    new TrFormElement(_T("Show the CVEs that have a fix available", "security"), $showPatchedCb),
-    array("value" => ($display['show_patched'] ?? true) ? "checked" : "")
+    new TrFormElement(_T("Show the CVEs for which the Linux distribution has not published a fix", "security"), new CheckboxTpl("display_show_unfixed")),
+    array("value" => !empty($display['show_unfixed']) ? "checked" : "")
 );
 
-// Max CVE age (days)
 $f->add(
     new TrFormElement(_T("Max CVE age (days)", "security"), new multifieldTpl(array(
         new InputTpl('display_max_age_days', '/^[0-9]+$/', htmlspecialchars($display['max_age_days'] ?? 0)),
@@ -114,23 +91,18 @@ $f->add(
     )))
 );
 
-// Min published year (1999-2099)
 $f->add(
     new TrFormElement(_T("Min published year", "security"), new multifieldTpl(array(
-        new InputTpl('display_min_published_year', '/^(199[9]|20[0-9]{2})$/', htmlspecialchars($display['min_published_year'] ?? 2000)),
-        new TextTpl('<i style="color:#999999">' . _T("1999 - 2099", "security") . '</i>')
+        new InputTpl('display_min_published_year', '/^(0|199[9]|20[0-9]{2})$/', htmlspecialchars($display['min_published_year'] ?? 0)),
+        new TextTpl('<i style="color:#999999">' . _T("1999 - 2099, 0 = no limit", "security") . '</i>')
     )))
 );
 
 $f->pop();
-
+$f->addValidateButtonWithValue('bsave', _T("Save", "security"));
+// Réinitialiser : confirmation dans une popup, à côté d'Enregistrer
+$reset = "PopupWindow(event, '" . urlStrRedirect('security/security/ajaxResetDisplayFilters') . "', 400); return false;";
+$f->addButton('breset', htmlspecialchars(_T("Reset to Defaults", "security")), 'btnSecondary',
+              'onclick="' . htmlspecialchars($reset) . '"', 'button');
 $f->display();
 ?>
-<div style="margin-top: 20px;">
-<input type="submit" name="bsave" value="<?php echo _T("Save", "security"); ?>" class="btnPrimary" form="Form" />
-<a class="btnSecondary" style="margin-left: 10px;"
-   href="main.php?module=security&amp;submod=security&amp;action=ajaxResetDisplayFilters"
-   onclick="PopupWindow(event, 'main.php?module=security&amp;submod=security&amp;action=ajaxResetDisplayFilters', 400); return false;">
-    <?php echo _T("Reset to Defaults", "security"); ?>
-</a>
-</div>

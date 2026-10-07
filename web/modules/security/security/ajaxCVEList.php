@@ -26,89 +26,31 @@ require_once("modules/security/includes/html.inc.php");
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
-// Get filter parameters
-$filter = isset($_GET["filter"]) ? $_GET["filter"] : "";
+$filter = $_GET["filter"] ?? "";
 $start = isset($_GET["start"]) ? intval($_GET["start"]) : 0;
-$severity = isset($_GET["severity"]) && $_GET["severity"] !== "" ? $_GET["severity"] : null;
-$location = isset($_GET["location"]) ? $_GET["location"] : "";
+$severity = SecurityFilter::severity();
+$exploitedOnly = SecurityFilter::exploitedOnly();
 
-// Get data from backend
-$result = xmlrpc_get_cves($start, $maxperpage, $filter, $severity, $location);
-$data = $result['data'];
-$count = $result['total'];
+$result = xmlrpc_get_cves(
+    $start,
+    $maxperpage,
+    $filter,
+    $severity,
+    SecurityFilter::location(),
+    'cvss_score',
+    'desc',
+    SecurityFilter::platform(),
+    $exploitedOnly
+);
+$count = $result['total'] ?? 0;
 
-// Prepare arrays for display
-$cveIds = array();
-$severities = array();
-$cvssScores = array();
-$descriptions = array();
-$machinesCounts = array();
-$softwaresList = array();
-$params = array();
-$cssClasses = array();
-
-foreach ($data as $row) {
-    $cveIds[] = $row['cve_id'];
-    $sev = $row['severity'];
-    $severities[] = SecurityBadge::severity($sev);
-
-    // CVSS Score
-    $cvss = floatval($row['cvss_score']);
-    $cvssScores[] = number_format($cvss, 1);
-
-    // Description (truncated)
-    $desc = $row['description'] ? $row['description'] : '';
-    if (strlen($desc) > 100) {
-        $desc = substr($desc, 0, 100) . '...';
-    }
-    $descriptions[] = htmlspecialchars($desc);
-
-    // Machines affected
-    $machinesCounts[] = $row['machines_affected'];
-
-    // Softwares affected
-    $swList = array();
-    if (isset($row['softwares']) && is_array($row['softwares'])) {
-        foreach ($row['softwares'] as $sw) {
-            $swList[] = htmlspecialchars($sw['name'] . ' ' . $sw['version']);
-        }
-    }
-    $softwaresList[] = implode(', ', array_slice($swList, 0, 2)) . (count($swList) > 2 ? '...' : '');
-
-    // Params for actions
-    $params[] = array('cve_id' => $row['cve_id']);
-
-    // CSS class : "alternate" garde le zébrage 1 ligne/2 (le rendu remplace
-    // sinon la classe "alternate" par celle-ci), "severity-*" ajoute le liseré.
-    $sevClass = ($sev === 'N/A') ? 'na' : strtolower($sev);
-    $cssClasses[] = 'severity-' . $sevClass . ' alternate';
-}
-
-// Actions
-$detailAction = new ActionItem(_T("View Details", "security"), "cveDetail", "display", "", "security", "security");
-$excludeAction = new ActionPopupItem(_T("Exclude this CVE", "security"), "ajaxAddExclusion", "delete", "", "security", "security");
-$excludeAction->setWidth(400);
-
-// Display the list
 if ($count > 0) {
-    $n = new OptimizedListInfos($cveIds, _T("CVE ID", "security"));
-    $n->setResizable();
-    $n->setTableCssClass("security-table");
-    $n->disableFirstColumnActionLink();
-    $n->setCssClasses($cssClasses);
-    $n->addExtraInfo($severities, _T("Severity", "security"));
-    $n->addExtraInfo($cvssScores, _T("CVSS", "security"));
-    $n->addExtraInfo($softwaresList, _T("Software", "security"));
-    $n->addExtraInfo($descriptions, _T("Description", "security"));
-    $n->addExtraInfoCentered($machinesCounts, _T("Machines", "security"));
-    $n->setItemCount($count);
-    $n->setNavBar(new AjaxNavBar($count, $filter));
-    $n->setParamInfo($params);
-    $n->addActionItem($detailAction);
-    $n->addActionItem($excludeAction);
-    $n->start = 0;
-    $n->end = $count;
-    $n->display();
+    SecurityLists::cves($result['data'] ?? array(), $count, $filter, true);
+} elseif ($filter !== '' || $severity || $exploitedOnly) {
+    EmptyStateBox::show(
+        _T("No CVEs found", "security"),
+        _T("No CVEs match your filter criteria", "security")
+    );
 } else {
     EmptyStateBox::show(
         _T("No CVEs found", "security"),

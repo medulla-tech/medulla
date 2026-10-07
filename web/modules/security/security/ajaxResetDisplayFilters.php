@@ -40,7 +40,7 @@ if (isset($_POST['bconfirm'])) {
 // Show confirmation popup
 $f = new PopupForm(_T("Reset Display Filters", "security"));
 $f->addText("<br/>" . _T("Are you sure you want to reset display filters to default values?", "security") . "<br/><br/>");
-$f->addValidateButton("bconfirm", _T("Reset", "security"));
+$f->addValidateButtonWithValue("bconfirm", _T("Reset", "security"));
 $f->addCancelButton("bback");
 $f->display();
 ?>

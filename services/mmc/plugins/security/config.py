@@ -34,22 +34,12 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
     def _ensure_db_policies_loaded(self):
         """Lazy load DB policies on first access."""
         if not self._db_policies_loaded:
-            self._load_db_policies()
+            self.load_policies()
             self._db_policies_loaded = True
-
-    def reload_policies(self):
-        """Force reload policies from database.
-
-        Call this after modifying policies to ensure the config
-        reflects the latest values.
-        """
-        self._db_policies_loaded = False
-        self._load_db_policies()
-        self._db_policies_loaded = True
 
     # Attributes that trigger lazy loading from DB
     _POLICY_ATTRS = {
-        'display_min_cvss', 'display_min_severity', 'display_show_patched',
+        'display_min_severity', 'display_show_unfixed',
         'display_max_age_days', 'display_min_published_year',
         'excluded_vendors', 'excluded_names', 'excluded_cve_ids',
         'excluded_machines_ids', 'excluded_groups_ids'
@@ -63,6 +53,7 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
         self.cve_central_url = ''
         self.cve_central_server_id = ''
         self.cve_central_keyAES32 = ''
+        self.cve_central_ssl_verify = True
 
     def __getattr__(self, name):
         """Lazy load policies from DB on first access to policy attributes."""
@@ -89,9 +80,10 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
             self.cve_central_url = self.safe_get("cve_central", "url", "")
             self.cve_central_server_id = self.safe_get("cve_central", "server_id", "")
             self.cve_central_keyAES32 = self.safe_get("cve_central", "keyAES32", "")
+            self.cve_central_ssl_verify = self.safe_get("cve_central", "ssl_verify", "1") not in ('0', 'false', 'no')
 
         # NOTE: [display] and [exclusions] are NOT read from .ini
-        # They are loaded from database via _load_db_policies()
+        # They are loaded from database via load_policies()
 
     def safe_get(self, section, option, default=''):
         """Get config value with fallback to default"""
@@ -118,7 +110,7 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
             return [int(v.strip()) for v in val.split(',') if v.strip().isdigit()]
         return []
 
-    def _load_db_policies(self):
+    def load_policies(self):
         """Load policies from database."""
         try:
             from pulse2.database.security import SecurityDatabase
@@ -134,24 +126,20 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
 
             # Display policies
             display = policies.get('display', {})
-            try:
-                self._display_min_cvss = float(display.get('min_cvss', 0))
-            except (ValueError, TypeError):
-                self._display_min_cvss = 0.0
-
             severity = display.get('min_severity', 'None')
             self._display_min_severity = severity if severity in self.SEVERITY_LEVELS else 'None'
-            self._display_show_patched = display.get('show_patched', True) in (True, 'true', '1', 1)
+            self._display_show_unfixed = display.get('show_unfixed', False) in (True, 'true', '1', 1)
+
+            # 0 = pas de limite (défaut, et valeur illisible)
+            try:
+                self._display_max_age_days = int(display.get('max_age_days', 0))
+            except (ValueError, TypeError):
+                self._display_max_age_days = 0
 
             try:
-                self._display_max_age_days = int(display.get('max_age_days', 365))
+                self._display_min_published_year = int(display.get('min_published_year', 0))
             except (ValueError, TypeError):
-                self._display_max_age_days = 365
-
-            try:
-                self._display_min_published_year = int(display.get('min_published_year', 2020))
-            except (ValueError, TypeError):
-                self._display_min_published_year = 2020
+                self._display_min_published_year = 0
 
             # Exclusion policies
             exclusions = policies.get('exclusions', {})
@@ -168,74 +156,36 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
     def check(self):
         pass
 
-    def is_cve_central_configured(self):
-        """Check if CVE Central is properly configured"""
-        return bool(self.cve_central_url and
-                    self.cve_central_server_id and
-                    self.cve_central_keyAES32)
-
-    def get_severity_index(self, severity):
-        """Get numeric index for severity level (for comparison)"""
-        try:
-            return self.SEVERITY_LEVELS.index(severity)
-        except ValueError:
-            return 0
-
-    def should_display_cve(self, cve):
-        """
-        Check if a CVE should be displayed based on local policies.
-
-        Args:
-            cve: dict with keys: cve_id, cvss_score, severity, has_patch, published_date
-
-        Returns:
-            bool: True if CVE passes all display filters
-        """
-        self._ensure_db_policies_loaded()
-
-        # Check CVSS score filter
-        cvss = cve.get('cvss_score') or 0.0
-        if isinstance(cvss, str):
-            try:
-                cvss = float(cvss)
-            except (ValueError, TypeError):
-                cvss = 0.0
-        if cvss < self.display_min_cvss:
-            return False
-
-        # Check severity filter
-        severity = cve.get('severity', 'None')
-        if self.get_severity_index(severity) < self.get_severity_index(self.display_min_severity):
-            return False
-
-        # Check patched CVE filter
-        if not self.display_show_patched and cve.get('has_patch'):
-            return False
-
-        # Check CVE ID exclusion
-        cve_id = cve.get('cve_id', '').upper()
-        if cve_id in self.excluded_cve_ids:
-            return False
-
-        return True
+    def filters(self):
+        """Display policies as keyword arguments of the SecurityDatabase reads."""
+        self.load_policies()  # toujours relu : mmc-agent garde cette config en mémoire
+        return {
+            'min_severity': self.display_min_severity,
+            'excluded_names': self.excluded_names,
+            'excluded_cve_ids': self.excluded_cve_ids,
+            'excluded_machines_ids': self.excluded_machines_ids,
+            'excluded_groups_ids': self.excluded_groups_ids,
+            'show_unfixed': self.display_show_unfixed,
+            'max_age_days': self.display_max_age_days,
+            'min_published_year': self.display_min_published_year
+        }
 
     def get_display_policies(self):
         """Return display policies as a dict (for API/UI)
 
         Note: Numeric values returned as strings for XMLRPC compatibility.
         """
-        self._ensure_db_policies_loaded()
+        self.load_policies()  # toujours relu : mmc-agent garde cette config en mémoire
         return {
-            'min_cvss': str(self.display_min_cvss),
             'min_severity': self.display_min_severity,
-            'show_patched': self.display_show_patched,
+            'show_unfixed': self.display_show_unfixed,
             'max_age_days': str(self.display_max_age_days),
             'min_published_year': str(self.display_min_published_year)
         }
 
     def get_exclusion_policies(self):
         """Return exclusion policies as a dict (for API/UI)"""
-        self._ensure_db_policies_loaded()
+        self.load_policies()  # toujours relu : mmc-agent garde cette config en mémoire
         return {
             'vendors': self.excluded_vendors,
             'names': self.excluded_names,

@@ -33,9 +33,15 @@ $submod->setImg('modules/security/graph/navbar/security');
 $submod->setDefaultPage("security/security/index");
 $submod->setPriority(500);
 
-// CVE Summary page (index)
-$page = new Page("index", _T('CVE Summary', 'security'));
+// CVE Summary page (index), one tab per platform
+$page = new Page("index", _T('Dashboard', 'security'));
 $page->setFile("modules/security/security/index.php");
+foreach (array("taball" => _T("All", "security"), "tabwindows" => "Windows", "tablinux" => "Linux") as $tabId => $tabTitle) {
+    // Platform filter, not a privilege
+    $tab = new Tab($tabId, $tabTitle);
+    $tab->setOptions(array("noACL" => True));
+    $page->addTab($tab);
+}
 $submod->addPage($page);
 
 // Ajax CVE List
@@ -44,15 +50,14 @@ $page->setFile("modules/security/security/ajaxCVEList.php");
 $page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
 $submod->addPage($page);
 
-// All CVEs page (flat list)
-$page = new Page("allcves", _T('All CVEs', 'security'));
-$page->setFile("modules/security/security/allcves.php");
+// Software page, sorted by priority
+$page = new Page("softwares", _T('Software list', 'security'));
+$page->setFile("modules/security/security/softwares.php");
 $submod->addPage($page);
 
-// Results by Software page (hidden, replaced by index)
-$page = new Page("softwares", _T('Results by Software', 'security'));
-$page->setFile("modules/security/security/softwares.php");
-$page->setOptions(array("visible" => False));
+// All CVEs page (flat list)
+$page = new Page("allcves", _T('CVEs', 'security'));
+$page->setFile("modules/security/security/allcves.php");
 $submod->addPage($page);
 
 // Ajax Softwares List
@@ -90,26 +95,14 @@ $page->setFile("modules/security/security/machineDetail.php");
 $page->setOptions(array("visible" => False));
 $submod->addPage($page);
 
-// Ajax Machine CVE List
-$page = new Page("ajaxMachineCVEList", _T('Machine CVE List', 'security'));
-$page->setFile("modules/security/security/ajaxMachineCVEList.php");
-$page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
-$submod->addPage($page);
-
 // Ajax Machine Softwares List (grouped view)
 $page = new Page("ajaxMachineSoftwaresList", _T('Machine Softwares List', 'security'));
 $page->setFile("modules/security/security/ajaxMachineSoftwaresList.php");
 $page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
 $submod->addPage($page);
 
-// CVE Detail page
-$page = new Page("cveDetail", _T('CVE Details', 'security'));
-$page->setFile("modules/security/security/cveDetail.php");
-$page->setOptions(array("visible" => False));
-$submod->addPage($page);
-
 // Results by Entity page
-$page = new Page("entities", _T('Results by Entity', 'security'));
+$page = new Page("entities", _T('Entities', 'security'));
 $page->setFile("modules/security/security/entities.php");
 $submod->addPage($page);
 
@@ -120,7 +113,7 @@ $page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True))
 $submod->addPage($page);
 
 // Results by Group page
-$page = new Page("groups", _T('Results by Group', 'security'));
+$page = new Page("groups", _T('Groups', 'security'));
 $page->setFile("modules/security/security/groups.php");
 $submod->addPage($page);
 
@@ -142,15 +135,15 @@ $page->setFile("modules/security/security/ajaxGroupMachinesList.php");
 $page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
 $submod->addPage($page);
 
+// CVE Detail page
+$page = new Page("cveDetail", _T('CVE Details', 'security'));
+$page->setFile("modules/security/security/cveDetail.php");
+$page->setOptions(array("visible" => False));
+$submod->addPage($page);
+
 // Ajax Scan Machine popup
 $page = new Page("ajaxScanMachine", _T('Scan Machine', 'security'));
 $page->setFile("modules/security/security/ajaxScanMachine.php");
-$page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
-$submod->addPage($page);
-
-// Ajax Dashboard Summary (for entity filter update)
-$page = new Page("ajaxDashboardSummary", _T('Dashboard Summary', 'security'));
-$page->setFile("modules/security/security/ajaxDashboardSummary.php");
 $page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
 $submod->addPage($page);
 

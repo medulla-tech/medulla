@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['badd_cve'])) {
     // Validate CVE ID format (CVE-YYYY-NNNNN)
     if (!empty($cveId) && preg_match('/^CVE-\d{4}-\d{4,}$/', $cveId)) {
         if (ExclusionHelper::addExclusion('cve_ids', $cveId, $currentUser)) {
-            new NotifyWidgetSuccess(sprintf(_T("'%s' added to excluded CVEs", "security"), $cveId));
+            new NotifyWidgetSuccess(sprintf(_T("'%s' added to excluded CVEs", "security"), htmlspecialchars($cveId)));
         } else {
             new NotifyWidgetFailure(_T("Failed to add CVE exclusion", "security"));
         }
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['badd_cve'])) {
 
 <h3><?php echo _T("Excluded CVEs", "security"); ?></h3>
 <p style="color:#666; font-size:0.9em; margin-bottom:15px;">
-    <?php echo _T("CVEs listed here will not appear in reports. You can also exclude CVEs directly from the All CVEs page.", "security"); ?>
+    <?php echo _T("CVEs listed here will not appear in reports. You can also exclude CVEs directly from the CVEs page.", "security"); ?>
 </p>
 
 <?php

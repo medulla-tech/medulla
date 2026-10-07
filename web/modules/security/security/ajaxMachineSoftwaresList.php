@@ -21,126 +21,49 @@
  */
 
 require_once("modules/security/includes/xmlrpc.php");
+require_once("modules/security/includes/html.inc.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
-// Get parameters
 $id_glpi = isset($_GET["id_glpi"]) ? intval($_GET["id_glpi"]) : 0;
-$hostname = isset($_GET["hostname"]) ? $_GET["hostname"] : '';
-$filter = isset($_GET["filter"]) ? $_GET["filter"] : "";
+$filter = $_GET["filter"] ?? "";
 $start = isset($_GET["start"]) ? intval($_GET["start"]) : 0;
-$category = isset($_GET["category"]) ? $_GET["category"] : "";
-
-// Get policies to determine which columns to show
-$policies = xmlrpc_get_policies();
-$minSeverity = $policies['display']['min_severity'] ?? 'None';
-
-// Determine which severity columns to show based on min_severity
-$severityOrder = array('None' => 0, 'Low' => 1, 'Medium' => 2, 'High' => 3, 'Critical' => 4);
-$minSevIndex = isset($severityOrder[$minSeverity]) ? $severityOrder[$minSeverity] : 0;
-$showLow = $minSevIndex <= 1;
-$showMedium = $minSevIndex <= 2;
-$showHigh = $minSevIndex <= 3;
-$showCritical = true; // Always show Critical
 
 if ($id_glpi <= 0) {
     echo '<p class="error">' . _T("Invalid machine ID", "security") . '</p>';
     return;
 }
 
-// Get data from backend
-$result = xmlrpc_get_machine_softwares_summary($id_glpi, $start, $maxperpage, $filter, $category);
-$data = $result['data'];
-$count = $result['total'];
+$result = xmlrpc_get_machine_softwares_summary($id_glpi, $start, $maxperpage, $filter, SecurityFilter::category());
+$data = $result['data'] ?? array();
+$count = $result['total'] ?? 0;
 
-// Prepare arrays for display
-$softwareNames = array();
-$versions = array();
-$typeLabels = array();
-$maxScores = array();
-$criticalCounts = array();
-$highCounts = array();
-$mediumCounts = array();
-$lowCounts = array();
-$totalCounts = array();
+$names = array();
 $params = array();
-
 foreach ($data as $row) {
-    $softwareNames[] = $row['software_name'];
-    $versions[] = $row['software_version'];
-
-    // Type : extension de navigateur ou logiciel classique
-    if (!empty($row['is_extension'])) {
-        $typeLabels[] = '<span class="badge" style="background-color:#6f42c1;color:#fff;" title="'
-            . _T("Browser extension", "security") . '">' . _T("Extension", "security") . '</span>';
-    } else {
-        $typeLabels[] = '<span class="badge" style="background-color:#6c757d;color:#fff;">'
-            . _T("Software", "security") . '</span>';
-    }
-
-    // Max CVSS score with color
-    $score = floatval($row['max_cvss']);
-    $scoreClass = 'low';
-    if ($score >= 9.0) $scoreClass = 'critical';
-    elseif ($score >= 7.0) $scoreClass = 'high';
-    elseif ($score >= 4.0) $scoreClass = 'medium';
-    $maxScores[] = '<span class="risk-score risk-' . $scoreClass . '">' . number_format($score, 1) . '</span>';
-
-    // Counts with badges
-    $criticalCounts[] = $row['critical'] > 0 ?
-        '<span class="badge badge-critical">' . $row['critical'] . '</span>' : '0';
-    $highCounts[] = $row['high'] > 0 ?
-        '<span class="badge badge-high">' . $row['high'] . '</span>' : '0';
-    $mediumCounts[] = $row['medium'] > 0 ?
-        '<span class="badge badge-medium">' . $row['medium'] . '</span>' : '0';
-    $lowCounts[] = $row['low'] > 0 ?
-        '<span class="badge badge-low">' . $row['low'] . '</span>' : '0';
-    $totalCounts[] = $row['total_cves'];
-
-    // Params for actions - link to software detail (global view)
+    $names[] = SecurityColumns::software($row);
     $params[] = array(
         'software_name' => $row['software_name'],
-        'software_version' => $row['software_version']
+        'software_version' => $row['software_version'],
+        'back' => SecurityFilter::back()
     );
 }
 
-// Actions
-$detailAction = new ActionItem(_T("View CVEs", "security"), "softwareDetail", "display", "", "security", "security");
-
-// Display the list
 if ($count > 0) {
-    $n = new OptimizedListInfos($softwareNames, _T("Software", "security"));
+    $n = new OptimizedListInfos($names, _T("Software", "security"));
     $n->setResizable();
     $n->setTableCssClass("security-table");
     $n->disableFirstColumnActionLink();
-    $n->addExtraInfo($versions, _T("Version", "security"));
-    $n->addExtraInfoCentered($typeLabels, _T("Type", "security"));
-    $n->addExtraInfoCentered($maxScores, _T("Max CVSS", "security"));
-    // Only show severity columns that are >= min_severity
-    if ($showCritical) {
-        $n->addExtraInfoCentered($criticalCounts, _T("Critical", "security"));
-    }
-    if ($showHigh) {
-        $n->addExtraInfoCentered($highCounts, _T("High", "security"));
-    }
-    if ($showMedium) {
-        $n->addExtraInfoCentered($mediumCounts, _T("Medium", "security"));
-    }
-    if ($showLow) {
-        $n->addExtraInfoCentered($lowCounts, _T("Low", "security"));
-    }
-    $n->addExtraInfoCentered($totalCounts, _T("Total", "security"));
+    SecurityColumns::add($n, $data, 'max_cvss');
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $filter));
     $n->setParamInfo($params);
-    $n->addActionItem($detailAction);
+    $n->addActionItem(new ActionItem(_T("View CVEs", "security"), "softwareDetail", "display", "", "security", "security"));
     $n->start = 0;
     $n->end = $count;
     $n->display();
 } else {
-    echo '<div class="empty-message">';
-    echo '<p>' . _T("No vulnerable software found on this machine", "security") . '</p>';
-    echo '</div>';
+    echo '<div class="empty-message"><p>' . _T("No vulnerable software found on this machine", "security") . '</p></div>';
 }
 ?>

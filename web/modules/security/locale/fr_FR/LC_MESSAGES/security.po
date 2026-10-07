@@ -1244,3 +1244,322 @@ msgstr "Recherche"
 #: modules/security/security/allcves.php
 msgid "Columns"
 msgstr "Colonnes"
+
+msgid "'%s' added to exclusions"
+msgstr "« %s » ajouté aux exclusions"
+
+msgid "Actively exploited since %s"
+msgstr "Activement exploitée depuis le %s"
+
+msgid "Add '%s' to excluded CVEs?"
+msgstr "Ajouter « %s » aux CVE exclues ?"
+
+msgid "Add '%s' to excluded software?"
+msgstr "Ajouter « %s » aux logiciels exclus ?"
+
+msgid "Add Exclusion"
+msgstr "Ajouter une exclusion"
+
+msgid "All versions of this software will no longer appear in CVE reports."
+msgstr "Aucune version de ce logiciel n'apparaîtra plus dans les rapports CVE."
+
+msgid "Back to CVE Summary"
+msgstr "Retour au résumé des CVE"
+
+msgid "Browser extension"
+msgstr "Extension de navigateur"
+
+msgid "CVE scan started for '%s' (ID: %s). The scan runs in background."
+msgstr "Analyse CVE lancée pour « %s » (ID : %s). L'analyse s'exécute en arrière-plan."
+
+msgid "CVEs known to be actively exploited"
+msgstr "CVE connues pour être activement exploitées"
+
+msgid "Click to view exploited CVEs"
+msgstr "Cliquer pour voir les CVE exploitées"
+
+msgid "Completed"
+msgstr "Terminé"
+
+msgid "Deploy Store Update"
+msgstr "Déployer la mise à jour du Store"
+
+msgid "Deploy Update: %s"
+msgstr "Déployer la mise à jour : %s"
+
+msgid "Deploy to selected machines"
+msgstr "Déployer sur les machines sélectionnées"
+
+msgid "Deploy update"
+msgstr "Déployer la mise à jour"
+
+msgid "Deployment failed"
+msgstr "Échec du déploiement"
+
+msgid "Deployment started on %d machine(s)"
+msgstr "Déploiement lancé sur %d machine(s)"
+
+msgid "EUVD ID"
+msgstr "Identifiant EUVD"
+
+msgid "Exclude CVE"
+msgstr "Exclure la CVE"
+
+msgid "Exclude Software"
+msgstr "Exclure le logiciel"
+
+msgid "Exclude this CVE"
+msgstr "Exclure cette CVE"
+
+msgid "Exclude this software"
+msgstr "Exclure ce logiciel"
+
+msgid "Exploited"
+msgstr "Exploitées"
+
+msgid "Exploited only"
+msgstr "Exploitées seulement"
+
+msgid "Exploited since"
+msgstr "Exploitée depuis"
+
+msgid "Extension"
+msgstr "Extension"
+
+msgid "Failed"
+msgstr "Échoué"
+
+msgid "Failed to add exclusion"
+msgstr "Échec de l'ajout de l'exclusion"
+
+msgid "Failed to start scan for %s."
+msgstr "Échec du lancement de l'analyse pour %s."
+
+msgid "Fix"
+msgstr "Correctif"
+
+msgid "Fix available"
+msgstr "Correctif disponible"
+
+msgid "Installed Version"
+msgstr "Version installée"
+
+msgid "Invalid machine data"
+msgstr "Données de machine invalides"
+
+msgid "No deployment package is available yet for this software. The package may still be building or not yet downloaded."
+msgstr "Aucun paquet de déploiement n'est encore disponible pour ce logiciel. Il est peut-être en cours de construction ou pas encore téléchargé."
+
+msgid "No fix published"
+msgstr "Aucun correctif publié"
+
+msgid "No machines found with this software"
+msgstr "Aucune machine trouvée avec ce logiciel"
+
+msgid "No package UUID available for deployment"
+msgstr "Aucun paquet disponible pour le déploiement"
+
+msgid "No software with CVE data match your current filters."
+msgstr "Aucun logiciel avec des CVE ne correspond à vos filtres."
+
+msgid "None"
+msgstr "Aucune"
+
+msgid "Not available in Store"
+msgstr "Non disponible dans le Store"
+
+msgid "Please select at least one machine"
+msgstr "Veuillez sélectionner au moins une machine"
+
+msgid "Remove '%s' from exclusions?"
+msgstr "Retirer « %s » des exclusions ?"
+
+msgid "Remove Exclusion"
+msgstr "Retirer l'exclusion"
+
+msgid "Running"
+msgstr "En cours"
+
+msgid "Same version in Store"
+msgstr "Même version dans le Store"
+
+msgid "Select all"
+msgstr "Tout sélectionner"
+
+msgid "Select machines to update (%d affected)"
+msgstr "Sélectionner les machines à mettre à jour (%d concernées)"
+
+msgid "Select none"
+msgstr "Ne rien sélectionner"
+
+msgid "Show the CVEs for which the Linux distribution has not published a fix"
+msgstr "Afficher les failles sans correctif publié par la distribution"
+
+msgid "Software:"
+msgstr "Logiciel :"
+
+msgid "Store"
+msgstr "Store"
+
+msgid "Store:"
+msgstr "Store :"
+
+msgid "System"
+msgstr "Système"
+
+msgid "This CVE will no longer appear in reports."
+msgstr "Cette CVE n'apparaîtra plus dans les rapports."
+
+msgid "This group will no longer appear in CVE reports."
+msgstr "Ce groupe n'apparaîtra plus dans les rapports CVE."
+
+msgid "Update Information"
+msgstr "Informations de mise à jour"
+
+msgid "Update available in Store"
+msgstr "Mise à jour disponible dans le Store"
+
+msgid "Vulnerable:"
+msgstr "Vulnérable :"
+
+msgid "Warning:"
+msgstr "Attention :"
+
+msgid "selected"
+msgstr "sélectionnée(s)"
+
+msgid "Exploited CVEs"
+msgstr "CVE exploitées"
+
+msgid "Platform"
+msgstr "Plateforme"
+
+msgid "Available in Store, subscription required"
+msgstr "Disponible dans le Store, abonnement requis"
+
+msgid "%d CVE(s) known to be actively exploited"
+msgstr "%d CVE activement exploitée(s)"
+
+msgid "Add group to exclusions:"
+msgstr "Ajouter un groupe aux exclusions :"
+
+msgid "CVEs listed here will not appear in reports. You can also exclude CVEs directly from the CVEs page."
+msgstr "Les CVE listées ici n'apparaîtront pas dans les rapports. Vous pouvez aussi exclure des CVE directement depuis la page CVE."
+
+msgid "Click to view critical CVEs"
+msgstr "Cliquer pour voir les CVE critiques"
+
+msgid "Create a group with the affected machines"
+msgstr "Créer un groupe avec les machines touchées"
+
+msgid "Dashboard"
+msgstr "Tableau de bord"
+
+msgid "Group added to exclusions"
+msgstr "Groupe ajouté aux exclusions"
+
+msgid "Highest CVSS score and its severity"
+msgstr "Score CVSS le plus élevé et sa sévérité"
+
+msgid "Hover a number for the breakdown by severity"
+msgstr "Survoler un nombre pour le détail par sévérité"
+
+msgid "Machines can be excluded from the Machines page using the exclude action."
+msgstr "Les machines peuvent être exclues depuis la page Machines avec l'action d'exclusion."
+
+msgid "Risk"
+msgstr "Risque"
+
+msgid "Software listed here will not appear in CVE reports. You can also exclude software directly from the Software page."
+msgstr "Les logiciels listés ici n'apparaîtront pas dans les rapports CVE. Vous pouvez aussi exclure un logiciel directement depuis la page Logiciels."
+
+msgid "To exclude a machine, use the 'Exclude from reports' action on the Machines page."
+msgstr "Pour exclure une machine, utilisez l'action « Exclure des rapports » de la page Machines."
+
+msgid "To fix first"
+msgstr "À traiter en priorité"
+
+msgid "View all software"
+msgstr "Voir tous les logiciels"
+
+msgid "Entities"
+msgstr "Entités"
+
+msgid "You can also exclude a group from the Groups page."
+msgstr "Vous pouvez aussi exclure un groupe depuis la page Groupes."
+
+msgid "%d of %d machines shown"
+msgstr "%d machines affichées sur %d"
+
+msgid "1999 - 2099, 0 = no limit"
+msgstr "1999 - 2099, 0 = pas de limite"
+
+msgid "Active filters:"
+msgstr "Filtres actifs :"
+
+msgid "Back"
+msgstr "Retour"
+
+msgid "CVSS at least %s"
+msgstr "CVSS ≥ %s"
+
+msgid "Edit"
+msgstr "Modifier"
+
+msgid "Search..."
+msgstr "Rechercher..."
+
+msgid "Software list"
+msgstr "Logiciels"
+
+msgid "published in the last %d days"
+msgstr "publiées depuis moins de %d jours"
+
+msgid "published since %d"
+msgstr "publiées depuis %d"
+
+msgid "severity at least %s"
+msgstr "sévérité ≥ %s"
+
+msgid "vulnerabilities without a published fix hidden"
+msgstr "failles sans correctif masquées"
+
+msgid "Display:"
+msgstr "Affichage :"
+
+msgid "The Store installs the latest version."
+msgstr "Le Store installe la dernière version."
+
+msgid "Version %s in the Store"
+msgstr "Version %s dans le Store"
+
+msgid "Update available in the Store"
+msgstr "Mise à jour disponible dans le Store"
+
+msgid "subscription required"
+msgstr "abonnement requis"
+
+msgid "Update available"
+msgstr "Mise à jour disponible"
+
+msgid "Subscription required"
+msgstr "Abonnement requis"
+
+msgid "Newer version in the Medulla Store: deployable when subscribed"
+msgstr "Version plus récente dans le Store Medulla : déployable si abonné"
+
+msgid "Deploy the update from the Store"
+msgstr "Déployer la mise à jour depuis le Store"
+
+msgid "Newer version in the Store, subscription required"
+msgstr "Version plus récente dans le Store, abonnement requis"
+
+msgid "Green: deploy the update from the Store. Grey: newer version, subscription required"
+msgstr "Vert : déployer la mise à jour depuis le Store. Gris : version plus récente, abonnement requis"
+
+#, c-format
+msgid "%s (CVSS %s and above)"
+msgstr "%s (CVSS %s et plus)"
+
+msgid "All severities"
+msgstr "Toutes les sévérités"
