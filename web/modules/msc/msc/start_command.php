@@ -27,13 +27,13 @@ require('modules/msc/includes/package_api.php');
 require('modules/msc/includes/scheduler_xmlrpc.php');
 require('modules/msc/includes/mscoptions_xmlrpc.php');
 
-// "Direct launch" executes immediately on GET; require a token in the URL to prevent CSRF.
-verifyCSRFToken($_GET);
+// direct launch requires csrf
+verifyCSRFToken($_POST);
 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
     require_once("modules/xmppmaster/includes/xmlrpc.php");
 }
 
-$from = $_GET['from'];
+$from = $_POST['from'];
 $path = explode('|', $from);
 $module = $path[0];
 $submod = $path[1];
@@ -42,29 +42,29 @@ $tab = $path[3];
 
 $params = array();
 
-$name = $_GET['name'];
-$version = $_GET['version'];
-$hostname = $_GET['hostname'];
-if (!empty($_GET['uuid'])) {
-    $uuid = $_GET['uuid'];
+$name = $_POST['name'];
+$version = $_POST['version'];
+$hostname = $_POST['hostname'];
+if (!empty($_POST['uuid'])) {
+    $uuid = $_POST['uuid'];
 } else {
     $uuid = null;
 }
-if (!empty($_GET['gid'])) {
-    $gid = $_GET['gid'];
+if (!empty($_POST['gid'])) {
+    $gid = $_POST['gid'];
 } else {
     $gid = null;
 }
 
 
-$pid = $_GET['pid'];
+$pid = $_POST['pid'];
 $p_api = new ServerAPI();
-$p_api->fromURI($_GET["papi"]);
+$p_api->fromURI($_POST["papi"]);
 
 
 $cible = $hostname;
 if ($gid) {
-    $group = new Group($_GET['gid'], true);
+    $group = new Group($gid, true);
     $cible = $group->getName();
 }
 
