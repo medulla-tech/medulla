@@ -1402,15 +1402,18 @@ class ImagingRpcProxy(RpcProxyI):
                     logger.error("The package server failed to delete the image")
                     return [False, "The package server failed to delete the image"]
 
+            ret = [False, ""]
             try:
                 ret = db.imagingServerImageDelete(image_uuid)
-                return ret
             except Exception as e:
                 return [False, f"Error deleting image {image_uuid}: {str(e)}"]
 
+            # Delete the image from the file system of the selected server
+            # We need these calls
             d = i.imagingServerImageDelete(im.uuid)
             d.addCallback(treatDel, image_uuid, db, logger)
-            return d
+
+            return ret
         # except Exception as e:
         #    return xmlrpcCleanup([False, e])
 
