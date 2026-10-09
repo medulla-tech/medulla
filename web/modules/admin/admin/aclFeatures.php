@@ -109,6 +109,15 @@ foreach ($featureDefs as $fkey => $fdef) {
 <form method="post" action="<?php echo urlStrRedirect("admin/admin/aclFeatures"); ?>">
     <input type="hidden" name="save_acl" value="1">
 
+    <div class="acl-profile-selector">
+        <label for="acl-profile-view"><?php echo _T("Profile to configure", "admin"); ?></label>
+        <select id="acl-profile-view">
+            <?php foreach ($profiles as $profile): ?>
+                <option value="<?php echo htmlspecialchars($profile, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($profile); ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+
     <?php
     // Show "Manage profiles" only if the user has the add or delete right.
     $canManageProfiles = hasCorrectAcl("admin", "admin", "addAclProfile")
@@ -127,7 +136,7 @@ foreach ($featureDefs as $fkey => $fdef) {
                 <th class="acl-th-feature"><?php echo _T("Feature", "admin"); ?></th>
                 <th class="acl-th-center"><?php echo _T("Access", "admin"); ?></th>
                 <?php foreach ($profiles as $profile): ?>
-                    <th class="acl-th-center"><?php echo htmlspecialchars($profile); ?></th>
+                    <th class="acl-th-center" data-profile-column="<?php echo htmlspecialchars($profile, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($profile); ?></th>
                 <?php endforeach; ?>
             </tr>
         </thead>
@@ -143,7 +152,7 @@ foreach ($featureDefs as $fkey => $fdef) {
                         <?php echo htmlspecialchars($catLabel); ?>
                     </td>
                     <?php foreach ($profiles as $pIdx => $profile): ?>
-                        <td class="acl-td-center">
+                        <td class="acl-td-center" data-profile-column="<?php echo htmlspecialchars($profile, ENT_QUOTES, 'UTF-8'); ?>">
                             <input type="checkbox"
                                 data-master="1"
                                 data-category="<?php echo $cat; ?>"
@@ -188,7 +197,7 @@ foreach ($featureDefs as $fkey => $fdef) {
                                 $checked = ($current === 'ro' || $current === 'rw') ? ' checked' : '';
                                 $disabled = ($isSuperadminOnly && $profile !== 'Super-Admin') ? ' disabled' : '';
                             ?>
-                                <td class="acl-td-center">
+                                <td class="acl-td-center" data-profile-column="<?php echo htmlspecialchars($profile, ENT_QUOTES, 'UTF-8'); ?>">
                                     <?php if (!$isSuperadminOnly || $profile === 'Super-Admin'): ?>
                                         <input type="checkbox" name="<?php echo $fieldName; ?>" value="1" <?php echo $checked . $disabled; ?>
                                             data-profile="<?php echo $pIdx; ?>" data-feature="<?php echo $fkey; ?>" data-level="ro" data-category="<?php echo $cat; ?>">
@@ -234,7 +243,7 @@ foreach ($featureDefs as $fkey => $fdef) {
                                         $disabled = ' disabled';
                                     }
                                 ?>
-                                    <td class="acl-td-center">
+                                    <td class="acl-td-center" data-profile-column="<?php echo htmlspecialchars($profile, ENT_QUOTES, 'UTF-8'); ?>">
                                         <?php if (!$isSuperadminOnly || $profile === 'Super-Admin'): ?>
                                             <?php if ($lockedThis): ?>
                                                 <input type="hidden" name="<?php echo $fieldName; ?>" value="1">
@@ -309,6 +318,14 @@ foreach ($featureDefs as $fkey => $fdef) {
 </template>
 
 <style>
+    .acl-profile-selector {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 14px 0;
+    }
+    .acl-profile-selector label { font-weight: 600; }
+    .acl-profile-selector select { min-width: 220px; }
     .manage-profiles-popup { width: 100%; }
     .manage-profiles-help { margin: 0 0 16px 0; color: var(--gray-500, #666); font-size: 0.9em; }
     .manage-profiles-section {
@@ -339,6 +356,21 @@ foreach ($featureDefs as $fkey => $fdef) {
 </style>
 
 <script>
+    function applyAclProfileView() {
+        var selector = document.getElementById('acl-profile-view');
+        if (!selector) return;
+        var selected = selector.value;
+        document.querySelectorAll('[data-profile-column]').forEach(function(column) {
+            column.hidden = column.getAttribute('data-profile-column') !== selected;
+        });
+    }
+
+    var aclProfileView = document.getElementById('acl-profile-view');
+    if (aclProfileView) {
+        aclProfileView.addEventListener('change', applyAclProfileView);
+        applyAclProfileView();
+    }
+
     // RW checked → auto-check RO
     document.querySelectorAll('input[data-level="rw"]').forEach(function(rwBox) {
         rwBox.addEventListener('change', function() {

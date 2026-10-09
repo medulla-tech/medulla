@@ -380,11 +380,35 @@ function xmlrpc_itsmsync_save_client_config($client_id, $config)
  * Create the ITSMLocal root entity for one new client.
  * Returns: array('success' => bool, 'entity_id' => int, 'error' => string)
  */
-function xmlrpc_itsmsync_create_client_root($client_name)
+function xmlrpc_itsmsync_create_client_root($client_name, $parent_entity_id = 0)
 {
     try {
-        $result = xmlCall('admin.create_itsmsync_client_root_ctx', array($client_name));
+        $result = xmlCall('admin.create_itsmsync_client_root_ctx', array($client_name, (int)$parent_entity_id));
         return is_array($result) ? $result : array('success' => false, 'error' => 'Invalid backend response');
+    } catch (Exception $e) {
+        return array('success' => false, 'error' => $e->getMessage());
+    }
+}
+
+function xmlrpc_itsmsync_get_supra_entities()
+{
+    try {
+        $result = xmlCall('admin.get_itsmsync_supra_entities_ctx', array());
+        return is_array($result) ? $result : array();
+    } catch (Exception $e) {
+        return array();
+    }
+}
+
+function xmlrpc_itsmsync_save_supra_entity($entity_id, $parent_entity_id, $name)
+{
+    try {
+        $result = xmlCall('admin.save_itsmsync_supra_entity_ctx', array(
+            (int)$entity_id,
+            (int)$parent_entity_id,
+            (string)$name,
+        ));
+        return is_array($result) ? $result : array('success' => false);
     } catch (Exception $e) {
         return array('success' => false, 'error' => $e->getMessage());
     }

@@ -203,8 +203,57 @@ def load_itsm_sync_clients(database):
 
 
 def is_client_enabled(config):
-    """Return True when a client configuration is enabled for scheduling."""
-    return str(config.get("enabled", "0")).strip() == "1"
+    """Return True when a synchronized ITSM client is enabled for scheduling."""
+    if str(config.get("enabled", "0")).strip() != "1":
+        return False
+
+    organization_mode = str(config.get("organization_mode", "")).strip()
+    if organization_mode:
+        return organization_mode == "itsm_sync"
+
+    # Legacy external ITSM configurations predate organization_mode.
+    return bool(
+        str(config.get("itsm_type", "")).strip()
+        or str(config.get("conn.api_url", config.get("api_url", ""))).strip()
+        or str(config.get("conn.db_host", config.get("db_host", ""))).strip()
+    )
+
+
+def save_client_sync_status(admin_database, client_id, status, error=""):
+    """Persist a non-sensitive operational status for one ITSM client."""
+    if status not in ("success", "failed"):
+        raise ValueError("invalid ITSM synchronization status")
+
+    values = {
+        "sync.last_at": None,
+        "sync.last_status": status,
+        "sync.last_error": error if status == "failed" else "",
+    }
+    with admin_database.begin() as connection:
+        for key, value in values.items():
+            setting_name = f"itsm.{client_id}.{key}"
+            if key == "sync.last_at":
+                connection.execute(
+                    text(
+                        """
+                        INSERT INTO saas_application (setting_name, setting_value)
+                        VALUES (:setting_name, UTC_TIMESTAMP())
+                        ON DUPLICATE KEY UPDATE setting_value = UTC_TIMESTAMP()
+                        """
+                    ),
+                    {"setting_name": setting_name},
+                )
+            else:
+                connection.execute(
+                    text(
+                        """
+                        INSERT INTO saas_application (setting_name, setting_value)
+                        VALUES (:setting_name, :setting_value)
+                        ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)
+                        """
+                    ),
+                    {"setting_name": setting_name, "setting_value": value},
+                )
 
 
 def prepare_client_adapter(
@@ -304,6 +353,8 @@ def run_cycle(admin_database, target_database, max_workers=4, dry_run=False):
             client_id = futures[future]
             try:
                 future.result()
+                if not dry_run:
+                    save_client_sync_status(admin_database, client_id, "success")
             except ValueError as exc:
                 LOGGER.error(
                     "Client %s ignored: %s (available: %s)",
@@ -311,8 +362,16 @@ def run_cycle(admin_database, target_database, max_workers=4, dry_run=False):
                     exc,
                     ", ".join(adapter_names()),
                 )
+                if not dry_run:
+                    save_client_sync_status(
+                        admin_database, client_id, "failed", "Invalid synchronization configuration"
+                    )
             except Exception:
                 LOGGER.exception("Client %s scheduling failed", client_id)
+                if not dry_run:
+                    save_client_sync_status(
+                        admin_database, client_id, "failed", "Synchronization failed"
+                    )
 
     return len(active_clients)
 

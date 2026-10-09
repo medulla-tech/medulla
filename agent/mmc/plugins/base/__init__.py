@@ -703,8 +703,7 @@ def getUserAcl(uid):
 
 def setUserAcl(uid, aclString):
     ldapObj = ldapUserGroupControl()
-    ldapObj.changeUserAttributes(uid, "lmcACL", aclString)
-    return 0
+    return ldapObj.changeUserAttributes(uid, "lmcACL", aclString)
 
 
 def getUserAttributes(uid, attr):
@@ -1725,8 +1724,10 @@ class LdapUserGroupControl:
                 self.l.modify_s(userdn, [(ldap.MOD_REPLACE, attr, attrVal)])
             except Exception as e:
                 logging.getLogger().error(e)
+                return False
             if log:
                 r.commit()
+            return True
         else:
             # Remove the attribute because its value is empty
             if log:
@@ -1742,6 +1743,13 @@ class LdapUserGroupControl:
             except ldap.NO_SUCH_ATTRIBUTE:
                 # The attribute has been already deleted
                 pass
+            except Exception as e:
+                logging.getLogger().error(e)
+                return False
+            else:
+                if log:
+                    r.commit()
+                return True
 
     def changeGroupAttributes(self, group, attr, attrVal, log=True):
         """

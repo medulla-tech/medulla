@@ -551,6 +551,48 @@ class AdminDatabase(DatabaseHelper):
             return {"success": False, "error": str(e)}
 
     @DatabaseHelper._sessionm
+    def get_itsmsync_supra_entities(self, session):
+        """Return explicitly declared SaaS supra-organisation entity IDs."""
+        try:
+            rows = (
+                session.query(self.Saas_application.setting_name)
+                .filter(self.Saas_application.setting_name.like("supra.%.entity_id"))
+                .all()
+            )
+            return [str(row[0]).split(".")[1] for row in rows]
+        except Exception as e:
+            logger.error("get_itsmsync_supra_entities failed: %s", e)
+            return []
+
+    @DatabaseHelper._sessionm
+    def save_itsmsync_supra_entity(self, session, entity_id, parent_entity_id, name):
+        """Mark one local entity explicitly as a SaaS supra-organisation."""
+        try:
+            entity_id = int(entity_id)
+            values = {
+                "entity_id": str(entity_id),
+                "parent_entity_id": str(int(parent_entity_id or 0)),
+                "name": str(name or "").strip(),
+            }
+            for key, value in values.items():
+                setting_name = f"supra.{entity_id}.{key}"
+                row = (
+                    session.query(self.Saas_application)
+                    .filter(self.Saas_application.setting_name == setting_name)
+                    .first()
+                )
+                if row is None:
+                    session.add(self.Saas_application(setting_name=setting_name, setting_value=value))
+                else:
+                    row.setting_value = value
+            session.commit()
+            return {"success": True}
+        except Exception as e:
+            session.rollback()
+            logger.error("save_itsmsync_supra_entity failed: %s", e)
+            return {"success": False, "error": str(e)}
+
+    @DatabaseHelper._sessionm
     def create_entity_under_custom_parent(
         self, session, entity_id, name, tag_value, stripe_tag=None
     ):

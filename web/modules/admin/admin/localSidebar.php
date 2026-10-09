@@ -52,6 +52,32 @@ $userLabel = ($action === 'edituser')
 // Side menu
 $sidemenu->addSideMenuItem(new SideMenuItem($userLabel,     "admin", "admin", "editUser"));
 
+if (function_exists('getInstallType')
+    && getInstallType() === 'saas'
+    && (strtolower((string)($_SESSION['login'] ?? '')) === 'root'
+        || (function_exists('hasCorrectAcl') && hasCorrectAcl('admin', 'admin', 'aclFeatures')))) {
+    $sidemenu->addSideMenuItem(
+        new SideMenuItem(_T("Gestion des clients SaaS", "admin"), "admin", "admin", "itsmsync")
+    );
+}
+
+if (function_exists('getInstallType')
+    && getInstallType() === 'saas'
+    && strtolower((string)($_SESSION['login'] ?? '')) === 'root') {
+    $sidemenu->addSideMenuItem(
+        new SideMenuItem(_T("Créer un compte client SaaS", "admin"), "admin", "admin", "editSaasClient")
+    );
+    $sidemenu->addSideMenuItem(
+        new SideMenuItem(_T("Créer un regroupement d organisations", "admin"), "admin", "admin", "createSaasSupra")
+    );
+}
+
+if (strtolower((string)($_SESSION['login'] ?? '')) === 'root') {
+    $sidemenu->addSideMenuItem(
+        new SideMenuItem(_T("Development installation mode", "admin"), "admin", "admin", "installationMode")
+    );
+}
+
 // Configuration
 //$sidemenu->addSideMenuItem(new SideMenuItem(_T("Configuration", "admin"), "admin", "admin", "configList"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Authentication Configuration", "admin"), "admin", "admin", "authConfig"));

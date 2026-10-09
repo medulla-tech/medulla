@@ -240,6 +240,23 @@ $page = new Page("editUser", _T('Edit User', 'admin'));
 $page->setFile("modules/admin/admin/editUser.php");
 $submod->addPage($page);
 
+$page = new Page("editSaasClient", _T('Créer un compte client SaaS', 'admin'));
+$page->setFile("modules/admin/admin/editSaasClient.php");
+$submod->addPage($page);
+
+$page = new Page("completeSaasClient", _T('Edit tenant account', 'admin'));
+$page->setFile("modules/admin/admin/completeSaasClient.php");
+$page->setOptions(array("visible" => false));
+$submod->addPage($page);
+
+$page = new Page("createSaasSupra", _T('Créer un regroupement d organisations', 'admin'));
+$page->setFile("modules/admin/admin/createSaasSupra.php");
+$submod->addPage($page);
+
+$page = new Page("installationMode", _T('Development installation mode', 'admin'));
+$page->setFile("modules/admin/admin/installationMode.php");
+$submod->addPage($page);
+
 $page = new Page("deleteUser", _T('Delete User', 'admin'));
 $page->setFile("modules/admin/admin/deleteUser.php");
 $submod->addPage($page);

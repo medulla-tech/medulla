@@ -1129,6 +1129,40 @@ class SelectItem extends AbstractTpl
 
 }
 
+/**
+ * SelectItem variant that renders native HTML option groups.
+ *
+ * Groups are passed as: ['Group label' => ['value' => 'label']].
+ */
+class GroupedSelectItem extends SelectItem
+{
+    public $groups = [];
+
+    public function setGroups(array $groups)
+    {
+        $this->groups = $groups;
+    }
+
+    public function content_to_string($paramArray = null)
+    {
+        $selected = $this->selected ?? ($paramArray['value'] ?? null);
+        $ret = '';
+        foreach ($this->groups as $groupLabel => $options) {
+            $ret .= "\t<optgroup label=\"" . htmlspecialchars($groupLabel, ENT_QUOTES, 'UTF-8') . "\">\n";
+            foreach ($options as $value => $label) {
+                $isSelected = ((string)$value === (string)$selected) ? ' selected="selected"' : '';
+                $ret .= "\t\t<option value=\""
+                    . htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8')
+                    . "\"$isSelected>"
+                    . htmlspecialchars((string)$label, ENT_QUOTES, 'UTF-8')
+                    . "</option>\n";
+            }
+            $ret .= "\t</optgroup>\n";
+        }
+        return $ret;
+    }
+}
+
 class SelectMultiTpl extends SelectItem
 {
     public $height;

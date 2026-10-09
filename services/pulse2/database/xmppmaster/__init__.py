@@ -15148,7 +15148,7 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
         """
 
         # Construction dynamique des filtres
-        filter_sql = []
+        filter_entity_sql = []
         filter_noncompliant_sql = []
 
         if config is not None and getattr(config, "filter_on", None) is not None:
@@ -15156,7 +15156,7 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                 if not values:
                     continue
                 if key == "entity":
-                    filter_sql.append(f"lm.entities_id IN ({','.join(map(str, values))})")
+                    filter_entity_sql.append(f"lm.entities_id IN ({','.join(map(str, values))})")
                 elif key == "state":
                     filter_noncompliant_sql.append(f"lgf.states_id IN ({','.join(map(str, values))})")
                 elif key == "type":
@@ -15169,33 +15169,65 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
         ]
         if entities:
             where_conditions.append(f"lm.entities_id IN ({','.join(map(str, entities))})")
-        if filter_sql:
-            where_conditions.extend(filter_sql)
+        if filter_entity_sql:
+            where_conditions.extend(filter_entity_sql)
 
-        # Clause WHERE spécifique non-conformité
-        where_noncompliant = ""
+        base_join = ""
+        base_machine_select = "lm.entities_id AS entity_id, m.id AS machine_id"
         if filter_noncompliant_sql:
-            where_noncompliant = " AND " + " AND ".join(filter_noncompliant_sql)
+            base_join = """
+                JOIN up_machine_activated uma_filter ON uma_filter.id_machine = m.id
+                JOIN local_glpi_filters lgf ON lgf.id = uma_filter.glpi_id
+            """
+            base_machine_select = "DISTINCT lm.entities_id AS entity_id, m.id AS machine_id"
 
-        # Requête SQL unifiée
+        noncompliant_join = ""
+        noncompliant_conditions = list(where_conditions)
+        if filter_noncompliant_sql:
+            noncompliant_join = """
+                JOIN local_glpi_filters lgf ON lgf.id = SUBSTR(m.uuid_inventorymachine, 5)
+            """
+            noncompliant_conditions.extend(filter_noncompliant_sql)
+
+        # Do not join every update row to the machine count: that multiplies
+        # rows before the DISTINCT aggregates and makes the entity list slow.
         sql = f"""
             SELECT
-                lm.entities_id AS entity_id,
-                COUNT(DISTINCT m.id) AS totalmach,
-                COUNT(DISTINCT uma.id_machine) AS nbmachines,
-                COUNT(DISTINCT uma.update_id) AS nbupdates
+                base.entity_id,
+                COUNT(*) AS totalmach,
+                COALESCE(noncompliant.nbmachines, 0) AS nbmachines,
+                COALESCE(noncompliant.nbupdates, 0) AS nbupdates
             FROM
-                machines m
-                JOIN xmppmaster.local_glpi_machines lm ON lm.id = m.id_glpi
-                LEFT JOIN up_machine_activated uma ON uma.id_machine = m.id
-                LEFT JOIN local_glpi_filters lgf ON lgf.id = uma.glpi_id
-            WHERE
-                {' AND '.join(where_conditions)}
-                {where_noncompliant}
+                (
+                    SELECT {base_machine_select}
+                    FROM machines m
+                    JOIN xmppmaster.local_glpi_machines lm ON lm.id = m.id_glpi
+                    {base_join}
+                    WHERE {' AND '.join(where_conditions)}
+                ) AS base
+                LEFT JOIN (
+                    SELECT
+                        lm.entities_id AS entity_id,
+                        COUNT(DISTINCT umw.id_machine) AS nbmachines,
+                        COUNT(DISTINCT umw.update_id) AS nbupdates
+                    FROM up_machine_windows umw
+                    JOIN machines m ON m.id = umw.id_machine
+                    JOIN xmppmaster.local_glpi_machines lm ON CONCAT('UUID', lm.id) = m.uuid_inventorymachine
+                    LEFT JOIN up_white_list uwl ON uwl.updateid = umw.update_id
+                    LEFT JOIN up_gray_list ugl ON ugl.updateid = umw.update_id
+                    {noncompliant_join}
+                    WHERE {' AND '.join(noncompliant_conditions)}
+                      AND (ugl.valided = 1 OR uwl.valided = 1)
+                      AND lm.is_deleted = 0
+                      AND lm.is_template = 0
+                    GROUP BY lm.entities_id
+                ) AS noncompliant ON noncompliant.entity_id = base.entity_id
             GROUP BY
-                lm.entities_id
+                base.entity_id,
+                noncompliant.nbmachines,
+                noncompliant.nbupdates
             ORDER BY
-                lm.entities_id;
+                base.entity_id;
         """
 
         logger.debug("SQL conformité Windows : %s", sql)

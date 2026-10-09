@@ -396,10 +396,22 @@ class RpcProxy(RpcProxyI):
 
     @with_optional_xmpp_context
     def create_itsmsync_client_root_ctx(
-        self, client_name=None, tokenuser=None, ctx=None
+        self, client_name=None, parent_entity_id=0, tokenuser=None, ctx=None
     ):
-        """Create the local Medulla child entity for a new ITSM client."""
-        return create_itsmsync_client_root(client_name)
+        """Create the local entity for a new ITSM client under a parent."""
+        return create_itsmsync_client_root(client_name, parent_entity_id)
+
+    @with_optional_xmpp_context
+    def get_itsmsync_supra_entities_ctx(self, tokenuser=None, ctx=None):
+        """Return explicitly declared SaaS supra-organisation IDs."""
+        return AdminDatabase().get_itsmsync_supra_entities()
+
+    @with_optional_xmpp_context
+    def save_itsmsync_supra_entity_ctx(
+        self, entity_id=None, parent_entity_id=0, name=None, tokenuser=None, ctx=None
+    ):
+        """Register a local entity as a SaaS supra-organisation."""
+        return AdminDatabase().save_itsmsync_supra_entity(entity_id, parent_entity_id, name)
 
     @with_optional_xmpp_context
     def archive_itsmsync_client_ctx(self, client_id=None, tokenuser=None, ctx=None):
@@ -1748,8 +1760,8 @@ def save_itsmsync_client_config(client_id=None, config=None, tokenuser=None):
     return AdminDatabase().save_itsmsync_client_config(client_id, config)
 
 
-def create_itsmsync_client_root(client_name=None):
-    """Create the idempotent ITSMLocal root for one ITSM client."""
+def create_itsmsync_client_root(client_name=None, parent_entity_id=0):
+    """Create an idempotent ITSMLocal client entity under a parent."""
     try:
         config = ItsmlocalConfig("itsmlocal")
         if config.disable:
@@ -1757,7 +1769,7 @@ def create_itsmsync_client_root(client_name=None):
         database = ItsmlocalDatabase()
         if not database.activate(config):
             return {"success": False, "error": "ITSMLocal database is unavailable"}
-        entity_id = database.create_client_root(client_name)
+        entity_id = database.create_client_root(client_name, parent_entity_id)
         return {"success": True, "entity_id": entity_id}
     except (TypeError, ValueError) as exc:
         return {"success": False, "error": str(exc)}

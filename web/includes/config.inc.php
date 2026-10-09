@@ -31,27 +31,6 @@ global $conf;
 
 fetchIniFile();
 
-function affichedebugJFKJFK($a, $title = "")
-{
-    // Example usage
-    // $data = array("key" => "value");
-    // affichedebugJFKJFK($data, "Debug Title");
-
-    // Get the backtrace
-    $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 1);
-
-    // Extract the file name from the first frame of the backtrace
-    $file = isset($backtrace[0]['file']) ? basename($backtrace[0]['file']) : 'Unknown File';
-
-    if ($title != "") {
-        printf("<h2>%s -> %s</h2>", $title, $file);
-    }
-
-    echo "<pre>";
-    print_r($a);
-    echo "</pre>";
-}
-
 function affichefile($a)
 {
     echo "<h3>";
@@ -133,12 +112,14 @@ function id_clean($val)
 }
 
 // Returns the installation type ("onpremise" or "saas") read from mmc.ini.
-// Presence and validity are enforced at boot in modules.inc.php, so this
-// helper can be called freely without re-checking.
 function getInstallType()
 {
     global $conf;
-    return $conf['global']['install_type'];
+    $sessionMode = $_SESSION['dev_installation_mode'] ?? null;
+    if (($_SESSION['login'] ?? '') === 'root' && in_array($sessionMode, ['dedicated', 'saas'], true)) {
+        return $sessionMode === 'saas' ? 'saas' : 'onpremise';
+    }
+    return $conf['global']['install_type'] ?? 'onpremise';
 }
 
 // Providers (OIDC)

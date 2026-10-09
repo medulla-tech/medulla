@@ -14,9 +14,25 @@ require_once("modules/admin/includes/xmlrpc.php");
 
 session_name("PULSESESSION");
 session_start();
-$client = !empty($_SESSION['o']) ? $_SESSION['o'] : 'MMC';
 
 use Jumbojett\OpenIDConnectClient;
+
+function getOidcTenant(): string {
+    if (isset($_GET['code'])) {
+        $tenant = id_clean($_SESSION['tenant_context'] ?? '');
+        if ($tenant === '') {
+            new NotifyWidgetFailure("Missing OIDC tenant context. Please start the connection again.");
+            header("Location: /mmc/index.php"); exit;
+        }
+        return $tenant;
+    }
+
+    $tenant = id_clean($_SESSION['o'] ?? '') ?: 'MMC';
+    $_SESSION['tenant_context'] = $tenant;
+    return $tenant;
+}
+
+$client = getOidcTenant();
 
 function handleSession() {
     if (isset($_POST['lang'])) {
@@ -112,10 +128,7 @@ function handleAuthentication($providerKey) {
             // Création session locale MMC
             $error = ""; $login = "";
             $ip         = preg_replace('@\.@', '', $_SERVER["REMOTE_ADDR"]);
-            $sessionid  = md5(time() . $ip . mt_rand());
-            session_id($sessionid);
-            session_name("PULSESESSION");
-            session_start();
+            session_regenerate_id(true);
 
             $_SESSION["ip_addr"]                   = $_SERVER["REMOTE_ADDR"];
             $_SESSION["XMLRPC_agent"]              = parse_url($conf["server_01"]["url"]);

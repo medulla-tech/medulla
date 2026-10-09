@@ -63,7 +63,11 @@ $_SESSION['glpi_user'] = [
 $entitiesId = $_SESSION['glpi_user']['entities_id'] ?? null;
 $entityName = trim((string)($_SESSION['glpi_user']['entity'] ?? ''));
 
-if ($entitiesId === 0) {
+// OIDC fixes its tenant before the external redirect; GLPI metadata must not replace it.
+$tenantContext = trim((string)($_SESSION['tenant_context'] ?? ''));
+if ($tenantContext !== '') {
+    $_SESSION['o'] = $tenantContext;
+} elseif ($entitiesId === 0) {
     $_SESSION['o'] = 'MMC';
 } elseif ($entityName !== '') {
     $_SESSION['o'] = $entityName;

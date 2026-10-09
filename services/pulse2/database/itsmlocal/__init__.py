@@ -40,8 +40,8 @@ class ItsmlocalDatabase(DatabaseHelper):
         """Return module health-check rows."""
         return []
 
-    def create_client_root(self, client_name):
-        """Create one ITSMLocal client root directly below Medulla.
+    def create_client_root(self, client_name, parent_entity_id=0):
+        """Create one ITSMLocal client entity below a validated parent.
 
         Client roots are allocated locally before their remote ITSM access is
         configured. Their local id is subsequently the scope used by the
@@ -50,6 +50,9 @@ class ItsmlocalDatabase(DatabaseHelper):
         name = str(client_name or "").strip()
         if not name:
             raise ValueError("client root name is required")
+        parent_id = int(parent_entity_id or 0)
+        if parent_id < 0:
+            raise ValueError("parent entity id must be positive")
 
         with self.db.begin() as connection:
             connection.execute(
@@ -57,12 +60,30 @@ class ItsmlocalDatabase(DatabaseHelper):
                 {"name": "itsmlocal_entity_alloc"},
             )
             try:
+                if parent_id == 0:
+                    parent_name = "Medulla"
+                    parent_path = "Medulla"
+                    parent_level = 1
+                else:
+                    parent = connection.execute(
+                        text(
+                            "SELECT `name`, `completename`, `level` "
+                            "FROM `glpi_entities` WHERE `id` = :parent_id"
+                        ),
+                        {"parent_id": parent_id},
+                    ).mappings().first()
+                    if parent is None:
+                        raise ValueError("parent entity does not exist")
+                    parent_name = str(parent["name"] or "")
+                    parent_path = str(parent["completename"] or parent_name)
+                    parent_level = int(parent["level"] or 1)
+
                 existing_id = connection.execute(
                     text(
                         "SELECT `id` FROM `glpi_entities` "
-                        "WHERE `entities_id` = 0 AND `name` = :name"
+                        "WHERE `entities_id` = :parent_id AND `name` = :name"
                     ),
-                    {"name": name},
+                    {"parent_id": parent_id, "name": name},
                 ).scalar()
                 if existing_id is not None:
                     return int(existing_id)
@@ -78,14 +99,16 @@ class ItsmlocalDatabase(DatabaseHelper):
                             (`id`, `name`, `entities_id`, `completename`, `level`,
                              `sons_cache`, `ancestors_cache`, `date_mod`, `date_creation`)
                         VALUES
-                            (:id, :name, 0, :completename, 2,
+                            (:id, :name, :parent_id, :completename, :level,
                              '[]', NULL, NOW(), NOW())
                         """
                     ),
                     {
                         "id": local_id,
                         "name": name,
-                        "completename": f"Medulla/{name}",
+                        "parent_id": parent_id,
+                        "completename": f"{parent_path}/{name}",
+                        "level": parent_level + 1,
                     },
                 )
                 return local_id

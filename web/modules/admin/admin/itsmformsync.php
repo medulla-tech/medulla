@@ -208,6 +208,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['bconfirm'])) {
         $config['sync.retry_delay'] = $config['retry_delay'];
     }
 
+    // This form configures an external ITSM entity source, never the local-only mode.
+    $config['organization_mode'] = 'itsm_sync';
+
     $posted_conn_mode = isset($_POST['conn_mode']) ? (string) $_POST['conn_mode'] : 'api';
     if (!in_array($posted_conn_mode, array('api', 'db'), true)) {
         $posted_conn_mode = 'api';

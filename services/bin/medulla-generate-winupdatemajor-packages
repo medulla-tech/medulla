@@ -92,32 +92,57 @@ check_arguments() {
             --force)
                 FORCE=1
                 shift
-                ;;
-            --test-download-iso)
-                if [[ -z "$2" ]]; then
+                    "action": "action_loop_question",
+                    "step": 1,
+                    "codereturn": "",
+                    "actionlabel": "QUESTION_RELEASE_UPDATE",
+                    "titlemessage": "$(printf '%s' 'Windows Release Update' | base64 -w0)",
+                    "sizeheader": "15",
+                    "message": "$(printf '%s' 'A Windows release update is ready to install. Do you want to start it now?' | base64 -w0)",
+                    "sizemessage": "10",
+                    "textbuttonyes": "Yes",
+                    "textbuttonno": "No",
+                    "gotoyes": "INSTALL",
+                    "gotolookterminate": "ABORT_BY_USER",
+                    "gotonouser": "INSTALL",
+                    "gototimeout": "ABORT_BY_TIMEOUT",
+                    "timeout": "800",
+                    "loopnumber": "1",
+                    "timeloop": "900"
+                },
+                {
+                    "step": 2,
+                    "action": "action_comment",
+                    "actionlabel": "INSTALL",
+                    "comment": "Windows release update execution confirmed: ISO control started"
+                },
+                {
+                    "command": "$(echo $COMMAND | base64 -w0)",
+                    "30@lastlines": "30@lastlines",
+                    "actionlabel": "RUN_UPDATE_ISO",
                     colored_echo red "$(date +\[%F\ %X\]) Missing value for --test-download-iso"
-                    display_usage
-                fi
+                    "step": 3,
                 TEST_DOWNLOAD_ISO="$2"
                 shift 2
-                ;;
+                    "gotoreturncode@3010": "REBOOTREQUIRED",
+                    "gotoreturncode@!=0": "END_ERROR"
             --help|-h)
                 display_usage
                 ;;
-            *)
+                    "step": 4,
                 colored_echo red "$(date +\[%F\ %X\]) Unknown option: $1"
                 display_usage
                 ;;
         esac
     done
-}
+                "step": 5,
 
 run_checks() {
     #
     # Check that all required parameters are set
     #
     if [[ ${DL_URL} == '' ]]; then
-        colored_echo red "$(date +\[%F\ %X\]) DL_URL parameter is not set. Please set it"
+                "step": 6,
         exit 1
     fi
     if [[ ${KEYAES32} == '' ]]; then
@@ -128,90 +153,124 @@ run_checks() {
 
 
 test_single_iso_download() {
-    #
-    # Console test mode: verify that PS1 and ISO can be downloaded for one ISO filename.
-    # No package directory, no DB write, no scheduler side effect.
-    #
-    local ISO_FILENAME=$1
-    local FAMILY=${ISO_FILENAME%%_*}
-    local TEST_DIR="/tmp/medulla-winupdatemajor-test"
-    local PS1_OUTPUT="${TEST_DIR}/update_iso.ps1"
-    local ISO_OUTPUT="${TEST_DIR}/${ISO_FILENAME}"
-    local PS1_URL_BASE="${DL_URL}/${FAMILY}/update_iso.ps1"
-    local PS1_URL_REAL="${PS1_URL_BASE}?token=${KEYAES32}"
-    local PS1_URL_MASKED="${PS1_URL_BASE}?token=<TOKEN_AES32>"
-    local ISO_URL_BASE="${DL_URL}/${FAMILY}/${ISO_FILENAME}"
-    local ISO_URL_REAL="${ISO_URL_BASE}?token=${KEYAES32}"
-    local ISO_URL_MASKED="${ISO_URL_BASE}?token=<TOKEN_AES32>"
-    local CURL_ERR_FILE
-    local HTTP_CODE
-    local CURL_RC
-
-    mkdir -p "${TEST_DIR}"
-
-    colored_echo blue "$(date +\[%F\ %X\]) Test mode enabled for ISO: ${ISO_FILENAME}"
-    colored_echo blue "$(date +\[%F\ %X\]) Testing PowerShell bootstrap download..."
-    log_replay_download_command "${PS1_OUTPUT}" "${PS1_URL_MASKED}"
-
-    CURL_ERR_FILE=$(mktemp)
-    HTTP_CODE=$(curl --silent --show-error --fail --location -C - -w "%{http_code}" -o "${PS1_OUTPUT}" "${PS1_URL_REAL}" 2>"${CURL_ERR_FILE}")
-    CURL_RC=$?
-    if [[ ${CURL_RC} -ne 0 ]]; then
-        colored_echo red "$(date +\[%F\ %X\]) TEST FAILED: update_iso.ps1 download failed"
-        colored_echo red "$(date +\[%F\ %X\]) curl exit=${CURL_RC} http=${HTTP_CODE:-000}"
-        if [[ -s "${CURL_ERR_FILE}" ]]; then
-            while IFS= read -r line; do
-                colored_echo red "$(date +\[%F\ %X\]) curl stderr: ${line}"
-            done < "${CURL_ERR_FILE}"
-        fi
-        rm -f "${CURL_ERR_FILE}" "${PS1_OUTPUT}" "${ISO_OUTPUT}"
-        return 1
-    fi
-    rm -f "${CURL_ERR_FILE}"
-    colored_echo green "$(date +\[%F\ %X\]) TEST OK: update_iso.ps1 downloaded"
-
-    colored_echo blue "$(date +\[%F\ %X\]) Testing ISO download..."
-    log_replay_download_command "${ISO_OUTPUT}" "${ISO_URL_MASKED}"
-
-    CURL_ERR_FILE=$(mktemp)
-    HTTP_CODE=$(curl --silent --show-error --fail --location -C - -w "%{http_code}" -o "${ISO_OUTPUT}" "${ISO_URL_REAL}" 2>"${CURL_ERR_FILE}")
-    CURL_RC=$?
-    if [[ ${CURL_RC} -ne 0 ]]; then
-        colored_echo red "$(date +\[%F\ %X\]) TEST FAILED: ISO download failed"
-        colored_echo red "$(date +\[%F\ %X\]) curl exit=${CURL_RC} http=${HTTP_CODE:-000}"
-        if [[ -s "${CURL_ERR_FILE}" ]]; then
-            while IFS= read -r line; do
-                colored_echo red "$(date +\[%F\ %X\]) curl stderr: ${line}"
-            done < "${CURL_ERR_FILE}"
-        fi
-        rm -f "${CURL_ERR_FILE}" "${ISO_OUTPUT}"
-        return 1
-    fi
-    rm -f "${CURL_ERR_FILE}"
-    colored_echo green "$(date +\[%F\ %X\]) TEST OK: ISO downloaded"
-    colored_echo blue "$(date +\[%F\ %X\]) Test files kept in ${TEST_DIR}"
-    return 0
+                "step": 7,
+                "action": "actionsuccescompletedend",
+                "actionlabel": "END_SUCCESS",
+                "clear": "False",
+                "inventory": "noforced"
+            },
+            {
+                "step": 8,
+                "action": "action_comment",
+                "actionlabel": "ABORT_BY_TIMEOUT",
+                "comment": "Windows release update aborted: user response timed out @@@CONNECTED_USER@@@"
+            },
+            {
+                "action": "actionwaitandgoto",
+                "step": 9,
+                "codereturn": "",
+                "actionlabel": "wait_abort_by_timeout",
+                "waiting": "1",
+                "goto": "END_ERROR"
+            },
+            {
+                "step": 10,
+                "action": "action_comment",
+                "actionlabel": "ABORT_BY_USER",
+                "comment": "Windows release update aborted by user @@@CONNECTED_USER@@@"
+            },
+            {
+                "action": "actionwaitandgoto",
+                "step": 11,
+                "codereturn": "",
+                "actionlabel": "wait_abort_by_user",
+                "waiting": "1",
+                "goto": "END_ERROR"
+            },
+            {
+                "action": "actionerrorcompletedend",
+                "step": 12,
+                "actionlabel": "END_ERROR"
+            }
+        ]
+    },
+    "metaparameter": {
+        "win": {
+            "label": {
+                "upd_70a70cc9": 0,
+                "QUESTION_RELEASE_UPDATE": 1,
+                "INSTALL": 2,
+                "RUN_UPDATE_ISO": 3,
+                "wait_cc66c870": 4,
+                "REBOOTREQUIRED": 5,
+                "notif_ee9943f2": 6,
+                "END_SUCCESS": 7,
+                "ABORT_BY_TIMEOUT": 8,
+                "wait_abort_by_timeout": 9,
+                "ABORT_BY_USER": 10,
+                "wait_abort_by_user": 11,
+                "END_ERROR": 12
+            }
+        },
+        "os": [
+            "win"
+        ]
+    }
 }
-
-find_packages_to_generate() {
-    #
-    # Rebuild up_major_win (temp table) then return distinct (iso_filename, package_uuid) pairs.
-    # The stored procedure also feeds up_machine_major_windows (persistent table).
-    #
-    mysql -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} xmppmaster -se "CALL up_init_table_major_win_complet();"
-    local result=$(mysql -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} xmppmaster \
-        -se "SELECT DISTINCT iso_filename,package_uuid FROM up_major_win WHERE COALESCE(TRIM(iso_filename), '') NOT IN ('', 'NULL') AND COALESCE(TRIM(package_uuid), '') NOT IN ('', 'NULL');")
-    # Quote result to preserve multi-line output and avoid word splitting
-    echo "${result}"
-    return 0
+EOF
+    
+    cat <<EOF > ${DEST}/${PACKAGE_UUID}/conf.json
+{
+    "urlpath" : "",
+    "localisation_server": "$SHARE_NAME",
+    "sub_packages": [],
+    "metagenerator": "manual",
+    "description": "Major update to ${ISO_FILENAME%%.*}",
+    "creator": "root",
+    "edition_date": "$PACKAGE_DATE",
+    "previous_localisation_server": "$SHARE_NAME",
+    "entity_id": "0",
+    "creation_date": "$PACKAGE_DATE",
+    "inventory": {
+        "associateinventory": "0",
+        "licenses": "",
+        "queries": {
+            "Qsoftware": "",
+            "Qvendor": "",
+            "boolcnd": "",
+            "Qversion": ""
+        }
+    },
+    "version": "1.0",
+    "reboot": 0,
+    "editor": "",
+    "targetos": "win",
+    "commands": {
+        "postCommandSuccess": {
+            "command": "",
+            "name": ""
+        },
+        "command": {
+            "command": "",
+            "name": ""
+        },
+        "postCommandFailure": {
+            "command": "",
+            "name": ""
+        },
+        "installInit": {
+            "command": "",
+            "name": ""
+        },
+        "preCommand": {
+            "command": "",
+            "name": ""
+        }
+    },
+    "id": "$PACKAGE_UUID",
+    "name": "${ISO_FILENAME%%.*}"
 }
-
-check_package_exists() {
-    #
-    # Check if package already exists in the database
-    # Parameter passed is package_uuid ($1)
-    # Prints "true" or "false" on stdout, returns 0 or 1.
-    #
+EOF
     local PACKAGE_UUID=$1
 
     local result=$(mysql -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} pkgs \
@@ -326,6 +385,7 @@ generate_package() {
                 "error": 7,
                 "action": "actionprocessscript",
                 "timeout": "3600",
+                "error": 12,
                 "gotoreturncode@3010": "REBOOTREQUIRED"
             },
             {
