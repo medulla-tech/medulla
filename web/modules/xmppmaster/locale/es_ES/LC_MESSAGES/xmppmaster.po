@@ -2530,3 +2530,9 @@ msgstr "Uso compartido de la acción rápida %s actualizado correctamente"
 
 msgid "Error when updating sharing of Quick Action %s"
 msgstr "Error al actualizar el uso compartido de la acción rápida %s"
+
+msgid "Number of machines attached to this relay."
+msgstr "Número de máquinas vinculadas a este relé."
+
+msgid "Machines attached to this relay that have not yet sent an inventory."
+msgstr "Máquinas vinculadas a este relé que aún no han enviado su inventario."

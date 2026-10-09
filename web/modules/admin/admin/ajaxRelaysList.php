@@ -160,8 +160,10 @@ $n->setMainActionClasses($relays['datas']['enabled_css']);
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo( $relays['datas']['jid'], _T("Jid", "xmppmaster"));
 $n->addExtraInfo( $relays['datas']['cluster_name'], _T("Cluster Name", "xmppmaster"));
-$n->addExtraInfoCentered( $relays['datas']['total_machines'], _T("Total Machines", "xmppmaster"));
-$n->addExtraInfoCentered( $relays['datas']['uninventoried_online'], _T("Non-inventoried", "xmppmaster"));
+$n->addExtraInfoCentered( $relays['datas']['total_machines'], _T("Total Machines", "xmppmaster"), "",
+    _T("Number of machines attached to this relay.", "xmppmaster"));
+$n->addExtraInfoCentered( $relays['datas']['uninventoried'], _T("Non-inventoried", "xmppmaster"), "",
+    _T("Machines attached to this relay that have not yet sent an inventory.", "xmppmaster"));
 
 
 $n->setItemCount($relays['total']);

@@ -1890,155 +1890,71 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         return [x[0] for x in result]
 
-    @DatabaseHelper._sessionm
-    def get_stat_ars_machine(self, session, listarsjid):
-        listin = ",".join(["'%s'" % x for x in listarsjid])
-        sql = (
-            """
+    RELAY_MACHINE_STAT_COUNTERS = [
+        "total_machines", "inventoried", "uninventoried", "uninventoried_offline",
+        "uninventoried_online", "inventoried_offline", "inventoried_online",
+        "mach_on", "mach_off", "nblinuxmachine", "nbwindows", "nbdarwin",
+        "nbAMD64", "nbARM64", "with_uuid_serial", "bothclass", "publicclass",
+        "privateclass", "nb_ou_user", "nb_OU_mach", "kioskon", "kioskoff",
+        "nbmachinereconf",
+    ]
+
+    def _relay_machine_stats_sql(self, where_extra=""):
+        """
+        Agrégats des postes (agenttype = 'machine') par groupdeploy,
+        c'est-à-dire par jid du relais auquel ils sont rattachés.
+        """
+        uninv = "COALESCE(TRIM(uuid_inventorymachine), '') = ''"
+        inv = "COALESCE(TRIM(uuid_inventorymachine), '') != ''"
+        return f"""
             SELECT
                 groupdeploy,
-                SUM(CASE
-                    WHEN (LOCATE('linux', platform)) THEN 1
-                    ELSE 0
-                END) AS nblinuxmachine,
-                SUM(CASE
-                    WHEN (LOCATE('windows', platform)) THEN 1
-                    ELSE 0
-                END) AS nbwindows,
-                SUM(CASE
-                    WHEN (LOCATE('darwin', platform)) THEN 1
-                    ELSE 0
-                END) AS nbdarwin,
-                SUM(CASE
-                    WHEN (enabled = '1') THEN 1
-                    ELSE 0
-                END) AS mach_on,
-                SUM(CASE
-                    WHEN (enabled = '0') THEN 1
-                    ELSE 0
-                END) AS mach_off,
-                SUM(CASE
-                    WHEN SUBSTRING(uuid_inventorymachine,1,1) = "U"
-                    THEN
-                    0
-                    ELSE
-                    1
-                END) AS uninventoried,
-                SUM(CASE
-                    WHEN  SUBSTRING(uuid_inventorymachine,1,1) = "U"
-                    THEN
-                        1
-                    ELSE 0
-                END) AS inventoried,
-                SUM(CASE
-                    WHEN
-                        (enabled = '1'
-                            AND  SUBSTRING(uuid_inventorymachine,1,1) = "U"  )
-                    THEN
-                        0
-                    ELSE 1
-                END) AS uninventoried_online,
-                SUM(CASE
-                    WHEN
-                        (enabled = '0'
-                            AND  SUBSTRING(uuid_inventorymachine,1,1) = "U"  )
-                    THEN
-                        0
-                    ELSE 1
-                END) AS uninventoried_offline,
-                SUM(CASE
-                    WHEN
-                        (enabled = 1
-                            AND  SUBSTRING(uuid_inventorymachine,1,1) = "U"  )
-                    THEN
-                        1
-                    ELSE 0
-                END) AS inventoried_online,
-                SUM(CASE
-                    WHEN
-                        (enabled = '0'
-                            AND  SUBSTRING(uuid_inventorymachine,1,1) = "U"  )
-                    THEN
-                        1
-                    ELSE 0
-                END) AS inventoried_offline,
-                SUM(CASE
-                    WHEN id THEN 1
-                    ELSE 0
-                END) AS nbmachine,
-                SUM(CASE
-                    WHEN (COALESCE(uuid_serial_machine, '') != '') THEN 1
-                    ELSE 0
-                END) AS with_uuid_serial,
-                SUM(CASE
-                    WHEN (classutil = 'both') THEN 1
-                    ELSE 0
-                END) AS bothclass,
-                SUM(CASE
-                    WHEN (classutil = 'public') THEN 1
-                    ELSE 0
-                END) AS publicclass,
-                SUM(CASE
-                    WHEN (classutil = 'private') THEN 1
-                    ELSE 0
-                END) AS privateclass,
-                SUM(CASE
-                    WHEN (COALESCE(ad_ou_user, '') != '') THEN 1
-                    ELSE 0
-                END) AS nb_ou_user,
-                SUM(CASE
-                    WHEN (COALESCE(ad_ou_machine, '') != '') THEN 1
-                    ELSE 0
-                END) AS nb_OU_mach,
-                SUM(CASE
-                    WHEN (kiosk_presence = 'True') THEN 1
-                    ELSE 0
-                END) AS kioskon,
-                SUM(CASE
-                    WHEN (kiosk_presence = 'FALSE') THEN 1
-                    ELSE 0
-                END) AS kioskoff,
-                SUM(CASE
-                    WHEN need_reconf THEN 1
-                    ELSE 0
-                END) AS nbmachinereconf
-            FROM
-                machines
-            WHERE
-                groupdeploy IN (%s)
-                    AND agenttype = 'machine'
-            GROUP BY groupdeploy;"""
-            % listin
-        )
-        # logger.error("sql\n%s"%sql)
+                COUNT(*) AS total_machines,
+                SUM(CASE WHEN {inv} THEN 1 ELSE 0 END) AS inventoried,
+                SUM(CASE WHEN {uninv} THEN 1 ELSE 0 END) AS uninventoried,
+                SUM(CASE WHEN {uninv} AND enabled = 0 THEN 1 ELSE 0 END) AS uninventoried_offline,
+                SUM(CASE WHEN {uninv} AND enabled = 1 THEN 1 ELSE 0 END) AS uninventoried_online,
+                SUM(CASE WHEN {inv} AND enabled = 0 THEN 1 ELSE 0 END) AS inventoried_offline,
+                SUM(CASE WHEN {inv} AND enabled = 1 THEN 1 ELSE 0 END) AS inventoried_online,
+                SUM(CASE WHEN enabled = 1 THEN 1 ELSE 0 END) AS mach_on,
+                SUM(CASE WHEN enabled = 0 THEN 1 ELSE 0 END) AS mach_off,
+                SUM(CASE WHEN LOCATE('linux', platform) > 0 THEN 1 ELSE 0 END) AS nblinuxmachine,
+                SUM(CASE WHEN LOCATE('windows', platform) > 0 THEN 1 ELSE 0 END) AS nbwindows,
+                SUM(CASE WHEN LOCATE('darwin', platform) > 0 THEN 1 ELSE 0 END) AS nbdarwin,
+                SUM(CASE WHEN archi REGEXP '^x86_64|^AMD64' THEN 1 ELSE 0 END) AS nbAMD64,
+                SUM(CASE WHEN archi REGEXP '^ARM64' THEN 1 ELSE 0 END) AS nbARM64,
+                SUM(CASE WHEN COALESCE(uuid_serial_machine, '') != '' THEN 1 ELSE 0 END) AS with_uuid_serial,
+                SUM(CASE WHEN classutil = 'both' THEN 1 ELSE 0 END) AS bothclass,
+                SUM(CASE WHEN classutil = 'public' THEN 1 ELSE 0 END) AS publicclass,
+                SUM(CASE WHEN classutil = 'private' THEN 1 ELSE 0 END) AS privateclass,
+                SUM(CASE WHEN COALESCE(ad_ou_user, '') != '' THEN 1 ELSE 0 END) AS nb_ou_user,
+                SUM(CASE WHEN COALESCE(ad_ou_machine, '') != '' THEN 1 ELSE 0 END) AS nb_OU_mach,
+                SUM(CASE WHEN kiosk_presence = 'True' THEN 1 ELSE 0 END) AS kioskon,
+                SUM(CASE WHEN kiosk_presence = 'FALSE' THEN 1 ELSE 0 END) AS kioskoff,
+                SUM(CASE WHEN need_reconf THEN 1 ELSE 0 END) AS nbmachinereconf
+            FROM machines
+            WHERE agenttype = 'machine' {where_extra}
+            GROUP BY groupdeploy
+        """
+
+    @DatabaseHelper._sessionm
+    def get_stat_ars_machine(self, session, listarsjid):
+        listarsjid = [x for x in listarsjid if x]
+        if not listarsjid:
+            return {}
+        listin = ",".join(["'%s'" % x for x in listarsjid])
+        sql = self._relay_machine_stats_sql("AND groupdeploy IN (%s)" % listin)
         result = session.execute(sql)
         session.commit()
         session.flush()
         resultatout = {}
-        if result:
-            for row in result:
-                resultatout[row[0]] = {}
-                resultatout[row[0]]["nblinuxmachine"] = int(row[1])
-                resultatout[row[0]]["nbwindows"] = int(row[2])
-                resultatout[row[0]]["nbdarwin"] = int(row[3])
-                resultatout[row[0]]["mach_on"] = int(row[4])
-                resultatout[row[0]]["mach_off"] = int(row[5])
-                resultatout[row[0]]["uninventoried"] = int(row[6])
-                resultatout[row[0]]["inventoried"] = int(row[7])
-                resultatout[row[0]]["uninventoried_online"] = int(row[8])
-                resultatout[row[0]]["uninventoried_offline"] = int(row[9])
-                resultatout[row[0]]["inventoried_online"] = int(row[10])
-                resultatout[row[0]]["inventoried_offline"] = int(row[11])
-                resultatout[row[0]]["nbmachine"] = int(row[12])
-                resultatout[row[0]]["with_uuid_serial"] = int(row[13])
-                resultatout[row[0]]["bothclass"] = int(row[14])
-                resultatout[row[0]]["publicclass"] = int(row[15])
-                resultatout[row[0]]["privateclass"] = int(row[16])
-                resultatout[row[0]]["nb_ou_user"] = int(row[17])
-                resultatout[row[0]]["nb_OU_mach"] = int(row[18])
-                resultatout[row[0]]["kioskon"] = int(row[19])
-                resultatout[row[0]]["kioskoff"] = int(row[20])
-                resultatout[row[0]]["nbmachinereconf"] = int(row[21])
+        for row in result:
+            stats = {
+                col: int(getattr(row, col) or 0)
+                for col in self.RELAY_MACHINE_STAT_COUNTERS
+            }
+            stats["nbmachine"] = stats["total_machines"]
+            resultatout[row.groupdeploy] = stats
         return resultatout
 
     @DatabaseHelper._sessionm
@@ -11625,6 +11541,10 @@ class XmppMasterDatabase(DatabaseHelper):
 
         where_sql = " AND ".join(where_clauses)
 
+        counters_sql = ",\n                ".join(
+            f"MAX(st.{col}) AS {col}" for col in self.RELAY_MACHINE_STAT_COUNTERS
+        )
+
         # Requête principale
         sql = f"""
             SELECT
@@ -11642,33 +11562,12 @@ class XmppMasterDatabase(DatabaseHelper):
                 c.description AS cluster_description,
 
                 -- Compteurs
-                COUNT(m.id) AS total_machines,
-                SUM(CASE WHEN SUBSTRING(m.uuid_inventorymachine,1,1) = 'U' THEN 1 ELSE 0 END) AS inventoried,
-                SUM(CASE WHEN SUBSTRING(m.uuid_inventorymachine,1,1) != 'U' THEN 1 ELSE 0 END) AS uninventoried,
-                SUM(CASE WHEN SUBSTRING(m.uuid_inventorymachine,1,1) != 'U' AND m.enabled = 0 THEN 1 ELSE 0 END) AS uninventoried_offline,
-                SUM(CASE WHEN SUBSTRING(m.uuid_inventorymachine,1,1) != 'U' AND m.enabled = 1 THEN 1 ELSE 0 END) AS uninventoried_online,
-                SUM(CASE WHEN SUBSTRING(m.uuid_inventorymachine,1,1) = 'U' AND m.enabled = 0 THEN 1 ELSE 0 END) AS inventoried_offline,
-                SUM(CASE WHEN SUBSTRING(m.uuid_inventorymachine,1,1) = 'U' AND m.enabled = 1 THEN 1 ELSE 0 END) AS inventoried_online,
-                SUM(CASE WHEN m.enabled = 1 THEN 1 ELSE 0 END) AS mach_on,
-                SUM(CASE WHEN m.enabled = 0 THEN 1 ELSE 0 END) AS mach_off,
-                SUM(CASE WHEN m.platform REGEXP '^linux.*' THEN 1 ELSE 0 END) AS nblinuxmachine,
-                SUM(CASE WHEN m.platform REGEXP '^Microsoft.*' THEN 1 ELSE 0 END) AS nbwindows,
-                SUM(CASE WHEN LOCATE('darwin', m.platform) > 0 THEN 1 ELSE 0 END) AS nbdarwin,
-                SUM(CASE WHEN m.archi REGEXP '^x86_64|^AMD64' THEN 1 ELSE 0 END) AS nbAMD64,
-                SUM(CASE WHEN m.archi REGEXP '^ARM64' THEN 1 ELSE 0 END) AS nbARM64,
-                SUM(CASE WHEN COALESCE(m.uuid_serial_machine,'') != '' THEN 1 ELSE 0 END) AS with_uuid_serial,
-                SUM(CASE WHEN rs.classutil = 'both' THEN 1 ELSE 0 END) AS bothclass,
-                SUM(CASE WHEN rs.classutil = 'public' THEN 1 ELSE 0 END) AS publicclass,
-                SUM(CASE WHEN rs.classutil = 'private' THEN 1 ELSE 0 END) AS privateclass,
-                SUM(CASE WHEN COALESCE(m.ad_ou_user,'') != '' THEN 1 ELSE 0 END) AS nb_ou_user,
-                SUM(CASE WHEN COALESCE(m.ad_ou_machine,'') != '' THEN 1 ELSE 0 END) AS nb_OU_mach,
-                SUM(CASE WHEN m.kiosk_presence = 'True' THEN 1 ELSE 0 END) AS kioskon,
-                SUM(CASE WHEN m.kiosk_presence = 'FALSE' THEN 1 ELSE 0 END) AS kioskoff,
-                SUM(CASE WHEN m.need_reconf THEN 1 ELSE 0 END) AS nbmachinereconf
+                {counters_sql}
             FROM relayserver rs
             LEFT JOIN has_cluster_ars hca ON hca.id_ars = rs.id
             LEFT JOIN cluster_ars c       ON c.id = hca.id_cluster
             LEFT JOIN machines m          ON m.hostname = rs.nameserver
+            LEFT JOIN ({self._relay_machine_stats_sql()}) st ON st.groupdeploy = rs.jid
             WHERE {where_sql}
             GROUP BY rs.id
         """
@@ -11701,14 +11600,7 @@ class XmppMasterDatabase(DatabaseHelper):
         ]
 
         # Sous-ensemble des colonnes qui sont des compteurs -> doivent être forcées en int
-        counters = [
-            "total_machines", "inventoried", "uninventoried", "uninventoried_offline",
-            "uninventoried_online", "inventoried_offline", "inventoried_online",
-            "mach_on", "mach_off", "nblinuxmachine", "nbwindows", "nbdarwin",
-            "nbAMD64", "nbARM64", "with_uuid_serial", "bothclass", "publicclass",
-            "privateclass", "nb_ou_user", "nb_OU_mach", "kioskon", "kioskoff",
-            "nbmachinereconf"
-        ]
+        counters = self.RELAY_MACHINE_STAT_COUNTERS
         # Init dictionnaire vide avec listes
         result = {col: [] for col in columns}
         result["enabled_css"] = []  # calculé à part

@@ -385,7 +385,7 @@ class RpcProxy(RpcProxyI):
             return res
 
         stat_ars_machine = XmppMasterDatabase(
-        ).get_stat_ars_machine(ars_list["jid"])
+        ).get_stat_ars_machine(ars_list["jid_from_relayserver"])
         ars_list["total_machines"] = []
         ars_list["uninventoried"] = []
         ars_list["publicclass"] = []
@@ -407,7 +407,7 @@ class RpcProxy(RpcProxyI):
         ars_list["uninventoried_offline"] = []
         ars_list["nbwindows"] = []
         ars_list["nb_ou_user"] = []
-        for jid in ars_list["jid"]:
+        for jid in ars_list["jid_from_relayserver"]:
             if jid in stat_ars_machine:
                 ars_list["total_machines"].append(
                     stat_ars_machine[jid]["nbmachine"])
