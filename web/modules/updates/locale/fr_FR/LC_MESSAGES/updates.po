@@ -1563,3 +1563,12 @@ msgstr "Mises à jour du noyau de la distribution."
 
 msgid "Security fixes published by the distribution."
 msgstr "Correctifs de sécurité publiés par la distribution."
+
+msgid "All"
+msgstr "Tous"
+
+msgid "Windows 10 → Windows 11"
+msgstr "Windows 10 → Windows 11"
+
+msgid "Windows 11 → latest version"
+msgstr "Windows 11 → dernière version"

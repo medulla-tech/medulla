@@ -1,10 +1,4 @@
 <?php
-if (!defined('MMC_XMPPMASTER_AUTO_TRACE_DONE')) {
-    define('MMC_XMPPMASTER_AUTO_TRACE_DONE', true);
-    if (function_exists('mmc_trace_module_auto_from_include')) {
-        mmc_trace_module_auto_from_include('xmppmaster', 'mmc_dev_trace', 'INFO', 'XMPPMASTER');
-    }
-}
 // SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 // SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
 // SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net

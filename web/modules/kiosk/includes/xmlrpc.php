@@ -1,10 +1,4 @@
 <?php
-if (!defined('MMC_KIOSK_AUTO_TRACE_DONE')) {
-    define('MMC_KIOSK_AUTO_TRACE_DONE', true);
-    if (function_exists('mmc_trace_module_auto_from_include')) {
-        mmc_trace_module_auto_from_include('kiosk', 'mmc_dev_trace', 'INFO', 'KIOSK');
-    }
-}
 /*
  * (c) 2016-2023 Siveo, http://www.siveo.net
  * (c) 2024-2025 Medulla, http://www.medulla-tech.io
@@ -56,13 +50,18 @@ function xmlrpc_create_profile($name, $login, $ou, $active, $packages = [], $sou
 function xmlrpc_delete_profile($id)
 {
     // Delete $id form the table of profiles and the assiociates packages.
-    return xmlCall("kiosk.delete_profile", [$id]);
+    return xmlCall("kiosk.delete_profile", [$_SESSION['login'], $id]);
+}
+
+function xmlrpc_delete_profiles($ids)
+{
+    return xmlCall("kiosk.delete_profiles", [$_SESSION['login'], $ids]);
 }
 
 function xmlrpc_get_profile_by_id($id)
 {
     // Return the simplified list of the profiles
-    return xmlCall("kiosk.get_profile_by_id", array($id));
+    return xmlCall("kiosk.get_profile_by_id", [$_SESSION['login'], $id]);
 }
 
 function xmlrpc_update_profile($login, $id, $name, $ous, $active, $packages = [], $source)

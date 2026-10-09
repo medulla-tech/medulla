@@ -179,6 +179,7 @@ if(is_array($ou_list)) {
 <script src="modules/kiosk/graph/js/validate.js"></script>
 <script>
 var MSG_OU_REQUIRED = "<?php echo _T('Please select the concerned OUs'); ?>";
+var MSG_SAVING_PROFILE = <?php echo json_encode(_T("Saving the profile may take a few moments.", "kiosk")); ?>;
 jQuery(document).ready(function(){
     function applyFilter(filterSelector, targetSelector) {
         let value = jQuery(filterSelector).val().toLowerCase();

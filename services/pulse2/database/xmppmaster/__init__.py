@@ -15115,8 +15115,10 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
         """
         Récupère les statistiques de conformité des mises à jour Windows par entité (version SQL optimisée).
 
-        Cette fonction consolide les informations de conformité des machines Windows
-        au niveau de chaque entité GLPI, en utilisant la table `local_glpi_machines`.
+        Cette fonction matérialise d'abord le périmètre des machines GLPI, puis
+        agrège localement les mises à jour Windows par entité. Cette séparation
+        conserve l'entité GLPI comme source de vérité sans joindre les tables
+        FEDERATED pendant le comptage coûteux.
 
         Args:
             session (Session):
@@ -15147,101 +15149,193 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                 - `totalmach` (int) : Nombre total de machines Windows enregistrées.
         """
 
-        # Construction dynamique des filtres
-        filter_entity_sql = []
-        filter_noncompliant_sql = []
-
-        if config is not None and getattr(config, "filter_on", None) is not None:
-            for key, values in config.filter_on.items():
-                if not values:
+        def normalize_entity_ids(values):
+            normalized_ids = []
+            for value in values or []:
+                try:
+                    entity_id = int(value)
+                except (TypeError, ValueError):
                     continue
-                if key == "entity":
-                    filter_entity_sql.append(f"lm.entities_id IN ({','.join(map(str, values))})")
-                elif key == "state":
-                    filter_noncompliant_sql.append(f"lgf.states_id IN ({','.join(map(str, values))})")
-                elif key == "type":
-                    filter_noncompliant_sql.append(f"lgf.computertypes_id IN ({','.join(map(str, values))})")
+                if entity_id not in normalized_ids:
+                    normalized_ids.append(entity_id)
+            return normalized_ids
 
-        # Clause WHERE commune
-        where_conditions = [
-            "m.agenttype = 'machine'",
-            "m.platform LIKE 'Microsoft Windows%'",
-        ]
-        if entities:
-            where_conditions.append(f"lm.entities_id IN ({','.join(map(str, entities))})")
-        if filter_entity_sql:
-            where_conditions.extend(filter_entity_sql)
+        filters = getattr(config, "filter_on", {}) if config is not None else {}
+        filters = filters or {}
+        requested_entities = normalize_entity_ids(entities)
+        filtered_entities = normalize_entity_ids(filters.get("entity"))
+        state_filters = normalize_entity_ids(filters.get("state"))
+        type_filters = normalize_entity_ids(filters.get("type"))
 
-        base_join = ""
-        base_machine_select = "lm.entities_id AS entity_id, m.id AS machine_id"
-        if filter_noncompliant_sql:
-            base_join = """
-                JOIN up_machine_activated uma_filter ON uma_filter.id_machine = m.id
-                JOIN local_glpi_filters lgf ON lgf.id = uma_filter.glpi_id
+        if (entities and not requested_entities) or (
+            filters.get("entity") and not filtered_entities
+        ):
+            return []
+
+        # State and type filters historically apply through local_glpi_filters
+        # after updates are joined. Keep this path unchanged until their GLPI
+        # data is materialized locally too.
+        if state_filters or type_filters:
+            where_conditions = [
+                "m.agenttype = 'machine'",
+                "m.platform LIKE 'Microsoft Windows%'",
+            ]
+            if requested_entities:
+                where_conditions.append(
+                    f"lm.entities_id IN ({','.join(map(str, requested_entities))})"
+                )
+            if filtered_entities:
+                where_conditions.append(
+                    f"lm.entities_id IN ({','.join(map(str, filtered_entities))})"
+                )
+            if state_filters:
+                where_conditions.append(
+                    f"lgf.states_id IN ({','.join(map(str, state_filters))})"
+                )
+            if type_filters:
+                where_conditions.append(
+                    f"lgf.computertypes_id IN ({','.join(map(str, type_filters))})"
+                )
+
+            sql = f"""
+                SELECT
+                    lm.entities_id AS entity_id,
+                    COUNT(DISTINCT m.id) AS totalmach,
+                    COUNT(DISTINCT uma.id_machine) AS nbmachines,
+                    COUNT(DISTINCT uma.update_id) AS nbupdates
+                FROM machines m
+                JOIN xmppmaster.local_glpi_machines lm ON lm.id = m.id_glpi
+                LEFT JOIN up_machine_activated uma ON uma.id_machine = m.id
+                LEFT JOIN local_glpi_filters lgf ON lgf.id = uma.glpi_id
+                WHERE {' AND '.join(where_conditions)}
+                GROUP BY lm.entities_id
+                ORDER BY lm.entities_id;
             """
-            base_machine_select = "DISTINCT lm.entities_id AS entity_id, m.id AS machine_id"
+            logger.debug("SQL conformité Windows avec filtres GLPI : %s", sql)
+            rows = session.execute(sql)
+        else:
+            scope_conditions = []
+            scope_params = {}
+            if requested_entities:
+                scope_conditions.append("lm.entities_id IN :requested_entities")
+                scope_params["requested_entities"] = requested_entities
+            if filtered_entities:
+                scope_conditions.append("lm.entities_id IN :filtered_entities")
+                scope_params["filtered_entities"] = filtered_entities
 
-        noncompliant_join = ""
-        noncompliant_conditions = list(where_conditions)
-        if filter_noncompliant_sql:
-            noncompliant_join = """
-                JOIN local_glpi_filters lgf ON lgf.id = SUBSTR(m.uuid_inventorymachine, 5)
+            scope_sql = """
+                SELECT
+                    lm.id AS glpi_id,
+                    lm.entities_id AS entity_id
+                FROM xmppmaster.local_glpi_machines lm
             """
-            noncompliant_conditions.extend(filter_noncompliant_sql)
+            if scope_conditions:
+                scope_sql += " WHERE " + " AND ".join(scope_conditions)
 
-        # Do not join every update row to the machine count: that multiplies
-        # rows before the DISTINCT aggregates and makes the entity list slow.
-        sql = f"""
-            SELECT
-                base.entity_id,
-                COUNT(*) AS totalmach,
-                COALESCE(noncompliant.nbmachines, 0) AS nbmachines,
-                COALESCE(noncompliant.nbupdates, 0) AS nbupdates
-            FROM
-                (
-                    SELECT {base_machine_select}
-                    FROM machines m
-                    JOIN xmppmaster.local_glpi_machines lm ON lm.id = m.id_glpi
-                    {base_join}
-                    WHERE {' AND '.join(where_conditions)}
-                ) AS base
-                LEFT JOIN (
+            scope_statement = text(scope_sql)
+            if requested_entities:
+                scope_statement = scope_statement.bindparams(
+                    bindparam("requested_entities", expanding=True)
+                )
+            if filtered_entities:
+                scope_statement = scope_statement.bindparams(
+                    bindparam("filtered_entities", expanding=True)
+                )
+
+            scope = [
+                {
+                    "glpi_id": row.glpi_id,
+                    "entity_id": row.entity_id,
+                }
+                for row in session.execute(scope_statement, scope_params)
+            ]
+            if not scope:
+                return []
+
+            temporary_table_created = False
+            try:
+                session.execute("DROP TEMPORARY TABLE IF EXISTS tmp_conformity_scope")
+                session.execute(
+                    """
+                    CREATE TEMPORARY TABLE tmp_conformity_scope (
+                        glpi_id INT NOT NULL PRIMARY KEY,
+                        entity_id INT NOT NULL
+                    ) ENGINE=MEMORY
+                    """
+                )
+                temporary_table_created = True
+                session.execute(
+                    text(
+                        """
+                        INSERT INTO tmp_conformity_scope (glpi_id, entity_id)
+                        VALUES (:glpi_id, :entity_id)
+                        """
+                    ),
+                    scope,
+                )
+                session.execute(
+                    "DROP TEMPORARY TABLE IF EXISTS tmp_conformity_active_inventory"
+                )
+                session.execute(
+                    """
+                    CREATE TEMPORARY TABLE tmp_conformity_active_inventory (
+                        uuid_inventorymachine VARCHAR(255) NOT NULL PRIMARY KEY
+                    ) ENGINE=MEMORY
+                    """
+                )
+                session.execute(
+                    """
+                    INSERT INTO tmp_conformity_active_inventory (uuid_inventorymachine)
+                    SELECT CONCAT('UUID', lm.id)
+                    FROM xmppmaster.local_glpi_machines lm
+                    WHERE lm.is_deleted = 0 AND lm.is_template = 0
+                    """
+                )
+
+                sql = """
                     SELECT
-                        lm.entities_id AS entity_id,
-                        COUNT(DISTINCT umw.id_machine) AS nbmachines,
-                        COUNT(DISTINCT umw.update_id) AS nbupdates
-                    FROM up_machine_windows umw
-                    JOIN machines m ON m.id = umw.id_machine
-                    JOIN xmppmaster.local_glpi_machines lm ON CONCAT('UUID', lm.id) = m.uuid_inventorymachine
-                    LEFT JOIN up_white_list uwl ON uwl.updateid = umw.update_id
-                    LEFT JOIN up_gray_list ugl ON ugl.updateid = umw.update_id
-                    {noncompliant_join}
-                    WHERE {' AND '.join(noncompliant_conditions)}
-                      AND (ugl.valided = 1 OR uwl.valided = 1)
-                      AND lm.is_deleted = 0
-                      AND lm.is_template = 0
-                    GROUP BY lm.entities_id
-                ) AS noncompliant ON noncompliant.entity_id = base.entity_id
-            GROUP BY
-                base.entity_id,
-                noncompliant.nbmachines,
-                noncompliant.nbupdates
-            ORDER BY
-                base.entity_id;
-        """
+                        scope.entity_id AS entity_id,
+                        COUNT(DISTINCT m.id) AS totalmach,
+                        COUNT(DISTINCT uma.id_machine) AS nbmachines,
+                        COUNT(DISTINCT uma.update_id) AS nbupdates
+                    FROM machines m
+                    JOIN tmp_conformity_scope scope ON scope.glpi_id = m.id_glpi
+                    LEFT JOIN (
+                        SELECT candidate.id AS id_machine, umw.update_id
+                        FROM tmp_conformity_scope candidate_scope
+                        JOIN machines candidate ON candidate.id_glpi = candidate_scope.glpi_id
+                        JOIN up_machine_windows umw ON umw.id_machine = candidate.id
+                        JOIN tmp_conformity_active_inventory active_inventory
+                            ON active_inventory.uuid_inventorymachine = candidate.uuid_inventorymachine
+                        LEFT JOIN up_white_list uwl ON uwl.updateid = umw.update_id
+                        LEFT JOIN up_gray_list ugl ON ugl.updateid = umw.update_id
+                        WHERE candidate.platform LIKE 'Microsoft Windows%'
+                          AND (ugl.valided = 1 OR uwl.valided = 1)
+                    ) uma ON uma.id_machine = m.id
+                    WHERE
+                        m.agenttype = 'machine'
+                        AND m.platform LIKE 'Microsoft Windows%'
+                    GROUP BY scope.entity_id
+                    ORDER BY scope.entity_id;
+                """
+                logger.debug("SQL conformité Windows locale : %s", sql)
+                rows = session.execute(sql).fetchall()
+            finally:
+                if temporary_table_created:
+                    session.execute(
+                        "DROP TEMPORARY TABLE IF EXISTS tmp_conformity_active_inventory"
+                    )
+                    session.execute("DROP TEMPORARY TABLE IF EXISTS tmp_conformity_scope")
 
-        logger.debug("SQL conformité Windows : %s", sql)
-
-        result = []
-        for row in session.execute(sql):
-            result.append({
+        return [
+            {
                 "entity": str(row.entity_id),
                 "nbmachines": row.nbmachines or 0,
                 "nbupdates": row.nbupdates or 0,
                 "totalmach": row.totalmach or 0,
-            })
-
-        return result
+            }
+            for row in rows
+        ]
 
 
     @DatabaseHelper._sessionm
@@ -15358,8 +15452,13 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
         where_clauses = ["m.agenttype = 'machine'"]
 
         if location:
+            # The GLPI entity is authoritative after a machine move. The local
+            # XMPP entity mapping can remain stale until the next inventory.
             where_clauses.append(
-                f"m.glpi_entity_id = (SELECT id FROM glpi_entity WHERE glpi_id = {location})"
+                "m.id_glpi IN ("
+                "SELECT lm.id FROM xmppmaster.local_glpi_machines lm "
+                f"WHERE lm.entities_id = {location}"
+                ")"
             )
 
         if criterion:
@@ -19856,7 +19955,8 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                                     filter="",
                                     start=0,
                                     limit=-1,
-                                    colonne=True):
+                                    colonne=True,
+                                    update_type=""):
         """
             Récupère les détails des machines avec des systèmes d'exploitation Windows ou Windows Server à partir de la base de données XMPPMaster.
 
@@ -19876,6 +19976,7 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                 start (int) : Le décalage pour commencer à retourner les lignes.
                 limit (int) : Le nombre maximum de lignes à retourner. Si -1, pas de limitation.
                 colonne (bool) : Si True, retourne les résultats dans un format en colonnes. La valeur par défaut est True.
+                update_type (str) : "W10to11" ou "W11to11" pour ne garder que ce type de mise à jour. Toute autre valeur : pas de filtre.
 
             Retourne :
                 dict : Un dictionnaire contenant :
@@ -19889,6 +19990,18 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                     - 'W11to11' : Mise à jour entre versions de Windows 11.
                     - 'not update' : Aucune mise à jour majeure nécessaire.
         """
+        update_type_sql = {
+            "W10to11": '''
+                AND TRIM(COALESCE(old_version, '')) = '10'
+                AND TRIM(COALESCE(new_version, '')) = '11'
+            ''',
+            "W11to11": '''
+                AND TRIM(COALESCE(old_version, '')) = '11'
+                AND TRIM(COALESCE(new_version, '')) = '11'
+                AND UPPER(TRIM(COALESCE(oldcode, ''))) != UPPER(TRIM(COALESCE(newcode, '')))
+            ''',
+        }
+
         # Base de la requête SQL
         total_os_sql = '''
             SELECT
@@ -19943,6 +20056,9 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
         # Ajouter le filtre sur le nom de la machine si nécessaire
         if filter:
             total_os_sql += " AND up_mach.hostname LIKE :filter"
+
+        if isinstance(update_type, str):
+            total_os_sql += update_type_sql.get(update_type, "")
 
         # Ajouter ORDER BY et LIMIT/OFFSET si nécessaire
         total_os_sql += " ORDER BY up_mach.hostname "
@@ -20343,6 +20459,31 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
         # Fetch the result
         deployment_exists = result.fetchone()[0]
         # Return True if deployment exists, otherwise False
+        return deployment_exists
+
+    @DatabaseHelper._sessionm
+    def deployment_is_running_on_machine(self, session, jidmachine):
+        """
+        Retourne True si un déploiement non terminé existe pour la machine.
+
+        Règle métier : un upgrade majeur ne doit pas démarrer si un autre
+        déploiement est déjà actif sur la machine.
+        """
+        datenow = datetime.now()
+
+        deployment_exists = (
+            session.query(Deploy.id)
+            .filter(
+                and_(
+                    Deploy.jidmachine == jidmachine,
+                    Deploy.state.like("DEPLOYMENT START%"),
+                    or_(Deploy.endcmd.is_(None), Deploy.endcmd >= datenow),
+                )
+            )
+            .first()
+            is not None
+        )
+
         return deployment_exists
 
     @DatabaseHelper._sessionm

@@ -130,13 +130,14 @@ foreach ($featureDefs as $fkey => $fdef) {
         <?php endif; ?>
     </div>
 
+    <div class="acl-table-scroll">
     <table class="listinfos acl-table">
         <thead>
             <tr>
                 <th class="acl-th-feature"><?php echo _T("Feature", "admin"); ?></th>
                 <th class="acl-th-center"><?php echo _T("Access", "admin"); ?></th>
                 <?php foreach ($profiles as $profile): ?>
-                    <th class="acl-th-center" data-profile-column="<?php echo htmlspecialchars($profile, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($profile); ?></th>
+                    <th class="acl-th-center" data-profile-column="<?php echo htmlspecialchars($profile, ENT_QUOTES, 'UTF-8'); ?>"><?php echo str_replace('_', '_<wbr>', htmlspecialchars($profile, ENT_QUOTES, 'UTF-8')); ?></th>
                 <?php endforeach; ?>
             </tr>
         </thead>
@@ -262,6 +263,7 @@ foreach ($featureDefs as $fkey => $fdef) {
                     <?php endforeach; ?>
         </tbody>
     </table>
+    </div>
 
     <div class="acl-actions-bottom">
         <button type="submit" class="btnPrimary"><?php echo _T("Save", "admin"); ?></button>

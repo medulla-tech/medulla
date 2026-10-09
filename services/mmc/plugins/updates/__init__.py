@@ -530,13 +530,15 @@ def get_os_update_major_details(entity_id,
                                 filter="",
                                 start=0,
                                 limit=-1,
-                                colonne=True):
+                                colonne=True,
+                                update_type=""):
     return XmppMasterDatabase().get_os_update_major_details(entity_id,
                                                             typeaction,
                                                             filter,
                                                             start,
                                                             limit,
-                                                            colonne)
+                                                            colonne,
+                                                            update_type)
 
 
 def get_linux_upgrade_info(distributor_id, release_version):

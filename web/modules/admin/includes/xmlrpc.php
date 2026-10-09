@@ -1,21 +1,4 @@
 <?php
-if (!defined('MMC_ADMIN_AUTO_TRACE_DONE')) {
-    define('MMC_ADMIN_AUTO_TRACE_DONE', true);
-    if (function_exists('mmc_trace_module_auto_from_include')) {
-        mmc_trace_module_auto_from_include('admin', 'mmc_dev_trace', 'INFO', 'ADMIN');
-    }
-}
-
-if (!defined('MMC_ADMIN_ITSMSYNC_TRACE_DONE')) {
-    define('MMC_ADMIN_ITSMSYNC_TRACE_DONE', true);
-    if (
-        function_exists('mmc_dev_trace')
-        && isset($_GET['action'])
-        && strtolower((string) $_GET['action']) === 'itsmsync'
-    ) {
-        mmc_dev_trace('INFO', 'itsmsync-view', array('file' => 'modules/admin/admin/itsmsync.php'), 'ADMIN');
-    }
-}
 /*
  * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
