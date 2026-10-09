@@ -1,7 +1,14 @@
 <?php
 require_once("modules/mobile/includes/xmlrpc.php");
 
-$device_number = isset($_GET['device']) ? $_GET['device'] : '';
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
+verifyCSRFToken($_POST);
+
+$device_number = isset($_POST['device']) ? $_POST['device'] : '';
 
 if (empty($device_number)) {
     echo '<p style="color:red;font-family:sans-serif;padding:20px;">Missing device number.</p>';

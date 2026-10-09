@@ -3,7 +3,15 @@ require_once("modules/mobile/includes/xmlrpc.php");
 
 header('Content-Type: application/json');
 
-$deviceId = isset($_GET['id']) ? intval($_GET['id']) : 0;
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+  http_response_code(405);
+  echo json_encode(['ok' => false, 'error' => _T("Invalid request", "mobile")]);
+  exit;
+}
+
+verifyCSRFToken($_POST);
+
+$deviceId = isset($_POST['id']) ? intval($_POST['id']) : 0;
 if ($deviceId <= 0) {
     echo json_encode(['ok' => false, 'error' => _T("Invalid device ID", "mobile")]);
     exit;

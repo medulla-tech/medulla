@@ -202,7 +202,7 @@ foreach ($mobiles as $index => $mobile) {
     $actionLogs[] = new ActionItem(_T("Logs", "mobile"), "logsmobile", "logfile", "device", "base", "logview");
     $actionMessage[] = new ActionItem(_T("Message", "mobile"), "newMessage", "add", "device", "mobile", "mobile");
     $actionEdit[] = new ActionItem(_T("Edit", "mobile"), "editDevice", "edit", "id", "mobile", "mobile");
-    $actionEnrollEmail[] = new ActionItem(_T("Send enrollment email", "mobile"), "deviceEnrollEmail", "share", "id", "mobile", "mobile");
+    $actionEnrollEmail[] = new ActionItem(_T("Send enrollment email", "mobile"), "deviceEnrollEmail", "share", "id", "mobile", "mobile", null, false, array("auth_token" => $_SESSION['auth_token'] ?? ''));
     $actionQuick[] = new ActionPopupItem(_T("Quick action", "mobile"), "deviceQuickAction", "quick", "id", "mobile", "mobile", null, 620);
     $actionQr[] = new ActionPopupItem(_T("QR Code", "mobile"), "qrCode", "qrcode", "", "mobile", "mobile", null, 450);
     $actionRemoteControl[] = new ActionPopupItem(_T("Remote Control", "mobile"), "remoteControlAction", "guaca", "device", "mobile", "mobile", null, 470);
@@ -307,7 +307,12 @@ document.addEventListener('click', function(e) {
         var deviceName = m ? decodeURIComponent(m[1]) : '';
         _deviceListConfirm(
             '<?php echo addslashes(_T("Start remote control session for device", "mobile")); ?> <strong>' + _escDevHtml(deviceName) + '</strong>?',
-            function() { window.open(href, 'remotecontrol', 'width=470,height=860,resizable=yes,scrollbars=no'); }
+            function() {
+                window.open('', 'remotecontrol', 'width=470,height=860,resizable=yes,scrollbars=no');
+                postAction(href, 'remotecontrol', {
+                    auth_token: <?php echo json_encode($_SESSION['auth_token'] ?? '', JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>
+                });
+            }
         );
     }
 }, true);
@@ -325,7 +330,25 @@ document.addEventListener('click', function(e) {
             function() {
                 if (typeof window._openEnrollModal === 'function') {
                     window._openEnrollModal('<?php echo addslashes(_T("Sending enrollment email", "mobile")); ?>', 1);
-                    jQuery.getJSON(url, function(resp) {
+                    var requestUrl = new URL(url, window.location.href);
+                    var routing = new URLSearchParams();
+                    var postData = {};
+                    ['module', 'submod', 'action', 'tab'].forEach(function(key) {
+                        if (requestUrl.searchParams.has(key)) {
+                            routing.set(key, requestUrl.searchParams.get(key));
+                        }
+                    });
+                    requestUrl.searchParams.forEach(function(value, key) {
+                        if (['module', 'submod', 'action', 'tab'].indexOf(key) === -1) {
+                            postData[key] = value;
+                        }
+                    });
+                    jQuery.ajax({
+                        url: requestUrl.pathname + '?' + routing.toString(),
+                        type: 'POST',
+                        dataType: 'json',
+                        data: postData
+                    }).done(function(resp) {
                         window._enrollModalSetProgress(1, 1);
                         var name  = resp.name  || '';
                         var email = resp.email || '<?php echo addslashes(_T("No email on file", "mobile")); ?>';
