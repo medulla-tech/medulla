@@ -223,13 +223,25 @@ $root = $conf["global"]["root"];
             }
 
             // submits get link style to post request
-            function postAction(url) {
+            function postAction(url, target, postData) {
                 var parts = url.split('?');
                 var path = parts[0];
                 var params = new URLSearchParams(parts[1] || '');
+                Object.keys(postData || {}).forEach(function(key) {
+                    params.set(key, postData[key]);
+                });
+                var routing = new URLSearchParams();
+                ['module', 'submod', 'action', 'tab'].forEach(function(key) {
+                    if (params.has(key)) {
+                        routing.set(key, params.get(key));
+                    }
+                });
                 var form = document.createElement('form');
                 form.method = 'POST';
-                form.action = path;
+                form.action = path + '?' + routing.toString();
+                if (target) {
+                    form.target = target;
+                }
                 params.forEach(function(value, key) {
                     var input = document.createElement('input');
                     input.type = 'hidden';
@@ -239,6 +251,7 @@ $root = $conf["global"]["root"];
                 });
                 document.body.appendChild(form);
                 form.submit();
+                document.body.removeChild(form);
             }
 
             function showPopupUp(evt, url) {
