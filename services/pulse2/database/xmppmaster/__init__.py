@@ -20462,6 +20462,31 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
         return deployment_exists
 
     @DatabaseHelper._sessionm
+    def deployment_is_running_on_machine(self, session, jidmachine):
+        """
+        Retourne True si un déploiement non terminé existe pour la machine.
+
+        Règle métier : un upgrade majeur ne doit pas démarrer si un autre
+        déploiement est déjà actif sur la machine.
+        """
+        datenow = datetime.now()
+
+        deployment_exists = (
+            session.query(Deploy.id)
+            .filter(
+                and_(
+                    Deploy.jidmachine == jidmachine,
+                    Deploy.state.like("DEPLOYMENT START%"),
+                    or_(Deploy.endcmd.is_(None), Deploy.endcmd >= datenow),
+                )
+            )
+            .first()
+            is not None
+        )
+
+        return deployment_exists
+
+    @DatabaseHelper._sessionm
     def get_audit_summary_updates_by_entity(self, session, entity_uuid, start, limit, filter, history_type=""):
         entity_uuid = normalize_entity(entity_uuid, defaut=-1)
         start = to_int(start, 0)
