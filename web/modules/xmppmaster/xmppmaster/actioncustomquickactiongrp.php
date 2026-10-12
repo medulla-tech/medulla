@@ -26,24 +26,32 @@
     require_once("../../../includes/acl.inc.php");
     require_once("../../../includes/session.inc.php");
     require_once("../../../includes/PageGenerator.php");
+    require_once("../../../includes/utils.inc.php");
     require_once('../includes/xmlrpc.php');
     require_once("../../medulla_server/includes/locations_xmlrpc.inc.php");
 
+    if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+        http_response_code(405);
+        exit;
+    }
+
+    verifyCSRFToken($_POST);
+
     // recuperation des donnees de la custom qa
-    $customqa = xmlrpc_get_qaction($_GET['namecmd'], $_GET['user'], 1, $_GET['namecmdos']);
+    $customqa = xmlrpc_get_qaction($_POST['namecmd'], $_POST['user'], 1, $_POST['namecmdos']);
     $customqa['customcmd'] = trim($customqa['customcmd']);
     $OS = strtoupper ($customqa['os']);
-    $GROUP = $_GET['gid'];
+    $GROUP = $_POST['gid'];
     // creation quick action command
-    $COMMANDID = xmlrpc_setCommand_qa($customqa['namecmd'], $customqa['customcmd'], $_GET['user'], $_GET['gid'], $command_machine='', $customqa['os']);
+    $COMMANDID = xmlrpc_setCommand_qa($customqa['namecmd'], $customqa['customcmd'], $_POST['user'], $_POST['gid'], $command_machine='', $customqa['os']);
     // recupère toutes les machines du groupe.
     $uuid = array();
-    $list = getRestrictedComputersList(0, -1, array('gid' => $_GET['gid']), False);
-    xmlrpc_setfromxmppmasterlogxmpp("QA : user ".$_SESSION['login']." requests command [ ".$customqa['customcmd']." ] on Group : ".$_GET['groupname'],
+    $list = getRestrictedComputersList(0, -1, array('gid' => $_POST['gid']), False);
+    xmlrpc_setfromxmppmasterlogxmpp("QA : user ".$_SESSION['login']." requests command [ ".$customqa['customcmd']." ] on Group : ".$_POST['groupname'],
                                     "QA",
                                     '' ,
                                     0,
-                                    'Grp : '.$_GET['groupname'],
+                                    'Grp : '.$_POST['groupname'],
                                     'Manuel',
                                     '',
                                     '',
@@ -79,7 +87,7 @@
                     $machineinfos = array();
                     $result = array();
                     $result['cmdid'] =  $COMMANDID;
-                    $machineinfos = array_merge($_GET, $machinegroup,$customqa,$result);
+                    $machineinfos = array_merge($_POST, $machinegroup,$customqa,$result);
                     unset($machineinfos['picklekeypublic']);
                     unset($machineinfos['urlguacamole']);
                     unset($machineinfos['module']);

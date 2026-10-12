@@ -23,18 +23,26 @@
  * file : xmppmaster/ActionQuickconsole.php
  */
 require("modules/base/computers/localSidebar.php");
-require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once("includes/utils.inc.php");
 
-extract($_GET);
-$uuid         = isset($objectUUID) ? $objectUUID : (isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
-$jid  = isset($jid) ? $jid : (isset($_POST['jid']) ? $_POST['jid'] : "");
-$machine = isset($Machine) ? $_POST['Machine'] : ($uuid != '' ? xmlrpc_getjidMachinefromuuid($uuid) : $jid);
-$cmdsend      = !empty($customcmd) ? $customcmd : $_POST['customcmd'];
-$namecmd      = !empty($namecmd) ? $namecmd : $_POST['namecmd'];
-$os           = !empty($os) ? $os : $_POST['os'];
-$user         = !empty($user) ? $user : $_POST['user'];
-$description  = !empty($description) ? $description : $_POST['description'];
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
+verifyCSRFToken($_POST);
+
+require("graph/navbar.inc.php");
+
+$uuid = $_POST['objectUUID'] ?? '';
+$jid = $_POST['jid'] ?? '';
+$machine = $_POST['Machine'] ?? ($uuid !== '' ? xmlrpc_getjidMachinefromuuid($uuid) : $jid);
+$cmdsend = $_POST['customcmd'] ?? '';
+$namecmd = $_POST['namecmd'] ?? '';
+$os = $_POST['os'] ?? '';
+$user = $_POST['user'] ?? '';
+$description = $_POST['description'] ?? '';
 $COMMANDID = xmlrpc_setCommand_qa($namecmd, $cmdsend, $user, "", $uuid, $os, $jid);
 
 $customqa = array();

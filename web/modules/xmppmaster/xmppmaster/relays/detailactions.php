@@ -73,7 +73,7 @@ var datas = <? echo json_encode($_GET); ?>;
 datas.auth_token = <? echo json_encode($_SESSION['auth_token'] ?? ''); ?>;
 jQuery('#reboot').on('click', function(){
 
-    jQuery.get( "modules/xmppmaster/xmppmaster/actionrestart.php", datas )
+    jQuery.post( "modules/xmppmaster/xmppmaster/actionrestart.php", datas )
         .done(function( data ) {
             alert( "reboot : " + datas['jid'] , "" , "alert-info" );
         })
