@@ -38,36 +38,41 @@ require_once('../includes/xmlrpc.php');
 
 require_once("../../medulla_server/includes/locations_xmlrpc.inc.php");
 
-verifyCSRFToken($_GET);
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
+verifyCSRFToken($_POST);
 
 $typewol = "";
-if (isset($_GET['wol']) && $_GET['wol']){
+if (isset($_POST['wol']) && $_POST['wol']){
     $typewol = "imaging";
 }
 
-switch($_GET['action']){
+switch($_POST['action']){
     case "deployquick":
             // work for one machine
-            if(!empty($_GET['objectUUID'])){
-                if ($_GET['wol']){
-                    xmlrpc_synchroComputer($_GET['objectUUID'], true,  false);
+            if(!empty($_POST['objectUUID'])){
+                if ($_POST['wol']){
+                    xmlrpc_synchroComputer($_POST['objectUUID'], true,  false);
                 }
                 else{
-                    xmlrpc_synchroComputer($_GET['objectUUID'], false,  false);
+                    xmlrpc_synchroComputer($_POST['objectUUID'], false,  false);
                 }
             }
 
-            if(!empty($_GET['jid'])){
-                xmlrpc_runXmppWolforuuid(["jid"=>$_GET['jid']]);
+            if(!empty($_POST['jid'])){
+                xmlrpc_runXmppWolforuuid(["jid"=>$_POST['jid']]);
             }
             else{
-                xmlrpc_runXmppWolforuuid([$_GET['objectUUID']]);
+                xmlrpc_runXmppWolforuuid([$_POST['objectUUID']]);
             }
-            xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] send wol to presente [ Machine : \"".$_GET['cn']."\"]",
+            xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] send wol to presente [ Machine : \"".$_POST['cn']."\"]",
                                             "QA",
                                             '' ,
                                             0,
-                                            $_GET['cn'],
+                                            $_POST['cn'],
                                             'Manuel',
                                             '',
                                             '',
@@ -85,12 +90,12 @@ switch($_GET['action']){
         $machine_already_present = array();
         $machine_not_present      = array();
         $result = array();
-        $list = getRestrictedComputersList(0, -1, array('gid' => $_GET['gid']), False);
-        xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] send a wol to machines on Group : [\"".$_GET['groupname']."\"]",
+        $list = getRestrictedComputersList(0, -1, array('gid' => $_POST['gid']), False);
+        xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] send a wol to machines on Group : [\"".$_POST['groupname']."\"]",
                                         "QA",
                                         '' ,
                                         0,
-                                        'Grp : '.$_GET['groupname'],
+                                        'Grp : '.$_POST['groupname'],
                                         'Manuel',
                                         '',
                                         '',
@@ -105,14 +110,14 @@ switch($_GET['action']){
                 $presence[] = 0;
                 $machine_not_present[] = $value[1]['cn'][0];
                 $groupewol[] = $key;
-                if ($_GET['wol']){
+                if ($_POST['wol']){
                     xmlrpc_synchroComputer($key, true,  false);
                 }
                 else{
                     xmlrpc_synchroComputer($key, false,  false);
                 }
                 xmlrpc_setfromxmppmasterlogxmpp("QA : [user : \"".$_SESSION["login"]."\"] ".
-                                                    "[Group :\"".$_GET['groupname'].
+                                                    "[Group :\"".$_POST['groupname'].
                                                     "\"] sent Wol to absent [machine : \"".$value[1]['cn'][0]."\"]",
                                                 "QA",
                                                 '' ,
