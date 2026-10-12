@@ -268,12 +268,13 @@ $root = $conf["global"]["root"];
                 PopupWindow(null, url, 0, _centerPlacement);
             }
 
-            function displayConfirmationPopup(message, url_yes, url_no, klass) {
+            function displayConfirmationPopup(message, url_yes, url_no, klass, method) {
 
                 if (!klass)
                     var klass = '';
+                var yesAction = method === 'POST' ? ' onclick="postAction(this.href); return false;"' : '';
                 var message = '<div style="padding: 10px"><div class="alert alert-info ' + klass + '">' + message + '</div>';
-                message += '<div style="text-align: center"><a class="btn btn-primary" href="' + url_yes + '"><?= _('Yes') ?></a>';
+                message += '<div style="text-align: center"><a class="btn btn-primary" href="' + url_yes + '"' + yesAction + '><?= _('Yes') ?></a>';
 
                 if (url_no)
                     message += ' <a class="btn btnSecondary" href="' + url_no + '"><?= _('No') ?></a>';
