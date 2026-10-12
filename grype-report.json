@@ -190,118 +190,118 @@
     "db": {
       "status": {
         "schemaVersion": "v6.1.10",
-        "from": "https://grype.anchore.io/databases/v6/vulnerability-db_v6.1.10_2026-10-11T00:37:11Z_1791700242.tar.zst?checksum=sha256%3Aa1e7eb21958172e46e2bb6db02e72d68eb4efd4b17d0c43fba5e56ae73d0a196",
-        "built": "2026-10-11T06:30:42Z",
+        "from": "https://grype.anchore.io/databases/v6/vulnerability-db_v6.1.10_2026-10-12T00:38:50Z_1791787522.tar.zst?checksum=sha256%3Af1d61e7be5caa87b18ab7519f71982399f4d43d8f407edd24717903acef3d83d",
+        "built": "2026-10-12T06:45:22Z",
         "path": "/home/runner/.cache/grype/db/6/vulnerability.db",
         "valid": true
       },
       "providers": {
         "alma": {
-          "captured": "2026-10-11T00:37:30Z",
+          "captured": "2026-10-12T00:38:58Z",
           "input": "xxh64:fa6021eeb96614ec"
         },
         "alpine": {
-          "captured": "2026-10-11T00:37:16Z",
-          "input": "xxh64:13f45c70fe7b866b"
+          "captured": "2026-10-12T00:39:05Z",
+          "input": "xxh64:4b92ce5e8b9a1118"
         },
         "amazon": {
-          "captured": "2026-10-11T00:37:18Z",
-          "input": "xxh64:27f34487aa3702c2"
+          "captured": "2026-10-12T00:39:02Z",
+          "input": "xxh64:0314b4cdce09ce6c"
         },
         "arch": {
-          "captured": "2026-10-11T00:37:32Z",
-          "input": "xxh64:e279490f0d4d1deb"
+          "captured": "2026-10-12T00:38:57Z",
+          "input": "xxh64:7271c817a19ab0cb"
         },
         "bitnami": {
-          "captured": "2026-10-11T00:37:59Z",
-          "input": "xxh64:1fb430a18a09d6e0"
+          "captured": "2026-10-12T00:38:59Z",
+          "input": "xxh64:ba2ee0c86d39fb08"
         },
         "chainguard": {
-          "captured": "2026-10-11T00:37:20Z",
-          "input": "xxh64:24be9263bcf5121c"
+          "captured": "2026-10-12T00:39:10Z",
+          "input": "xxh64:1dcd87751e5b8272"
         },
         "chainguard-libraries": {
-          "captured": "2026-10-11T00:37:30Z",
-          "input": "xxh64:310185a25e9e8ceb"
+          "captured": "2026-10-12T00:38:56Z",
+          "input": "xxh64:4ed06633e415271c"
         },
         "debian": {
-          "captured": "2026-10-11T00:38:10Z",
-          "input": "xxh64:e6ce0b255154cbda"
+          "captured": "2026-10-12T00:39:17Z",
+          "input": "xxh64:ee0628ed7da624da"
         },
         "echo": {
-          "captured": "2026-10-11T00:37:36Z",
-          "input": "xxh64:06ef934cdc1d47e0"
+          "captured": "2026-10-12T00:39:06Z",
+          "input": "xxh64:1ee8a4221d3a7dd7"
         },
         "eol": {
-          "captured": "2026-10-11T00:37:20Z",
-          "input": "xxh64:c589c77c1b9cbde8"
+          "captured": "2026-10-12T00:39:02Z",
+          "input": "xxh64:90ae2ac88ab821d7"
         },
         "epss": {
-          "captured": "2026-10-11T00:37:30Z",
-          "input": "xxh64:97844eaeae883528"
+          "captured": "2026-10-12T00:39:02Z",
+          "input": "xxh64:8ccc32b8dc236e01"
         },
         "fedora": {
-          "captured": "2026-10-11T00:38:12Z",
-          "input": "xxh64:950e8db459e4bf43"
+          "captured": "2026-10-12T00:39:11Z",
+          "input": "xxh64:8200cceecd6382e5"
         },
         "github": {
-          "captured": "2026-10-11T00:38:06Z",
-          "input": "xxh64:b206fc93f7ec259b"
+          "captured": "2026-10-12T00:39:19Z",
+          "input": "xxh64:ce84e0206a7d22ea"
         },
         "govulndb": {
-          "captured": "2026-10-11T00:37:26Z",
-          "input": "xxh64:7bacda842c76e8f9"
+          "captured": "2026-10-12T00:39:02Z",
+          "input": "xxh64:15c939abdde7b719"
         },
         "hummingbird": {
-          "captured": "2026-10-11T00:39:06Z",
-          "input": "xxh64:c23e573b9ab0e38b"
+          "captured": "2026-10-12T00:41:46Z",
+          "input": "xxh64:16384dab182e0aee"
         },
         "kev": {
-          "captured": "2026-10-11T00:37:19Z",
+          "captured": "2026-10-12T00:38:52Z",
           "input": "xxh64:b0d499c7f5ff1cee"
         },
         "mariner": {
-          "captured": "2026-10-11T00:37:11Z",
-          "input": "xxh64:106e18357b288122"
+          "captured": "2026-10-12T00:38:58Z",
+          "input": "xxh64:c2da786401913ef8"
         },
         "minimos": {
-          "captured": "2026-10-11T00:38:04Z",
-          "input": "xxh64:61adede73b7e2670"
+          "captured": "2026-10-12T00:39:23Z",
+          "input": "xxh64:1d67835c1f305d8b"
         },
         "nvd": {
-          "captured": "2026-10-11T00:37:58Z",
-          "input": "xxh64:adba79a9e1655465"
+          "captured": "2026-10-12T00:39:55Z",
+          "input": "xxh64:dfb371294eb1b338"
         },
         "oracle": {
-          "captured": "2026-10-11T00:37:22Z",
+          "captured": "2026-10-12T00:39:04Z",
           "input": "xxh64:4cbf6a809d7cebdf"
         },
         "photon": {
-          "captured": "2026-10-11T00:37:22Z",
-          "input": "xxh64:30e2c67109c731d8"
+          "captured": "2026-10-12T00:39:08Z",
+          "input": "xxh64:9587f784f4436ea5"
         },
         "rhel": {
-          "captured": "2026-10-11T00:38:55Z",
-          "input": "xxh64:c707f122bd589968"
+          "captured": "2026-10-12T00:40:24Z",
+          "input": "xxh64:296f17b12e3b1096"
         },
         "secureos": {
-          "captured": "2026-10-11T00:37:14Z",
-          "input": "xxh64:88a8ce265412e2f5"
+          "captured": "2026-10-12T00:38:50Z",
+          "input": "xxh64:c9b73fd4eaf333c9"
         },
         "sles": {
-          "captured": "2026-10-11T00:38:37Z",
-          "input": "xxh64:19d6dfbc7619c065"
+          "captured": "2026-10-12T00:41:00Z",
+          "input": "xxh64:4a5a88f30af2896c"
         },
         "ubuntu": {
-          "captured": "2026-10-11T00:38:04Z",
-          "input": "xxh64:d4e81e817cc24b51"
+          "captured": "2026-10-12T00:40:01Z",
+          "input": "xxh64:c1f202c5353152d7"
         },
         "wolfi": {
-          "captured": "2026-10-11T00:38:10Z",
-          "input": "xxh64:663962fd40dfa5a3"
+          "captured": "2026-10-12T00:39:03Z",
+          "input": "xxh64:efe5c0206a15a181"
         }
       }
     },
-    "timestamp": "2026-10-12T07:23:48.702412515Z"
+    "timestamp": "2026-10-12T08:53:45.008627137Z"
   }
 }
