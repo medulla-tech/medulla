@@ -577,6 +577,42 @@ class XmppMasterDatabase(DatabaseHelper):
             logger.error(f"An error occurred while fetching products for entity_id={identity}: {str(e)}")
             return {"id": [], "name_procedure": [], "enable": [], "comment": []} if colonne else []
 
+    @DatabaseHelper._sessionm
+    def count_enabled_products(self, session, entity_ids=None):
+        """
+        Compte les produits actives dans 'up_list_produit', avec le meme filtre
+        applicationconfig que get_approve_products.
+
+        Paramètres :
+        - entity_ids (list of int) : entites a prendre en compte. Vide ou None : toutes.
+
+        Retourne :
+        - int : nombre de produits actives, -1 en cas d'erreur.
+        """
+        try:
+            sql = """
+                SELECT COUNT(*)
+                FROM xmppmaster.up_list_produit upl
+                INNER JOIN xmppmaster.applicationconfig ac
+                    ON ac.value = upl.name_procedure
+                WHERE upl.enable = 1
+                  AND ac.`key` = 'table produits'
+                  AND ac.context = 'entity'
+                  AND ac.module = 'xmppmaster/update'
+                  AND ac.enable = 1
+            """
+            params = {}
+            if entity_ids:
+                sql += " AND upl.entity_id IN :entity_ids"
+                params["entity_ids"] = list(entity_ids)
+            query = text(sql)
+            if params:
+                query = query.bindparams(bindparam("entity_ids", expanding=True))
+            return int(session.execute(query, params).scalar() or 0)
+        except Exception as e:
+            logger.error(f"An error occurred while counting enabled products for entity_ids={entity_ids}: {str(e)}")
+            return -1
+
 
     @DatabaseHelper._sessionm
     def update_approve_products(self, session, updatesproduct, entity_id=None):

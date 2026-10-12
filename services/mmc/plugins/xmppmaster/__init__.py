@@ -161,6 +161,19 @@ class RpcProxy(RpcProxyI):
         return XmppMasterDatabase().get_approve_products(identity,
                                                          colonne=True)
 
+    def count_enabled_products(self, entity_ids=None):
+        if not isinstance(entity_ids, (list, tuple)):
+            entity_ids = [] if entity_ids in (None, "") else [entity_ids]
+        ids = []
+        for entity_id in entity_ids:
+            if isinstance(entity_id, bool):
+                continue
+            try:
+                ids.append(int(entity_id))
+            except (TypeError, ValueError):
+                continue
+        return XmppMasterDatabase().count_enabled_products(ids)
+
 
     @with_optional_xmpp_context
     def get_auto_approve_rules(self, identity, colonne=True, ctx=None):
