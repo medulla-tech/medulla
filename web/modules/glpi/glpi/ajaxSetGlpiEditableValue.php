@@ -23,11 +23,15 @@
  */
 
 /* Get GLPI xmlrpc includes */
-//die($_GET['uuid']."   ". $_GET['name']."   ".$_GET['value']);
-if (isset ($_GET['uuid']) && isset($_GET['name']) && isset ($_GET['value']) )
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
+if (isset ($_POST['uuid']) && isset($_POST['name']) && isset ($_POST['value']) )
 {
-    verifyCSRFToken($_GET);
+    verifyCSRFToken($_POST);
     require_once("modules/glpi/includes/xmlrpc.php");
-    setGlpiEditableValue($_GET['uuid'], $_GET['name'],$_GET['value']);
+    setGlpiEditableValue($_POST['uuid'], $_POST['name'], $_POST['value']);
 }
 ?>

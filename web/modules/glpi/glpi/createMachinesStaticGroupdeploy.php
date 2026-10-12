@@ -25,9 +25,14 @@ require_once("modules/dyngroup/includes/dyngroup.php"); // For Group Class
 require_once("modules/glpi/includes/xmlrpc.php"); // For total_machines
 require_once("modules/xmppmaster/includes/xmlrpc.php"); // For machines_online
 require_once("modules/dyngroup/includes/xmlrpc.php");
-extract($_GET);
+extract($_POST);
 
-verifyCSRFToken($_GET);
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+  http_response_code(405);
+  exit;
+}
+
+verifyCSRFToken($_POST);
 
  function creategroup($filter, $uuids){
     $groupname = sprintf (_T('Machines '.$filter['criterion']. ' at %s', "glpi"), date("Y-m-d H:i:s"));

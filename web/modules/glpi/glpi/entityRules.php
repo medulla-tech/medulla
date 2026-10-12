@@ -43,4 +43,32 @@ $ajax->displayDivToUpdate();
 ?>
 <script type="text/javascript">
 jQuery('.searchfield').first().hide()
+
+document.addEventListener('click', function(event) {
+    var link = event.target.closest('a');
+    if (!link) return;
+
+    var requestUrl = new URL(link.href, window.location.href);
+    var action = requestUrl.searchParams.get('action');
+    if (action !== 'moveRuleUp' && action !== 'moveRuleDown') return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    var routing = new URLSearchParams();
+    var postData = {};
+    requestUrl.searchParams.forEach(function(value, key) {
+        if (['module', 'submod', 'action', 'tab'].indexOf(key) !== -1) {
+            routing.set(key, value);
+        } else {
+            postData[key] = value;
+        }
+    });
+    var postDataWithToken = Object.assign({}, postData, {
+        auth_token: <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>
+    });
+
+    jQuery.post(requestUrl.pathname + '?' + routing.toString(), postDataWithToken)
+        .done(function() { pushSearch(); });
+}, true);
 </script>

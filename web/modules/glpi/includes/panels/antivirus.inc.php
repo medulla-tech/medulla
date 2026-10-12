@@ -72,26 +72,31 @@ class AntivirusPanel extends Panel
         'label': okLabel,
         'value': antivirusCount("green"),
         'href': urlRedirect+"&group=green",
+        'method': 'POST',
       },
       {
         'label': notUpToDateLabel,
         'value': antivirusCount("orange"),
         'href': urlRedirect+"&group=orange",
+        'method': 'POST',
       },
       {
         'label': disabledLabel,
         'value': antivirusCount("red"),
         'href': urlRedirect+"&group=red",
+        'method': 'POST',
       },
       {
         'label': missingLabel,
         'value': antivirusCount("missing"),
         'href': urlRedirect+"&group=missing",
+        'method': 'POST',
       },
       {
         'label': staleLabel,
         'value': antivirusCount("stale"),
         'href': urlRedirect+"&group=stale",
+        'method': 'POST',
       }
     ];
     donut("antivirus-graphs", datas, "Total", antivirusCount("total"));
