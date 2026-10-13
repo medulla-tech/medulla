@@ -23,6 +23,7 @@
  */
 
 if (isset($_POST["bconfirm"])) {
+    verifyCSRFToken($_POST);
     $ppolicy = $_POST["ppolicy"];
     removePPolicy($ppolicy);
     if (!isXMLRPCError()) {
@@ -41,6 +42,7 @@ else {
 <p><?php echo sprintf(_T("You will delete the password policy <strong>%s</strong>. Default password policy will be applied to users that use this password policy.", "ppolicy"), $ppolicy); ?></p>
 
 <form action="<?php echo urlStrRedirect('base/users/deleteppolicy'); ?>" method="post">
+    <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
     <input type="hidden" name="ppolicy" value="<?php echo $ppolicy; ?>" />
     <input type="submit" name="bconfirm" class="btnPrimary" value="<?php echo _('Delete'); ?>" />
     <input type="submit" name="bback" class="btnSecondary" value="<?php echo _('Cancel'); ?>" onclick="new Effect.Fade('popup'); return false;" />

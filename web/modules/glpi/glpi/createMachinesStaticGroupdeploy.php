@@ -27,6 +27,8 @@ require_once("modules/xmppmaster/includes/xmlrpc.php"); // For machines_online
 require_once("modules/dyngroup/includes/xmlrpc.php");
 extract($_GET);
 
+verifyCSRFToken($_GET);
+
  function creategroup($filter, $uuids){
     $groupname = sprintf (_T('Machines '.$filter['criterion']. ' at %s', "glpi"), date("Y-m-d H:i:s"));
     $group = new Group();

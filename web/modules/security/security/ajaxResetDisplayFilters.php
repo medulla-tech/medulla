@@ -25,6 +25,7 @@ require_once("modules/security/includes/xmlrpc.php");
 $currentUser = $_SESSION['login'] ?? 'unknown';
 
 if (isset($_POST['bconfirm'])) {
+    verifyCSRFToken($_POST);
     $result = xmlrpc_reset_display_policies($currentUser);
 
     if ($result) {
