@@ -28,6 +28,7 @@ $currentUser = $_SESSION['login'] ?? 'unknown';
 
 // Handle form submission for adding vendor exclusion
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['badd_vendor'])) {
+    verifyCSRFToken($_POST);
     $vendorName = trim($_POST['new_vendor_name'] ?? '');
 
     if (!empty($vendorName)) {

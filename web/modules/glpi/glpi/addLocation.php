@@ -28,6 +28,7 @@ require_once("modules/medulla_server/includes/locations_xmlrpc.inc.php");
 
 // Receiving form data
 if (isset($_POST['name'], $_POST['parent'], $_POST['description'])){
+    verifyCSRFToken($_POST);
 
     if (empty($_GET['id'])){
         addLocation($_POST['name'], $_POST['parent'], $_POST['description']);

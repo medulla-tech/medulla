@@ -38,7 +38,7 @@ $options = array(
 
 class os_repartitionPanel extends Panel {
   function display_content() {
-    $urlRedirect = urlStrRedirect("base/computers/createOSStaticGroup");
+    $urlRedirect = urlStrRedirect("base/computers/createOSStaticGroup", array("auth_token" => $_SESSION['auth_token'] ?? ''));
     $pcs = xmlrpc_get_os_for_dashboard();
 
     $uninventorized_text = _T("Uninventoried Machines", "dashboard");
@@ -88,7 +88,7 @@ class os_repartitionPanel extends Panel {
         $href = urlStrRedirect("mobile/mobile/index");
         $pcs['version'] = 'Mobile';
     } else {
-        $href = urlStrRedirect("base/computers/createOSStaticGroup").'&os='.$pcs['os'].'&version='.$pcs['version'];
+        $href = urlStrRedirect("base/computers/createOSStaticGroup", array("os" => $pcs['os'], "version" => $pcs['version'], "auth_token" => $_SESSION['auth_token'] ?? ''));
     }
 
     $item = array(

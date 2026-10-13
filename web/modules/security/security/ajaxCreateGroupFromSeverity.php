@@ -34,6 +34,7 @@ if ($severity === null) {
 
 // Handle confirmation
 if (isset($_POST['bconfirm'])) {
+    verifyCSRFToken($_POST);
     // Get machines affected by this severity
     $machinesData = xmlrpc_get_machines_by_severity($severity, $location);
 

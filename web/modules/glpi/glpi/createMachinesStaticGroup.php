@@ -25,6 +25,8 @@ require_once("modules/xmppmaster/includes/xmlrpc.php"); // For machines_online
 require_once("modules/dyngroup/includes/xmlrpc.php");
 require_once("modules/glpi/includes/xmlrpc.php"); // For xmlrpc_getListPresenceMachine
 
+verifyCSRFToken($_GET);
+
 $machines_online = xmlrpc_getListPresenceMachine();
 $uuids_online = [];
 $all_machines = xmlrpc_get_all_uuids_and_hostnames();

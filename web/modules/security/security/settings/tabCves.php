@@ -28,6 +28,7 @@ $currentUser = $_SESSION['login'] ?? 'unknown';
 
 // Handle form submission for adding CVE exclusion
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['badd_cve'])) {
+    verifyCSRFToken($_POST);
     $cveId = strtoupper(trim($_POST['new_cve_id'] ?? ''));
 
     // Validate CVE ID format (CVE-YYYY-NNNNN)
