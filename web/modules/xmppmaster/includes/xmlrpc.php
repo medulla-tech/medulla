@@ -41,6 +41,11 @@ function xmlrpc_get_approve_products($identity)
     return xmlCall("xmppmaster.get_approve_products", array($identity));
 }
 
+function xmlrpc_count_enabled_products($entity_ids = array())
+{
+    return xmlCall("xmppmaster.count_enabled_products", array($entity_ids));
+}
+
 function xmlrpc_get_auto_approve_rules($identity)
 {
     return xmlCall("xmppmaster.get_auto_approve_rules", array($identity));

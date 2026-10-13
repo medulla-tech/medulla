@@ -21,109 +21,45 @@
  */
 
 require_once("modules/security/includes/xmlrpc.php");
+require_once("modules/security/includes/html.inc.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
-// Get filter parameters
 $group_id = isset($_GET["group_id"]) ? intval($_GET["group_id"]) : 0;
-$filter = isset($_GET["filter"]) ? $_GET["filter"] : "";
+$filter = $_GET["filter"] ?? "";
 $start = isset($_GET["start"]) ? intval($_GET["start"]) : 0;
 
-// Get policies to determine which columns to show
-$policies = xmlrpc_get_policies();
-$minSeverity = $policies['display']['min_severity'] ?? 'None';
-
-// Determine which severity columns to show based on min_severity
-$severityOrder = array('None' => 0, 'Low' => 1, 'Medium' => 2, 'High' => 3, 'Critical' => 4);
-$minSevIndex = isset($severityOrder[$minSeverity]) ? $severityOrder[$minSeverity] : 0;
-$showLow = $minSevIndex <= 1;
-$showMedium = $minSevIndex <= 2;
-$showHigh = $minSevIndex <= 3;
-$showCritical = true; // Always show Critical
-
 if ($group_id <= 0) {
-    echo '<div class="empty-message">';
-    echo '<p>' . _T("Invalid group", "security") . '</p>';
-    echo '</div>';
+    echo '<div class="empty-message"><p>' . _T("Invalid group", "security") . '</p></div>';
     return;
 }
 
-// Get data from backend
 $result = xmlrpc_get_group_machines($group_id, $start, $maxperpage, $filter);
-$data = $result['data'];
-$count = $result['total'];
+$data = $result['data'] ?? array();
+$count = $result['total'] ?? 0;
 
-// Prepare arrays for display
 $hostnames = array();
-$riskScores = array();
-$criticalCounts = array();
-$highCounts = array();
-$mediumCounts = array();
-$lowCounts = array();
-$totalCounts = array();
 $params = array();
-
 foreach ($data as $row) {
-    $hostnames[] = $row['hostname'];
-
-    // Risk score with color
-    $score = floatval($row['risk_score']);
-    $scoreClass = 'low';
-    if ($score >= 9.0) $scoreClass = 'critical';
-    elseif ($score >= 7.0) $scoreClass = 'high';
-    elseif ($score >= 4.0) $scoreClass = 'medium';
-    $riskScores[] = '<span class="risk-score risk-' . $scoreClass . '">' . number_format($score, 1) . '</span>';
-
-    // Counts with badges
-    $criticalCounts[] = $row['critical'] > 0 ?
-        '<span class="badge badge-critical">' . $row['critical'] . '</span>' : '0';
-    $highCounts[] = $row['high'] > 0 ?
-        '<span class="badge badge-high">' . $row['high'] . '</span>' : '0';
-    $mediumCounts[] = $row['medium'] > 0 ?
-        '<span class="badge badge-medium">' . $row['medium'] . '</span>' : '0';
-    $lowCounts[] = isset($row['low']) && $row['low'] > 0 ?
-        '<span class="badge badge-low">' . $row['low'] . '</span>' : '0';
-    $totalCounts[] = $row['total_cves'];
-
-    // Params for actions
-    $params[] = array('id_glpi' => $row['id_glpi'], 'hostname' => $row['hostname']);
+    $hostnames[] = htmlspecialchars($row['hostname']);
+    $params[] = array('id_glpi' => $row['id_glpi'], 'hostname' => $row['hostname'], 'back' => SecurityFilter::back());
 }
 
-// Actions
-$detailAction = new ActionItem(_T("View CVEs", "security"), "machineDetail", "display", "", "security", "security");
-
-// Display the list
 if ($count > 0) {
     $n = new OptimizedListInfos($hostnames, _T("Machine", "security"));
     $n->setResizable();
     $n->setTableCssClass("security-table");
     $n->disableFirstColumnActionLink();
-    $n->addExtraInfoCentered($riskScores, _T("Risk Score", "security"));
-    // Only show severity columns that are >= min_severity
-    if ($showCritical) {
-        $n->addExtraInfoCentered($criticalCounts, _T("Critical", "security"));
-    }
-    if ($showHigh) {
-        $n->addExtraInfoCentered($highCounts, _T("High", "security"));
-    }
-    if ($showMedium) {
-        $n->addExtraInfoCentered($mediumCounts, _T("Medium", "security"));
-    }
-    if ($showLow) {
-        $n->addExtraInfoCentered($lowCounts, _T("Low", "security"));
-    }
-    $n->addExtraInfoCentered($totalCounts, _T("Total", "security"));
+    SecurityColumns::add($n, $data, 'risk_score');
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $filter));
     $n->setParamInfo($params);
-    $n->addActionItem($detailAction);
+    $n->addActionItem(new ActionItem(_T("View CVEs", "security"), "machineDetail", "display", "", "security", "security"));
     $n->start = 0;
     $n->end = $count;
     $n->display();
 } else {
-    echo '<div class="empty-message">';
-    echo '<p>' . _T("No machines in this group", "security") . '</p>';
-    echo '</div>';
+    echo '<div class="empty-message"><p>' . _T("No machines in this group", "security") . '</p></div>';
 }
 ?>

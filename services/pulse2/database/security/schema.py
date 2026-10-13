@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from sqlalchemy import Column, String, Integer, Text, DateTime, Date, Enum, DECIMAL, ForeignKey, UniqueConstraint
+from sqlalchemy import Boolean, Column, String, Integer, Text, DateTime, Date, Enum, DECIMAL, ForeignKey, UniqueConstraint
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from mmc.database.database_helper import DBObj
@@ -16,14 +16,6 @@ class SecurityDBObj(DBObj):
     pass
 
 
-class Tests(Base, SecurityDBObj):
-    """Test table (for module activation test)"""
-    __tablename__ = 'tests'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(50), nullable=False)
-    message = Column(String(255))
-
-
 class Cve(Base, SecurityDBObj):
     """Cache local des CVEs récupérées de CVE Central"""
     __tablename__ = 'cves'
@@ -34,6 +26,8 @@ class Cve(Base, SecurityDBObj):
     description = Column(Text)
     published_at = Column(Date)
     last_modified = Column(Date)
+    exploited_since = Column(Date)
+    euvd_id = Column(String(30))
     sources = Column(String(50))  # Sources ayant cette CVE (ex: circl,nvd,euvd)
     source_urls = Column(Text)  # URLs des sources en JSON (ex: {"nvd": "https://...", "circl": "https://..."})
     fetched_at = Column(DateTime, default=datetime.datetime.utcnow)
@@ -45,12 +39,16 @@ class Cve(Base, SecurityDBObj):
 class SoftwareCve(Base, SecurityDBObj):
     """Lien entre logiciels et CVEs"""
     __tablename__ = 'software_cves'
+    __table_args__ = (
+        UniqueConstraint('glpi_software_name', 'software_version', 'cve_id', name='uk_glpi_software_cve'),
+    )
     id = Column(Integer, primary_key=True, autoincrement=True)
     software_name = Column(String(255), nullable=False)  # Nom normalisé (ex: "Python")
-    software_version = Column(String(100), nullable=False)  # Version normalisée (ex: "3.11.9")
-    glpi_software_name = Column(String(255), nullable=True)  # Nom original GLPI pour jointure
+    software_version = Column(String(255), nullable=False)  # Version GLPI brute
+    glpi_software_name = Column(String(255), nullable=False)  # Nom GLPI brut
     source_package = Column(String(255), nullable=True)  # Package source distro Linux (libfreerdp2-2 -> freerdp2), NULL pour Windows
     target_platform = Column(String(50), nullable=True)  # Platform cible du CPE (android, macos, ios, windows, etc.)
+    fix_available = Column(Boolean, nullable=True)  # Version corrigée connue (NULL : ancien CVE Central)
     cve_id = Column(Integer, ForeignKey('cves.id', ondelete='CASCADE'), nullable=False)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
@@ -67,20 +65,7 @@ class Scan(Base, SecurityDBObj):
     status = Column(Enum('running', 'completed', 'failed'), default='running')
     softwares_sent = Column(Integer, default=0)
     cves_received = Column(Integer, default=0)
-    machines_affected = Column(Integer, default=0)
     error_message = Column(Text)
-
-
-class CveExclusion(Base, SecurityDBObj):
-    """CVE à ignorer"""
-    __tablename__ = 'cve_exclusions'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    cve_id = Column(String(20), nullable=False, unique=True)
-    reason = Column(Text)
-    excluded_by = Column(String(100))
-    excluded_at = Column(DateTime, default=datetime.datetime.utcnow)
-    expires_at = Column(DateTime)
-
 
 
 class Policy(Base, SecurityDBObj):

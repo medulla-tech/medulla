@@ -719,11 +719,17 @@ def deploy_update_major(package_id,
         result["success"] = False
         return result
 
-    # === ÉTAPE 3 : Vérification des déploiements majeurs en cours ===
-    # Évite de relancer un déploiement si une mise à jour majeure est déjà en cours
-    if XmppMasterDatabase().test_update_major_deployment_in_progress(title_deployementnew):
-        logger.warning(f"Déploiement non relancé : {package_id} est déjà en cours sur {hostname}")
-        result["msg"] = f"Déploiement non relancé : {package_id} est déjà en cours sur {hostname}"
+    # === ÉTAPE 3 : Vérification des déploiements déjà actifs sur la machine ===
+    # Évite de lancer un upgrade majeur si n'importe quel déploiement est déjà
+    # en cours sur la machine (kernel/security/other, majeur ou autre).
+    if is_deployment_running_on_machine(uuid_inventorymachine):
+        logger.warning(
+            "Déploiement non relancé : un déploiement est déjà en cours sur %s",
+            hostname,
+        )
+        result["msg"] = (
+            f"Déploiement non relancé : un déploiement est déjà en cours sur {hostname}"
+        )
         result["success"] = False
         return result
 

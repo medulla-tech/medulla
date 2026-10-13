@@ -28,7 +28,7 @@ $exclusionTypes = array(
     'software' => array(
         'param' => $_GET['software_name'] ?? '',
         'key' => 'names',
-        'redirect' => 'security/security/index',
+        'redirect' => 'security/security/softwares',
         'title' => _T("Exclude Software", "security"),
         'message' => _T("Add '%s' to excluded software?", "security"),
         'subMessage' => _T("All versions of this software will no longer appear in CVE reports.", "security")
@@ -77,13 +77,14 @@ foreach ($exclusionTypes as $key => $cfg) {
 $currentUser = $_SESSION['login'] ?? 'unknown';
 
 if (isset($_POST['bconfirm']) && $config) {
+    verifyCSRFToken($_POST);
     $value = isset($config['isInt']) ? intval($config['param']) : $config['param'];
     $itemName = isset($config['name']) && !empty($config['name']) ? $config['name'] : $config['param'];
 
     $success = ExclusionHelper::addExclusion($config['key'], $value, $currentUser);
 
     if ($success) {
-        new NotifyWidgetSuccess(sprintf(_T("'%s' added to exclusions", "security"), $itemName));
+        new NotifyWidgetSuccess(sprintf(_T("'%s' added to exclusions", "security"), htmlspecialchars($itemName)));
     } else {
         new NotifyWidgetFailure(_T("Failed to add exclusion", "security"));
     }
@@ -107,7 +108,7 @@ if ($config) {
 $f = new PopupForm($title);
 $f->addText("<br/>" . $message . "<br/><br/>");
 $f->addText("<em>" . $subMessage . "</em><br/><br/>");
-$f->addValidateButton("bconfirm", _T("Exclude", "security"));
+$f->addValidateButtonWithValue("bconfirm", _T("Exclude", "security"));
 $f->addCancelButton("bback");
 $f->display();
 ?>

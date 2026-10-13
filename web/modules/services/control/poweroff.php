@@ -22,6 +22,8 @@
 
 include("modules/services/includes/services-xmlrpc.inc.php");
 
+verifyCSRFToken($_GET);
+
 serverPoweroff();
 
 header("Location: main.php");

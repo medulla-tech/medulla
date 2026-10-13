@@ -45,7 +45,7 @@ class AntivirusPanel extends Panel
         $disabledLabel    = json_encode(_T("Antivirus disabled", "glpi"));
         $missingLabel     = json_encode(_T("Missing antivirus", "glpi"));
         $staleLabel       = json_encode(_T("Unreliable information", "glpi"));
-        $urlRedirect      = json_encode(urlStrRedirect("base/computers/createAntivirusStaticGroup"));
+        $urlRedirect      = json_encode(urlStrRedirect("base/computers/createAntivirusStaticGroup", array("auth_token" => $_SESSION['auth_token'] ?? '')));
 
         echo <<< ANTIVIRUS
     <div id="antivirus-graphs" style="display:flex;flex-direction:column;align-items:center;flex:1;"></div>

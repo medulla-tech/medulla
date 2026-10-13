@@ -59,6 +59,7 @@ if ($groupe_already_exist == "True")
 <br>
 <br>
 <form name="form" action="main.php?module=urbackup&amp;submod=urbackup&amp;action=create_group" method="post">
+    <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
     <label><?php echo _T("Profile name :", 'urbackup'); ?></label><input type="text" name="groupname" id="groupname"/>
     <input type="submit" name="subcreate" class="btnPrimary" id="subcreate" value="Create profile">
 </form>
@@ -97,7 +98,7 @@ foreach ($group_array as $group) {
                     <a title=<?php echo _T("Edit", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=edit_group_settings&amp;groupid=<?php echo $group['id']; ?>&amp;groupname=<?php echo $group['name']; ?>">&nbsp;</a>
                 </li>
                 <li class="delete">
-                    <a title=<?php echo _T("Delete", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_group&amp;groupid=<?php echo $group['id']; ?>">&nbsp;</a>
+                    <a title=<?php echo _T("Delete", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_group&amp;groupid=<?php echo $group['id']; ?>&amp;auth_token=<?php echo urlencode($_SESSION['auth_token'] ?? ''); ?>">&nbsp;</a>
                 </li>
             </ul>
             </td>

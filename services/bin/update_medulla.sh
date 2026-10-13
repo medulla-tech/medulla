@@ -990,7 +990,7 @@ update_561_to_562() {
         echo "fs.inotify.max_queued_events=32768" >> /etc/sysctl.d/99-pulse.conf
     fi
     # Apply the new sysctl settings
-    sysctl -p /etc/sysctl.d/99-pulse.conf
+    sysctl -p /etc/sysctl.d/99-pulse.conf > /dev/null 2>&1
     if [[ $? -ne 0 ]]; then
         str="[x] Error applying inotify limits sysctl settings. Aborting."
         echo "$str"
