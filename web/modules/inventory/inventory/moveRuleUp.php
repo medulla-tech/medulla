@@ -24,11 +24,16 @@
 
 require_once("modules/inventory/includes/xmlrpc.php");
 
-if (isset($_GET['numRule'])) {
-    verifyCSRFToken($_GET);
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
 
-    echo  $_GET['entitie']." rule " . $_GET['numRule']." up";
-    moveEntityRuleUp($_GET['numRule']);
+if (isset($_POST['numRule'])) {
+    verifyCSRFToken($_POST);
+
+    echo  $_POST['entitie']." rule " . $_POST['numRule']." up";
+    moveEntityRuleUp($_POST['numRule']);
 }
 ?>
 <script type="text/javascript">
