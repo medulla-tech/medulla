@@ -278,7 +278,49 @@ END$$
 DELIMITER ;
 
 CALL up_create_product_tables();
-CALL up_init_table_major_win_complet();
+
+-- Laisse le cron reconstruire les donnees avec la nouvelle logique.
+-- up_machine_major_windows existe deja via les schemas precedents / up_create_product_tables().
+TRUNCATE TABLE up_machine_major_windows;
+
+-- up_major_win est normalement recreee par la procedure. Sur certaines bases,
+-- elle peut ne pas encore exister au moment de la migration, donc on la cree
+-- vide ici pour eviter a la fois les erreurs SQL et les donnees stale.
+DROP TABLE IF EXISTS up_major_win;
+
+CREATE TABLE up_major_win (
+   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+   xmpp_id INT UNSIGNED NOT NULL,
+   glpi_id INT UNSIGNED NOT NULL,
+   ent_id INT UNSIGNED NOT NULL,
+   hostname VARCHAR(255),
+   enabled TINYINT(1),
+   jid VARCHAR(255),
+   serial VARCHAR(255),
+   platform VARCHAR(100),
+   name VARCHAR(255),
+   comment TEXT,
+   entity VARCHAR(255),
+   lang_code VARCHAR(10),
+   iso_filename VARCHAR(255),
+   package_uuid VARCHAR(255) NOT NULL,
+   prefix VARCHAR(50),
+   old_version VARCHAR(50),
+   oldcode VARCHAR(50),
+   isolang VARCHAR(10),
+   internal_code VARCHAR(50),
+   target_name VARCHAR(255),
+   is_active VARCHAR(10),
+   lang_version VARCHAR(50),
+   new_version VARCHAR(50),
+   newcode VARCHAR(50),
+   PRIMARY KEY (id),
+   INDEX idx_glpi_id (glpi_id),
+   INDEX idx_ent_id (ent_id),
+   INDEX idx_package_uuid (package_uuid)
+);
+
+TRUNCATE TABLE up_major_win;
 
 UPDATE version SET Number = 115;
 
