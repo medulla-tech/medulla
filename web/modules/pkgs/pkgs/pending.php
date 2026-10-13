@@ -31,9 +31,13 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 $p = new PageGenerator(_T("Pending packages list", 'pkgs'));
 $p->setSideMenu($sidemenu);
 
-if(isset($_GET['delete']) && $_GET['delete'] == 'all')
-{
-  verifyCSRFToken($_GET);
+if (isset($_GET['delete']) && $_GET['delete'] == 'all') {
+  http_response_code(405);
+  exit;
+}
+
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['delete']) && $_POST['delete'] == 'all') {
+  verifyCSRFToken($_POST);
 
   xmlrpc_delete_from_pending('', []);
   header("Location: " . urlStrRedirect("pkgs/pkgs/pending", array('deletependingsuccess' => 'all')));
@@ -56,3 +60,16 @@ $ajax = new AjaxFilter(urlStrRedirect("pkgs/pkgs/ajaxPendingPackageList"));
 $ajax->display();
 $ajax->displayDivToUpdate();
 ?>
+<script type="text/javascript">
+jQuery(document).on('click.packagesPendingPost', 'a[href]', function(event) {
+  var requestUrl = new URL(this.href, window.location.href);
+  if (requestUrl.searchParams.get('module') !== 'pkgs'
+    || requestUrl.searchParams.get('submod') !== 'pkgs'
+    || requestUrl.searchParams.get('action') !== 'pending'
+    || requestUrl.searchParams.get('delete') !== 'all') {
+    return;
+  }
+  event.preventDefault();
+  postAction(this.href);
+});
+</script>
