@@ -204,21 +204,21 @@ $client_enable = xmlrpc_get_client_status($client_id);
 if ($client_enable == 1)
 {
 ?>
-<a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Start incremental backup", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=start_backup&amp;backuptype=incremental&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>&amp;auth_token=<?php echo urlencode($_SESSION['auth_token'] ?? ''); ?>">Start incremental backup</a>
-<a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Start full backup", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=start_backup&amp;backuptype=full&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>&amp;auth_token=<?php echo urlencode($_SESSION['auth_token'] ?? ''); ?>">Start full backup</a>
+<a data-post-confirm="true" class='btn btn-small btn-primary' title=<?php echo _T("Start incremental backup", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=start_backup&amp;backuptype=incremental&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>&amp;auth_token=<?php echo urlencode($_SESSION['auth_token'] ?? ''); ?>">Start incremental backup</a>
+<a data-post-confirm="true" class='btn btn-small btn-primary' title=<?php echo _T("Start full backup", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=start_backup&amp;backuptype=full&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>&amp;auth_token=<?php echo urlencode($_SESSION['auth_token'] ?? ''); ?>">Start full backup</a>
 <?php 
 }
 if ($client_enable == 0)
 {
 ?>
-    <a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Enable backup for this client", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_client&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>&amp;editclient=enable&amp;auth_token=<?php echo urlencode($_SESSION['auth_token'] ?? ''); ?>">Enable backup for this client</a>
+    <a data-post-confirm="true" class='btn btn-small btn-primary' title=<?php echo _T("Enable backup for this client", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_client&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>&amp;editclient=enable&amp;auth_token=<?php echo urlencode($_SESSION['auth_token'] ?? ''); ?>">Enable backup for this client</a>
 <?php
 }
 
 if ($client_enable == 1)
 { 
 ?>
-    <a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Disable backup for this client", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_client&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>&amp;editclient=disable&amp;auth_token=<?php echo urlencode($_SESSION['auth_token'] ?? ''); ?>">Disable backup for this client</a>
+    <a data-post-confirm="true" class='btn btn-small btn-primary' title=<?php echo _T("Disable backup for this client", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_client&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>&amp;editclient=disable&amp;auth_token=<?php echo urlencode($_SESSION['auth_token'] ?? ''); ?>">Disable backup for this client</a>
 <?php
 }
 ?>

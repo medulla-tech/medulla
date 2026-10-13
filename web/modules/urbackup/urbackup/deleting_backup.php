@@ -20,14 +20,19 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+	http_response_code(405);
+	exit;
+}
+
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/urbackup/includes/xmlrpc.php");
 
-$clientid = htmlspecialchars($_GET["clientid"]);
-$backupid = htmlspecialchars($_GET["backupid"]);
+verifyCSRFToken($_POST);
 
-verifyCSRFToken($_GET);
+$clientid = htmlspecialchars($_POST["clientid"]);
+$backupid = htmlspecialchars($_POST["backupid"]);
 
 $p = new PageGenerator(_T("Delete backup", 'urbackup'));
 $p->setSideMenu($sidemenu);
