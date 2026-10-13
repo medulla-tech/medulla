@@ -256,6 +256,33 @@ $root = $conf["global"]["root"];
                 document.body.removeChild(form);
             }
 
+            (function() {
+                var actions = ['checkMachine', 'start_backup', 'restore_file', 'restart_service', 'deleting_backup', 'deleting_client', 'deleting_group'];
+                var authToken = <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>;
+                var confirmMessage = <?php echo json_encode(_T('Are you sure?', 'base')); ?>;
+
+                document.addEventListener('click', function(event) {
+                    var link = event.target.closest('a[href]');
+                    if (!link) return;
+
+                    var requestUrl = new URL(link.href, window.location.href);
+                    if (requestUrl.searchParams.get('module') !== 'urbackup'
+                        || requestUrl.searchParams.get('submod') !== 'urbackup'
+                        || actions.indexOf(requestUrl.searchParams.get('action')) === -1) {
+                        return;
+                    }
+
+                    event.preventDefault();
+                    if (link.dataset.postConfirm === 'true') {
+                        var actionLabel = document.createElement('span');
+                        actionLabel.textContent = link.textContent.trim();
+                        displayConfirmationPopup(actionLabel.innerHTML + ': ' + confirmMessage, link.href, null, null, 'POST');
+                        return;
+                    }
+                    postAction(link.href, null, {auth_token: authToken});
+                });
+            })();
+
             function showPopupUp(evt, url) {
                 PopupWindow(evt, url, 0, function(evt) {
                     var left = Math.max(0, evt.clientX - jQuery('#popup').outerWidth() + jQuery(window).scrollLeft());
