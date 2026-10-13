@@ -62,11 +62,7 @@ BEGIN
 END //
 DELIMITER ;
 
-
--- Enregistre le produit Windows 11 26H2 dans la configuration des applications.
--- La table des produits utilisée pour ce package est `up_packages_Win11_X64_26H2`.
-insert into applicationconfig (`key`, `value`, `comment`, context, module, `enable`) values("table produits", "up_packages_Win11_X64_26H2", "Microsoft Windows 11 [ fin support 2028/10 ]", "entity", "xmppmaster/update", 1);
-update applicationconfig set enable=1, comment="" where values("table produits", "up_packages_Win11_X64_26H2", "Microsoft Windows 11 [ fin support 2028/10 ]", "entity", "xmppmaster/update", 1);
+update applicationconfig set `enable`=1, `comment`="Microsoft Windows 11 [ fin support 2028/10 ]" where value="up_packages_Win11_X64_26H2";
 
 -- Fichiers ISO disponibles pour les build Windows 11 25H2 et 26H2.
 -- Ces lignes servent de documentation de configuration et de référence des packages gestionnés.
