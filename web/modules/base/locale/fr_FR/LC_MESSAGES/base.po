@@ -2407,3 +2407,7 @@ msgstr "Pour activer ces fonctionnalités, nous vous invitons à souscrire un co
 
 msgid "Loading..."
 msgstr "Chargement..."
+
+#: graph/header.inc.php:71
+msgid "Search..."
+msgstr "Saisir un mot-clé..."
