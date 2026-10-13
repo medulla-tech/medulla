@@ -242,7 +242,12 @@ $ajax->displayDivToUpdate();
     }
 
     function RestoreFile(paramstr) {
-        jQuery('#restoreDiv').load('<?php echo urlStrRedirect("backuppc/backuppc/ajaxRestoreFile"); ?>&auth_token=<?php echo urlencode($_SESSION['auth_token'] ?? ''); ?>&' + paramstr);
+        var restoreData = {};
+        new URLSearchParams(paramstr).forEach(function(value, key) {
+            restoreData[key] = value;
+        });
+        restoreData.auth_token = <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>;
+        jQuery('#restoreDiv').load('<?php echo urlStrRedirect("backuppc/backuppc/ajaxRestoreFile"); ?>', restoreData);
         setTimeout("refresh();", 4000);
     }
 
