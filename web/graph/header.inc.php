@@ -65,8 +65,6 @@ $root = $conf["global"]["root"];
             // Avoid prototype <> jQuery conflicts
             jQuery.noConflict();
         </script>
-        <!-- <script src="jsframework/lib/prototype.js" type="text/javascript"></script> -->
-        <script src="jsframework/src/scriptaculous.js" type="text/javascript"></script>
         <script type="text/javascript">
             window.mmcSearchPlaceholder = <?php echo json_encode(_T('Search...', 'base')); ?>;
         </script>
