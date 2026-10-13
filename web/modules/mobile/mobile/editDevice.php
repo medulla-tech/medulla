@@ -156,6 +156,7 @@ $sc->setSelected($configurationId);
 $f->add(new TrFormElement(_T('Configuration', 'mobile'), $sc));
 
 $f->pop();
+$f->add(new HiddenTpl("auth_token"), array("value" => $_SESSION['auth_token'] ?? '', "hide" => true));
 foreach ($f->elements as $element) {
     $element->display();
 }

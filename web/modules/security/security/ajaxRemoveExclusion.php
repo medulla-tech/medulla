@@ -67,6 +67,7 @@ if ($type === 'machine' && !empty($name)) {
 $currentUser = $_SESSION['login'] ?? 'unknown';
 
 if (isset($_POST['bconfirm'])) {
+    verifyCSRFToken($_POST);
     $value = isset($config['isInt']) ? intval($name) : $name;
     $success = ExclusionHelper::removeExclusion($config['key'], $value, $currentUser);
 

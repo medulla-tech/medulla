@@ -27,6 +27,8 @@ require_once("modules/dyngroup/includes/dyngroup.php"); # for Group Class
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
 
+verifyCSRFToken($_GET);
+
 $groupnames = array(
     'green'   => _T("Antivirus status is OK at %s", "glpi"),
     'orange'  => _T("Antivirus is not up to date at %s", "glpi"),

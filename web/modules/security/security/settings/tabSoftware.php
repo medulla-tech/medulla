@@ -28,6 +28,7 @@ $currentUser = $_SESSION['login'] ?? 'unknown';
 
 // Handle form submission for adding software exclusion
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['badd_software'])) {
+    verifyCSRFToken($_POST);
     $softwareName = trim($_POST['new_software_name'] ?? '');
 
     if (!empty($softwareName)) {

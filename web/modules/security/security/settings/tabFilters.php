@@ -26,6 +26,7 @@ $currentUser = $_SESSION['login'] ?? 'unknown';
 $severityOptions = array('None', 'Low', 'Medium', 'High', 'Critical');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bsave'])) {
+    verifyCSRFToken($_POST);
     // Merge into the stored policies so keys not edited here are kept
     $policies = xmlrpc_get_policies();
     $display = array_merge($policies['display'] ?? array(), array(
