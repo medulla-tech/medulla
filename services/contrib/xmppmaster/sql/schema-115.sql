@@ -277,10 +277,12 @@ END$$
 
 DELIMITER ;
 
-CALL up_create_product_tables();
+-- Limite le temps de migration en ne regenerant que la table produit
+-- introduite par ce schema, au lieu de reconstruire toutes les tables produits.
+CALL up_init_packages_Win11_X64_26H2();
 
 -- Laisse le cron reconstruire les donnees avec la nouvelle logique.
--- up_machine_major_windows existe deja via les schemas precedents / up_create_product_tables().
+-- up_machine_major_windows existe deja via les schemas precedents.
 TRUNCATE TABLE up_machine_major_windows;
 
 -- up_major_win est normalement recreee par la procedure. Sur certaines bases,
