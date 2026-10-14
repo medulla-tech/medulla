@@ -21,6 +21,11 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
 require_once("modules/dyngroup/includes/dyngroup.php"); # for Group Class
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
@@ -29,9 +34,9 @@ require_once("modules/medulla_server/includes/locations_xmlrpc.inc.php");
 require_once("modules/base/includes/computers.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-verifyCSRFToken($_GET);
+verifyCSRFToken($_POST);
 
-$requestedlocation = $_GET['location'];
+$requestedlocation = $_POST['location'];
 
 $gg = xmlrpc_getCustomMenubylocation($requestedlocation);
 
@@ -39,7 +44,6 @@ $location_name = xmlrpc_getLocationName($requestedlocation);
 
 
 $listforunregistred = array();
-
 $groupmembers = array();
 
 $newregisterd = array();
@@ -99,9 +103,5 @@ $params['bootcli'] = '';
 $params['dont_check_disk_size'] = '';
 $params['hidden_menu'] = '';
 $params['message'] = '-- Warning! Your PC is being backed up or restored. Do not reboot !';
-$params['target_opt_image'] = '';
-//$params['choose_network'] = nic_uuid;
-$ret = xmlrpc_setMyMenuProfile($group->id, $params);
-header("Location: " . urlStrRedirect("imaging/manage/display", array('gid'=>$group->id)));
 exit;
 ?>

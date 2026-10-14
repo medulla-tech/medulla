@@ -225,7 +225,7 @@ $root = $conf["global"]["root"];
             }
 
             // submits get link style to post request
-            function postAction(url, target, postData) {
+            function postAction(url, target, postData, postKeys) {
                 var parts = url.split('?');
                 var path = parts[0];
                 var params = new URLSearchParams(parts[1] || '');
@@ -233,9 +233,16 @@ $root = $conf["global"]["root"];
                     params.set(key, postData[key]);
                 });
                 var routing = new URLSearchParams();
-                ['module', 'submod', 'action', 'tab'].forEach(function(key) {
-                    if (params.has(key)) {
-                        routing.set(key, params.get(key));
+                var postParams = new URLSearchParams();
+                var routingKeys = ['module', 'submod', 'action', 'tab'];
+                params.forEach(function(value, key) {
+                    if (routingKeys.indexOf(key) !== -1) {
+                        routing.set(key, value);
+                        postParams.set(key, value);
+                    } else if (Array.isArray(postKeys) && postKeys.indexOf(key) === -1) {
+                        routing.set(key, value);
+                    } else {
+                        postParams.set(key, value);
                     }
                 });
                 var form = document.createElement('form');
@@ -244,7 +251,7 @@ $root = $conf["global"]["root"];
                 if (target) {
                     form.target = target;
                 }
-                params.forEach(function(value, key) {
+                postParams.forEach(function(value, key) {
                     var input = document.createElement('input');
                     input.type = 'hidden';
                     input.name = key;
@@ -281,6 +288,55 @@ $root = $conf["global"]["root"];
                     }
                     postAction(link.href, null, {auth_token: authToken});
                 });
+            })();
+
+            (function() {
+                var authToken = <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>;
+                var menuPostKeys = ['mod', 'itemid', 'itemlabel', 'auth_token'];
+                var resetPostKeys = ['reset_defaultMenu', 'target', 'auth_token'];
+                var leavePostKeys = ['leave_group', 'group_uuid', 'auth_token'];
+                var sysprepPostKeys = ['deleteFile', 'auth_token'];
+                var groupActions = ['creategroupcustonmenu', 'creategroupcustonmenuimaging'];
+
+                document.addEventListener('click', function(event) {
+                    var link = event.target.closest('a[href]');
+                    if (!link) return;
+
+                    var requestUrl = new URL(link.href, window.location.href);
+                    var module = requestUrl.searchParams.get('module');
+                    var submod = requestUrl.searchParams.get('submod');
+                    var action = requestUrl.searchParams.get('action');
+                    var tab = requestUrl.searchParams.get('tab');
+                    var postKeys = null;
+
+                    if (module === 'imaging' && submod === 'manage' && groupActions.indexOf(action) !== -1) {
+                        postKeys = null;
+                    } else if (requestUrl.searchParams.has('reset_defaultMenu')) {
+                        postKeys = resetPostKeys;
+                    } else if (requestUrl.searchParams.has('leave_group')) {
+                        postKeys = leavePostKeys;
+                    } else if (module === 'imaging' && submod === 'manage'
+                        && (action === 'bootmenu_up' || action === 'bootmenu_down')) {
+                        postKeys = ['itemid', 'itemlabel', 'auth_token'];
+                    } else if (module === 'imaging' && submod === 'manage'
+                        && action === 'systemImageManager' && tab === 'sysprepList'
+                        && requestUrl.searchParams.has('deleteFile')) {
+                        postKeys = sysprepPostKeys;
+                    } else if (((module === 'base' && submod === 'computers'
+                        && action === 'imgtabs' && tab === 'tabbootmenu')
+                        || (module === 'imaging' && submod === 'manage'
+                        && action === 'groupimgtabs' && tab === 'grouptabbootmenu'))
+                        && (requestUrl.searchParams.get('mod') === 'up'
+                        || requestUrl.searchParams.get('mod') === 'down')) {
+                        postKeys = menuPostKeys;
+                    } else {
+                        return;
+                    }
+
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+                    postAction(link.href, null, {auth_token: authToken}, postKeys || undefined);
+                }, true);
             })();
 
             function showPopupUp(evt, url) {
