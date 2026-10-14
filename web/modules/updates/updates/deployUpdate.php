@@ -209,13 +209,13 @@ $end_date = date("Y-m-d H:i:s", $_end_date);
 
 $mode = "";
 if(!empty($_GET["entity"])) {
-    $formtitle = _T("Schedule update deployment on entity", "update");
+    $formtitle = _T("Schedule update deployment on entity", "updates");
     $mode = "entity";
 } elseif(!empty($_GET["gid"])) {
-    $formtitle = _T("Schedule update deployment on group", "update");
+    $formtitle = _T("Schedule update deployment on group", "updates");
     $mode = "group";
 } elseif(!empty($_GET["machineid"])) {
-    $formtitle = _T("Schedule update deployment on machine", "update");
+    $formtitle = _T("Schedule update deployment on machine", "updates");
     $mode="machine";
 }
 

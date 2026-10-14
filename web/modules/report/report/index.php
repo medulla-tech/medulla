@@ -91,6 +91,7 @@ if (!array_intersect_key($_POST, array('generate_report' => '', 'get_xls' => '',
 }
 // second step, display results
 else if (isset($_POST['generate_report'])) {
+    verifyCSRFToken($_POST);
     $ts_from = intval($_POST['period_from_timestamp']);
     $ts_to = intval($_POST['period_to_timestamp']);
 

@@ -1,25 +1,10 @@
 <?php
-/**
- * (c) 2022-2024 Siveo, http://siveo.net/
- *
- * $Id$
- *
- * This file is part of Management Console (MMC).
- *
- * MMC is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * MMC is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+// SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+// SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+// SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+// SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
+// SPDX-License-Identifier: GPL-3.0-or-later
+// file : web/modules/updates/updates/ajaxMajorDetailsByMachines.php
 // file : modules/updates/updates/ajaxMajorDetailsByMachines.php
 
 require_once("modules/updates/includes/xmlrpc.php");
@@ -47,56 +32,7 @@ $entityCompleteName = !empty($_GET['completename']) ? htmlentities($_GET['comple
 $source = !empty($_GET['source']) ? htmlentities($_GET['source']) : "xmppmaster";
 $typeaction= !empty($_GET['typeaction']) ? htmlentities($_GET['typeaction']) : "windows";
 
-// Compteur "Mise à jour non conseillée" : on enveloppe la valeur dans le
-// tooltip stylisé (pattern .infomach / .ttable, cf. tooltip.css global) qui
-// liste les prérequis matériels Windows 11 non satisfaits par ces machines.
-$nbMissing = (isset($_GET['nb_missing']) && is_numeric($_GET['nb_missing'])) ? (int)$_GET['nb_missing'] : 0;
-if ($nbMissing > 0) {
-    $win11Requirements = array(
-        'TPM 2.0',
-        'UEFI Secure Boot',
-        '1GHz 2-core 64-bit CPU',
-        '4GB of RAM',
-        '64GB in C:\\ partition',
-        'GPU supporting DirectX 12 and WDDM 2.0',
-        'Display of 1280 x 720 24bits',
-    );
-    $reqTooltip = '<table class="ttable win11req-tt">';
-    $reqTooltip .= '<tr class="ttabletr tt-section win11req-head"><td class="ttabletd" colspan="2">'
-        . htmlspecialchars(_T("The machine does not meet the minimum requirements for Windows 11", "updates"))
-        . '</td></tr>';
-    foreach ($win11Requirements as $req) {
-        $reqTooltip .= '<tr class="ttabletr win11req-row"><td class="ttabletd">'
-            . htmlspecialchars($req) . '</td></tr>';
-    }
-    $reqTooltip .= '</table>';
-    $nbMissingCell = '<span class="infomach win11req-tooltip" mydata="'
-        . htmlentities($reqTooltip) . '">' . $nbMissing . '</span>';
-} else {
-    $nbMissingCell = (string)$nbMissing;
-}
 
-if ($typeaction == "windows") {
-    $n = new ListInfos(array($_GET['W10to10']), _T("Upgrade to latest Win 10", "updates"));
-    $n->addExtraInfoCentered(array($_GET['W10to11']), _T("Upgrade Win 10 to latest Win 11", "updates"));
-    $n->addExtraInfoCentered(array($_GET['W11to11']), _T("Upgrade to latest Win 11", "updates"));
-    $n->addExtraInfoCentered(array($_GET['UPDATED']), _T("Up to date", "updates"));
-    $n->addExtraInfoCenteredRaw(array($nbMissingCell), _T("Upgrade Not recommended", "updates"));
-    $n->addExtraInfoCentered(array($_GET['totalmachineentity']), _T("Total machines", "updates"));
-} else {
-    $n = new ListInfos(array($_GET['MS12toMS25']), _T("Upgrade Win Server 2012 to 2025", "updates"));
-    $n->addExtraInfoCentered(array($_GET['MS16toMS25']), _T("Upgrade Win Server 2016 to 2025", "updates"));
-    $n->addExtraInfoCentered(array($_GET['MS19toMS25']), _T("Upgrade Win Server 2019 to 2025", "updates"));
-    $n->addExtraInfoCentered(array($_GET['MS25toMS25']), _T("Upgrade to latest Win Server 2025", "updates"));
-    $n->addExtraInfoCentered(array($_GET['UPDATED']), _T("Up to date", "updates"));
-    $n->addExtraInfoCentered(array($_GET['nb_missing']), _T("Upgrade Not recommended", "updates"));
-    $n->addExtraInfoCentered(array($_GET['totalmachineentity']), _T("Total machines", "updates"));
-}
-$n->setNavBar = "";
-$n->start = 0;
-$n->end = 1;
-$n->disableFirstColumnActionLink();
-$n->display($navbar = 0, $header = 0);
 
     if ($source == "xmppmaster" ){
         // $statglpiversion = xmlrpc_get_os_xmpp_update_major_details($_GET['entity'],$filter);
@@ -165,7 +101,9 @@ foreach ($statglpiversion['id_machine'] as $key => $valeur) {
         $idmachinefrom_xmpp_or_glpi => $valeur,
         'cn' => $statglpiversion['machine'][$key] ?? '',
         'platform' => $statglpiversion['platform'][$key] ?? '',
+        'lang_code' => $statglpiversion['lang_code'][$key] ?? '',
         'version' => $statglpiversion['version'][$key] ?? '',
+        'newcode' => $statglpiversion['newcode'][$key] ?? '',
         'update' => $statglpiversion['update'][$key] ?? '',
         'uuid_inventorymachine' => $statglpiversion['uuid_inventorymachine'][$key] ?? '',
         'package_id' => $statglpiversion['package_id'][$key] ?? '',
@@ -176,8 +114,10 @@ foreach ($statglpiversion['id_machine'] as $key => $valeur) {
 $n = new OptimizedListInfos($statglpiversion["machine"], _T("Machine name", "updates"));
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($statglpiversion["platform"], _T("Platform", "updates"));
-$n->addExtraInfoCentered($statglpiversion["version"], _T("Version", "updates"));
-$n->addExtraInfo($statglpiversion["update"], _T("Upgrade", "updates"));
+$n->addExtraInfoCentered($statglpiversion["lang_code"], _T("Language Code", "updates"));
+$n->addExtraInfoCentered($statglpiversion["version"], _T("Current version", "updates"));
+$n->addExtraInfoCentered($statglpiversion["newcode"], _T("Target version", "updates"));
+$n->addExtraInfo($statglpiversion["update"], _T("Upgrade type", "updates"));
 $n->addActionItemArray($actionspeclistUpds);
 $n->addActionItemArray($actiondetailsByMachslog);
 // arrInfo contient déjà le slice paginé (LIMIT côté SQL via xmlrpc),
@@ -188,21 +128,11 @@ $n->end = $count;
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($params);
-$n->setEmptyState(_T("No machines found", "updates"), _T("No machines match the current filter.", "updates"));
+$n->setEmptyState(
+    _T("No machine to upgrade", "updates"),
+    _T("All machines in this entity are up to date or cannot be upgraded.", "updates")
+);
 $n->display();
 
-// Active le tooltip stylisé sur le compteur "Upgrade Not recommended" du
-// tableau récapitulatif (jQuery UI + tooltip.css, même pattern que
-// ajaxXmppMachinesList.php). items:"[mydata]" lit l'attribut mydata.
-echo '<script>
-jQuery(function() {
-    if (!(jQuery.ui && jQuery.ui.tooltip)) { return; }
-    jQuery(".win11req-tooltip").tooltip({
-        position: { my: "left+15 center", at: "right center" },
-        items: "[mydata]",
-        content: function() { return jQuery(this).attr("mydata"); }
-    });
-});
-</script>';
 
 ?>

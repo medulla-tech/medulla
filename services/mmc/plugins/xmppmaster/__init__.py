@@ -1,6 +1,7 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
+# file : services/mmc/plugins/xmppmaster/__init__.py
 
 """
 Plugin to manage the interface with xmppmaster
@@ -160,6 +161,19 @@ class RpcProxy(RpcProxyI):
         return XmppMasterDatabase().get_approve_products(identity,
                                                          colonne=True)
 
+    def count_enabled_products(self, entity_ids=None):
+        if not isinstance(entity_ids, (list, tuple)):
+            entity_ids = [] if entity_ids in (None, "") else [entity_ids]
+        ids = []
+        for entity_id in entity_ids:
+            if isinstance(entity_id, bool):
+                continue
+            try:
+                ids.append(int(entity_id))
+            except (TypeError, ValueError):
+                continue
+        return XmppMasterDatabase().count_enabled_products(ids)
+
 
     @with_optional_xmpp_context
     def get_auto_approve_rules(self, identity, colonne=True, ctx=None):
@@ -219,6 +233,22 @@ class RpcProxy(RpcProxyI):
             return {"success": False, "message": msgerror}
         return XmppMasterDatabase().update_auto_approve_rules(updatesrules,
                                                               entity_id=entity_id)
+
+    @with_optional_xmpp_context
+    def get_linux_approved_releases(self, ctx=None):
+        return XmppMasterDatabase().get_linux_approved_releases(colonne=True)
+
+    @with_optional_xmpp_context
+    def update_linux_approved_releases(self, updatesreleases, ctx=None):
+        return XmppMasterDatabase().update_linux_approved_releases(updatesreleases)
+
+    @with_optional_xmpp_context
+    def get_linux_auto_update_policy(self, entity_ids, ctx=None):
+        return XmppMasterDatabase().get_linux_auto_update_policy(entity_ids)
+
+    @with_optional_xmpp_context
+    def update_linux_auto_update_policy(self, updates, ctx=None):
+        return XmppMasterDatabase().update_linux_auto_update_policy(updates)
 
 
     def getListPackages(self):
@@ -368,7 +398,7 @@ class RpcProxy(RpcProxyI):
             return res
 
         stat_ars_machine = XmppMasterDatabase(
-        ).get_stat_ars_machine(ars_list["jid"])
+        ).get_stat_ars_machine(ars_list["jid_from_relayserver"])
         ars_list["total_machines"] = []
         ars_list["uninventoried"] = []
         ars_list["publicclass"] = []
@@ -390,7 +420,7 @@ class RpcProxy(RpcProxyI):
         ars_list["uninventoried_offline"] = []
         ars_list["nbwindows"] = []
         ars_list["nb_ou_user"] = []
-        for jid in ars_list["jid"]:
+        for jid in ars_list["jid_from_relayserver"]:
             if jid in stat_ars_machine:
                 ars_list["total_machines"].append(
                     stat_ars_machine[jid]["nbmachine"])
@@ -559,7 +589,10 @@ class RpcProxy(RpcProxyI):
 
         Return dict containing the machines counts.
         """
-        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        entities = []
+        infos=ctx.get_session_info()['mondict']
+        if 'liste_entities_user' in infos:
+            entities = infos['liste_entities_user']
         return xmlrpcCleanup(XmppMasterDatabase().get_computer_count_for_dashboard(entities))
 
     @with_optional_xmpp_context
@@ -584,27 +617,39 @@ class RpcProxy(RpcProxyI):
                 ]
             }
             """
-        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        infos=ctx.get_session_info()['mondict']
+        entities = []
+        if 'liste_entities_user' in infos:
+            entities = infos['liste_entities_user']
 
         result = XmppMasterDatabase().get_mon_events(start, maxperpage, filter, entities)
         return result
 
     @with_optional_xmpp_context
     def get_count_success_rate_for_dashboard(self, ctx=None):
-        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        infos=ctx.get_session_info()['mondict']
+        entities = []
+        if 'liste_entities_user' in infos:
+            entities = infos['liste_entities_user']
 
         result = XmppMasterDatabase().get_count_success_rate_for_dashboard(entities)
         return result
 
     @with_optional_xmpp_context
     def get_count_total_deploy_for_dashboard(self, ctx=None):
-        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        infos=ctx.get_session_info()['mondict']
+        entities = []
+        if 'liste_entities_user' in infos:
+            entities = infos['liste_entities_user']
         result = XmppMasterDatabase().get_count_total_deploy_for_dashboard(entities)
         return result
 
     @with_optional_xmpp_context
     def get_count_agent_for_dashboard(self, ctx=None):
-        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        infos=ctx.get_session_info()['mondict']
+        entities = []
+        if 'liste_entities_user' in infos:
+            entities = infos['liste_entities_user']
         result = XmppMasterDatabase().get_count_agent_for_dashboard(entities)
         return result
 
@@ -2378,9 +2423,11 @@ def get_updates_by_uuids(uuids, start=0, limit=-1, filter=""):
     return XmppMasterDatabase().get_updates_by_uuids(uuids, start, limit, filter)
 
 
-def get_updates_by_machineids(machineids, start=0, limit=-1, filter=""):
+def get_updates_by_machineids(
+    machineids, start=0, limit=-1, filter="", state="available"
+):
     return XmppMasterDatabase().get_updates_by_machineids(
-        machineids, start, limit, filter
+        machineids, start, limit, filter, state
     )
 
 
@@ -2404,9 +2451,42 @@ def cancel_update(machineid, updateid):
     return XmppMasterDatabase().cancel_update(machineid, updateid)
 
 
-def get_audit_summary_updates_by_entity(entity_uuid, start=0, limit=-1, filter=""):
-    return XmppMasterDatabase().get_audit_summary_updates_by_entity(entity_uuid, start, limit, filter)
+def get_audit_summary_updates_by_entity(entity_uuid, start=0, limit=-1, filter="", history_type=""):
+    return XmppMasterDatabase().get_audit_summary_updates_by_entity(entity_uuid, start, limit, filter, history_type)
 
 
 def get_audit_summary_updates_by_update(updateid, start=0, limit=-1, filter=""):
     return XmppMasterDatabase().get_audit_summary_updates_by_update(updateid, start, limit, filter)
+
+
+def get_distribution_version_compliance(
+        distributor_id,
+        entity_id,
+        start,
+        limit,
+        hostname_filter=None,
+        end=None,
+    ):
+    return XmppMasterDatabase().get_distribution_version_compliance(
+        distributor_id,
+        entity_id,
+        start,
+        limit,
+        hostname_filter,
+        end,
+    )
+
+def get_major_machines_by_entity(
+        distribution,
+        entity_id,
+        filter="",
+        start=0,
+        limit=50
+    ):
+    return XmppMasterDatabase().get_major_machines_by_entity(
+        distribution,
+        entity_id,
+        filter,
+        start,
+        limit
+    )

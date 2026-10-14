@@ -51,6 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' && is_array($configs)) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    verifyCSRFToken($_POST);
+
     $selectedConfigId = intval($_POST['configuration_id'] ?? 0);
     $configName = '';
 

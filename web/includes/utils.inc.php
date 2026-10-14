@@ -1,4 +1,10 @@
 <?php
+// SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+// SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+// SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+// SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
+// SPDX-License-Identifier: GPL-3.0-or-later
+// file : web/includes/utils.inc.php
 /**
  * Mandriva Management Console (MMC)
  *
@@ -21,6 +27,26 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC. If not, see <https://www.gnu.org/licenses/>.
  */
+
+if (!function_exists('cleanNavParams')) {
+    /**
+     * cleanNavParams - Nettoie les paramètres de navigation de $_GET.
+     *
+     * Supprime les clés techniques utilisées par la navigation MMC
+     * (module, submodule, action, tab, page) pour ne conserver que
+     * les paramètres métier utiles aux vues et appels AJAX.
+     *
+     * @param array &$get_array Tableau de paramètres, typiquement $_GET.
+     * @return void
+     */
+    function cleanNavParams(&$get_array)
+    {
+        $nav_params = ['action', 'module', 'submodule', 'tab', 'page'];
+        foreach ($nav_params as $param) {
+            unset($get_array[$param]);
+        }
+    }
+}
 
 /**
     Description : Cette fonction récupère le chemin du premier fichier logo trouvé dans un répertoire spécifique.

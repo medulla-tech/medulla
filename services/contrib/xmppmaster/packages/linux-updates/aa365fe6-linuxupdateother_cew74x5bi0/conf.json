@@ -1,0 +1,49 @@
+{
+    "sub_packages": [],
+    "description": "update other package",
+    "entity_id": "0",
+    "id": "aa365fe6-linuxupdateother_cew74x5bi0",
+    "localisation_server": "global",
+    "previous_localisation_server": "global",
+    "creator": "root",
+    "creation_date": "2026-06-08 09:20:47",
+    "editor": "root",
+    "edition_date": "2026-06-08 09:24:31",
+    "commands": {
+        "postCommandSuccess": {
+            "command": "",
+            "name": ""
+        },
+        "installInit": {
+            "command": "",
+            "name": ""
+        },
+        "postCommandFailure": {
+            "command": "",
+            "name": ""
+        },
+        "command": {
+            "command": "",
+            "name": ""
+        },
+        "preCommand": {
+            "command": "",
+            "name": ""
+        }
+    },
+    "name": "linux_update_other",
+    "targetos": "linux",
+    "reboot": 0,
+    "version": "1.0.0",
+    "metagenerator": "expert",
+    "inventory": {
+        "associateinventory": "0",
+        "licenses": "1.0",
+        "queries": {
+            "Qversion": "",
+            "Qvendor": "",
+            "boolcnd": "",
+            "Qsoftware": ""
+        }
+    }
+}

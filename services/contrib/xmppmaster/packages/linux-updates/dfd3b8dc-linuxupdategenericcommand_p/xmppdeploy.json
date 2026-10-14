@@ -1,0 +1,70 @@
+{
+    "info": {
+        "Dependency": [],
+        "editor": "root",
+        "edition_date": "2026-06-09 09:49:45",
+        "creator": "root",
+        "creation_date": "2026-06-05 15:50:40",
+        "previous_localisation_server": "global",
+        "localisation_server": "global",
+        "name": "linux-update-generic-command",
+        "version": "1.0.0",
+        "description": "Package de commande Linux generique sans dependance distribution pour security kernel et other@@generique ne pas afficher@@",
+        "metagenerator": "expert",
+        "transferfile": true,
+        "methodetransfert": "pushrsync",
+        "limit_rate_ko": "",
+        "spooling": "high",
+        "launcher": "",
+        "licenses": "1.0",
+        "packageUuid": "dfd3b8dc-linuxupdategenericcommand_p",
+        "gotoreturncode": "!=0",
+        "gotolabel": "END_ERROR",
+        "typescript": "Batch",
+        "targetrestart": "MA",
+        "url": "",
+        "gotono": "",
+        "inventory": "noforced",
+        "auth_token": "eff0ffe5c5be6411361e5d8b0ee03132",
+        "software": "linux-update-generic-command"
+    },
+    "linux": {
+        "sequence": [
+            {
+                "action": "actionprocessscript",
+                "step": 0,
+                "codereturn": "",
+                "actionlabel": "script_63ce48f5",
+                "command": "QEBAVVBEQVRFX0xJTlVYQEBAIEBAQERZTkFNSUNfUEFSQU1fREVQTE9ZQEBA",
+                "timeout": "800",
+                "30@lastlines": "30@lastlines",
+                "gotoreturncode@!=0": "END_ERROR"
+            },
+            {
+                "step": 1,
+                "action": "actionsuccescompletedend",
+                "actionlabel": "END_SUCCESS",
+                "clear": "True",
+                "inventory": "noforced"
+            },
+            {
+                "action": "actionerrorcompletedend",
+                "step": 2,
+                "actionlabel": "END_ERROR"
+            }
+        ]
+    },
+    "metaparameter": {
+        "linux": {
+            "label": {
+                "script_63ce48f5": 0,
+                "END_SUCCESS": 1,
+                "END_ERROR": 2
+            }
+        },
+        "os": [
+            "linux"
+        ],
+        "uuid": "dfd3b8dc-linuxupdategenericcommand_p"
+    }
+}

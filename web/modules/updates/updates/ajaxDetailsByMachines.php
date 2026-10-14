@@ -1,30 +1,16 @@
 <?php
-/**
- * (c) 2022-2024 Siveo, http://siveo.net/
- *
- * $Id$
- *
- * This file is part of Management Console (MMC).
- *
- * MMC is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * MMC is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+// SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+// SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+// SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+// SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
+// SPDX-License-Identifier: GPL-3.0-or-later
+// file : web/modules/updates/updates/ajaxDetailsByMachines.php
 require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/base/includes/computers.inc.php");
 require_once("modules/updates/includes/html.inc.php");
+
 
 $location = (isset($_GET['location'])) ? htmlentities($_GET['location']) : "";
 $gid = (isset($_GET['gid'])) ? htmlentities($_GET['gid']) : "";
@@ -126,13 +112,13 @@ if ($entity == '') {
         $machines["complianceRate"][] = ($missing == 0) && ($installed == 0) ? "-" : $complRate;
     }
     $count = getRestrictedComputersListLen($ctx, true);
-    $tabletitle = sprintf(_T("Computers from group %s", "updates"), $groupname);
+    $tabletitle = sprintf(_T("Windows computers from group %s", "updates"), $groupname);
 
 } else {
     $typeOfDetail = "entitie";
     $filterOn = array('entity' => $entity);
 
-    $tabletitle = sprintf(_T("Computers from entity %s", "updates"), $entityName);
+    $tabletitle = sprintf(_T("Windows computers from entity %s", "updates"), $entityName);
     // No usage
     $match = (int)str_replace('UUID', '', $entity);
 
@@ -248,15 +234,25 @@ if ($entity == '') {
     echo '<h2>'.$tabletitle.'</h2>';
 
 
-    $n = new OptimizedListInfos($machines["cn"], _T("Machine name", "updates"));
+    $n = new OptimizedListInfos($machines["cn"],
+        _T("Machine name", "updates"),
+        "",
+        "",
+        _T("Hostname reported by the Medulla agent.", "updates"));
     $n->setResizable();
     $n->disableFirstColumnActionLink();
-    $n->addExtraInfo($machines["os"], _T("Platform", "updates"));
-    $n->addExtraInfoRaw($machines["complianceRate"], _T("Compliance rate", "updates"));
-    $n->addExtraInfoCentered($machines["missing"], _T("Missing", "updates"));
-    $n->addExtraInfoCentered($machines["inprogress"], _T("In progress", "updates"));
-    $n->addExtraInfoCentered($machines["installed"], _T("Installed", "updates"));
-    $n->addExtraInfoCentered($machines["total"], _T("Total", "updates"));
+    $n->addExtraInfo($machines["os"], _T("Platform", "updates"), "",
+        _T("Operating system version detected on the machine.", "updates"));
+    $n->addExtraInfoRaw($machines["complianceRate"], _T("Compliance rate", "updates"), "",
+        _T("Share of approved updates already installed on this machine.", "updates"));
+    $n->addExtraInfoCentered($machines["missing"], _T("Missing", "updates"), "",
+        _T("Number of approved updates not yet installed on this machine.", "updates"));
+    $n->addExtraInfoCentered($machines["inprogress"], _T("In progress", "updates"), "",
+        _T("Number of updates currently being deployed on this machine.", "updates"));
+    $n->addExtraInfoCentered($machines["installed"], _T("Installed", "updates"), "",
+        _T("Number of approved updates already installed on this machine.", "updates"));
+    $n->addExtraInfoCentered($machines["total"], _T("Total", "updates"), "",
+        _T("Total number of approved updates targeting this machine.", "updates"));
     $n->addActionItemArray($machines["actionDetailByMachines"]);
     $n->addActionItemArray($machines["actionPendingByMachines"]);
     $n->addActionItemArray($machines["actionDoneByMachines"]);

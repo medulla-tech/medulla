@@ -216,7 +216,7 @@ $n->display();
             url: 'modules/mobile/mobile/ajaxCreateIcon.php',
             method: 'POST',
             dataType: 'json',
-            data: { id: id, name: name, fileId: fileId, fileName: fileName }
+            data: { id: id, name: name, fileId: fileId, fileName: fileName, auth_token: '<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>' }
         }).done(function(resp){
             clog('saveIcon response', resp);
             if (resp && resp.success) {
@@ -276,7 +276,7 @@ $n->display();
             url: 'modules/mobile/mobile/ajaxDeleteIcons.php',
             method: 'POST',
             dataType: 'json',
-            data: { id: id }
+            data: { id: id, auth_token: '<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>' }
         }).done(function(resp){
             if (resp && resp.success) {
                 if ($row && $row.length) $row.remove();

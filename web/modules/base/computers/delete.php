@@ -48,7 +48,7 @@ if (isset($_POST["bconfirm"])) {
         exit;
     } else {
         $uuid = $_POST["objectUUID"];
-        $backup = ($_POST["backup"] ? true : false);
+        $backup = false;
         if (in_array("imaging", $_SESSION["modulesList"])) {
             //$dede = xmlrpc_imagingClearMenuFromUuid($uuid);
             $dede = xmlrpc_imagingClearMenuFromUuidAllLocation($uuid);
@@ -98,11 +98,6 @@ if (isset($_POST["bconfirm"])) {
     $f = new PopupForm(_("Delete this computer"));
     $f->setLevel('danger');
     $f->push(new Table());
-
-    $tr = new TrFormElement(_("Do you want a backup to be done ?"), new CheckBoxTpl("backup"), array("value" => ''));
-    // Set first column to 100%, because without this setting, checkbox width is too large
-    $tr->setFirstColWidth('100%');
-    $f->add($tr);
 
     // this checkbox has to be checked to delete a computer
     $tr = new TrFormElement(_("I am aware that <b>all related images (non-master)</b> will be <b>DELETED</b>.<br />Check this box if it is what you want."), new CheckBoxTpl("imageWarning"), array("value" => ''));

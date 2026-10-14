@@ -36,6 +36,7 @@ if (isset( $_POST["uuid"])) {
 }
 
 if (isset($_POST["bfull"], $_POST["uuid"])) {
+    verifyCSRFToken($_POST);
     // Starting Full backup
     xmlrpc_setfromxmppmasterlogxmpp("Starting Full backup on machine $cn",
                                     "BPC",
@@ -53,6 +54,7 @@ if (isset($_POST["bfull"], $_POST["uuid"])) {
     // echo "full";
     return;
 } elseif (isset($_POST["bincr"], $_POST["uuid"])) {
+    verifyCSRFToken($_POST);
     // Starting increment backup
     xmlrpc_setfromxmppmasterlogxmpp("Starting increment backup on machine $cn",
                                     "BPC",

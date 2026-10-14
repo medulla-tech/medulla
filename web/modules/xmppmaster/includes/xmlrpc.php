@@ -1,5 +1,10 @@
 <?php
-
+// SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+// SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+// SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+// SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
+// SPDX-License-Identifier: GPL-3.0-or-later
+// file : web/modules/xmppmaster/includes/xmlrpc.php
 /*
  * (c) 2015-2023 Siveo, http://www.siveo.net
  *
@@ -36,6 +41,11 @@ function xmlrpc_get_approve_products($identity)
     return xmlCall("xmppmaster.get_approve_products", array($identity));
 }
 
+function xmlrpc_count_enabled_products($entity_ids = array())
+{
+    return xmlCall("xmppmaster.count_enabled_products", array($entity_ids));
+}
+
 function xmlrpc_get_auto_approve_rules($identity)
 {
     return xmlCall("xmppmaster.get_auto_approve_rules", array($identity));
@@ -44,6 +54,26 @@ function xmlrpc_get_auto_approve_rules($identity)
 function xmlrpc_update_auto_approve_rules($updates, $entity_id)
 {
     return xmlCall("xmppmaster.update_auto_approve_rules", array($updates, $entity_id));
+}
+
+function xmlrpc_get_linux_approved_releases($entity_id = "")
+{
+    return xmlCall("xmppmaster.get_linux_approved_releases", array($entity_id));
+}
+
+function xmlrpc_update_linux_approved_releases($updates, $entity_id = "")
+{
+    return xmlCall("xmppmaster.update_linux_approved_releases", array($updates, $entity_id));
+}
+
+function xmlrpc_get_linux_auto_update_policy($entity_ids)
+{
+    return xmlCall("xmppmaster.get_linux_auto_update_policy", array($entity_ids));
+}
+
+function xmlrpc_update_linux_auto_update_policy($updates)
+{
+    return xmlCall("xmppmaster.update_linux_auto_update_policy", array($updates));
 }
 //topology
 function xmlrpc_topology_pulse()
@@ -1171,9 +1201,9 @@ function xmlrpc_get_updates_by_uuids($uuids, $start = 0, $limit = -1, $filter = 
     return xmlCall("xmppmaster.get_updates_by_uuids", [$uuids, $start, $limit, $filter]);
 }
 
-function xmlrpc_get_updates_by_machineids($machineids, $start = 0, $limit = -1, $filter = "")
+function xmlrpc_get_updates_by_machineids($machineids, $start = 0, $limit = -1, $filter = "", $state = "available")
 {
-    return xmlCall("xmppmaster.get_updates_by_machineids", [$machineids, $start, $limit, $filter]);
+    return xmlCall("xmppmaster.get_updates_by_machineids", [$machineids, $start, $limit, $filter, $state]);
 }
 
 function xmlrpc_get_tagged_updates_by_machine($machineid, $start = 0, $end = -1, $filter = "")
@@ -1196,10 +1226,27 @@ function xmlrpc_cancel_update($machineid, $updateid)
     return xmlCall("xmppmaster.cancel_update", [$machineid, $updateid]);
 }
 
-function xmlrpc_get_audit_summary_updates_by_entity($entityuuid, $start=0, $limit=-1, $filter=""){
-    return xmlCall("xmppmaster.get_audit_summary_updates_by_entity", [$entityuuid, $start, $limit, $filter]);
+function xmlrpc_get_audit_summary_updates_by_entity($entityuuid, $start=0, $limit=-1, $filter="", $historyType=""){
+    return xmlCall("xmppmaster.get_audit_summary_updates_by_entity", [$entityuuid, $start, $limit, $filter, $historyType]);
 }
 
 function xmlrpc_get_audit_summary_updates_by_update($updateid, $start=0, $limit=-1, $filter=""){
     return xmlCall("xmppmaster.get_audit_summary_updates_by_update", [$updateid, $start, $limit, $filter]);
+}
+
+function xmlrpc_get_distribution_version_compliance($famillydistribution,
+                                                    $entity_id=null,
+                                                    $start=null,
+                                                    $limit=null,
+                                                    $hostname_filter=null,
+                                                    $end=null){
+    return xmlCall("xmppmaster.get_distribution_version_compliance", [$famillydistribution, $entity_id, $start, $limit, $hostname_filter, $end]);
+}
+
+function xmlrpc_get_major_machines_by_entity($distribution,
+                                              $entity_id,
+                                              $filter="",
+                                              $start=0,
+                                              $limit=50){
+    return xmlCall("xmppmaster.get_major_machines_by_entity", [$distribution, $entity_id, $filter, $start, $limit]);
 }

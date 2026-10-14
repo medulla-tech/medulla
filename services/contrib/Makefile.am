@@ -17,6 +17,25 @@
 
 contribdir = $(datadir)/doc/pulse2/contrib
 qactionsdir = $(localstatedir)/lib/pulse2/qactions
+pkgsharingglobaldir = $(localstatedir)/lib/pulse2/packages/sharing/global
+
+linuxupdatespkgdirs = \
+	xmppmaster/packages/linux-updates/34181a66-updateslinuxkernel_i8ppnmrs \
+	xmppmaster/packages/linux-updates/aa365fe6-linuxupdateother_cew74x5bi0 \
+	xmppmaster/packages/linux-updates/dfd3b8dc-linuxupdategenericcommand_p \
+	xmppmaster/packages/linux-updates/e05e689e-linuxupdatesecutity_ivvfn4b
+
+linuxupdatespkgfiles = \
+	xmppmaster/packages/linux-updates/34181a66-updateslinuxkernel_i8ppnmrs/conf.json \
+	xmppmaster/packages/linux-updates/34181a66-updateslinuxkernel_i8ppnmrs/xmppdeploy.json \
+	xmppmaster/packages/linux-updates/aa365fe6-linuxupdateother_cew74x5bi0/conf.json \
+	xmppmaster/packages/linux-updates/aa365fe6-linuxupdateother_cew74x5bi0/xmppdeploy.json \
+	xmppmaster/packages/linux-updates/dfd3b8dc-linuxupdategenericcommand_p/conf.json \
+	xmppmaster/packages/linux-updates/dfd3b8dc-linuxupdategenericcommand_p/xmppdeploy.json \
+	xmppmaster/packages/linux-updates/e05e689e-linuxupdatesecutity_ivvfn4b/conf.json \
+	xmppmaster/packages/linux-updates/e05e689e-linuxupdatesecutity_ivvfn4b/xmppdeploy.json
+
+EXTRA_DIST = $(linuxupdatespkgfiles)
 
 dist_qactions_DATA = msc/qactions/001reboot.msc \
 	msc/qactions/002shutdown.msc \
@@ -45,6 +64,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	admin/sql/schema-015.sql \
 	admin/sql/schema-016.sql \
 	admin/sql/schema-017.sql \
+	admin/sql/schema-018.sql \
 	dyngroup/sql/schema-001.sql \
 	dyngroup/sql/schema-002.sql \
 	dyngroup/sql/schema-003.sql \
@@ -301,6 +321,13 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	xmppmaster/sql/schema-106.sql \
 	xmppmaster/sql/schema-107.sql \
 	xmppmaster/sql/schema-108.sql \
+	xmppmaster/sql/schema-109.sql \
+	xmppmaster/sql/schema-110.sql \
+	xmppmaster/sql/schema-111.sql \
+	xmppmaster/sql/schema-112.sql \
+	xmppmaster/sql/schema-113.sql \
+	xmppmaster/sql/schema-114.sql \
+	xmppmaster/sql/schema-115.sql \
 	kiosk/sql/schema-001.sql \
 	kiosk/sql/schema-002.sql \
 	kiosk/sql/schema-003.sql \
@@ -322,14 +349,26 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	updates/sql/schema-001.sql \
 	urbackup/sql/schema-001.sql \
 	mastering/sql/schema-001.sql \
+	mastering/sql/schema-002.sql \
 	mobile/sql/schema-001.sql \
 	security/sql/schema-001.sql \
 	security/sql/schema-002.sql \
 	security/sql/schema-003.sql \
 	security/sql/schema-004.sql \
+	security/sql/schema-005.sql \
 	store/sql/schema-001.sql \
 	monit/pulse2 \
 	samba/smb.conf \
 	test-xmlrpc.php \
 	test-xmlrpc.examples \
 	test-xmlrpc.py
+
+install-data-hook:
+	$(MKDIR_P) $(DESTDIR)$(pkgsharingglobaldir)
+	@for pkgdir in $(linuxupdatespkgdirs); do \
+		src="$(srcdir)/$$pkgdir"; \
+		dst="$(DESTDIR)$(pkgsharingglobaldir)/$$(basename $$pkgdir)"; \
+		rm -rf "$$dst"; \
+		$(MKDIR_P) "$$dst"; \
+		cp -a "$$src"/. "$$dst"/; \
+	done

@@ -120,16 +120,15 @@ if ($facilitylevel <= 1) {
     // Bulk select bar
     $deleteUrl = urlStrRedirect("admin/admin/deleteEntity");
     $bulkBar = new BulkSelectBar($deleteUrl, '0', 'entity-select', [
-        'deleteSelected' => _T("Delete selected", "admin"),
-        'cancel'         => _T("Cancel", "admin"),
-        'selectionMode'  => _T("Selection mode", "admin"),
-        'confirmDelete'  => _T("Are you sure you want to delete these entities? All packages linked to these entities will also be deleted.", "admin"),
-        'partialErrors'  => _T("Some entities could not be deleted:", "admin"),
-        'deleteError'    => _T("An error occurred while deleting.", "admin"),
-        'yes'            => _T("Yes", "admin"),
-        'no'             => _T("No", "admin"),
-        'close'          => _T("Close", "admin"),
-        'andMore'        => _T("and %d more", "admin"),
+        'deleteSelected'    => _T("Delete selected", "admin"),
+        'cancel'            => _T("Cancel", "admin"),
+        'selectionMode'     => _T("Selection mode", "admin"),
+        'confirmDeleteOne'  => _T("Delete this entity?", "admin"),
+        'confirmDeleteMany' => _T("Delete %d entities?", "admin"),
+        'confirm'           => _T("Delete", "admin"),
+        'partialErrors'     => _T("Some entities could not be deleted:", "admin"),
+        'deleteError'       => _T("An error occurred while deleting.", "admin"),
+        'close'             => _T("Close", "admin"),
     ]);
 
     $editAction = $addAction = $manageusersAction = $downloadAction = $deleteAction = $params = $checkboxes = [];

@@ -11,34 +11,46 @@ require_once("modules/xmppmaster/includes/html.inc.php");
 global $maxperpage;
 
 
-$p = new TabbedPageGenerator();
-$p->setTitle(_T("OS Upgrades", "updates"));
+$p = new PageGenerator(_T("OS Upgrades - Compliance Status", "updates"));
 $p->setSideMenu($sidemenu);
-$p->addTab("tabwin", _T("Os Windows", "updates"), "",
+$p->display();
+
+
+$p = new TabbedPageGenerator();
+//$p->setTitle(_T("OS Upgrades", "updates"));
+//$p->setSideMenu($sidemenu);
+$p->addTab("tabwin", _T("Windows", "updates"), "",
            "modules/updates/updates/major/osWindows.php", array());
 
-$p->addTab("tabwinserv", _T("OS Windows Server", "dyngroup"), "",
+$p->addTab("tabwinserv", _T("Windows Server", "updates"), "",
            "modules/updates/updates/major/osWindowsserveur.php", array());
-/*
-$p->addTab("tabrhel", _T("OS Rhel", "dyngroup"), "",
-           "modules/updates/updates/major/Redhat.php", array());
 
-$p->addTab("tabalma", _T("OS Alma", "dyngroup"), "",
-           "modules/updates/updates/major/Alma.php", array());
+#$p->addTab("tabalma", _T("AlmaLinux", "updates"), "",
+#           "modules/updates/updates/major/Alma.php", array());
 
-$p->addTab("tabcentosos", _T("OS CentOS", "dyngroup"), "",
-           "modules/updates/updates/major/Centos.php", array());
+#$p->addTab("tabcentosos", _T("CentOS", "updates"), "",
+#           "modules/updates/updates/major/Centos.php", array());
 
-$p->addTab("tabdebian", _T("OS Debian", "dyngroup"), "",
-           "modules/updates/updates/major/Debian.php", array());
+#$p->addTab("tabdebian", _T("Debian", "updates"), "",
+#           "modules/updates/updates/major/Debian.php", array());
 
-$p->addTab("tabsuse", _T("OS Suse", "dyngroup"), "",
-           "modules/updates/updates/major/Suse.php", array());
+#$p->addTab("tabfedora", _T("Fedora", "updates"), "",
+#           "modules/updates/updates/major/Fedora.php", array());
 
-$p->addTab("tabubuntu", _T("OS Ubuntu", "dyngroup"), "",
-           "modules/updates/updates/major/Ubuntu.php", array());
+#$p->addTab("tabmint", _T("Mint", "updates"), "",
+#           "modules/updates/updates/major/Mint.php", array());
 
-$p->addTab("tabfedora", _T("OS Fedora", "dyngroup"), "",
-           "modules/updates/updates/major/Fedora.php", array());*/
+#$p->addTab("tabrhel", _T("Redhat", "updates"), "",
+#           "modules/updates/updates/major/Redhat.php", array());
+
+#$p->addTab("tabsuse", _T("Suse", "updates"), "",
+#           "modules/updates/updates/major/Suse.php", array());
+
+#$p->addTab("tabubuntu", _T("Ubuntu", "updates"), "",
+#           "modules/updates/updates/major/Ubuntu.php", array());
+
+#$p->addTab("tabzorin", _T("Zorin", "updates"), "",
+#           "modules/updates/updates/major/Zorin.php", array());
+
 $p->display();
 ?>

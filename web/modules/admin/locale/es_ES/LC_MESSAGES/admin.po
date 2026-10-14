@@ -1371,3 +1371,36 @@ msgstr "Añadir un perfil ACL"
 
 msgid "Delete ACL Profile"
 msgstr "Eliminar un perfil ACL"
+
+#: modules/admin/admin/ajaxEntitiesManagement.php
+msgid "Delete selected"
+msgstr "Eliminar selección"
+
+#: modules/admin/admin/ajaxEntitiesManagement.php
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: modules/admin/admin/ajaxEntitiesManagement.php
+msgid "Selection mode"
+msgstr "Modo de selección"
+
+#: modules/admin/admin/ajaxEntitiesManagement.php
+msgid "Delete this entity?"
+msgstr "¿Eliminar esta entidad?"
+
+#: modules/admin/admin/ajaxEntitiesManagement.php
+#, php-format
+msgid "Delete %d entities?"
+msgstr "¿Eliminar %d entidades?"
+
+#: modules/admin/admin/ajaxEntitiesManagement.php
+msgid "Some entities could not be deleted:"
+msgstr "Algunas entidades no se han podido eliminar:"
+
+#: modules/admin/admin/ajaxEntitiesManagement.php
+msgid "An error occurred while deleting."
+msgstr "Se ha producido un error durante la eliminación."
+
+#: modules/admin/admin/ajaxEntitiesManagement.php
+msgid "Close"
+msgstr "Cerrar"

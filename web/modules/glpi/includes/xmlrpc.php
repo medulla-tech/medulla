@@ -260,4 +260,8 @@ function xmlrpc_get_antiviruses_for_dashboard(){
 function xmlrpc_get_inventories_for_dashboard(){
     return XmlCall("glpi.get_inventories_for_dashboard");
 }
+
+function xmlrpc_get_phone_inventories_for_dashboard(){
+    return XmlCall("glpi.get_phone_inventories_for_dashboard");
+}
 ?>

@@ -1,30 +1,14 @@
 <?php
-/**
- * (c) 2022-2024 Siveo, http://siveo.net/
- *
- * $Id$
- *
- * This file is part of Management Console (MMC).
- *
- * MMC is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * MMC is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- *
- * file modules/updates/updates/ajaxMajorEntitiesList.php
- */
+// SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+// SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+// SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+// SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
+// SPDX-License-Identifier: GPL-3.0-or-later
+// file : web/modules/updates/updates/ajaxMajorEntitiesListServ.php
 require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+
 // ini_set('display_errors', 1);
 // ini_set('display_startup_errors', 1);
 // error_reporting(E_ALL);
@@ -207,7 +191,7 @@ $emptydeployAll = new EmptyActionItem1(_T("There are no major updates to deploy 
         "ajaxUpdateCreateGroup", // action
         "btnCreateGroup",
         '',
-        _T("Do you want to create the group ?", "updates"),
+        _T("Do you want to create the group?", "updates"),
         "updates",    // module
         "updates" ,    // submod
         null, // tab
@@ -363,16 +347,57 @@ foreach ($mergedArray as  $index=>$datacolonne) {
 $n = new OptimizedListInfos($complete_name_major, _T("Entity name", "updates"));
 $n->setResizable();
 $n->disableFirstColumnActionLink();
-$n->addExtraInfo($comformite_name_major, _T("Compliance rate", "updates"));
-$n->addExtraInfoRaw($MS12toMS25_major, _T("Upgrade Win Server 2012 to 2025", "updates"));
-$n->addExtraInfoRaw($MS16toMS25_major, _T("Upgrade Win Server 2016 to 2025", "updates"));
-$n->addExtraInfoRaw($MS19toMS25_major, _T("Upgrade Win Server 2019 to 2025", "updates"));
-$n->addExtraInfoRaw($MS25toMS25_major, _T("Upgrade to latest Win Server 2025", "updates"));
+// En-tetes abreges, le sens complet etant porte par l'infobulle.
+$n->addExtraInfo(
+    $comformite_name_major,
+    _T("Compliance rate", "updates"),
+    "",
+    _T("Share of machines already running the latest version of their operating system.", "updates")
+);
+$n->addExtraInfoCenteredRaw(
+    $MS12toMS25_major,
+    _T("2012 → 2025", "updates"),
+    "",
+    _T("Windows Server 2012 machines to upgrade to Windows Server 2025.", "updates")
+);
+$n->addExtraInfoCenteredRaw(
+    $MS16toMS25_major,
+    _T("2016 → 2025", "updates"),
+    "",
+    _T("Windows Server 2016 machines to upgrade to Windows Server 2025.", "updates")
+);
+$n->addExtraInfoCenteredRaw(
+    $MS19toMS25_major,
+    _T("2019 → 2025", "updates"),
+    "",
+    _T("Windows Server 2019 machines to upgrade to Windows Server 2025.", "updates")
+);
+$n->addExtraInfoCenteredRaw(
+    $MS25toMS25_major,
+    _T("2025 → 2025", "updates"),
+    "",
+    _T("Windows Server 2025 machines to upgrade to the latest available version.", "updates")
+);
 
-$n->addExtraInfoRaw($updated_major, _T("Up to date", "updates"));
+$n->addExtraInfoCenteredRaw(
+    $updated_major,
+    _T("Up to date", "updates"),
+    "",
+    _T("Machines already running the latest version of their operating system.", "updates")
+);
 // $n->addExtraInfo($missing_information_major, _T("Upgrade Not recommended", "updates"));
-$n->addExtraInfoRaw($missing_information_major, _T("Upgrade Not recommended", "updates"));
-$n->addExtraInfoRaw($total_win, _T("Total machines", "updates"));
+$n->addExtraInfoCenteredRaw(
+    $missing_information_major,
+    _T("Upgrade Not recommended", "updates"),
+    "",
+    _T("Machines that do not meet the hardware requirements for the target version.", "updates")
+);
+$n->addExtraInfoCenteredRaw(
+    $total_win,
+    _T("Total machines", "updates"),
+    "",
+    _T("Total number of machines attached to this entity.", "updates")
+);
 
 $n->addActionItemArray($actionupdateByentity);
 $n->addActionItemArray($actiondetailsByMachs);

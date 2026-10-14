@@ -263,11 +263,23 @@ class ComputerManager(Singleton):
         return ret
 
     def delComputer(self, ctx, uuid, backup):
+        failed = []
         for plugin in self.components:
             klass = self.components[plugin]
             instance = klass()
             if klass().canDelComputer():
-                instance.delComputer(ctx, uuid, backup)
+                try:
+                    instance.delComputer(ctx, uuid, backup)
+                except Exception as e:
+                    failed.append(plugin)
+                    self.logger.error(
+                        "delComputer %s failed on backend %s: %s"
+                        % (uuid, plugin, str(e))
+                    )
+        if failed:
+            raise Exception(
+                "delComputer %s failed on backends: %s" % (uuid, ", ".join(failed))
+            )
 
     def editComputerName(self, ctx, uuid, name):
         """

@@ -19,19 +19,11 @@
  */
 
 // =============================================================================
-// Legacy
-// =============================================================================
-function xmlrpc_tests()
-{
-    return xmlCall("security.tests", array());
-}
-
-// =============================================================================
 // Dashboard
 // =============================================================================
-function xmlrpc_get_dashboard_summary($location = '')
+function xmlrpc_get_dashboard_summary($location = '', $platform = '', $exploited_only = false)
 {
-    return xmlCall("security.get_dashboard_summary", array($location));
+    return xmlCall("security.get_dashboard_summary", array($location, $platform, $exploited_only));
 }
 
 // =============================================================================
@@ -44,7 +36,9 @@ function xmlrpc_get_cves(
     $severity = null,
     $location = '',
     $sort_by = 'cvss_score',
-    $sort_order = 'desc'
+    $sort_order = 'desc',
+    $platform = '',
+    $exploited_only = false
 ) {
     return xmlCall("security.get_cves", array(
         $start,
@@ -53,7 +47,9 @@ function xmlrpc_get_cves(
         $severity,
         $location,
         $sort_by,
-        $sort_order
+        $sort_order,
+        $platform,
+        $exploited_only
     ));
 }
 
@@ -65,9 +61,9 @@ function xmlrpc_get_cve_details($cve_id, $location = '')
 // =============================================================================
 // Machines
 // =============================================================================
-function xmlrpc_get_machines_summary($start = 0, $limit = 50, $filter = '', $location = '')
+function xmlrpc_get_machines_summary($start = 0, $limit = 50, $filter = '', $location = '', $platform = '', $exploited_only = false, $group_id = '')
 {
-    return xmlCall("security.get_machines_summary", array($start, $limit, $filter, $location));
+    return xmlCall("security.get_machines_summary", array($start, $limit, $filter, $location, $platform, $exploited_only, $group_id));
 }
 
 function xmlrpc_get_machine_cves($id_glpi, $start = 0, $limit = 50, $filter = '', $severity = null)
@@ -86,29 +82,11 @@ function xmlrpc_scan_machine($id_glpi)
 }
 
 // =============================================================================
-// Scans
-// =============================================================================
-function xmlrpc_get_scans($start = 0, $limit = 20)
-{
-    return xmlCall("security.get_scans", array($start, $limit));
-}
-
-// =============================================================================
 // Configuration
 // =============================================================================
-function xmlrpc_get_config($key = null)
-{
-    return xmlCall("security.get_config", array($key));
-}
-
 function xmlrpc_get_contract_status()
 {
     return xmlCall("security.get_contract_status", array());
-}
-
-function xmlrpc_set_config($key, $value)
-{
-    return xmlCall("security.set_config", array($key, $value));
 }
 
 // =============================================================================
@@ -119,26 +97,10 @@ function xmlrpc_get_policies()
     return xmlCall("security.get_policies", array());
 }
 
-function xmlrpc_get_policies_raw()
-{
-    return xmlCall("security.get_policies_raw", array());
-}
-
 function xmlrpc_set_policies($policies, $user = null)
 {
-    // Encode policies as JSON string to avoid XMLRPC nested array issues
-    $policies_json = json_encode($policies);
-    return xmlCall("security.set_policies_json", array($policies_json, $user));
-}
-
-function xmlrpc_set_policy($category, $key, $value, $user = null)
-{
-    return xmlCall("security.set_policy", array($category, $key, $value, $user));
-}
-
-function xmlrpc_reset_policies($user = null)
-{
-    return xmlCall("security.reset_policies", array($user));
+    // JSON avoids XML-RPC nested array issues
+    return xmlCall("security.set_policies_json", array(json_encode($policies), $user));
 }
 
 function xmlrpc_reset_display_policies($user = null)
@@ -147,29 +109,11 @@ function xmlrpc_reset_display_policies($user = null)
 }
 
 // =============================================================================
-// Exclusions
-// =============================================================================
-function xmlrpc_get_exclusions()
-{
-    return xmlCall("security.get_exclusions", array());
-}
-
-function xmlrpc_add_exclusion($cve_id, $reason, $user, $expires_at = null)
-{
-    return xmlCall("security.add_exclusion", array($cve_id, $reason, $user, $expires_at));
-}
-
-function xmlrpc_remove_exclusion($cve_id)
-{
-    return xmlCall("security.remove_exclusion", array($cve_id));
-}
-
-// =============================================================================
 // Software-centric view
 // =============================================================================
-function xmlrpc_get_softwares_summary($start = 0, $limit = 50, $filter = '', $location = '', $category = '')
+function xmlrpc_get_softwares_summary($start = 0, $limit = 50, $filter = '', $location = '', $category = '', $platform = '', $exploited_only = false)
 {
-    return xmlCall("security.get_softwares_summary", array($start, $limit, $filter, $location, $category));
+    return xmlCall("security.get_softwares_summary", array($start, $limit, $filter, $location, $category, $platform, $exploited_only));
 }
 
 function xmlrpc_get_software_cves(
@@ -193,17 +137,22 @@ function xmlrpc_get_software_cves(
 // =============================================================================
 // Entity-centric view
 // =============================================================================
-function xmlrpc_get_entities_summary($start = 0, $limit = 50, $filter = '', $user_entities = '')
+function xmlrpc_get_entities_summary($start = 0, $limit = 50, $filter = '', $user_entities = '', $platform = '', $exploited_only = false)
 {
-    return xmlCall("security.get_entities_summary", array($start, $limit, $filter, $user_entities));
+    return xmlCall("security.get_entities_summary", array($start, $limit, $filter, $user_entities, $platform, $exploited_only));
 }
 
 // =============================================================================
 // Group-centric view
 // =============================================================================
-function xmlrpc_get_groups_summary($start = 0, $limit = 50, $filter = '', $user_login = '')
+function xmlrpc_get_groups_summary($start = 0, $limit = 50, $filter = '', $user_login = '', $platform = '', $exploited_only = false)
 {
-    return xmlCall("security.get_groups_summary", array($start, $limit, $filter, $user_login));
+    return xmlCall("security.get_groups_summary", array($start, $limit, $filter, $user_login, $platform, $exploited_only));
+}
+
+function xmlrpc_get_groups_list()
+{
+    return xmlCall("security.get_groups_list", array());
 }
 
 function xmlrpc_get_group_machines($group_id, $start = 0, $limit = 50, $filter = '')
@@ -222,11 +171,6 @@ function xmlrpc_get_machines_by_severity($severity, $location = '')
 // =============================================================================
 // Store integration - Deploy updates for vulnerable software
 // =============================================================================
-function xmlrpc_get_store_software_info($software_name)
-{
-    return xmlCall("security.get_store_software_info", array($software_name));
-}
-
 function xmlrpc_get_machines_for_vulnerable_software(
     $software_name,
     $software_version,

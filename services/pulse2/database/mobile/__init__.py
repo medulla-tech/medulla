@@ -173,7 +173,7 @@ class MobileDatabase(DatabaseHelper):
 
         return devices_nano
 
-    def addHmdmDevice(self, name, configuration_id, description="", groups=None, imei="", phone="", device_id=None):
+    def addHmdmDevice(self, name, configuration_id, description="", groups=None, imei="", phone="", device_id=None, custom1=""):
         """
         Create or update a device in HMDM.
         
@@ -229,6 +229,10 @@ class MobileDatabase(DatabaseHelper):
         if phone:
             device_data["phone"] = phone
             logging.getLogger().info(f"Added phone to payload: {phone}")
+
+        if custom1:
+            device_data["custom1"] = custom1
+            logging.getLogger().info(f"Added custom1 to payload: {custom1}")
 
         logging.getLogger().info(f"=== FINAL PAYLOAD ===")
         logging.getLogger().info(f"{json.dumps(device_data, indent=2)}")
@@ -298,6 +302,10 @@ class MobileDatabase(DatabaseHelper):
         phone = device_data.get('phone', current_device.get('phone'))
         if phone:
             update_payload['phone'] = phone
+
+        custom1 = device_data.get('custom1', current_device.get('custom1'))
+        if custom1:
+            update_payload['custom1'] = custom1
         
         if 'groups' in device_data:
             logger.info(f"Groups in device_data: {device_data['groups']}")
@@ -334,12 +342,28 @@ class MobileDatabase(DatabaseHelper):
         hashed_pwd = hashlib.md5(password.encode()).hexdigest().upper()
         return hashed_pwd
 
-    def authenticate(self, login: str = None, password: str = None) -> str:
+    def get_hmdm_credentials(self, medulla_user: str = None):
+        """
+        Get HMDM credentials based on Medulla username.
+        - If medulla_user is 'root': use config credentials (admin:admin)
+        - Otherwise: use medulla_user:admin
+        Returns tuple (login, password)
+        """
+        if medulla_user == 'root' or medulla_user is None:
+            return (self.login, self.password)
+        else:
+            return (medulla_user, 'admin')
+
+    def authenticate(self, login: str = None, password: str = None, medulla_user: str = None) -> str:
         """
         Authentifie l'utilisateur auprès du service MDM en utilisant le mot de passe hashé en MD5.
         Renvoie le hmdmtoken JWT si succès, None sinon.
+
+        If medulla_user is provided, uses dynamic credentials based on Medulla username.
         """
-        if login is None:
+        if medulla_user is not None:
+            login, password = self.get_hmdm_credentials(medulla_user)
+        elif login is None:
             login = self.login
         if password is None:
             password = self.password
@@ -366,12 +390,29 @@ class MobileDatabase(DatabaseHelper):
             if not hmtoken:
                 raise Exception("Le hmdmtoken JWT est manquant dans la réponse.")
 
-            logging.getLogger().info(f"Authentification réussie ")
+            logging.getLogger().info(f"Authentification réussie pour {login}")
             return hmtoken
 
         except Exception as e:
-            logging.getLogger().error(f"Erreur lors de l'authentification : {e}")
+            logging.getLogger().error(f"Erreur lors de l'authentification pour {login}: {e}")
             return None
+    
+    def convert_large_ints(self, obj):
+        """
+        Recursively convert large integers to strings to avoid XMLRPC serialization errors.
+        XMLRPC uses 32-bit signed integers, range: -2147483648 to 2147483647.
+        
+        :param obj: Object to process (dict, list, or primitive)
+        :return: Processed object with large ints converted to strings
+        """
+        if isinstance(obj, dict):
+            return {k: self.convert_large_ints(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [self.convert_large_ints(item) for item in obj]
+        elif isinstance(obj, int):
+            if obj < -2147483648 or obj > 2147483647:
+                return str(obj)
+        return obj
     
     def getHmdmDevices(self):
         auth = self.authenticate()
@@ -379,6 +420,45 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error("Impossible d'authentifier pour récupérer la liste des appareils.")
             return []
         return self.getList(auth)
+
+    def getHmdmDeviceById(self, device_id):
+        """Fetch a single device by ID using GET /private/devices/{id}.
+        Returns the full device dict (including imei, custom1, etc.) or None."""
+        auth = self.authenticate()
+        if auth is None:
+            logging.getLogger().error("Cannot authenticate to fetch device by ID.")
+            return None
+        url = f"{self.BASE_URL}/private/devices/{device_id}"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {auth}"}
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            d = data.get("data", data)
+            info = d.get("info", {})
+            return {
+                "id": d.get("id", ""),
+                "number": d.get("number", ""),
+                "description": d.get("description", ""),
+                "statusCode": d.get("statusCode", ""),
+                "configurationId": d.get("configurationId", ""),
+                "custom1": d.get("custom1", ""),
+                "custom2": d.get("custom2", ""),
+                "custom3": d.get("custom3", ""),
+                "publicIp": d.get("publicIp", ""),
+                "imei": d.get("imei", ""),
+                "phone": d.get("phone", ""),
+                "serial": d.get("serial", ""),
+                "launcherVersion": d.get("launcherVersion", ""),
+                "mdmMode": d.get("mdmMode", info.get("mdmMode", "")),
+                "kioskMode": d.get("kioskMode", info.get("kioskMode", "")),
+                "androidVersion": d.get("androidVersion", ""),
+                "lastUpdate": d.get("lastUpdate", 0),
+                "groups": d.get("groups", []),
+            }
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching device {device_id}: {e}")
+            return None
 
     def getHmdmDevicesOsCount(self):
         """
@@ -411,6 +491,335 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"Error getting HMDM device count: {e}")
             return []
+
+    def getHmdmOnlineCount(self):
+        """
+        Get online/offline count of HMDM devices for dashboard.
+        online  = statusCode in (green, yellow)
+        offline = statusCode in (red, brown, grey)
+        """
+        if not self.is_activated:
+            return {"total": 0, "online": 0, "offline": 0}
+
+        auth = self.authenticate()
+        if auth is None:
+            return {"total": 0, "online": 0, "offline": 0}
+
+        url = f"{self.BASE_URL}/private/devices/search"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {auth}"}
+        total = 0
+        online = 0
+        offset = 0
+        limit = 100
+
+        try:
+            while True:
+                payload = {"limit": limit, "offset": offset}
+                resp = requests.post(url, json=payload, headers=headers)
+                resp.raise_for_status()
+                devices = resp.json().get("data", {}).get("devices", {})
+                if offset == 0:
+                    total = devices.get("totalItemsCount", 0)
+                items = devices.get("items", [])
+                if not items:
+                    break
+                for d in items:
+                    if d.get("statusCode") in ("green", "yellow"):
+                        online += 1
+                if len(items) < limit:
+                    break
+                offset += limit
+            return {"total": total, "online": online, "offline": total - online}
+        except Exception as e:
+            logging.getLogger().error(f"Error getting HMDM online count: {e}")
+            return {"total": 0, "online": 0, "offline": 0}
+
+    def getHmdmAllUsers(self):
+        """
+        Get all HMDM users via GET /private/users/all.
+        Returns list of user dicts or empty list on error.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Cannot authenticate for getHmdmAllUsers")
+            return []
+        url = f"{self.BASE_URL}/private/users/all"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.get(url, headers=headers)
+            logging.getLogger().info(f"HMDM Users API - Status: {resp.status_code}, URL: {url}")
+            resp.raise_for_status()
+            data = resp.json()
+            logging.getLogger().info(f"HMDM Users API response type: {type(data)}")
+            # Handle both list and dict responses
+            if isinstance(data, list):
+                return data
+            elif isinstance(data, dict):
+                # Try 'data' key first, then 'users', then return empty
+                users = data.get('data', data.get('users', []))
+                logging.getLogger().info(f"Extracted {len(users) if isinstance(users, list) else 0} users from dict response")
+                return users if isinstance(users, list) else []
+            return []
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching HMDM users from {url}: {e}")
+            if hasattr(e, 'response') and e.response is not None:
+                logging.getLogger().error(f"Response status: {e.response.status_code}")
+                logging.getLogger().error(f"Response body: {e.response.text[:500]}")
+            return []
+
+    def getCurrentHmdmUser(self, medulla_user: str = None):
+        """
+        Get info about the currently authenticated HMDM user.
+        Returns dict with user info including role, or None on error.
+
+        @param medulla_user: Medulla username to determine HMDM credentials
+        """
+        hmtoken = self.authenticate(medulla_user=medulla_user)
+        if hmtoken is None:
+            logging.getLogger().error("Failed to authenticate when fetching current user.")
+            return None
+
+        url = f"{self.BASE_URL}/private/users/current"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+
+            # Handle dict response with 'data' key
+            if isinstance(data, dict) and 'data' in data:
+                user_info = data['data']
+            elif isinstance(data, dict):
+                user_info = data
+            else:
+                user_info = {}
+
+            logging.getLogger().info(f"Current HMDM user: {user_info.get('login')}, role: {user_info.get('userRole', {}).get('name')}")
+            return self._sanitize_for_xmlrpc(user_info)
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching current HMDM user: {e}")
+            return None
+
+    def getHmdmAllRoles(self):
+        """
+        Get all HMDM roles via GET /private/users/roles.
+        Returns list of role dicts or empty list on error.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Cannot authenticate for getHmdmAllRoles")
+            return []
+        url = f"{self.BASE_URL}/private/users/roles"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.get(url, headers=headers)
+            logging.getLogger().info(f"HMDM Roles API - Status: {resp.status_code}, URL: {url}")
+            resp.raise_for_status()
+            data = resp.json()
+            logging.getLogger().info(f"HMDM Roles API response type: {type(data)}, content: {json.dumps(data, indent=2)[:1000]}")
+            if isinstance(data, list):
+                return data
+            return data.get('data', []) if isinstance(data, dict) else []
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching HMDM roles from {url}: {e}")
+            if hasattr(e, 'response') and e.response is not None:
+                logging.getLogger().error(f"Response status: {e.response.status_code}")
+                logging.getLogger().error(f"Response body: {e.response.text[:500]}")
+            return []
+
+    def getHmdmAllPermissions(self):
+        """
+        Get all HMDM permissions via GET /private/roles/permissions.
+        Returns list of permission dicts or empty list on error.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Cannot authenticate for getHmdmAllPermissions")
+            return []
+        url = f"{self.BASE_URL}/private/roles/permissions"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            if isinstance(data, list):
+                return data
+            return data.get('data', []) if isinstance(data, dict) else []
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching HMDM permissions from {url}: {e}")
+            if hasattr(e, 'response') and e.response is not None:
+                logging.getLogger().error(f"Response status: {e.response.status_code}")
+                logging.getLogger().error(f"Response body: {e.response.text[:500]}")
+            return []
+
+    def createOrUpdateHmdmRole(self, name, description=None, permission_ids=None, role_id=None):
+        """
+        Create or update an HMDM role via PUT /private/roles.
+        Returns response dict or None on error.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Cannot authenticate for createOrUpdateHmdmRole")
+            return None
+
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        permissions_value = None
+        if permission_ids:
+            permissions_value = [{"id": int(p)} for p in permission_ids if p]
+
+        url = f"{self.BASE_URL}/private/roles"
+
+        payload = {
+            "name": name,
+            "description": description or "",
+            "permissions": permissions_value or []
+        }
+
+        if role_id is not None and role_id != '' and role_id != 0:
+            payload["id"] = int(role_id)
+
+        logging.getLogger().info(f"HMDM Role {'Update' if role_id else 'Create'} - URL: {url}")
+        logging.getLogger().info(f"HMDM Role Payload: {json.dumps(payload, indent=2)}")
+
+        try:
+            resp = requests.put(url, json=payload, headers=headers)
+            resp.raise_for_status()
+            logging.getLogger().info(f"HMDM Role {'updated' if role_id else 'created'} successfully: {name}")
+            return resp.json()
+        except Exception as e:
+            logging.getLogger().error(f"Error creating/updating HMDM role '{name}': {e}")
+            if hasattr(e, 'response') and e.response is not None:
+                logging.getLogger().error(f"Response status: {e.response.status_code}")
+                logging.getLogger().error(f"Response body: {e.response.text}")
+            return None
+
+    def deleteHmdmRole(self, role_id):
+        """
+        Delete an HMDM role by ID via DELETE /private/roles/{id}.
+        Returns True on success, False on error.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Cannot authenticate for deleteHmdmRole")
+            return False
+        url = f"{self.BASE_URL}/private/roles/{int(role_id)}"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.delete(url, headers=headers)
+            resp.raise_for_status()
+            logging.getLogger().info(f"HMDM role {role_id} deleted successfully")
+            return True
+        except Exception as e:
+            logging.getLogger().error(f"Error deleting HMDM role {role_id}: {e}")
+            if hasattr(e, 'response') and e.response is not None:
+                logging.getLogger().error(f"Response status: {e.response.status_code}")
+                logging.getLogger().error(f"Response body: {e.response.text}")
+            return False
+
+
+    def createOrUpdateHmdmUser(self, login, role_id, all_devices=True, all_configs=True, user_id=None, device_groups=None, config_ids=None):
+        """
+        Create or update an HMDM user via PUT /private/users.
+        Password is MD5-uppercase of 'admin' (same hash format as authenticate()).
+        When all_devices is False, device_groups (list of group IDs) limits visible devices.
+        When all_configs is False, config_ids (list of configuration IDs) limits visible configs.
+        Returns response dict or None on error.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Cannot authenticate for createOrUpdateHmdmUser")
+            return None
+
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        groups_value = None
+        if not all_devices and device_groups:
+            groups_value = [{"id": int(g)} for g in device_groups if g]
+
+        configs_value = None
+        if not all_configs and config_ids:
+            configs_value = [{"id": int(c)} for c in config_ids if c]
+
+        url = f"{self.BASE_URL}/private/users"
+
+        if user_id is not None and user_id != '' and user_id != 0:
+            # Fetch existing user first
+            get_url = f"{self.BASE_URL}/private/users/{int(user_id)}"
+            try:
+                get_resp = requests.get(get_url, headers=headers)
+                get_resp.raise_for_status()
+                resp_data = get_resp.json()
+
+                # Extract the data field if response is wrapped
+                if 'data' in resp_data:
+                    payload = resp_data['data']
+                else:
+                    payload = resp_data
+
+                logging.getLogger().info(f"Fetched existing user data for update")
+            except Exception as e:
+                logging.getLogger().error(f"Failed to fetch existing user {user_id}: {e}")
+                return None
+
+            # Update only the fields we want to change
+            payload["userRole"] = {"id": int(role_id)}
+            payload["allDevicesAvailable"] = bool(all_devices)
+            payload["allConfigAvailable"] = bool(all_configs)
+            payload["groups"] = groups_value
+            payload["configurations"] = configs_value
+        else:
+            # New user - build minimal payload
+            payload = {
+                "login": login,
+                "name": login,
+                "email": "",
+                "userRole": {"id": int(role_id)},
+                "allDevicesAvailable": bool(all_devices),
+                "allConfigAvailable": bool(all_configs),
+                "groups": groups_value,
+                "configurations": configs_value,
+            }
+            pw_hash = self.hash_password("admin")
+            payload["newPassword"] = pw_hash
+            payload["confirm"] = "admin"
+            payload["confirmModal"] = pw_hash
+
+        logging.getLogger().info(f"HMDM User {'Update' if user_id else 'Create'} - URL: {url}")
+        logging.getLogger().info(f"HMDM User Payload: {json.dumps(payload, indent=2)}")
+
+        try:
+            resp = requests.put(url, json=payload, headers=headers)
+            resp.raise_for_status()
+            logging.getLogger().info(f"HMDM User {'updated' if user_id else 'created'} successfully: {login}")
+            return resp.json()
+        except Exception as e:
+            logging.getLogger().error(f"Error creating/updating HMDM user '{login}': {e}")
+            if hasattr(e, 'response') and e.response is not None:
+                logging.getLogger().error(f"Response status: {e.response.status_code}")
+                logging.getLogger().error(f"Response body: {e.response.text}")
+            return None
+
+    def deleteHmdmUser(self, user_id):
+        """
+        Delete an HMDM user by ID via DELETE /private/users/other/{id}.
+        Returns True on success, False on error.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Cannot authenticate for deleteHmdmUser")
+            return False
+        url = f"{self.BASE_URL}/private/users/other/{int(user_id)}"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.delete(url, headers=headers)
+            resp.raise_for_status()
+            logging.getLogger().info(f"HMDM user {user_id} deleted successfully")
+            return True
+        except Exception as e:
+            logging.getLogger().error(f"Error deleting HMDM user {user_id}: {e}")
+            return False
 
     def getHmdmAuditLogs(self, page_size=50, page_num=1, message_filter="", user_filter=""):
         """
@@ -761,7 +1170,9 @@ class MobileDatabase(DatabaseHelper):
             resp.raise_for_status()
             data = resp.json()
             logging.getLogger().info(f"Device detailed info fetched successfully for {device_number}.")
-            return data.get("data", {}) if isinstance(data, dict) else data
+            result = data.get("data", {}) if isinstance(data, dict) else data
+            
+            return self.convert_large_ints(result)
         except Exception as e:
             logging.getLogger().error(f"Error fetching device detailed info: {e}")
             return {}
@@ -904,7 +1315,7 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error("Impossible d'authentifier pour récupérer la liste des configurations.")
             return []
 
-        url = f"{self.BASE_URL}/private/configurations/search"
+        url = f"{self.BASE_URL}/private/configurations/list"
         headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
 
         try:
@@ -979,9 +1390,9 @@ class MobileDatabase(DatabaseHelper):
                     'devicePath': f.get('devicePath') or f.get('device_path') or '',
                     'external': bool(f.get('external')),
                     'replaceVariables': bool(f.get('replaceVariables')),
-                    'usedByConfigurations': f.get('usedByConfigurations') if f.get('usedByConfigurations') else [],
-                    'usedByApps': used_by_apps,
-                    'usedByIcons': f.get('usedByIcons') if f.get('usedByIcons') else []
+                    'usedByConfigurations': self._sanitize_for_xmlrpc(f.get('usedByConfigurations') or []),
+                    'usedByApps': self._sanitize_for_xmlrpc(used_by_apps),
+                    'usedByIcons': self._sanitize_for_xmlrpc(f.get('usedByIcons') or [])
                 }
                 files.append(file_entry)
             return files
@@ -1400,35 +1811,78 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error("Could not fetch configurations list")
             return {"status": "ERROR", "message": "failed_to_fetch_configs"}
         
-        # Build the payload with all configurations
         config_url = f"{self.BASE_URL}/private/web-ui-files/configurations"
         headers = {
             "Authorization": f"Bearer {hmtoken}",
             "Content-Type": "application/json",
             "Accept": "application/json"
         }
-        
+
+        # Fetch existing assignment records using the correct path-param endpoint.
+        # Returns one entry per config; id=null means not assigned, id=N means assigned (record ID needed for unassign).
+        existing_assignments = {}  # configurationId (int) -> assignment record id
+        all_config_records = []
+        try:
+            detail_resp = requests.get(f"{config_url}/{file_id}", headers=headers)
+            logging.getLogger().info(f"File configs status: {detail_resp.status_code}, body: {detail_resp.text[:500]}")
+            if detail_resp.status_code == 200:
+                data = detail_resp.json().get('data') or []
+                # Use the response records directly as the base payload
+                seen = set()
+                for rec in data:
+                    cfg_id = rec.get('configurationId')
+                    rec_id = rec.get('id')
+                    if cfg_id is None:
+                        continue
+                    int_cfg_id = int(cfg_id)
+                    # HMDM may return duplicate entries per config; keep first non-null id
+                    if int_cfg_id in seen:
+                        continue
+                    if rec_id is not None:
+                        existing_assignments[int_cfg_id] = rec_id
+                    all_config_records.append(rec)
+                    seen.add(int_cfg_id)
+            logging.getLogger().info(f"Existing assignments for file {file_id}: {existing_assignments}")
+        except Exception as e:
+            logging.getLogger().warning(f"Could not fetch existing assignments (will use id=null): {e}")
+
         selected_ids = set(int(cid) for cid in (configuration_ids if configuration_ids else []))
         configurations_payload = []
-        
-        for cfg in all_configs:
-            cfg_id = cfg.get('id')
-            if cfg_id is None:
-                continue
-            
-            is_selected = int(cfg_id) in selected_ids
-            configurations_payload.append({
-                "id": None,
-                "customerId": 1,
-                "configurationId": int(cfg_id),
-                "configurationName": cfg.get('name', ''),
-                "fileId": int(file_id),
-                "fileName": None,
-                "upload": is_selected,
-                "remove": False,
-                "notify": is_selected,
-                "common": False
-            })
+
+        if all_config_records:
+            # Use records from GET /configurations/{file_id} — already correct structure with real IDs
+            for rec in all_config_records:
+                cfg_id = rec.get('configurationId')
+                if cfg_id is None:
+                    continue
+                int_cfg_id = int(cfg_id)
+                is_selected = int_cfg_id in selected_ids
+                rec_id = rec.get('id')  # real assignment record id (or null if never assigned)
+                entry = dict(rec)  # copy the record as-is
+                entry['upload'] = is_selected
+                entry['notify'] = rec_id is not None  # notify only when updating an existing assignment
+                configurations_payload.append(entry)
+        else:
+            # Fallback: build from all_configs list (no existing IDs available)
+            for cfg in all_configs:
+                cfg_id = cfg.get('id')
+                if cfg_id is None:
+                    continue
+                int_cfg_id = int(cfg_id)
+                is_selected = int_cfg_id in selected_ids
+                existing_id = existing_assignments.get(int_cfg_id)
+                configurations_payload.append({
+                    "id": existing_id,
+                    "customerId": 1,
+                    "configurationId": int_cfg_id,
+                    "configurationName": cfg.get('name', ''),
+                    "fileId": int(file_id),
+                    "fileName": None,
+                    "upload": is_selected,
+                    "remove": False,
+                    "notify": existing_id is not None,
+                    "common": False
+                })
         
         body = {
             "fileId": int(file_id),
@@ -1512,7 +1966,7 @@ class MobileDatabase(DatabaseHelper):
                     "description": d.get("description", ""),
                     "statusCode": d.get("statusCode", ""),
                     "configurationId": d.get("configurationId", ""),
-                    "custom1": d.get("statusCode", ""),
+                    "custom1": d.get("custom1", ""),
                     "custom2": d.get("custom2", ""),
                     "custom3": d.get("custom3", ""),
                     "publicIp": d.get("publicIp", ""),
@@ -1647,6 +2101,16 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error(f"Error fetching configuration {config_id}: {e}")
             return None
 
+    def getHmdmConfigQrUrl(self):
+        config = self.getHmdmConfigurationById(1)
+        if not config:
+            return None
+        qr_key = config.get('qrCodeKey')
+        if not qr_key:
+            logging.getLogger().error("No qrCodeKey found for configuration 1")
+            return None
+        return f"{self.BASE_URL}/public/qr/{qr_key}?create=0&useId=imei"
+
     def updateHmdmConfiguration(self, config_data: dict):
         """
         Update an existing HMDM configuration by merging changes into the existing config.
@@ -1680,9 +2144,10 @@ class MobileDatabase(DatabaseHelper):
         # front uses s but back uses ms
         if 'applicationSettings' in config_data and isinstance(config_data['applicationSettings'], list):
             for incoming_setting in config_data['applicationSettings']:
-                if 'lastUpdate' in incoming_setting and incoming_setting['lastUpdate']:
-                    incoming_setting['lastUpdate'] = int(incoming_setting['lastUpdate'] * 1000)
-            
+                for ts_field in ('lastUpdate', 'tempId'):
+                    if incoming_setting.get(ts_field):
+                        incoming_setting[ts_field] = int(incoming_setting[ts_field] * 1000)
+
             existing['applicationSettings'] = config_data['applicationSettings']
 
         logging.getLogger().info(f"Final payload to HMDM (after merge): {json.dumps(existing, indent=2)}")
@@ -2042,30 +2507,50 @@ class MobileDatabase(DatabaseHelper):
             return {"status": "ERROR", "message": str(e)}
 
     def deleteHmdmGroupById(self, group_id):
-        """
-        Delete a group from HMDM by its ID.
-
-        :param group_id: The group ID to delete.
-        :return: True if deleted, False otherwise.
-        """
         hmtoken = self.authenticate()
         if hmtoken is None:
             logging.getLogger().error("Impossible to authenticate to delete group.")
             return False
 
-        url = f"{self.BASE_URL}/private/groups/{group_id}"
+        group_id = int(group_id)
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {hmtoken}"
         }
 
+        devices = self.getHmdmDevices()
+        url_devices = f"{self.BASE_URL}/private/devices"
+
+        for device in devices:
+            device_groups = device.get('groups', [])
+            group_ids = [g.get('id') for g in device_groups if isinstance(g, dict)]
+            if group_id not in group_ids:
+                continue
+            new_groups = [g for g in device_groups if g.get('id') != group_id]
+            update_payload = {
+                "id": device['id'],
+                "number": device['number'],
+                "configurationId": device['configurationId'],
+                "groups": new_groups
+            }
+            if device.get('description'):
+                update_payload['description'] = device['description']
+            if device.get('imei'):
+                update_payload['imei'] = device['imei']
+            if device.get('phone'):
+                update_payload['phone'] = device['phone']
+            try:
+                resp = requests.put(url_devices, json=update_payload, headers=headers)
+                resp.raise_for_status()
+            except Exception as e:
+                logging.getLogger().warning(f"Could not update device {device.get('number')} during group deletion: {e}")
+
+        url = f"{self.BASE_URL}/private/groups/{group_id}"
         try:
             resp = requests.delete(url, headers=headers)
             resp.raise_for_status()
-
             logging.getLogger().info(f"Group {group_id} deleted successfully.")
             return True
-
         except Exception as e:
             logging.getLogger().error(f"Error deleting group {group_id}: {e}")
             return False
@@ -2209,23 +2694,28 @@ class MobileDatabase(DatabaseHelper):
             sev = -1
         payload["severity"] = sev
 
+        logging.getLogger().info(f"[getHmdmDeviceLogs] url={url} payload={payload}")
         try:
             resp = requests.post(url, json=payload, headers=headers)
+            logging.getLogger().info(f"[getHmdmDeviceLogs] HTTP {resp.status_code} body={resp.text[:500]}")
             resp.raise_for_status()
             data = resp.json()
             items = data.get("data", {}).get("items", [])
+            logging.getLogger().info(f"[getHmdmDeviceLogs] got {len(items)} items")
+            if items:
+                logging.getLogger().info(f"[getHmdmDeviceLogs] first item keys: {list(items[0].keys())}")
             result = []
             for m in items:
                 result.append({
                     "device": m.get("deviceNumber") or m.get("device"),
-                    "time": (m.get("ts") or m.get("time") or 0) // 1000,
-                    "package": m.get("package") or m.get("packageName") or "",
+                    "time": (m.get("createTime") or m.get("ts") or m.get("time") or 0) // 1000,
+                    "package": m.get("applicationPkg") or m.get("package") or m.get("packageName") or "",
                     "severity": m.get("severity"),
                     "message": m.get("message") or m.get("text") or "",
                 })
             return result
         except Exception as e:
-            logging.getLogger().error(f"Error fetching device logs: {e}")
+            logging.getLogger().error(f"[getHmdmDeviceLogs] Error: {e}")
             return []
 
     def exportHmdmDeviceLogs(self, device_number="", app_id="", severity="-1"):
@@ -2393,7 +2883,7 @@ class MobileDatabase(DatabaseHelper):
             payload["iconId"] = icon_id
 
         # Select endpoint based on app type
-        endpoint = "web" if app_type == "web" else "android"
+        endpoint = "android" if app_type == "app" else "web"
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {hmtoken}",
@@ -2615,4 +3105,704 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             action = "updating" if group_id else "creating"
             logging.getLogger().error(f"Error {action} group '{name}': {e} {group_data}")
+
+    # ------------------------------------------------------------------ #
+    # Contacts plugin                                                       #
+    # ------------------------------------------------------------------ #
+
+    def getHmdmContactsConfig(self, configuration_id: int):
+        """
+        Fetch the contacts sync config for a device configuration.
+
+        GET /rest/plugins/contacts/private/config/{configurationId}
+
+        :param configuration_id: HMDM configuration ID
+        :return: ContactsConfig dict or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when fetching contacts config.")
             return None
+
+        url = f"{self.BASE_URL}/plugins/contacts/private/config/{configuration_id}"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            result = data.get("data", data)
+            if result is None:
+                # No config yet — return sensible defaults
+                return {
+                    "configurationId": configuration_id,
+                    "url": "",
+                    "login": "",
+                    "password": "",
+                    "accountType": "com.android.contacts",
+                    "syncInterval": 60,
+                    "wipeContacts": False
+                }
+            logging.getLogger().info(f"Contacts config for configuration {configuration_id} fetched.")
+            return result
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching contacts config for configuration {configuration_id}: {e}")
+            return None
+
+    def saveHmdmContactsConfig(self, config_data: dict):
+        """
+        Save (create or update) the contacts sync config for a device configuration.
+
+        PUT /rest/plugins/contacts/private/config
+
+        :param config_data: dict matching ContactsConfig schema
+        :return: {"status": "OK"} on success or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when saving contacts config.")
+            return None
+
+        url = f"{self.BASE_URL}/plugins/contacts/private/config"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+        try:
+            logging.getLogger().info(f"Saving contacts config: {json.dumps(config_data, indent=2)}")
+            resp = requests.put(url, headers=headers, json=config_data)
+            resp.raise_for_status()
+            result = resp.json()
+            logging.getLogger().info(f"Contacts config saved successfully.")
+            return result
+        except Exception as e:
+            logging.getLogger().error(f"Error saving contacts config: {e}")
+            return None
+
+    def exportHmdmDevices(self, group_id=None, configuration_id=None, filter_text=None, columns=None):
+        """
+        Export devices to CSV.
+
+        POST /rest/plugins/deviceexport/private/export
+
+        :param group_id: Optional group ID filter
+        :param configuration_id: Optional configuration ID filter
+        :param filter_text: Optional text search filter
+        :param columns: List of column names to export
+        :return: CSV content as string or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when exporting devices.")
+            return None
+
+        url = f"{self.BASE_URL}/plugins/deviceexport/private/export"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        if columns is None:
+            columns = ["description", "configuration", "imei", "phone", "groups", "custom1", "custom2", "custom3"]
+
+        payload = {
+            "groupId": group_id,
+            "configurationId": configuration_id,
+            "filter": filter_text,
+            "columns": columns
+        }
+
+        try:
+            logging.getLogger().info(f"Exporting devices with filters: {json.dumps(payload, indent=2)}")
+            resp = requests.post(url, headers=headers, json=payload)
+            resp.raise_for_status()
+            csv_content = resp.content.decode('utf-8-sig')
+            logging.getLogger().info(f"Devices exported successfully ({len(csv_content)} bytes)")
+            return csv_content
+        except Exception as e:
+            logging.getLogger().error(f"Error exporting devices: {e}")
+            return None
+
+    def importHmdmDevices(self, csv_content: str):
+        """
+        Import devices from CSV.
+
+        POST /rest/plugins/deviceexport/private/import
+
+        :param csv_content: CSV file content as string
+        :return: dict with keys: created, updated, skipped, errors or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when importing devices.")
+            return None
+
+        url = f"{self.BASE_URL}/plugins/deviceexport/private/import"
+        headers = {"Content-Type": "text/plain; charset=UTF-8", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            logging.getLogger().info(f"Importing devices from CSV ({len(csv_content)} bytes)")
+            resp = requests.post(url, headers=headers, data=csv_content.encode('utf-8'))
+            resp.raise_for_status()
+            result = resp.json()
+            if result.get("status") == "OK":
+                data = result.get("data", {})
+                logging.getLogger().info(f"Devices imported: {data.get('created', 0)} created, {data.get('updated', 0)} updated, {data.get('skipped', 0)} skipped")
+                return data
+            else:
+                logging.getLogger().error(f"Import failed: {result.get('message', 'Unknown error')}")
+                return None
+        except Exception as e:
+            logging.getLogger().error(f"Error importing devices: {e}")
+            return None
+
+    def getPhotosSettings(self):
+        """
+        Get photo upload settings for current customer.
+
+        GET /rest/plugins/photos/private/settings
+
+        :return: dict with settings or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when getting photos settings.")
+            return None
+
+        url = f"{self.BASE_URL}/plugins/photos/private/settings"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            result = resp.json()
+            if result.get("status") == "OK":
+                return result.get("data", {})
+            return None
+        except Exception as e:
+            logging.getLogger().error(f"Error getting photos settings: {e}")
+            return None
+
+    def savePhotosSettings(self, settings_data: dict):
+        """
+        Save photo upload settings.
+
+        PUT /rest/plugins/photos/private/settings
+
+        :param settings_data: dict with settings
+        :return: dict with status or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when saving photos settings.")
+            return None
+
+        url = f"{self.BASE_URL}/plugins/photos/private/settings"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.put(url, headers=headers, json=settings_data)
+            resp.raise_for_status()
+            result = resp.json()
+            logging.getLogger().info("Photos settings saved successfully")
+            return result
+        except Exception as e:
+            logging.getLogger().error(f"Error saving photos settings: {e}")
+            return None
+
+    def listPhotos(self, device_number=None, date_from=None, date_to=None, page_num=0, page_size=50):
+        """
+        List uploaded photos with filtering and pagination.
+
+        POST /rest/plugins/photos/private/list
+
+        :param device_number: filter by device (optional)
+        :param date_from: timestamp in milliseconds (optional)
+        :param date_to: timestamp in milliseconds (optional)
+        :param page_num: page number (0-indexed)
+        :param page_size: items per page
+        :return: dict with items and totalCount, or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when listing photos.")
+            return None
+
+        url = f"{self.BASE_URL}/plugins/photos/private/list"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        payload = {
+            "pageNum": page_num,
+            "pageSize": page_size
+        }
+
+        if device_number:
+            payload["deviceNumber"] = device_number
+        if date_from:
+            payload["dateFrom"] = date_from
+        if date_to:
+            payload["dateTo"] = date_to
+
+        try:
+            resp = requests.post(url, headers=headers, json=payload)
+            resp.raise_for_status()
+            result = resp.json()
+            if result.get("status") == "OK":
+                data = result.get("data", {})
+                return self.convert_large_ints(data)
+            return None
+        except Exception as e:
+            logging.getLogger().error(f"Error listing photos: {e}")
+            return None
+
+    def deletePhoto(self, photo_id: int):
+        """
+        Delete a photo.
+
+        DELETE /rest/plugins/photos/private/photo/{id}
+
+        :param photo_id: photo ID
+        :return: dict with status or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when deleting photo.")
+            return None
+
+        url = f"{self.BASE_URL}/plugins/photos/private/photo/{photo_id}"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.delete(url, headers=headers)
+            resp.raise_for_status()
+            result = resp.json()
+            logging.getLogger().info(f"Photo {photo_id} deleted successfully")
+            return result
+        except Exception as e:
+            logging.getLogger().error(f"Error deleting photo {photo_id}: {e}")
+            return None
+
+    def getPhotoFile(self, photo_id: int, is_thumb: bool = False):
+        """
+        Get photo file content.
+
+        GET /rest/plugins/photos/private/photo/{id}/file
+
+        :param photo_id: photo ID
+        :param is_thumb: request thumbnail instead of full image
+        :return: dict with 'content' (base64), 'contentType', or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when getting photo file.")
+            return None
+
+        url = f"{self.BASE_URL}/plugins/photos/private/photo/{photo_id}/file"
+        if is_thumb:
+            url += "?thumb=true"
+
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            import base64
+            content_type = resp.headers.get('Content-Type', 'image/jpeg')
+            content_b64 = base64.b64encode(resp.content).decode('utf-8')
+            return {
+                'content': content_b64,
+                'contentType': content_type
+            }
+        except Exception as e:
+            logging.getLogger().error(f"Error getting photo file {photo_id}: {e}")
+            return None
+
+    def startRemoteControlSession(self, device_number):
+        """
+        Start a remote control session for the given device.
+
+        POST /rest/plugins/remotecontrol/private/sessions/{deviceNumber}/start
+
+        :param device_number: Device identifier
+        :return: dict with id, token, deviceNumber, status or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when starting remote control session.")
+            return None
+
+        url = f"{self.BASE_URL}/plugins/remotecontrol/private/sessions/{device_number}/start"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.post(url, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("status") == "OK":
+                return self.convert_large_ints(data.get("data", {}))
+            logging.getLogger().error(f"Remote control start failed: {data}")
+            return None
+        except Exception as e:
+            logging.getLogger().error(f"Error starting remote control session for {device_number}: {e}")
+            return None
+
+    def stopRemoteControlSession(self, session_id):
+        """
+        Stop a remote control session.
+
+        POST /rest/plugins/remotecontrol/private/sessions/{sessionId}/stop
+
+        :param session_id: Session ID returned by startRemoteControlSession
+        :return: True on success, False on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when stopping remote control session.")
+            return False
+
+        url = f"{self.BASE_URL}/plugins/remotecontrol/private/sessions/{session_id}/stop"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.post(url, headers=headers)
+            resp.raise_for_status()
+            return True
+        except Exception as e:
+            logging.getLogger().error(f"Error stopping remote control session {session_id}: {e}")
+            return False
+
+    def getNetfilterSettings(self):
+        """
+        Get network filtering settings for the customer.
+
+        GET /rest/plugins/netfilter/private/settings
+
+        :return: dict with enabled, filterMode, or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when getting netfilter settings.")
+            return None
+
+        url = f"{self.BASE_URL}/plugins/netfilter/private/settings"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("status") == "OK":
+                return self.convert_large_ints(data.get("data", {}))
+            return None
+        except Exception as e:
+            logging.getLogger().error(f"Error getting netfilter settings: {e}")
+            return None
+
+    def saveNetfilterSettings(self, enabled, filter_mode):
+        """
+        Save network filtering settings.
+
+        PUT /rest/plugins/netfilter/private/settings
+
+        :param enabled: bool
+        :param filter_mode: str 'BLOCKLIST' or 'ALLOWLIST'
+        :return: True on success, False on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when saving netfilter settings.")
+            return False
+
+        url = f"{self.BASE_URL}/plugins/netfilter/private/settings"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+        payload = {"enabled": bool(enabled), "filterMode": filter_mode}
+
+        try:
+            resp = requests.put(url, headers=headers, json=payload)
+            resp.raise_for_status()
+            return True
+        except Exception as e:
+            logging.getLogger().error(f"Error saving netfilter settings: {e}")
+            return False
+
+    def getNetfilterRules(self):
+        """
+        Get all domain filter rules.
+
+        GET /rest/plugins/netfilter/private/rules
+
+        :return: list of rule dicts, or empty list on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when getting netfilter rules.")
+            return []
+
+        url = f"{self.BASE_URL}/plugins/netfilter/private/rules"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("status") == "OK":
+                return self.convert_large_ints(data.get("data", []))
+            return []
+        except Exception as e:
+            logging.getLogger().error(f"Error getting netfilter rules: {e}")
+            return []
+
+    def addNetfilterRule(self, domain, rule_type):
+        """
+        Add a new domain filter rule.
+
+        POST /rest/plugins/netfilter/private/rules
+
+        :param domain: str, domain or wildcard pattern
+        :param rule_type: str 'BLOCK' or 'ALLOW'
+        :return: created rule dict or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when adding netfilter rule.")
+            return None
+
+        url = f"{self.BASE_URL}/plugins/netfilter/private/rules"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+        payload = {"domain": domain, "ruleType": rule_type}
+
+        try:
+            resp = requests.post(url, headers=headers, json=payload)
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("status") == "OK":
+                return self.convert_large_ints(data.get("data", {}))
+            logging.getLogger().error(f"Add netfilter rule failed: {data}")
+            return None
+        except Exception as e:
+            logging.getLogger().error(f"Error adding netfilter rule: {e}")
+            return None
+
+    def updateNetfilterRule(self, rule_id, domain, rule_type, enabled):
+        """
+        Update an existing domain filter rule.
+
+        PUT /rest/plugins/netfilter/private/rules/{id}
+
+        :param rule_id: int rule ID
+        :param domain: str
+        :param rule_type: str 'BLOCK' or 'ALLOW'
+        :param enabled: bool
+        :return: True on success, False on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when updating netfilter rule.")
+            return False
+
+        url = f"{self.BASE_URL}/plugins/netfilter/private/rules/{rule_id}"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+        payload = {"domain": domain, "ruleType": rule_type, "enabled": bool(enabled)}
+
+        try:
+            resp = requests.put(url, headers=headers, json=payload)
+            resp.raise_for_status()
+            return True
+        except Exception as e:
+            logging.getLogger().error(f"Error updating netfilter rule {rule_id}: {e}")
+            return False
+
+    def deleteNetfilterRule(self, rule_id):
+        """
+        Delete a domain filter rule permanently.
+
+        DELETE /rest/plugins/netfilter/private/rules/{id}
+
+        :param rule_id: int rule ID
+        :return: True on success, False on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when deleting netfilter rule.")
+            return False
+
+        url = f"{self.BASE_URL}/plugins/netfilter/private/rules/{rule_id}"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.delete(url, headers=headers)
+            resp.raise_for_status()
+            return True
+        except Exception as e:
+            logging.getLogger().error(f"Error deleting netfilter rule {rule_id}: {e}")
+            return False
+
+    # ------------------------------------------------------------------ #
+    # Netfilter profiles                                                   #
+    # ------------------------------------------------------------------ #
+
+    @staticmethod
+    def _sanitize_profile(p):
+        """Convert fields that exceed XML-RPC 32-bit int limits to strings."""
+        if isinstance(p, dict):
+            for key in ('createdAt',):
+                if key in p and isinstance(p[key], int):
+                    p[key] = str(p[key])
+        return p
+
+    def getNetfilterProfiles(self):
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when listing netfilter profiles.")
+            return None
+        url = f"{self.BASE_URL}/plugins/netfilter/private/profiles"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            profiles = resp.json().get("data", [])
+            return [self._sanitize_profile(p) for p in profiles]
+        except Exception as e:
+            logging.getLogger().error(f"Error listing netfilter profiles: {e}")
+            return None
+
+    def createNetfilterProfile(self, name, filter_mode):
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when creating netfilter profile.")
+            return None
+        url = f"{self.BASE_URL}/plugins/netfilter/private/profiles"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.post(url, headers=headers, json={"name": name, "filterMode": filter_mode})
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("status") != "OK":
+                logging.getLogger().error(f"Create netfilter profile failed: {data}")
+                return None
+            return self._sanitize_profile(data.get("data") or {})
+        except Exception as e:
+            logging.getLogger().error(f"Error creating netfilter profile: {e}")
+            return None
+
+    def updateNetfilterProfile(self, profile_id, name, filter_mode, enabled):
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when updating netfilter profile.")
+            return False
+        url = f"{self.BASE_URL}/plugins/netfilter/private/profiles/{profile_id}"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.put(url, headers=headers, json={
+                "name": name,
+                "filterMode": filter_mode,
+                "enabled": bool(enabled),
+            })
+            resp.raise_for_status()
+            return resp.json().get("status") == "OK"
+        except Exception as e:
+            logging.getLogger().error(f"Error updating netfilter profile {profile_id}: {e}")
+            return False
+
+    def deleteNetfilterProfile(self, profile_id):
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when deleting netfilter profile.")
+            return False
+        url = f"{self.BASE_URL}/plugins/netfilter/private/profiles/{profile_id}"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.delete(url, headers=headers)
+            resp.raise_for_status()
+            return True
+        except Exception as e:
+            logging.getLogger().error(f"Error deleting netfilter profile {profile_id}: {e}")
+            return False
+
+    def getNetfilterProfileRules(self, profile_id):
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when listing profile rules.")
+            return None
+        url = f"{self.BASE_URL}/plugins/netfilter/private/profiles/{profile_id}/rules"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            rules = resp.json().get("data", [])
+            return [self._sanitize_profile(r) for r in rules]
+        except Exception as e:
+            logging.getLogger().error(f"Error listing rules for profile {profile_id}: {e}")
+            return None
+
+    def addNetfilterProfileRule(self, profile_id, domain, rule_type):
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when adding profile rule.")
+            return None
+        url = f"{self.BASE_URL}/plugins/netfilter/private/profiles/{profile_id}/rules"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.post(url, headers=headers, json={"domain": domain, "ruleType": rule_type})
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("status") != "OK":
+                logging.getLogger().error(f"Add profile rule failed: {data}")
+                return None
+            return self._sanitize_profile(data.get("data") or {})
+        except Exception as e:
+            logging.getLogger().error(f"Error adding rule to profile {profile_id}: {e}")
+            return None
+
+    def deleteNetfilterProfileRule(self, profile_id, rule_id):
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when deleting profile rule.")
+            return False
+        url = f"{self.BASE_URL}/plugins/netfilter/private/profiles/{profile_id}/rules/{rule_id}"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.delete(url, headers=headers)
+            resp.raise_for_status()
+            return True
+        except Exception as e:
+            logging.getLogger().error(f"Error deleting rule {rule_id} from profile {profile_id}: {e}")
+            return False
+
+    def getNetfilterProfileConfigs(self, profile_id):
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when listing profile configs.")
+            return None
+        url = f"{self.BASE_URL}/plugins/netfilter/private/profiles/{profile_id}/configs"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            return resp.json().get("data", [])
+        except Exception as e:
+            logging.getLogger().error(f"Error listing configs for profile {profile_id}: {e}")
+            return None
+
+    def setNetfilterProfileConfigs(self, profile_id, config_ids):
+        """Replace config assignments: add new ones, remove removed ones."""
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when setting profile configs.")
+            return False
+
+        current = self.getNetfilterProfileConfigs(profile_id)
+        if current is None:
+            current = []
+
+        current_set = set(int(x) for x in current)
+        new_set = set(int(x) for x in config_ids)
+        to_add = new_set - current_set
+        to_remove = current_set - new_set
+
+        base = f"{self.BASE_URL}/plugins/netfilter/private/profiles/{profile_id}/configs"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+        try:
+            for cid in to_add:
+                resp = requests.post(f"{base}/{cid}", headers=headers)
+                resp.raise_for_status()
+            for cid in to_remove:
+                resp = requests.delete(f"{base}/{cid}", headers=headers)
+                resp.raise_for_status()
+            return True
+        except Exception as e:
+            logging.getLogger().error(f"Error setting configs for profile {profile_id}: {e}")
+            return False

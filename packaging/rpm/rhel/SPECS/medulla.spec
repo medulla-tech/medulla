@@ -485,6 +485,11 @@ This package contains the updates plugin for the MMC agent.
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/updates.ini
 %python3_sitelib/mmc/plugins/updates
 %python3_sitelib/pulse2/database/updates
+%{_sharedstatedir}/pulse2/packages/sharing/global/34181a66-updateslinuxkernel_i8ppnmrs
+%{_sharedstatedir}/pulse2/packages/sharing/global/aa365fe6-linuxupdateother_cew74x5bi0
+%{_sharedstatedir}/pulse2/packages/sharing/global/dfd3b8dc-linuxupdategenericcommand_p
+%{_sharedstatedir}/pulse2/packages/sharing/global/e05e689e-linuxupdatesecutity_ivvfn4b
+
 
 
 #--------------------------------------------------------------------
@@ -1027,7 +1032,6 @@ Requires(pre): python3-mmc-base
 Requires:   python3-mmc-base
 Requires:   ajax-php-file-manager
 Requires:   python3-memory-profiler
-Requires:   python3-posix-ipc
 Requires:   python3.11-pyyaml
 Requires:   python3.11-incremental
 Requires:   python3.11-typing-extensions

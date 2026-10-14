@@ -2730,3 +2730,7 @@ msgstr ""
 
 msgid "Print"
 msgstr ""
+
+#: graph/header.inc.php:71
+msgid "Search..."
+msgstr ""

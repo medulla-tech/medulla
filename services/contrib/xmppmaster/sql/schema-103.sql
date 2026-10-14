@@ -197,9 +197,9 @@ END$$
 
 DELIMITER ;
 
--- L'index unique rule_unique (msrcseverity, updateclassification), hérité de
--- schema-094, ignore entityid : il interdit la même règle sur deux entités et
--- fait planter up_genere_list_rule_entity pour toute entité autre que la racine.
+-- L'index unique rule_unique (msrcseverity, updateclassification), herite de
+-- schema-094, ignore entityid : il interdit la meme regle sur deux entites et
+-- fait planter up_genere_list_rule_entity pour toute entite autre que la racine.
 -- uniq_entity_rule (entityid, msrcseverity, updateclassification) le remplace.
 ALTER TABLE `xmppmaster`.`up_auto_approve_rules` DROP INDEX IF EXISTS `rule_unique`;
 

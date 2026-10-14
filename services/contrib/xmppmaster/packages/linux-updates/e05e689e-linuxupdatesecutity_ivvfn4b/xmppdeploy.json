@@ -1,0 +1,70 @@
+{
+    "info": {
+        "Dependency": [],
+        "editor": "root",
+        "edition_date": "2026-06-08 14:42:17",
+        "creator": "root",
+        "creation_date": "2026-06-08 09:14:33",
+        "previous_localisation_server": "global",
+        "localisation_server": "global",
+        "name": "linux_updates_secutity",
+        "version": "1.0.0",
+        "description": "update security package",
+        "metagenerator": "expert",
+        "transferfile": true,
+        "methodetransfert": "pushrsync",
+        "limit_rate_ko": "",
+        "spooling": "ordinary",
+        "launcher": "",
+        "licenses": "1.0",
+        "packageUuid": "e05e689e-linuxupdatesecutity_ivvfn4b",
+        "gotoreturncode": "!=0",
+        "gotolabel": "END_ERROR",
+        "typescript": "Batch",
+        "targetrestart": "MA",
+        "url": "",
+        "gotono": "",
+        "inventory": "False",
+        "auth_token": "549e1d0d254c95314235a6ffd6e94eb4",
+        "software": "linux_updates_secutity"
+    },
+    "linux": {
+        "sequence": [
+            {
+                "action": "actionprocessscript",
+                "step": 0,
+                "codereturn": "",
+                "actionlabel": "script_d5531e99",
+                "command": "QEBAVVBEQVRFX0xJTlVYQEBAIHsic2VjdGlvbiI6InVwZGF0ZSIsImxpbnV4X2FjdGlvbnMiOlsic2VjdXJpdHkiXX0=",
+                "timeout": "800",
+                "10@lastlines": "10@lastlines",
+                "gotoreturncode@!=0": "END_ERROR"
+            },
+            {
+                "step": 1,
+                "action": "actionsuccescompletedend",
+                "actionlabel": "END_SUCCESS",
+                "clear": "True",
+                "inventory": "False"
+            },
+            {
+                "action": "actionerrorcompletedend",
+                "step": 2,
+                "actionlabel": "END_ERROR"
+            }
+        ]
+    },
+    "metaparameter": {
+        "linux": {
+            "label": {
+                "script_d5531e99": 0,
+                "END_SUCCESS": 1,
+                "END_ERROR": 2
+            }
+        },
+        "os": [
+            "linux"
+        ],
+        "uuid": "e05e689e-linuxupdatesecutity_ivvfn4b"
+    }
+}

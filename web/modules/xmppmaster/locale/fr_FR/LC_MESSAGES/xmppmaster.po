@@ -1099,6 +1099,9 @@ msgstr "Nom du package"
 msgid "Start Date"
 msgstr "Date de début"
 
+msgid "Last renewal"
+msgstr "Dernière reconduction"
+
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:413
 msgid "Stop Date"
 msgstr "Date de fin"
@@ -2564,3 +2567,9 @@ msgstr "Partage de l'action rapide %s mis à jour avec succès"
 
 msgid "Error when updating sharing of Quick Action %s"
 msgstr "Erreur lors de la mise à jour du partage de l'action rapide %s"
+
+msgid "Number of machines attached to this relay."
+msgstr "Nombre de machines rattachées à ce relais."
+
+msgid "Machines attached to this relay that have not yet sent an inventory."
+msgstr "Machines rattachées à ce relais qui n'ont pas encore remonté d'inventaire."

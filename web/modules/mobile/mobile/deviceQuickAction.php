@@ -41,7 +41,7 @@ $deviceDescription = $device['description'] ?? '';
     }
 </style>
 
-    <div style="width : 600px;">
+    <div style="width: 100%;">
         <?
         echo "<h1>"._T("Quick Actions", "mobile")."</h1>";
         echo "<h2>"._T("Device", "mobile")." : ".$deviceNumber."</h2>";
@@ -49,17 +49,19 @@ $deviceDescription = $device['description'] ?? '';
             echo "<h2>"._T("Description", "mobile")." : ".$deviceDescription."</h2>";
         }
         ?>
-        <table style="width : 500px;">
+        <table style="width: 100%;">
             <tr>
             <?
                     echo sprintf("<td id='reboot0' align='center' title='%s'><img src='img/actions/restart.svg' height='70' width='70'></td>", _T("Click here to reboot this device", "mobile"));
                     echo sprintf("<td id='sync0' align='center' title='%s'><img src='modules/updates/graph/navbar/updates.svg' height='70' width='70'></td>", _T("Click here to update configuration", "mobile"));
+                    echo sprintf("<td id='reset-password0' align='center' title='%s'><img src='img/actions/key.svg' height='70' width='70'></td>", _T("Click here to reset password on this device", "mobile"));
                 ?>
             </tr>
                 <tr>
                 <?
                     echo '<td id="reboot" align="center">'._T("Reboot", "mobile")."</td>";
                     echo '<td id="sync" align="center">'._T("Update Config", "mobile")."</td>";
+                    echo '<td id="reset-password" align="center">'._T("Reset Password", "mobile")."</td>";
                 ?>
             </tr>
             </table>
@@ -83,6 +85,7 @@ $deviceDescription = $device['description'] ?? '';
                         echo '<option value="exitKiosk">'._T("Exit Kiosk", "mobile").'</option>';
                         echo '<option value="clearDownloadHistory">'._T("Clear Download History", "mobile").'</option>';
                         echo '<option value="grantPermissions">'._T("Grant Permissions", "mobile").'</option>';
+                        echo '<option value="passwordReset">'._T("Reset Password", "mobile").'</option>';
                         echo '<option value="custom">'._T("Custom", "mobile").'</option>';
                         echo'</select>
                     </td>
@@ -99,6 +102,7 @@ $deviceDescription = $device['description'] ?? '';
                 echo "</table>";
              ?>
     </div>
+
 <script type="text/javascript">
     
     // payload templates
@@ -113,9 +117,54 @@ $deviceDescription = $device['description'] ?? '';
         'purgeDir': '{\n  "path": "/path/to/dir",\n  "recursive": "1"\n}',
         'intent': '{\n  "action": "android.intent.action.VIEW",\n  "data": "https://medulla-tech.io"\n}',
         'runCommand': '{\n  "command": "shell command"\n}',
-        'grantPermissions': '{\n  "pkg": "app.package.id"\n}'
+        'grantPermissions': '{\n  "pkg": "app.package.id"\n}',
+        'passwordReset': '{\n  "password": ""\n}'
     };
-    
+
+    var _destructiveTypes = ['wipe', 'reboot', 'lockDevice', 'runCommand', 'purgeDir', 'deleteDir', 'passwordReset'];
+    var _destructiveLabels = {
+        'wipe':          '<?php echo addslashes(_T("Factory Reset", "mobile")); ?>',
+        'reboot':        '<?php echo addslashes(_T("Reboot", "mobile")); ?>',
+        'lockDevice':    '<?php echo addslashes(_T("Lock Screen", "mobile")); ?>',
+        'runCommand':    '<?php echo addslashes(_T("Run Command", "mobile")); ?>',
+        'purgeDir':      '<?php echo addslashes(_T("Purge Directory", "mobile")); ?>',
+        'deleteDir':     '<?php echo addslashes(_T("Delete Directory", "mobile")); ?>',
+        'passwordReset': '<?php echo addslashes(_T("Reset Password", "mobile")); ?>'
+    };
+    function requireConfirm(action, messageType, payload) {
+        if (_destructiveTypes.indexOf(messageType) === -1) { submitAction(action, messageType, payload); return; }
+        var label = _destructiveLabels[messageType] || messageType;
+        window._mobileDestructiveAction = function() { submitAction(action, messageType, payload); };
+        var savedContent = jQuery('#__popup_container').html();
+        var savedWidth = jQuery('#popup').css('width');
+        window._mobileRestorePopup = function() {
+            jQuery('#popup').css('width', savedWidth);
+            jQuery('#__popup_container').html(savedContent);
+            var $p = jQuery('#popup');
+            $p.css({'visibility':'hidden','display':'block'});
+            $p.css({'top':'50%','left':'50%',
+                    'margin-top': -($p.outerHeight()/2)+'px',
+                    'margin-left': -($p.outerWidth()/2)+'px',
+                    'visibility':'visible'});
+        };
+        var msg = '<?php echo addslashes(_T("You are about to send:", "mobile")); ?> <strong>' + label + '<\/strong> <?php echo addslashes(_T("to device", "mobile")); ?> <strong><?php echo addslashes(htmlspecialchars($deviceNumber, ENT_QUOTES)); ?><\/strong>. <?php echo addslashes(_T("This action may be irreversible.", "mobile")); ?>';
+        var html = '<div style="padding:10px">'
+                 + '<div class="alert alert-warning">' + msg + '<\/div>'
+                 + '<div style="text-align:center">'
+                 + '<button class="btn btn-danger" onclick="var f=window._mobileDestructiveAction;window._mobileDestructiveAction=null;window._mobileRestorePopup=null;closePopup();if(f)f();"><?php echo addslashes(_T("Confirm", "mobile")); ?><\/button>'
+                 + ' <button class="btn btnSecondary" onclick="var r=window._mobileRestorePopup;window._mobileDestructiveAction=null;window._mobileRestorePopup=null;if(r)r();return false;"><?php echo addslashes(_T("Cancel", "mobile")); ?><\/button>'
+                 + '<\/div><\/div>';
+        PopupWindow(null, null, 0, function() {
+            var $p = jQuery('#popup');
+            $p.css({'top':'50%','left':'50%',
+                    'margin-top': -($p.outerHeight()/2)+'px',
+                    'margin-left': -($p.outerWidth()/2)+'px'});
+            jQuery('#overlay').fadeIn().click(function() {
+                var r=window._mobileRestorePopup;window._mobileDestructiveAction=null;window._mobileRestorePopup=null;if(r)r();
+            });
+        }, html);
+    }
+
     var deviceId = <?php echo $deviceId; ?>;
     
     function submitAction(action, messageType, payload) {
@@ -127,7 +176,8 @@ $deviceDescription = $device['description'] ?? '';
             'id': deviceId,
             'action': action,
             'message_type': messageType,
-            'payload': payload
+            'payload': payload,
+            'auth_token': '<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>'
         };
         
         for (var key in fields) {
@@ -162,7 +212,11 @@ $deviceDescription = $device['description'] ?? '';
         jQuery('#select').trigger('change');
         
         jQuery('#reboot0, #reboot').on('click', function(){
-            submitAction('reboot', 'reboot', '');
+            requireConfirm('reboot', 'reboot', '');
+        });
+
+        jQuery('#reset-password0, #reset-password').on('click', function(){
+            requireConfirm('passwordReset', 'passwordReset', '{"password":""}');
         });
         
         jQuery('#sync0, #sync').on('click', function(){
@@ -183,7 +237,7 @@ $deviceDescription = $device['description'] ?? '';
                 messageType = customType;
             }
             
-            submitAction('custom', messageType, payload);
+            requireConfirm('custom', messageType, payload);
         });
     });
 

@@ -831,6 +831,11 @@ function xmlrpc_get_active_convergence_commands($package)
     return xmlCall("dyngroup.get_active_convergence_commands", array($package));
 }
 
+function xmlrpc_get_active_convergence_counts($gids)
+{
+    return xmlCall("dyngroup.get_active_convergence_counts", array($gids));
+}
+
 /*
  * When a package is edited, we have to stop current convergence command
  * then start a new command with new package params

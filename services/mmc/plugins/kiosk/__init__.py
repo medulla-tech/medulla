@@ -163,6 +163,15 @@ def _filter_authorized_entity_ous(login, ous):
     return ous
 
 
+def _owner_patterns(login):
+    if login == "root":
+        return None
+    patterns = XmppMasterDatabase().get_team_patterns_from_login(login)
+    if patterns == []:
+        patterns = [login]
+    return patterns
+
+
 class RpcProxy(RpcProxyI):
 
     @with_optional_xmpp_context
@@ -174,6 +183,8 @@ class RpcProxy(RpcProxyI):
                        packages,
                        source,
                        ctx=None):
+        if KioskDatabase().profile_name_exists(name, _owner_patterns(login)):
+            return False
         if source == "entity":
             ous = _filter_authorized_entity_ous(login, ous)
         result = KioskDatabase().create_profile(name, login, ous, active, packages, source)
@@ -185,31 +196,61 @@ class RpcProxy(RpcProxyI):
 
     @with_optional_xmpp_context
     def get_profiles_list(self, login, start=0, limit=-1, filter="", ctx=None):
-        if login == "root":
+        patterns = _owner_patterns(login)
+        if patterns is None:
             return KioskDatabase().get_profiles_list(start, limit, filter)
-        else:
-            patterns = XmppMasterDatabase().get_team_patterns_from_login(login)
-            if patterns == []:
-                patterns = [login]
-            result = KioskDatabase().get_profiles_list_team(patterns, start, limit, filter)
-            return result
+        return KioskDatabase().get_profiles_list_team(patterns, start, limit, filter)
 
     @with_optional_xmpp_context
     def get_profiles_name_list(self, ctx=None):
         return KioskDatabase().get_profiles_name_list()
 
     @with_optional_xmpp_context
-    def delete_profile(self, id, ctx=None):
-        result = KioskDatabase().delete_profile(id)
-        notify_kiosks()
-        return result
+    def delete_profiles(self, login, ids, ctx=None):
+        if not isinstance(ids, (list, tuple)):
+            ids = [ids]
+        wanted = []
+        for id in ids:
+            try:
+                wanted.append(int(id))
+            except (TypeError, ValueError):
+                continue
+        allowed = KioskDatabase().filter_profile_ids(wanted, _owner_patterns(login))
+        if not allowed:
+            return []
+        deleted = [int(id) for id in KioskDatabase().delete_profiles(allowed)]
+        if deleted:
+            notify_kiosks()
+        return deleted
 
     @with_optional_xmpp_context
-    def get_profile_by_id(self, id, ctx=None):
+    def delete_profile(self, login, id, ctx=None):
+        try:
+            id = int(id)
+        except (TypeError, ValueError):
+            return False
+        return id in self.delete_profiles(login, [id], ctx=ctx)
+
+    @with_optional_xmpp_context
+    def get_profile_by_id(self, login, id, ctx=None):
+        try:
+            id = int(id)
+        except (TypeError, ValueError):
+            return False
+        if not KioskDatabase().filter_profile_ids([id], _owner_patterns(login)):
+            return False
         return KioskDatabase().get_profile_by_id(id)
 
     @with_optional_xmpp_context
     def update_profile(self, login, id, name, ous, active, packages, source, ctx=None):
+        try:
+            id = int(id)
+        except (TypeError, ValueError):
+            return False
+        if not KioskDatabase().filter_profile_ids([id], _owner_patterns(login)):
+            return False
+        if KioskDatabase().profile_name_exists(name, _owner_patterns(login), exclude_id=id):
+            return False
         if source == "entity":
             ous = _filter_authorized_entity_ous(login, ous)
         result = KioskDatabase().update_profile(
@@ -562,7 +603,7 @@ def handlerkioskpresence(
     structuredatakiosk = get_packages_for_machine(machine)
     datas = {
         "subaction": "initialisation_kiosk",
-        "data": {"action": "packages", "packages_list": structuredatakiosk},
+        "data": structuredatakiosk,
     }
 
     if not fromplugin:
@@ -672,10 +713,16 @@ def notify_kiosks():
     for machine in machines_list:
         if machine["uuid_inventorymachine"] == "":
             continue
-        structuredatakiosk = get_packages_for_machine(machine)
+        try:
+            structuredatakiosk = get_packages_for_machine(machine)
+        except Exception as e:
+            logger.error(
+                "kiosk: unable to compute packages for %s: %s" % (machine["jid"], e)
+            )
+            continue
         datas = {
             "subaction": "profiles_updated",
-            "data": {"action": "packages", "packages_list": structuredatakiosk},
+            "data": structuredatakiosk,
         }
         send_message_to_machine(
             datas, machine["jid"], name_random(6, "profiles_updated")
@@ -691,7 +738,7 @@ def notify_kiosk(machine):
     structuredatakiosk = get_packages_for_machine(machine)
     datas = {
         "subaction": "profiles_updated",
-        "data": {"action": "packages", "packages_list": structuredatakiosk},
+        "data": structuredatakiosk,
     }
     send_message_to_machine(datas, machine["jid"], name_random(6, "profiles_updated"))
 
@@ -714,9 +761,14 @@ def get_packages_for_machine(machine):
     if "platform" in machine:
         # Because re is picky, we have to use an independant str
         mach_platform = machine["platform"]
-        if re.match("Microsoft", mach_platform) is not None:
+        if re.match("Microsoft", mach_platform, re.I) is not None:
             platform = "win"
-        elif re.match("Darwin", mach_platform) is not None or re.match("MacOS", mach_platform) is not None:
+        elif (
+            re.match("Darwin", mach_platform, re.I) is not None
+            or re.match("mac", mach_platform, re.I) is not None
+        ):
+            # GLPI reports macOS as "macOS 26.2" (lowercase) -> case-insensitive
+            # match, and accept the "mac"/"Mac OS X"/"Darwin" forms.
             platform = "mac"
         else:
             platform = "linux"
@@ -797,10 +849,13 @@ def get_packages_for_machine(machine):
         if platform not in pkg["os"]:
             continue
 
-        # Check if the uninstall section is present
+        # Check if the uninstall section is present.
+        # Use .get() chains: a package may lack a section for this platform
+        # (e.g. a "mac" package whose xmppdeploy.json has no "mac" metaparameter);
+        # a direct [platform] lookup would raise KeyError and wipe the whole list.
         uninstall_section_present = False
         update_section_present = False
-        for action_name in depl["metaparameter"][platform]["label"]:
+        for action_name in depl.get("metaparameter", {}).get(platform, {}).get("label", []):
             if action_name == action_name.startswith("upd_"):
                 uninstall_section_present = True
             if action_name == "label_section_uninstall" or action_name.startswith("Uninst_"):
@@ -829,9 +884,7 @@ def get_packages_for_machine(machine):
             uninstall_section_present = uninstall_has_content
 
         # Check if the launcher is specified
-        launcher = ""
-        if depl["info"]["launcher"] != "":
-            launcher = depl["info"]["launcher"]
+        launcher = depl.get("info", {}).get("launcher", "")
 
         # Check if the package is installed on the machine
         found = Glpi().find_software_info_for_machine(machine["uuid_inventorymachine"],  pkg)

@@ -163,7 +163,7 @@ check_medulla_version() {
         echo "${CURRENT_VERSION}" > /var/lib/mmc/version
     fi
     # Get available version from the repository
-    AVAILABLE_VERSION=$(apt-cache policy pulse2-common | grep Candidat | awk '{print $2}' | cut -d'g' -f1)
+    AVAILABLE_VERSION=$(LC_ALL=C apt-cache policy pulse2-common | grep Candidate | awk '{print $2}' | cut -d'g' -f1)
 }
 
 update_repo_defs() {
@@ -990,7 +990,7 @@ update_561_to_562() {
         echo "fs.inotify.max_queued_events=32768" >> /etc/sysctl.d/99-pulse.conf
     fi
     # Apply the new sysctl settings
-    sysctl -p /etc/sysctl.d/99-pulse.conf
+    sysctl -p /etc/sysctl.d/99-pulse.conf > /dev/null 2>&1
     if [[ $? -ne 0 ]]; then
         str="[x] Error applying inotify limits sysctl settings. Aborting."
         echo "$str"
@@ -1069,25 +1069,25 @@ update_564_to_565() {
     str="[=] Installing Mac agent generation prerequisites..."
     echo "$str"
     write_to_log "$str"
-    apt install -y build-essential autoconf libtool libxml2-dev libssl-dev libbz2-dev zlib1g-dev pkg-config git
+    apt install -y build-essential autoconf libtool libxml2-dev libssl-dev libbz2-dev zlib1g-dev pkg-config git &>/dev/null
     if ! command -v xar >/dev/null 2>&1; then
         rm -rf /tmp/xar
-        git clone https://github.com/tpoechtrager/xar.git /tmp/xar
+        git clone https://github.com/tpoechtrager/xar.git /tmp/xar &>/dev/null
         (
             cd /tmp/xar/xar || exit 1
-            ./autogen.sh
-            ./configure
-            make
-            make install
+            ./autogen.sh &>/dev/null
+            ./configure &>/dev/null
+            make &>/dev/null
+            make install &>/dev/null
         )
     fi
     if ! command -v mkbom >/dev/null 2>&1; then
         rm -rf /tmp/bomutils
-        git clone https://github.com/hogliux/bomutils.git /tmp/bomutils
+        git clone https://github.com/hogliux/bomutils.git /tmp/bomutils &>/dev/null
         (
             cd /tmp/bomutils || exit 1
-            make
-            make install
+            make &>/dev/null
+            make install &>/dev/null
         )
     fi
     str="[v] Mac agent generation prerequisites installed successfully."

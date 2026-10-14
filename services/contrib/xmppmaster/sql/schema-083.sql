@@ -22,20 +22,20 @@
 START TRANSACTION;
 USE `xmppmaster`;
 -- ----------------------------------------------------------------------
--- Crée la table `mmc_module_actif` s'il n'existe pas déjà.
--- Cette table permet de mettre à disposition des informations au substitut via la base de données.
+-- Cree la table `mmc_module_actif` s'il n'existe pas deja.
+-- Cette table permet de mettre a disposition des informations au substitut via la base de donnees.
 -- ----------------------------------------------------------------------
 
--- Cette table est mise à jour à chaque démarrage de l'agent mmc.
--- Lors du démarrage, l'agent mmc met à jour cette table à l'initialisation de xmpp.
+-- Cette table est mise a jour a chaque demarrage de l'agent mmc.
+-- Lors du demarrage, l'agent mmc met a jour cette table a l'initialisation de xmpp.
 
--- Les modules activés par la configuration sont des informations directement accessibles au substitus
--- qui ont accès à xmppmaster.
+-- Les modules actives par la configuration sont des informations directement accessibles au substitus
+-- qui ont acces a xmppmaster.
 CREATE TABLE IF NOT EXISTS `xmppmaster`.`mmc_module_actif` (
-  `name_module` VARCHAR(40) NOT NULL,  -- Nom du module (chaîne de caractères jusqu'à 40 caractères)
-  `enable` INT NOT NULL DEFAULT 0,    -- Activation du module (entier non nul, par défaut à 0)
-  `informations` VARCHAR(1024) NULL,  -- Informations supplémentaires (chaîne de caractères jusqu'à 1024 caractères, peut être nul)
-  PRIMARY KEY (`name_module`)         -- Clé primaire sur le nom du module
+  `name_module` VARCHAR(40) NOT NULL,  -- Nom du module (chaîne de caracteres jusqu'a 40 caracteres)
+  `enable` INT NOT NULL DEFAULT 0,    -- Activation du module (entier non nul, par defaut a 0)
+  `informations` VARCHAR(1024) NULL,  -- Informations supplementaires (chaîne de caracteres jusqu'a 1024 caracteres, peut être nul)
+  PRIMARY KEY (`name_module`)         -- Cle primaire sur le nom du module
 );
 
 -- ----------------------------------------------------------------------

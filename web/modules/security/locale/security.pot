@@ -1172,3 +1172,346 @@ msgstr ""
 #: modules/security/security/ajaxResetDisplayFilters.php
 msgid "Reset"
 msgstr ""
+
+msgid "'%s' added to exclusions"
+msgstr ""
+
+msgid "Actively exploited since %s"
+msgstr ""
+
+msgid "Add '%s' to excluded CVEs?"
+msgstr ""
+
+msgid "Add '%s' to excluded software?"
+msgstr ""
+
+msgid "Add Exclusion"
+msgstr ""
+
+msgid "All versions of this software will no longer appear in CVE reports."
+msgstr ""
+
+msgid "Back to CVE Summary"
+msgstr ""
+
+msgid "Browser extension"
+msgstr ""
+
+msgid "CVE scan started for '%s' (ID: %s). The scan runs in background."
+msgstr ""
+
+msgid "CVEs known to be actively exploited"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Click to view exploited CVEs"
+msgstr ""
+
+msgid "Columns"
+msgstr ""
+
+msgid "Completed"
+msgstr ""
+
+msgid "Deploy Store Update"
+msgstr ""
+
+msgid "Deploy Update: %s"
+msgstr ""
+
+msgid "Deploy to selected machines"
+msgstr ""
+
+msgid "Deploy update"
+msgstr ""
+
+msgid "Deployment failed"
+msgstr ""
+
+msgid "Deployment started on %d machine(s)"
+msgstr ""
+
+msgid "Download"
+msgstr ""
+
+msgid "EUVD ID"
+msgstr ""
+
+msgid "Exclude CVE"
+msgstr ""
+
+msgid "Exclude Software"
+msgstr ""
+
+msgid "Exclude this CVE"
+msgstr ""
+
+msgid "Exclude this software"
+msgstr ""
+
+msgid "Exploited"
+msgstr ""
+
+msgid "Exploited only"
+msgstr ""
+
+msgid "Exploited since"
+msgstr ""
+
+msgid "Export CSV"
+msgstr ""
+
+msgid "Export CVE IDs"
+msgstr ""
+
+msgid "Export CVE IDs as CSV"
+msgstr ""
+
+msgid "Export CVEs"
+msgstr ""
+
+msgid "Extension"
+msgstr ""
+
+msgid "Failed"
+msgstr ""
+
+msgid "Failed to add exclusion"
+msgstr ""
+
+msgid "Failed to start scan for %s."
+msgstr ""
+
+msgid "Fix"
+msgstr ""
+
+msgid "Fix available"
+msgstr ""
+
+msgid "Installed Version"
+msgstr ""
+
+msgid "Invalid machine data"
+msgstr ""
+
+msgid "No deployment package is available yet for this software. The package may still be building or not yet downloaded."
+msgstr ""
+
+msgid "No fix published"
+msgstr ""
+
+msgid "No machines found with this software"
+msgstr ""
+
+msgid "No package UUID available for deployment"
+msgstr ""
+
+msgid "No software with CVE data match your current filters."
+msgstr ""
+
+msgid "None"
+msgstr ""
+
+msgid "Not available in Store"
+msgstr ""
+
+msgid "Number of CVEs"
+msgstr ""
+
+msgid "Please select at least one machine"
+msgstr ""
+
+msgid "Remove '%s' from exclusions?"
+msgstr ""
+
+msgid "Remove Exclusion"
+msgstr ""
+
+msgid "Running"
+msgstr ""
+
+msgid "Same version in Store"
+msgstr ""
+
+msgid "Select all"
+msgstr ""
+
+msgid "Select machines to update (%d affected)"
+msgstr ""
+
+msgid "Select none"
+msgstr ""
+
+msgid "Show the CVEs for which the Linux distribution has not published a fix"
+msgstr ""
+
+msgid "Software:"
+msgstr ""
+
+msgid "Store"
+msgstr ""
+
+msgid "Store:"
+msgstr ""
+
+msgid "System"
+msgstr ""
+
+msgid "This CVE will no longer appear in reports."
+msgstr ""
+
+msgid "This group will no longer appear in CVE reports."
+msgstr ""
+
+msgid "Update Information"
+msgstr ""
+
+msgid "Update available in Store"
+msgstr ""
+
+msgid "Vulnerable:"
+msgstr ""
+
+msgid "Warning:"
+msgstr ""
+
+msgid "selected"
+msgstr ""
+
+msgid "Exploited CVEs"
+msgstr ""
+
+msgid "Platform"
+msgstr ""
+
+msgid "Available in Store, subscription required"
+msgstr ""
+
+msgid "%d CVE(s) known to be actively exploited"
+msgstr ""
+
+msgid "Add group to exclusions:"
+msgstr ""
+
+msgid "CVEs listed here will not appear in reports. You can also exclude CVEs directly from the CVEs page."
+msgstr ""
+
+msgid "Click to view critical CVEs"
+msgstr ""
+
+msgid "Create a group with the affected machines"
+msgstr ""
+
+msgid "Dashboard"
+msgstr ""
+
+msgid "Group added to exclusions"
+msgstr ""
+
+msgid "Highest CVSS score and its severity"
+msgstr ""
+
+msgid "Hover a number for the breakdown by severity"
+msgstr ""
+
+msgid "Machines can be excluded from the Machines page using the exclude action."
+msgstr ""
+
+msgid "Risk"
+msgstr ""
+
+msgid "Software listed here will not appear in CVE reports. You can also exclude software directly from the Software page."
+msgstr ""
+
+msgid "To exclude a machine, use the 'Exclude from reports' action on the Machines page."
+msgstr ""
+
+msgid "To fix first"
+msgstr ""
+
+msgid "View all software"
+msgstr ""
+
+msgid "Entities"
+msgstr ""
+
+msgid "You can also exclude a group from the Groups page."
+msgstr ""
+
+msgid "%d of %d machines shown"
+msgstr ""
+
+msgid "1999 - 2099, 0 = no limit"
+msgstr ""
+
+msgid "Active filters:"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
+msgid "CVSS at least %s"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Search..."
+msgstr ""
+
+msgid "Software list"
+msgstr ""
+
+msgid "published in the last %d days"
+msgstr ""
+
+msgid "published since %d"
+msgstr ""
+
+msgid "severity at least %s"
+msgstr ""
+
+msgid "vulnerabilities without a published fix hidden"
+msgstr ""
+
+msgid "Display:"
+msgstr ""
+
+msgid "The Store installs the latest version."
+msgstr ""
+
+msgid "Version %s in the Store"
+msgstr ""
+
+msgid "Update available in the Store"
+msgstr ""
+
+msgid "subscription required"
+msgstr ""
+
+msgid "Update available"
+msgstr ""
+
+msgid "Subscription required"
+msgstr ""
+
+msgid "Newer version in the Medulla Store: deployable when subscribed"
+msgstr ""
+
+msgid "Deploy the update from the Store"
+msgstr ""
+
+msgid "Newer version in the Store, subscription required"
+msgstr ""
+
+msgid "Green: deploy the update from the Store. Grey: newer version, subscription required"
+msgstr ""
+
+#, c-format
+msgid "%s (CVSS %s and above)"
+msgstr ""
+
+msgid "All severities"
+msgstr ""

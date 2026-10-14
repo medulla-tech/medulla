@@ -44,9 +44,9 @@ if ($is_gp && $is_gp == 1) { # Profile
 }
 
 if ($is_gp != 1) {
-    $delete = new ActionPopupItem(_T("Delete this group", 'dyngroup'), "delete_group", "delete", "id", "base", "computers");
+    $delete = new ActionPopupItem(_T("Delete this group", 'dyngroup'), "delete_group", "delete", "id", "base", "computers", null, 400);
 } else {
-    $delete = new ActionPopupItem(_T("Delete this profile", 'dyngroup'), "delete_group", "delete", "id", "base", "computers");
+    $delete = new ActionPopupItem(_T("Delete this profile", 'dyngroup'), "delete_group", "delete", "id", "base", "computers", null, 400);
 }
 if ($is_gp != 1) { // Simple group
     $actions['displayGroup'] = new ActionItem(_T("Display this group's content", 'dyngroup'), "display", "displaygroup", "id", "base", "computers");

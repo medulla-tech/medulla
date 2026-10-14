@@ -1,3 +1,7 @@
 etc/mmc/plugins/updates.ini
 usr/lib/python3/*-packages/mmc/plugins/updates
 usr/lib/python3/*-packages/pulse2/database/updates
+var/lib/pulse2/packages/sharing/global/34181a66-updateslinuxkernel_i8ppnmrs
+var/lib/pulse2/packages/sharing/global/aa365fe6-linuxupdateother_cew74x5bi0
+var/lib/pulse2/packages/sharing/global/dfd3b8dc-linuxupdategenericcommand_p
+var/lib/pulse2/packages/sharing/global/e05e689e-linuxupdatesecutity_ivvfn4b
