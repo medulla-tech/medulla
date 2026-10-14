@@ -128,14 +128,19 @@ class DBScriptLaunchInterface:
         @type filename: str
         """
         process = Popen(
-            self.cmd, text=True, stdout=PIPE, stdin=PIPE, stderr=PIPE, shell=True
+            self.cmd, text=False, stdout=PIPE, stdin=PIPE, stderr=PIPE, shell=True
         )
         try:
-            ret, err = process.communicate(f"source {filename}")
-            if err:
-                self.log.error(f"Error while execute script '{filename}': {err}")
+            ret, err = process.communicate(f"source {filename}\n".encode("utf-8"))
+            decoded_ret = ret.decode("utf-8", errors="replace") if ret else ""
+            decoded_err = err.decode("utf-8", errors="replace") if err else ""
+
+            if decoded_err:
+                self.log.error(
+                    f"Error while execute script '{filename}': {decoded_err}"
+                )
                 return None
-            return ret
+            return decoded_ret
         except Exception as exc:
             self.log.error(f"Error while execute script '{filename}': {str(exc)}")
             return None

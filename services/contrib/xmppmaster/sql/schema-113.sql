@@ -29,8 +29,9 @@
 --      ne liste plus une machine une fois la mise a jour appliquee).
 --   2. La fraicheur de l'inventaire est verifiee via
 --      COALESCE(local_glpi_machines.last_inventory_update, local_glpi_machines.date_mod)
---      (colonnes ajoutees ici sur cette table FEDERATED, deja connectee a
---      glpi.glpi_computers). Ce COALESCE reprend la meme convention que
+--      (colonnes devant deja exister sur cette table FEDERATED, recreee en
+--      amont et connectee a glpi.glpi_computers). Ce COALESCE reprend la
+--      meme convention que
 --      celle deja utilisee cote GLPI natif dans
 --      services/mmc/plugins/glpi/database_110.py.
 --      Limite connue: `last_inventory_update` est une colonne GLPI native
@@ -53,20 +54,7 @@ START TRANSACTION;
 USE `xmppmaster`;
 
 -- ----------------------------------------------------------------------
--- 1. Exposer last_inventory_update / last_boot / date_mod sur le miroir
---    FEDERATED de glpi_computers (colonnes ignorees jusqu'ici, deja
---    disponibles cote glpi.glpi_computers). date_mod sert de repli pour
---    les installations ou last_inventory_update n'existe pas (cf. limite
---    documentee plus haut).
--- ----------------------------------------------------------------------
-
-ALTER TABLE `xmppmaster`.`local_glpi_machines`
-    ADD COLUMN IF NOT EXISTS `last_inventory_update` timestamp NULL DEFAULT NULL,
-    ADD COLUMN IF NOT EXISTS `last_boot` timestamp NULL DEFAULT NULL,
-    ADD COLUMN IF NOT EXISTS `date_mod` timestamp NULL DEFAULT NULL;
-
--- ----------------------------------------------------------------------
--- 2. Table de suivi: version cible figee au moment du passage en
+-- 1. Table de suivi: version cible figee au moment du passage en
 --    RELEASE_UPDATE_PENDING_REBOOT, par sessionid de deploiement.
 -- ----------------------------------------------------------------------
 
@@ -83,11 +71,11 @@ CREATE TABLE `xmppmaster`.`up_release_update_watch` (
     CONSTRAINT `fk_up_release_update_watch_deploy`
         FOREIGN KEY (`sessionid`) REFERENCES `xmppmaster`.`deploy` (`sessionid`)
         ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci
 COMMENT = 'target release captured when a deploy enters RELEASE_UPDATE_PENDING_REBOOT, used to close it after a later inventory';
 
 -- ----------------------------------------------------------------------
--- 3. Trigger: a chaque passage de deploy.state a
+-- 2. Trigger: a chaque passage de deploy.state a
 --    RELEASE_UPDATE_PENDING_REBOOT, figer la version cible connue via
 --    up_machine_major_windows pour la machine concernee.
 --
@@ -123,7 +111,7 @@ END$$
 DELIMITER ;
 
 -- ----------------------------------------------------------------------
--- 4. Procedure de cloture: pour chaque deploiement encore
+-- 3. Procedure de cloture: pour chaque deploiement encore
 --    RELEASE_UPDATE_PENDING_REBOOT avec une ligne de suivi, verifier si un
 --    inventaire posterieur au lancement confirme ou infirme la version
 --    cible, et cloturer en RELEASE_UPDATE_SUCCESS / RELEASE_UPDATE_ERROR.
@@ -206,7 +194,7 @@ END$$
 DELIMITER ;
 
 -- ----------------------------------------------------------------------
--- 5. Event: appelle la procedure de cloture toutes les 15 minutes.
+-- 4. Event: appelle la procedure de cloture toutes les 15 minutes.
 --    event_scheduler doit etre a ON (SHOW VARIABLES LIKE 'event_scheduler';).
 -- ----------------------------------------------------------------------
 
