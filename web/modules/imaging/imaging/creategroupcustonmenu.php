@@ -22,6 +22,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
 require_once("modules/dyngroup/includes/dyngroup.php"); # for Group Class
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
@@ -30,7 +34,9 @@ require_once("modules/medulla_server/includes/locations_xmlrpc.inc.php");
 require_once("modules/base/includes/computers.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-$requestedlocation = $_GET['location'];
+verifyCSRFToken($_POST);
+
+$requestedlocation = $_POST['location'];
 
 $gg = xmlrpc_getCustomMenubylocation($requestedlocation);
 

@@ -21,6 +21,15 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+if (isset($_GET['deleteFile']) && (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST')) {
+	http_response_code(405);
+	exit;
+}
+
+if (isset($_POST['deleteFile'])) {
+	verifyCSRFToken($_POST);
+}
+
 if(!isset($_GET['tab']) && $_GET['action'] == 'sysprepList')
 {
 	require("modules/imaging/manage/localSidebar.php");
@@ -31,16 +40,16 @@ if(!isset($_GET['tab']) && $_GET['action'] == 'sysprepList')
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 //Verify if any file must be deleted
-if (isset($_GET['deleteFile'])){
-    echo xmlrpc_deleteWindowsAnswerFile($_GET['deleteFile']);
+if (isset($_POST['deleteFile'])){
+	echo xmlrpc_deleteWindowsAnswerFile($_POST['deleteFile']);
     if (!isXMLRPCError())
     {
-        $str = sprintf(_T("The sysprep answer file %s has been removed from the imaging system.", "imaging"),$_GET['deleteFile']);
+		$str = sprintf(_T("The sysprep answer file %s has been removed from the imaging system.", "imaging"),$_POST['deleteFile']);
         xmlrpc_setfromxmppmasterlogxmpp($str,
                                         "IMG",
                                         '',
                                         0,
-                                        $_GET['deleteFile'] ,
+										$_POST['deleteFile'] ,
                                         'Manuel',
                                         '',
                                         '',
