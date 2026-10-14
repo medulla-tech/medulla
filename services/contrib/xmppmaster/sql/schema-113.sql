@@ -71,7 +71,7 @@ CREATE TABLE `xmppmaster`.`up_release_update_watch` (
     CONSTRAINT `fk_up_release_update_watch_deploy`
         FOREIGN KEY (`sessionid`) REFERENCES `xmppmaster`.`deploy` (`sessionid`)
         ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci
 COMMENT = 'target release captured when a deploy enters RELEASE_UPDATE_PENDING_REBOOT, used to close it after a later inventory';
 
 -- ----------------------------------------------------------------------
