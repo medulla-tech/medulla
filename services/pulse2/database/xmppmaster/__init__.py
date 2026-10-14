@@ -19843,8 +19843,10 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                 up_mach.platform AS platform,
                 up_mach.entity AS entity,
                 up_mach.ent_id AS entity_id,
+                up_mach.lang_code AS lang_code,
                 up_mach.kb AS installeur,
                 up_mach.oldcode AS version,
+                up_mach.newcode AS newcode,
                 CASE
                     WHEN old_version = 10 AND new_version = 11 THEN 'W10to11'
                     WHEN old_version = 11
@@ -19929,9 +19931,11 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                 'entity_id': [row.entity_id if row.entity_id is not None else "" for row in entity_result],
                 'machine': [row.machine if row.machine is not None else "" for row in entity_result],
                 'platform': [row.platform if row.platform is not None else "" for row in entity_result],
+                'lang_code': [row.lang_code if row.lang_code is not None else "" for row in entity_result],
                 'package_id': [row.package_id if row.package_id is not None else "" for row in entity_result],
                 'installeur': [row.installeur if row.installeur is not None else "" for row in entity_result],
                 'version': [row.version if row.version is not None else "" for row in entity_result],
+                'newcode': [row.newcode if row.newcode is not None else "" for row in entity_result],
                 'update': [row.update if row.update is not None else "" for row in entity_result]
             })
         else:
@@ -19944,9 +19948,11 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                     'uuid_inventorymachine': row.uuid_inventorymachine if row.uuid_inventorymachine is not None else "",
                     'machine': row.machine if row.machine is not None else "",
                     'platform': row.platform if row.platform is not None else "",
+                    'lang_code': row.lang_code if row.lang_code is not None else "",
                     'package_id': row.package_id if row.package_id is not None else "",
                     'installeur': row.installeur if row.installeur is not None else "",
                     'version': row.version if row.version is not None else "",
+                    'newcode': row.newcode if row.newcode is not None else "",
                     'update': row.update if row.update is not None else ""
                 }
                 for row in entity_result
