@@ -22,7 +22,12 @@
 
 require_once("modules/support/includes/xmlrpc.php");
 
-verifyCSRFToken($_GET);
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+	http_response_code(405);
+	exit;
+}
+
+verifyCSRFToken($_POST);
 
 open();
 header("Location: " . urlStrRedirect("base/main/"));
