@@ -38,7 +38,7 @@ DECLARE tmp_kb_updateid varchar(90) DEFAULT "tmp_kb_updateid";
 DECLARE tmp_t1 varchar(90) DEFAULT "tmp_t1";
 DECLARE tmp_my_mise_a_jour varchar(90) DEFAULT "tmp_my_mise_a_jour";
 DECLARE tmp_result_procedure varchar(90) DEFAULT "tmp_result_procedure";
--- Génération de noms uniques pour les tables temporaires dans la procedure. si concurence.
+-- Generation de noms uniques pour les tables temporaires dans la procedure. si concurence.
 SELECT
     CONCAT('tmp_kb_updateid_',
             REPLACE(UUID(), '-', ''))
@@ -54,7 +54,7 @@ SELECT
 INTO tmp_result_procedure;
 
 -- -----------------------------------------------------------------------
--- Création de la table temporaire tmp_kb_updateid pour stocker les KB
+-- Creation de la table temporaire tmp_kb_updateid pour stocker les KB
 CREATE temporary TABLE IF NOT EXISTS tmp_kb_updateid (
   `c1` varchar(64) NOT NULL,
   PRIMARY KEY (`c1`),
@@ -98,7 +98,7 @@ END LOOP;
 -- tmp_kb_updateid a les kb installer sur la machine 1 par ligne
 -- -----------------------------------------------------------------------
 -- ------ generation table kb tmp_kb_updateid -----------
--- Création de la table temporaire tmp_my_mise_a_jour pour stocker les mises à jour filtrées
+-- Creation de la table temporaire tmp_my_mise_a_jour pour stocker les mises a jour filtrees
 -- on extrait de la table update_data tout les enregistrement consernant le titre produit (exemple "up_packages_Win_Malicious_X64")
 -- seulement ceux qui sont a mettre a jour c'est a dire qui ne sont pas Dynamic Cumulative Update
 -- and que supersededby soit null ou vide se qui indique que le kb a 1 mise a jour.
@@ -250,11 +250,11 @@ USE `xmppmaster`$$
 CREATE PROCEDURE `up_search_kb_update`(in tablesearch varchar(1024), in KB_LIST varchar(2048) )
 BEGIN
     DECLARE result VARCHAR(50);
-    -- Vérifier si KB_LIST est vide
+    -- Verifier si KB_LIST est vide
     end_procedure:
     BEGIN
         IF KB_LIST IS NULL OR KB_LIST = '' THEN
-             -- Sortir de la procédure
+             -- Sortir de la procedure
              LEAVE end_procedure;
         END IF;
           CASE

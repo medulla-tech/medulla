@@ -174,14 +174,14 @@ INSERT INTO up_packages_major_Lang_code (major, lang_code, num_code, country, en
 
 -- -----------------------------------------------------
 --
--- Procédure stockée pour initialiser et synchroniser la table `up_machine_major_windows`
--- à partir des données de la table `up_major_win`.
+-- Procedure stockee pour initialiser et synchroniser la table `up_machine_major_windows`
+-- a partir des donnees de la table `up_major_win`.
 --
--- Cette procédure effectue les opérations suivantes :
--- 1. Supprime et recrée la table `up_major_win`.
--- 2. Insère des données dans `up_major_win` à partir de plusieurs jointures.
--- 3. Lit les données de `up_major_win` et insère les enregistrements dans `up_machine_major_windows`
---    uniquement si les enregistrements n'existent pas déjà.
+-- Cette procedure effectue les operations suivantes :
+-- 1. Supprime et recree la table `up_major_win`.
+-- 2. Insere des donnees dans `up_major_win` a partir de plusieurs jointures.
+-- 3. Lit les donnees de `up_major_win` et insere les enregistrements dans `up_machine_major_windows`
+--    uniquement si les enregistrements n'existent pas deja.
 --
 -- -----------------------------------------------------
 USE `xmppmaster`;
@@ -195,18 +195,18 @@ BEGIN
     DECLARE done INT DEFAULT FALSE;
     -- Variables pour stocker les valeurs lues depuis le curseur
     DECLARE id_machine INT; -- Identifiant de la machine
-    DECLARE update_id VARCHAR(38); -- Identifiant de la mise à jour
-    DECLARE kb VARCHAR(45); -- Identifiant du bulletin de sécurité
-    DECLARE msrcseverity VARCHAR(16); -- Niveau de sévérité de la mise à jour
+    DECLARE update_id VARCHAR(38); -- Identifiant de la mise a jour
+    DECLARE kb VARCHAR(45); -- Identifiant du bulletin de securite
+    DECLARE msrcseverity VARCHAR(16); -- Niveau de severite de la mise a jour
     DECLARE vglpi_id INT UNSIGNED; -- Identifiant GLPI
-    DECLARE vent_id INT UNSIGNED; -- Identifiant de l'entité
+    DECLARE vent_id INT UNSIGNED; -- Identifiant de l'entite
     DECLARE vhostname VARCHAR(255); -- Nom d'hôte
     DECLARE vjid VARCHAR(255); -- Identifiant JID
-    DECLARE vserial VARCHAR(255); -- Numéro de série
+    DECLARE vserial VARCHAR(255); -- Numero de serie
     DECLARE vplatform VARCHAR(100); -- os machine
     DECLARE vname VARCHAR(255); -- Nom
     DECLARE vcomment TEXT; -- Commentaire
-    DECLARE ventity VARCHAR(255); -- Entité
+    DECLARE ventity VARCHAR(255); -- Entite
     DECLARE vlang_code VARCHAR(10); -- Code de langue
     DECLARE vold_version VARCHAR(50); -- Ancienne version
     DECLARE vnew_version VARCHAR(50); -- Nouvelle version
@@ -220,29 +220,29 @@ BEGIN
         SELECT xmpp_id, package_uuid, iso_filename, 'major', glpi_id, ent_id, hostname,enabled, jid, serial, platform, name, comment, entity, lang_code, old_version, new_version, oldcode, newcode, isolang
         FROM up_major_win;
 
-    -- Gestionnaire pour détecter la fin des enregistrements du curseur
+    -- Gestionnaire pour detecter la fin des enregistrements du curseur
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
-    -- Démarrer une transaction
+    -- Demarrer une transaction
     START TRANSACTION;
 
-    -- Supprimer la table `up_major_win` si elle existe déjà
+    -- Supprimer la table `up_major_win` si elle existe deja
     DROP TABLE IF EXISTS up_major_win;
 
-    -- Création de la table `up_major_win` avec des index pour optimiser les requêtes
+    -- Creation de la table `up_major_win` avec des index pour optimiser les requêtes
     CREATE TABLE up_major_win (
-        id INT UNSIGNED NOT NULL AUTO_INCREMENT,  -- Clé primaire avec auto-incrémentation
+        id INT UNSIGNED NOT NULL AUTO_INCREMENT,  -- Cle primaire avec auto-incrementation
         xmpp_id INT UNSIGNED NOT NULL,  -- Identifiant XMPP
         glpi_id INT UNSIGNED NOT NULL,  -- Identifiant GLPI
-        ent_id INT UNSIGNED NOT NULL,  -- Identifiant de l'entité
+        ent_id INT UNSIGNED NOT NULL,  -- Identifiant de l'entite
         hostname VARCHAR(255),  -- Nom d'hôte
         enabled INT UNSIGNED,  -- on or off (0 ou 1)
         jid VARCHAR(255),  -- Identifiant JID
-        serial VARCHAR(255),  -- Numéro de série
+        serial VARCHAR(255),  -- Numero de serie
         platform VARCHAR(100),  -- os machine
         name VARCHAR(255),  -- Nom
         comment TEXT,  -- Commentaire
-        entity VARCHAR(255),  -- Entité
+        entity VARCHAR(255),  -- Entite
         lang_code VARCHAR(10),  -- Code de langue
         iso_filename VARCHAR(255),  -- Nom du fichier ISO
         package_uuid VARCHAR(255) NOT NULL,  -- UUID du package
@@ -251,14 +251,14 @@ BEGIN
         oldcode VARCHAR(50),  -- Ancien code
         newcode VARCHAR(50),  -- Nouveau code
         isolang VARCHAR(10),  -- Langue ISO
-        PRIMARY KEY (id),  -- Définition de la clé primaire
-        INDEX idx_glpi_id (glpi_id),  -- Index pour accélérer les requêtes sur glpi_id
+        PRIMARY KEY (id),  -- Definition de la cle primaire
+        INDEX idx_glpi_id (glpi_id),  -- Index pour accelerer les requêtes sur glpi_id
         INDEX idx_xmpp_id (xmpp_id),  -- Index pour xmpp_id
         INDEX idx_ent_id (ent_id),    -- Index pour ent_id
         INDEX idx_package_uuid (package_uuid)  -- Index sur package_uuid pour les recherches rapides
     );
 
-    -- Insertion des données dans `up_major_win` en s'assurant que NULL est bien géré
+    -- Insertion des donnees dans `up_major_win` en s'assurant que NULL est bien gere
     INSERT INTO up_major_win (
         xmpp_id, glpi_id, ent_id,
         hostname,enabled, jid, serial,platform,
@@ -316,7 +316,7 @@ BEGIN
     -- Valider la transaction pour enregistrer les modifications
     COMMIT;
 
-    -- Ouvrir le curseur pour lire les données de `up_major_win`
+    -- Ouvrir le curseur pour lire les donnees de `up_major_win`
  OPEN cur;
 
     read_loop: LOOP
@@ -329,14 +329,14 @@ BEGIN
             LEAVE read_loop;
         END IF;
 
-        -- Vérifier si l'enregistrement existe déjà dans `up_machine_major_windows`
+        -- Verifier si l'enregistrement existe deja dans `up_machine_major_windows`
         IF NOT EXISTS (
             SELECT 1
             FROM up_machine_major_windows
             WHERE up_machine_major_windows.id_machine = id_machine AND
                   up_machine_major_windows.update_id = update_id
         ) THEN
-            -- Insérer le nouvel enregistrement dans `up_machine_major_windows`
+            -- Inserer le nouvel enregistrement dans `up_machine_major_windows`
             INSERT INTO up_machine_major_windows (
                 id_machine, update_id, kb, msrcseverity, glpi_id, ent_id, hostname,enabled, jid, serial, platform, name, comment, entity, lang_code, old_version, new_version, oldcode, newcode, isolang
             )
@@ -392,12 +392,12 @@ DELIMITER ;
 -- -----------------------------------------------------
 -- INSTALL PLANIFICATION DE L'APPEL AUTOMATIQUE DE PROCEDURE STOCKEE up_init_table_major_win_complet
 --
--- Planifie l'événement pour qu'il se répète tous les jours
--- L'événement commencera à partir du 1er mars 2025 à 20h00
+-- Planifie l'evenement pour qu'il se repete tous les jours
+-- L'evenement commencera a partir du 1er mars 2025 a 20h00
 -- -----------------------------------------------------
--- Supprime l'événement s'il existe déjà
+-- Supprime l'evenement s'il existe deja
 DROP EVENT IF EXISTS appel_procedure_soir_init_major_table;
--- Crée un nouvel événement nommé 'appel_procedure_soir_init_major_table'
+-- Cree un nouvel evenement nomme 'appel_procedure_soir_init_major_table'
 CREATE EVENT appel_procedure_soir_init_major_table
 ON SCHEDULE EVERY 1 DAY
 STARTS '2025-03-01 20:00:00'

@@ -84,7 +84,7 @@ BEGIN
 -- Cette procedure supprime de la table delpoy et de la table log
 -- les deployements appartenant a une 1 Convergence restant bloque
 -- les deployement supprimer ne sont pas relance.
--- les deployements seront relancé par la convergence planifier.
+-- les deployements seront relance par la convergence planifier.
 
 DECLARE finished INTEGER DEFAULT 0;
 DECLARE session_string varchar(100) DEFAULT "";

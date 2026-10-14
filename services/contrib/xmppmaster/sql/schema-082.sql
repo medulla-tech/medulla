@@ -25,19 +25,19 @@ USE `xmppmaster`;
 -- ----------------------------------------------------------------------
 -- Database additionne events
 -- ----------------------------------------------------------------------
--- [Event] Désinstallation des packages inutilisés depuis plus de 10 jours
+-- [Event] Desinstallation des packages inutilises depuis plus de 10 jours
 
--- Cet événement automatisé, nommé "Uninstall_unused_packages", vise à optimiser l'utilisation des ressources en supprimant les packages qui n'ont pas été demandés ou utilisés depuis plus de 10 jours.
+-- Cet evenement automatise, nomme "Uninstall_unused_packages", vise a optimiser l'utilisation des ressources en supprimant les packages qui n'ont pas ete demandes ou utilises depuis plus de 10 jours.
 
--- L'événement surveille les enregistrements dans la base de données et effectue les actions suivantes :
--- - Pour les packages non demandés par aucune machine depuis 10 jours, il bascule dans la "graylistflipflop" (liste grise) et les désinstalle.
--- - Les packages en liste blanche ("white list") ne sont jamais désinstallés.
--- - Si des demandes sont présentes dans la table "up_machine_windows" mais ne sont pas satisfaites, ces demandes sont supprimées.
--- - Si une machine refait une demande ultérieurement, le package est automatiquement réinséré dans la "graylist" et réinstallé.
+-- L'evenement surveille les enregistrements dans la base de donnees et effectue les actions suivantes :
+-- - Pour les packages non demandes par aucune machine depuis 10 jours, il bascule dans la "graylistflipflop" (liste grise) et les desinstalle.
+-- - Les packages en liste blanche ("white list") ne sont jamais desinstalles.
+-- - Si des demandes sont presentes dans la table "up_machine_windows" mais ne sont pas satisfaites, ces demandes sont supprimees.
+-- - Si une machine refait une demande ulterieurement, le package est automatiquement reinsere dans la "graylist" et reinstalle.
 
--- Cet événement contribue à optimiser l'espace et les ressources en supprimant les packages inutilisés et en maintenant la liste des packages pertinente et efficace. Il garantit également que les demandes non satisfaites sont gérées de manière appropriée.
+-- Cet evenement contribue a optimiser l'espace et les ressources en supprimant les packages inutilises et en maintenant la liste des packages pertinente et efficace. Il garantit egalement que les demandes non satisfaites sont gerees de maniere appropriee.
 
--- Notez que l'événement fonctionne de manière automatique et continue, contribuant ainsi à la maintenance 1 list beaucoup plus humaine en nombre de package deployable.
+-- Notez que l'evenement fonctionne de maniere automatique et continue, contribuant ainsi a la maintenance 1 list beaucoup plus humaine en nombre de package deployable.
 
 DROP EVENT IF EXISTS   xmppmaster.Uninstall_old_package;
 DELIMITER $$
