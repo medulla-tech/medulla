@@ -28,8 +28,8 @@ $p->setTitle(_T("Products", "updates"));
 $p->addTab("tabwin", _T("Windows", "updates"), "",
            "modules/updates/updates/products/windowsProducts.php", array());
 
-#$p->addTab("tablinux", _T("Linux", "updates"), "",
-#           "modules/updates/updates/products/linuxReleases.php", array());
+$p->addTab("tablinux", _T("Linux", "updates"), "",
+           "modules/updates/updates/products/linuxReleases.php", array());
 
 $p->display();
 ?>

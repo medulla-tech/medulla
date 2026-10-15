@@ -22,8 +22,8 @@ $p = new TabbedPageGenerator();
 $p->addTab("tabwin", _T("Windows", "updates"), "",
            "modules/updates/updates/entity/ajaxEntityCompliance.php", array());
 
-#$p->addTab("tablinux", _T("Linux", "updates"), "",
-#     "modules/updates/updates/entity/ajaxEntityComplianceLinux.php", array());
+$p->addTab("tablinux", _T("Linux", "updates"), "",
+     "modules/updates/updates/entity/ajaxEntityComplianceLinux.php", array());
 
 $p->display();
 ?>

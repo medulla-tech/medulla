@@ -28,8 +28,8 @@ $p->setTitle(_T("Automatic Deployment", "updates"));
 $p->addTab("tabwin", _T("Windows", "updates"), "",
            "modules/updates/updates/automation/windowsRules.php", array());
 
-#$p->addTab("tablinux", _T("Linux", "updates"), "",
-#           "modules/updates/updates/automation/linuxPolicy.php", array());
+$p->addTab("tablinux", _T("Linux", "updates"), "",
+           "modules/updates/updates/automation/linuxPolicy.php", array());
 
 $p->display();
 ?>
