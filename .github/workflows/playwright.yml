@@ -1,0 +1,116 @@
+name: Playwright E2E
+
+on:
+  pull_request:
+    paths:
+      - 'web/**'
+      - 'tests/playwright/**'
+      - '.github/workflows/playwright.yml'
+  push:
+    branches:
+      - integration
+      - dev
+      - master
+      - test/playwright-e2e
+    paths:
+      - 'web/**'
+      - 'tests/playwright/**'
+      - '.github/workflows/playwright.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: playwright-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: tests/playwright
+
+jobs:
+  check:
+    name: Type-check and list tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: tests/playwright/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check
+        run: npm run typecheck
+
+      - name: List tests
+        run: npx playwright test --list
+        env:
+          MEDULLA_URL: https://example.invalid/mmc/
+
+  e2e:
+    name: Run tests against Medulla
+    needs: check
+    # The runner must reach the test server: set the PLAYWRIGHT_RUNNER
+    # variable to a self-hosted runner label if the server is not public.
+    runs-on: ${{ vars.PLAYWRIGHT_RUNNER || 'ubuntu-latest' }}
+    timeout-minutes: 30
+    env:
+      MEDULLA_URL: ${{ secrets.MEDULLA_URL }}
+      MEDULLA_USER: ${{ secrets.MEDULLA_USER }}
+      MEDULLA_PASSWORD: ${{ secrets.MEDULLA_PASSWORD }}
+
+    steps:
+      # Secrets are not available on pull requests from forks
+      - name: Check test server configuration
+        id: config
+        run: |
+          if [ -z "$MEDULLA_URL" ]; then
+            echo "::notice::MEDULLA_URL secret is not set, skipping end-to-end tests"
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+        working-directory: .
+
+      - name: Checkout repository
+        if: steps.config.outputs.enabled == 'true'
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        if: steps.config.outputs.enabled == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: tests/playwright/package-lock.json
+
+      - name: Install dependencies
+        if: steps.config.outputs.enabled == 'true'
+        run: npm ci
+
+      - name: Install Chromium
+        if: steps.config.outputs.enabled == 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright tests
+        if: steps.config.outputs.enabled == 'true'
+        run: npx playwright test
+
+      - name: Upload report
+        if: always() && steps.config.outputs.enabled == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            tests/playwright/playwright-report/
+            tests/playwright/test-results/
+          retention-days: 14
