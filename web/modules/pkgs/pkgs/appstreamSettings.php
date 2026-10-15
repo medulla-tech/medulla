@@ -23,13 +23,25 @@
  */
 
 
+require_once("modules/pkgs/includes/xmlrpc.php");
+
+if (isset($_GET['refresh_appstream'])) {
+    http_response_code(405);
+    exit;
+}
+
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['refresh_appstream'])) {
+    verifyCSRFToken($_POST);
+    header('Content-Type: application/json');
+    echo json_encode(['success' => updateAppstreamPackages()]);
+    exit;
+}
+
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 
 require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/pkgs/includes/html.inc.php");
-
-updateAppstreamPackages();
 
 $p = new PageGenerator(_T("Appstream settings", 'pkgs'));
 $p->setSideMenu($sidemenu);
@@ -159,6 +171,15 @@ include("modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php");
 ?>
 
 <script type="text/javascript">
+    jQuery.ajax({
+        url: <?php echo json_encode(urlStrRedirect("pkgs/pkgs/appstreamSettings")); ?>,
+        type: 'POST',
+        data: {
+            refresh_appstream: '1',
+            auth_token: <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>
+        }
+    });
+
     if (jQuery('#show_credentials').val() == "0")
     {
         jQuery('#credentials_form').css("display","none");

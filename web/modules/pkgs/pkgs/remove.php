@@ -92,10 +92,12 @@ if (isset($_POST['gid']) && is_array($_POST['gid'])) {
 
 // --- Single deletion mode (popup form) ---
 if (isset($_POST["bconfirm"])) {
-    $p_api = $_GET["p_api"];
-    $pid = $_GET["pid"];
-    $from = $_GET["from"];
-    $uuid =  isset($_GET["packageUuid"]) ? $_GET["packageUuid"] : base64_decode($pid);
+    verifyCSRFToken($_POST);
+
+    $p_api = $_POST["p_api"];
+    $pid = $_POST["pid"];
+    $from = $_POST["from"];
+    $uuid = isset($_POST["packageUuid"]) ? $_POST["packageUuid"] : base64_decode($pid);
     $ret = remove_xmpp_package($uuid);
     xmlrpc_pkgs_delete_synchro_package($uuid);
     $expire_result = expire_all_package_commands($uuid);
@@ -106,7 +108,7 @@ if (isset($_POST["bconfirm"])) {
                                     "PKG",
                                     '',
                                     0,
-                                    $_GET["from"],
+                                    $_POST["from"],
                                     'Manuel',
                                     '',
                                     '',
@@ -132,6 +134,7 @@ if (isset($_POST["bconfirm"])) {
     $packageOs = isset($_GET["packageOs"]) ? htmlspecialchars($_GET["packageOs"]) : '';
     $packageSize = isset($_GET["packageSize"]) ? htmlspecialchars(trim(strip_tags($_GET["packageSize"]))) : '';
     $f = new PopupForm(_T("Delete this package", "pkgs"));
+    $f->options["action"] = urlStrRedirect("pkgs/pkgs/delete");
     if ($packageName) {
         $details = array_filter([$packageOs, $packageSize], 'strlen');
         $suffix = $packageVersion ? " " . $packageVersion : "";
