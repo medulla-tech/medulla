@@ -1,5 +1,21 @@
 # Change Log
 
+## [5.6.6](https://github.com/medulla-tech/medulla/releases/tag/5.6.6) (2026-10-15)
+- [FEATURE] Add notification for Windows 10 Extended Security Update Programme
+- [FEATURE] Allow + character in LDAP user identifiers
+- [FEATURE] Remove option to backup a machine on deletion
+- [FEATURE] Add support for Windows 11 26H2 version
+- [FEATURE] Add a warning when no product is selected in updates module
+- [BUGFIX]  Fix update counters in cases where the ITSM is external
+- [BUGFIX]  Fix Kiosk when a profile name already exists
+- [BUGFIX]  Remove date information from convergence deployments view
+- [BUGFIX]  Fix ACL management view when there are many custom profiles
+- [BUGFIX]  Fix convergences when the package concerned is deleted
+- [BUGFIX]  Delete masters files when deleting a master
+- [BUGFIX]  Fix deployment of major updates when another major update is already running
+- [BUGFIX]  Fix relay list machine counters
+- [BUGFIX]  Fix rights of users to see all their entities
+
 ## [5.6.5](https://github.com/medulla-tech/medulla/releases/tag/5.6.5) (2026-09-18)
 - [FEATURE] Support for MacOS clients
 - [FEATURE] Support for .pkg and .dmp packages

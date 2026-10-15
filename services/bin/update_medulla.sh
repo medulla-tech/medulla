@@ -1105,8 +1105,254 @@ update_564_to_565() {
     fi
 }
 
+update_565_to_566() {
+    str="Applying Medulla config update from 5.6.5 to 5.6.6..."
+    echo "$str"
+    write_to_log "$str"
+    update_medulla
+
+    # Federated table updates
+    str="[=] Applying federated table updates..."
+    echo "$str"
+    write_to_log "$str"
+    mysql --defaults-group-suffix=medulla xmppmaster -e  "CREATE OR REPLACE TABLE \`local_glpi_machines\` (\`id\` int NOT NULL, primary key(id), \`entities_id\` int(10) NOT NULL DEFAULT 0, \`name\` varchar(255) NULL DEFAULT NULL, \`is_template\` tinyint(4) NOT NULL DEFAULT 0, \`is_deleted\` tinyint(4) NOT NULL DEFAULT 0, \`last_inventory_update\` timestamp NULL DEFAULT NULL, \`last_boot\` timestamp NULL DEFAULT NULL, \`date_mod\` timestamp NULL DEFAULT NULL) ENGINE=FEDERATED DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci CONNECTION='itsm_federated/glpi_computers';"
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error updating local_glpi_machines federated table."
+        echo "$str"
+        write_to_log "$str"
+    fi
+
+    # pkgs database configuration for deployment substitute
+    str="[=] Configuring pkgs database for deployment substitute..."
+    echo "$str"
+    write_to_log "$str"
+    crudini --set /etc/pulse-xmpp-agent-substitute/agent_master_substitute_depl.ini.local pkgsdatabase pkgs_dbhost $DBHOST
+    crudini --set /etc/pulse-xmpp-agent-substitute/agent_master_substitute_depl.ini.local pkgsdatabase pkgs_dbport $DBPORT
+    crudini --set /etc/pulse-xmpp-agent-substitute/agent_master_substitute_depl.ini.local pkgsdatabase pkgs_dbuser $DBUSER
+    crudini --set /etc/pulse-xmpp-agent-substitute/agent_master_substitute_depl.ini.local pkgsdatabase pkgs_dbpasswd $DBPASS
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring pkgs database for deployment substitute."
+        echo "$str"
+        write_to_log "$str"
+    fi
+    systemctl restart pulse-xmpp-master-substitute-deployment
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error restarting pulse-xmpp-master-substitute-deployment service."
+        echo "$str"
+        write_to_log "$str"
+    fi
+
+    # HMDM Setup
+    str="[=] Installing HMDM for Medulla..."
+    echo "$str"
+    write_to_log "$str"
+    HMDM_HOSTNAME="${INTERNAL_FQDN}"
+    HMDM_DBHOST="localhost"
+    HMDM_DBPORT="3306"
+    HMDM_DBNAME="hmdm"
+    HMDM_DBUSER="hmdm"
+    HMDM_DBPASSWD=$(openssl rand -base64 24)
+    HMDM_TOMCAT_PORT="8081"
+    HMDM_APACHE_CONF="/etc/apache2/conf-available/hmdm.conf"
+
+    HMDM_ADMINPASSWD=$(crudini --get /etc/mmc/plugins/base.ini.local ldap password)
+
+    HMDM_TURNHOST="${HMDM_HOSTNAME}"
+    HMDM_TURNPORT="3478"
+    HMDM_TURNUSER="turnuser"
+    HMDM_TURNPASSWD=$(openssl rand -base64 24)
+
+    HMDM_BUILD_DEST="/opt/HMDM_BUILD"
+    HMDM_BUILD_URL="https://dl.medulla-tech.io/in/hmdm-build-5.36.2-1.tar.gz"
+
+    if [[ ! -f /var/lib/hmdm/.hmdminitialised ]]; then
+
+        apt -y install tomcat9 mariadb-client aapt wget curl openssl > /dev/null 2>&1
+        if [[ $? -ne 0 ]]; then
+            str="[x] Error installing dependencies for HMDM. Aborting."
+            echo "$str"
+            write_to_log "$str"
+            exit 1
+        fi
+
+        mysql --defaults-group-suffix=dbsetup -e "CREATE DATABASE IF NOT EXISTS ${HMDM_DBNAME} DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+        if [[ $? -ne 0 ]]; then
+            str="[x] Error creating HMDM database. Aborting."
+            echo "$str"
+            write_to_log "$str"
+            exit 1
+        fi
+
+        mysql --defaults-group-suffix=dbsetup -e "GRANT ALL PRIVILEGES ON ${HMDM_DBNAME}.* TO '${HMDM_DBUSER}'@'localhost' IDENTIFIED BY '${HMDM_DBPASSWD}'; FLUSH PRIVILEGES;"
+        mysql --defaults-group-suffix=dbsetup -e "GRANT ALL PRIVILEGES ON ${HMDM_DBNAME}.* TO '${HMDM_DBUSER}'@'${IP_ADDRESS}' IDENTIFIED BY '${HMDM_DBPASSWD}'; FLUSH PRIVILEGES;"
+        mysql --defaults-group-suffix=dbsetup -e "GRANT ALL PRIVILEGES ON ${HMDM_DBNAME}.* TO '${HMDM_DBUSER}'@'${INTERNAL_FQDN}' IDENTIFIED BY '${HMDM_DBPASSWD}'; FLUSH PRIVILEGES;"
+        if [[ -n "${PUBLIC_IP}" ]]; then
+            mysql --defaults-group-suffix=dbsetup -e "GRANT ALL PRIVILEGES ON ${HMDM_DBNAME}.* TO '${HMDM_DBUSER}'@'${PUBLIC_IP}' IDENTIFIED BY '${HMDM_DBPASSWD}'; FLUSH PRIVILEGES;"
+        fi
+
+        curl -fsSL "${HMDM_BUILD_URL}" -o /tmp/hmdm-build.tar.gz
+        if [[ $? -ne 0 ]]; then
+            str="[x] Error downloading HMDM build. Aborting."
+            echo "$str"
+            write_to_log "$str"
+            exit 1
+        fi
+
+        tar -xzf /tmp/hmdm-build.tar.gz -C /opt/
+        if [[ $? -ne 0 ]]; then
+            str="[x] Error extracting HMDM build. Aborting."
+            echo "$str"
+            write_to_log "$str"
+            exit 1
+        fi
+
+        chmod +x "${HMDM_BUILD_DEST}/hmdm_install.sh"
+        if [[ $? -ne 0 ]]; then
+            str="[x] Error setting execute permission on HMDM install script. Aborting."
+            echo "$str"
+            write_to_log "$str"
+            exit 1
+        fi
+
+        HMDM_INSTALL_RC=0
+
+        if (
+            cd "${HMDM_BUILD_DEST}" || exit 1
+            str="[!] Running HMDM install script. This process can take up to 20 minutes."
+            echo "$str"
+            write_to_log "$str"
+            ./hmdm_install.sh \
+                --hostname "${HMDM_HOSTNAME}" \
+                --db-host "${HMDM_DBHOST}" \
+                --db-port "${HMDM_DBPORT}" \
+                --db-name "${HMDM_DBNAME}" \
+                --db-user "${HMDM_DBUSER}" \
+                --db-pass "${HMDM_DBPASSWD}" \
+                --admin-pass "${HMDM_ADMINPASSWD}" \
+                --turn-host "${HMDM_TURNHOST}" \
+                --turn-port "${HMDM_TURNPORT}" \
+                --turn-user "${HMDM_TURNUSER}" \
+                --turn-pass "${HMDM_TURNPASSWD}"
+        ); then
+            HMDM_INSTALL_RC=0
+        else
+            HMDM_INSTALL_RC=$?
+        fi
+
+        if [[ ${HMDM_INSTALL_RC} -ne 0 ]]; then
+            str="[!] HMDM installer returned an error. Waiting for deployment..."
+            echo "$str"
+            write_to_log "$str"
+
+            HMDM_DEPLOY_TIMEOUT=180
+            HMDM_CHECK_INTERVAL=5
+
+            for ((i=0; i<HMDM_DEPLOY_TIMEOUT/HMDM_CHECK_INTERVAL; i++)); do
+                if curl -fsS --connect-timeout 2 --max-time 3 \
+                    "http://127.0.0.1:${HMDM_TOMCAT_PORT}/hmdm/" \
+                    >/dev/null 2>&1; then
+                    HMDM_INSTALL_RC=0
+                    break
+                fi
+
+                sleep "${HMDM_CHECK_INTERVAL}"
+            done
+        fi
+
+        if [[ ${HMDM_INSTALL_RC} -ne 0 ]]; then
+            str="[x] HMDM installation failed."
+            echo "$str"
+            write_to_log "$str"
+            exit 1
+        fi
+
+        str="[v] HMDM installed successfully."
+        echo "$str"
+        write_to_log "$str"
+
+        mkdir -p /var/lib/hmdm
+        touch /var/lib/hmdm/.hmdminitialised
+    fi
+
+    str="[=] Configuring Apache reverse proxy for HMDM..."
+    echo "$str"
+    write_to_log "$str"
+
+    if ! a2enmod proxy proxy_http; then
+        str="[x] Failed to enable Apache proxy modules."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    cat > "${HMDM_APACHE_CONF}" <<EOF
+<IfModule mod_proxy.c>
+    ProxyPreserveHost On
+
+    ProxyPass        /hmdm/ http://127.0.0.1:${HMDM_TOMCAT_PORT}/hmdm/
+    ProxyPassReverse /hmdm/ http://127.0.0.1:${HMDM_TOMCAT_PORT}/hmdm/
+
+    RedirectMatch 301 ^/hmdm$ /hmdm/
+
+</IfModule>
+EOF
+
+    if ! a2enconf hmdm; then
+        str="[x] Failed to enable HMDM Apache configuration."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+
+    if ! apache2ctl configtest; then
+        str="[x] Invalid Apache configuration for HMDM."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+
+    if ! systemctl reload apache2; then
+        str="[x] Failed to reload Apache after HMDM configuration."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+
+    str="[v] Apache reverse proxy for HMDM configured successfully."
+    echo "$str"
+    write_to_log "$str"
+
+    ## Setup new MMC module: mobile
+    setup_new_mmc_module "mobile"
+    # Configure mobile module
+    crudini --set /etc/mmc/plugins/mobile.ini.local main disable 1
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring mobile module. Aborting."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    # mmc-agent will be restarted in final_operations
+    str="[v] Medulla MMC module 'mobile' setup and configuration applied successfully."
+    echo "$str"
+    write_to_log "$str"
+
+    echo "5.6.6" > /var/lib/mmc/version
+    
+    str="[v] Medulla config update from 5.6.5 to 5.6.6 applied successfully."
+    echo "$str"
+    write_to_log "$str"
+    
+    if [[ -f /tmp/update_medulla.sh ]]; then
+        exec /tmp/update_medulla.sh "$@"
+    else
+        exec /usr/sbin/update_medulla.sh "$@"
+    fi
+}
+
 # --- End of specific update functions for each version ---
 
+temp_updates() {
+}
 
 
 final_operations() {
@@ -1165,8 +1411,8 @@ else
     download_migration_script_and_restart
 fi
 
-# Setup apt sources for Medulla updates
-setup_apt_sources
+# Setup apt sources for Medulla updates - Not needed anymore
+# setup_apt_sources
 # Update repo definitions
 update_repo_defs
 
@@ -1261,11 +1507,17 @@ case "$CURRENT_VERSION" in
             update_564_to_565
         fi
         ;;
+    "5.6.5")
+        if [[ "$AVAILABLE_VERSION" > "5.6.5" ]]; then
+            update_565_to_566
+        fi
+        ;;
     *)
         str="Updating minor version if needed..."
         echo "$str"
         write_to_log "$str"
         update_medulla
+        temp_updates
         str="[!] Medulla is already at the latest version or an unsupported version is detected."
         echo "$str"
         write_to_log "$str"
