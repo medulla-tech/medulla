@@ -24,18 +24,24 @@
  */
 
 /*
- * Check if we come from computer page by checking if random ID provided
- * by $_GET matches the $_SESSION one
+ * Check the submitted one-time ID against the session value.
  */
 
-if ($_GET['remove_pull_id'] == $_SESSION['remove_pull_id']) {
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
+verifyCSRFToken($_POST);
+
+if ($_POST['remove_pull_id'] == $_SESSION['remove_pull_id']) {
     // then remove pull targets from DB
-    $result = xmlCall('msc.remove_pull_targets', array($_GET['uuid']));
+    $result = xmlCall('msc.remove_pull_targets', array($_POST['uuid']));
     if ($result) {
         // then remove random ID
         unset($_SESSION['remove_pull_id']);
         // Remove current UUID from pull_targets session list
-        if (($key = array_search($_GET['uuid'], $_SESSION['pull_targets'])) !== false) {
+        if (($key = array_search($_POST['uuid'], $_SESSION['pull_targets'])) !== false) {
             unset($_SESSION['pull_targets'][$key]);
         }
     }

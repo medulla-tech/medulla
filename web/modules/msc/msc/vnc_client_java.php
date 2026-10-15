@@ -25,10 +25,16 @@ require_once('modules/msc/includes/scheduler_xmlrpc.php');
 require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 
 # FIXME: I'm not really proud of this piece of code :/
-if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
+if (isset($_GET['establishproxy']) && $_GET['establishproxy'] == "yes") {
+    http_response_code(405);
+    exit;
+}
+
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['establishproxy']) && $_POST['establishproxy'] == "yes") {
+    verifyCSRFToken($_POST);
     // Check if we're here thru a proxy defining HTTP_X_FORWARDED_FOR
     $remoteaddr = isset($_SERVER["HTTP_X_FORWARDED_FOR"])? $_SERVER["HTTP_X_FORWARDED_FOR"]: $_SERVER["REMOTE_ADDR"];
-    $result = scheduler_establish_vnc_proxy('', $_GET['objectUUID'], $remoteaddr);
+    $result = scheduler_establish_vnc_proxy('', $_POST['objectUUID'], $remoteaddr);
 
     # $result is expected to be an array containing host, port, let's check it:
     if ($result == False) {
@@ -171,6 +177,8 @@ else {
     {
         $f = new PopupWindowForm(_T("Take control of this computer", "msc"));
         $f->target_uri = $_SERVER["REQUEST_URI"] . "&establishproxy=yes";
+        $f->target_method = 'POST';
+        $f->target_post_keys = array('objectUUID', 'establishproxy', 'auth_token');
         $f->addValidateButtonWithFade("bconfirm");
     }
     $f->addCancelButton("bback");
