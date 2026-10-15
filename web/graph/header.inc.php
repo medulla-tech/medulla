@@ -325,6 +325,10 @@ $root = $conf["global"]["root"];
                     } else if (module === 'xmppmaster' && submod === 'xmppmaster'
                         && action === 'rescheduleconvergence') {
                         postKeys = null;
+                    } else if (module === 'pkgs' && submod === 'pkgs'
+                        && action === 'rulesList'
+                        && ['raise', 'lower'].indexOf(requestUrl.searchParams.get('mod')) !== -1) {
+                        postKeys = null;
                     } else if (((module === 'base' && submod === 'computers'
                         && action === 'imgtabs' && tab === 'tabbootmenu')
                         || (module === 'imaging' && submod === 'manage'

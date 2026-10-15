@@ -872,12 +872,14 @@ class ActionConfirmItem extends ActionItem
 {
     public $_displayType = 0;
     public $_confirmMessage = '';
+    public $confirmationMethod = null;
 
-    public function __construct($desc, $action, $classCss, $paramString, $module = null, $submod = null, $confirmMessage, $tab = null, $width = 300, $mod = false)
+    public function __construct($desc, $action, $classCss, $paramString, $module = null, $submod = null, $confirmMessage, $tab = null, $width = 300, $mod = false, $confirmationMethod = null)
     {
         parent::__construct($desc, $action, $classCss, $paramString, $module, $submod, $tab, $mod);
         //$this->setWidth($width);
         $this->_confirmMessage = $confirmMessage;
+        $this->confirmationMethod = $confirmationMethod;
     }
 
     public function displayWithRight($param, $extraParams = array())
@@ -904,10 +906,11 @@ class ActionConfirmItem extends ActionItem
             ENT_QUOTES,
             'UTF-8'
         );
+        $methodArgument = $this->confirmationMethod === 'POST' ? ", 'POST'" : "";
 
         echo "<li class=\"" . $this->classCss . "\">";
         echo "<a title=\"" . $this->desc . "\" href=\"#\" ";
-        echo " onclick=\"displayConfirmationPopup(" . $confirmMessageJs . ", " . $targetUrlJs . "); return false;\" ";
+        echo " onclick=\"displayConfirmationPopup(" . $confirmMessageJs . ", " . $targetUrlJs . $methodArgument . "); return false;\" ";
         echo ">&nbsp;</a>";
         echo "</li>";
     }
