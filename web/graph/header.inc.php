@@ -322,6 +322,9 @@ $root = $conf["global"]["root"];
                         && action === 'systemImageManager' && tab === 'sysprepList'
                         && requestUrl.searchParams.has('deleteFile')) {
                         postKeys = sysprepPostKeys;
+                    } else if (module === 'xmppmaster' && submod === 'xmppmaster'
+                        && action === 'rescheduleconvergence') {
+                        postKeys = null;
                     } else if (((module === 'base' && submod === 'computers'
                         && action === 'imgtabs' && tab === 'tabbootmenu')
                         || (module === 'imaging' && submod === 'manage'
