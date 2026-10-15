@@ -490,6 +490,7 @@ var interval = setInterval(barprogress,6000);
             echo '<input name="multicast"  type="hidden" value="start" />';
             echo '<input name="location"  type="hidden" value="' . $objprocess['location'] . '" />';
             echo '<input name="process"  type="hidden" value="' . $scriptmulticast . '" />';
+            echo '<input type="hidden" name="auth_token" value="'.htmlspecialchars($_SESSION['auth_token'] ?? '').'" />';
             echo '<input name="path" type="hidden" value="' . $path . '" />
         <input name="bgo" type="submit" class="btnPrimary"
         value="';
@@ -503,6 +504,7 @@ var interval = setInterval(barprogress,6000);
             echo '<input name="multicast"  type="hidden" value="clear" />';
             echo '<input name="location"  type="hidden" value="' . $objprocess['location'] . '" />';
             echo '<input name="process"  type="hidden" value="' . $scriptmulticast . '" />';
+            echo '<input type="hidden" name="auth_token" value="'.htmlspecialchars($_SESSION['auth_token'] ?? '').'" />';
             echo '<input name="path" type="hidden" value="' . $path . '" />
         <input name="bgo" type="submit" class="btnPrimary"
         value="';
