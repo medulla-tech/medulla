@@ -4321,6 +4321,9 @@ class PopupForm extends Form
  */
 class PopupWindowForm extends PopupForm
 {
+    public $target_method = 'GET';
+    public $target_post_keys = array();
+
     public function __construct($title)
     {
         $options = array("action" => $_SERVER["REQUEST_URI"]);
@@ -4333,7 +4336,15 @@ class PopupWindowForm extends PopupForm
 
     public function addValidateButtonWithFade($name)
     {
-        $this->buttons[] = $this->getButtonString($name, _("Confirm"), "btnPrimary", "onclick=\"jQuery('popup').fadeOut(); window.open('" . $this->target_uri . "', '', 'toolbar=no, location=no, menubar=no, status=no, status=no, scrollbars=yes, width=330, height=200'); return false;\"");
+        if ($this->target_method === 'POST') {
+            $targetUri = htmlspecialchars(json_encode($this->target_uri, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8');
+            $postKeys = htmlspecialchars(json_encode($this->target_post_keys, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8');
+            $authToken = htmlspecialchars(json_encode($_SESSION['auth_token'] ?? '', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8');
+            $extra = "onclick=\"jQuery('popup').fadeOut(); var targetName = 'mmcPopup' + Date.now(); window.open('', targetName, 'toolbar=no, location=no, menubar=no, status=no, scrollbars=yes, width=330, height=200'); postAction(" . $targetUri . ", targetName, {auth_token: " . $authToken . "}, " . $postKeys . "); return false;\"";
+        } else {
+            $extra = "onclick=\"jQuery('popup').fadeOut(); window.open('" . $this->target_uri . "', '', 'toolbar=no, location=no, menubar=no, status=no, status=no, scrollbars=yes, width=330, height=200'); return false;\"";
+        }
+        $this->buttons[] = $this->getButtonString($name, _("Confirm"), "btnPrimary", $extra);
     }
 
 }

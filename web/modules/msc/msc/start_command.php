@@ -27,6 +27,11 @@ require('modules/msc/includes/package_api.php');
 require('modules/msc/includes/scheduler_xmlrpc.php');
 require('modules/msc/includes/mscoptions_xmlrpc.php');
 
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
 // direct launch requires csrf
 verifyCSRFToken($_POST);
 if(in_array("xmppmaster", $_SESSION["modulesList"])) {

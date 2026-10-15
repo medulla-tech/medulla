@@ -68,11 +68,13 @@ if ($_GET['actionconvergenceint'] != 1){
 // when we ask to disable the convergence
 // the remainings needed params (i.e. gid, commandid ...) are stored in $_POST datas and are handled by start_a_command
 if (isset($_POST["bpdesactiver"])) {
+    verifyCSRFToken($_POST);
     stop_convergence();
 }
 
 /* Validation on local proxies selection page */
 if (isset($_POST["bconfirmproxy"])) {
+    verifyCSRFToken($_POST);
     $proxy = array();
     if (isset($_POST["lpmembers"])) {
         if ($_POST["local_proxy_selection_mode"] == "semi_auto") {
@@ -122,6 +124,7 @@ if (isset($_POST['local_proxy'])) {
 
 /* Advanced Action Post Handling */
 if (isset($_GET['badvanced']) and isset($_POST['bconfirm']) and !isset($_POST['local_proxy'])) {
+    verifyCSRFToken($_POST);
     // active convergence. et start command
     start_convergence();
 }
@@ -139,6 +142,12 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     }
     // form design
     $f = new ValidatingForm();
+    $formRoute = $_GET['module'] . '/' . $_GET['submod'] . '/' . $_GET['action'];
+    $formRouteParams = array('badvanced' => true);
+    if (isset($_GET['tab'])) {
+        $formRouteParams['tab'] = $_GET['tab'];
+    }
+    $f->options['action'] = urlStrRedirect($formRoute, $formRouteParams);
 
     // display top label
     if (isset($_GET['uuid']) && $_GET['uuid']) {
@@ -152,6 +161,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         $f->push(new Table());
         $f->add(new HiddenTpl("uuid"), array("value" => $uuid, "hide" => True));
         $f->add(new HiddenTpl("name"), array("value" => $hostname, "hide" => True));
+        $f->add(new HiddenTpl("hostname"), array("value" => $hostname, "hide" => True));
     } else {
         $gid = $_GET['gid'];
         $group = new Group($gid, true);
@@ -184,6 +194,11 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     $f->add(new HiddenTpl("pid"), array("value" => $pid, "hide" => True));
     $f->add(new HiddenTpl("papi"), array("value" => quick_get("papi"), "hide" => True));
     $f->add(new HiddenTpl("from"), array("value" => $from, "hide" => True));
+    foreach (array('actionconvergenceint', 'hostname', 'polarity', 'switch_polarity', 'previous') as $param) {
+        if (isset($_GET[$param])) {
+            $f->add(new HiddenTpl($param), array("value" => $_GET[$param], "hide" => True));
+        }
+    }
 
     $action = quick_get('launchAction');
     if (isset($action) && $action != '') {

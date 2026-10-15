@@ -329,6 +329,9 @@ $root = $conf["global"]["root"];
                         && action === 'rulesList'
                         && ['raise', 'lower'].indexOf(requestUrl.searchParams.get('mod')) !== -1) {
                         postKeys = null;
+                    } else if (module === 'base' && submod === 'computers'
+                        && action === 'remove_from_pull') {
+                        postKeys = null;
                     } else if (((module === 'base' && submod === 'computers'
                         && action === 'imgtabs' && tab === 'tabbootmenu')
                         || (module === 'imaging' && submod === 'manage'
