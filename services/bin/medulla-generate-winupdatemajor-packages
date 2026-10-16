@@ -391,7 +391,7 @@ generate_package() {
                 "action": "actionsuccescompletedend",
                 "actionlabel": "END_SUCCESS",
                 "clear": "False",
-                "inventory": "noforced"
+                "inventory": "forced"
             },
             {
                 "step": 10,
