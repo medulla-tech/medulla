@@ -21,6 +21,17 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *  file xmppfilesbrowsing.php
  */
+require_once("modules/xmppmaster/includes/xmlrpc.php");
+if (isset($_GET['create_transfer_directory'])) {
+    http_response_code(405);
+    exit;
+}
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['create_transfer_directory'])) {
+    verifyCSRFToken($_POST);
+    header('Content-Type: application/json');
+    echo json_encode(xmlrpc_create_local_dir_transfert($_POST['pathroot'], $_POST['hostname']));
+    exit;
+}
 ?>
 <?php
 echo '<link rel="stylesheet" href="jsframework/lib/pluginjqueryjtree/themes/default/style.min.css" />'."\n".
@@ -59,8 +70,7 @@ include_once('modules/medulla_server/includes/menu_actionaudit.php');
 // et recuperation pathcurent pour cette machine eg /var/lib/pulse2/transfertfiles
 // /machine25pulse
 $lifdirlocal = xmlrpc_localfilesystem("");
-$filecurentdir = xmlrpc_create_local_dir_transfert($lifdirlocal['path_abs_current'], $ma['hostname']);
-$curentdir = $filecurentdir['path_abs_current'];
+$curentdir = $lifdirlocal['path_abs_current'];
 
 echo '<script type="text/javascript">';
 
@@ -266,7 +276,21 @@ echo '</ul>';
         nameremotepath = "";
         absolutepath ="";
         init = 1;
-        local(namemachine);
+        jQuery.ajax({
+            url: "main.php?module=xmppmaster&submod=xmppmaster&action=xmppfilesbrowsing",
+            type: "POST",
+            dataType: "json",
+            data: {
+                create_transfer_directory: '1',
+                pathroot: <?php echo json_encode($lifdirlocal['path_abs_current']); ?>,
+                hostname: namemachine,
+                auth_token: <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>
+            }
+        }).done(function(directory) {
+            jQuery('#path_abs_current_local').val(directory.path_abs_current);
+            jQuery('#parentdirlocal').val(directory.parentdir);
+            local();
+        });
         remote("@1@");
         jQuery('#directoryremote')
             .on("changed.jstree", function (e, data) {
@@ -586,16 +610,22 @@ echo '</ul>';
                             style : "color:#FFFFFF; background-color: #000000;",
                             click:function() {
                             // call plugin de telechargement.
-                            jQuery.get( "modules/xmppmaster/xmppmaster/ajaxxmppplugindownloadexpert.php",  {
+                            jQuery.ajax({
+                                        url: "modules/xmppmaster/xmppmaster/ajaxxmppplugindownloadexpert.php",
+                                        type: "POST",
+                                        data: {
                                         "dest"          : jQuery('#dest_string').text(),
                                         "directory"     : jQuery('#dest_string').text(),
                                         "listdirectory" : dir.join(";"),
                                         "listfile"      : file.join(";"),
-                                        "jidmachine"    : jid
-                                        },function(data){
+                                        "jidmachine"    : jid,
+                                        "auth_token"    : <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>
+                                        },
+                                        success: function(data){
                                             jQuery('#dialog-notification-download-file').attr('title', '<?php echo sprintf(_T('The list (folder & files) copy has been requested successfully', 'xmppmaster')); ?>');
                                             confirmation_information(data);
-                                        });
+                                        }
+                                    });
                                 jQuery( this ).dialog( "close" );
                             }
                         },

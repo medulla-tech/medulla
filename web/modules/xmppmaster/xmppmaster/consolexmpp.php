@@ -24,6 +24,9 @@
 ?>
 <style type='text/css'>
 textarea {
+if (isset($_POST['command'], $_POST['Machine']) && trim($_POST['Machine']) !== '' && trim($_POST['command']) !== '') {
+    verifyCSRFToken($_POST);
+}
     width:50% ;
     height:150px;
     margin:auto;   /* exemple pour centrer */
@@ -81,6 +84,7 @@ textarea {
 ?>
 
 <form method="post" id="Form">
+    <input type="hidden" name="auth_token" value="<? echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
     <table cellspacing="0">
     <input  type="hidden" id="machine" value="<? echo $machine; ?>" name="Machine"/>
 

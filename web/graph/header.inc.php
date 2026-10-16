@@ -325,6 +325,10 @@ $root = $conf["global"]["root"];
                     } else if (module === 'xmppmaster' && submod === 'xmppmaster'
                         && action === 'rescheduleconvergence') {
                         postKeys = null;
+                    } else if (module === 'xmppmaster' && submod === 'xmppmaster'
+                        && ['index', 'auditteam', 'auditteamconvergence', 'convergence', 'logbygrpmachine', 'logbymachine'].indexOf(action) !== -1
+                        && requestUrl.searchParams.get('postaction') === 'delete') {
+                        postKeys = ['cmd_id', 'postaction', 'auth_token'];
                     } else if (module === 'pkgs' && submod === 'pkgs'
                         && action === 'rulesList'
                         && ['raise', 'lower'].indexOf(requestUrl.searchParams.get('mod')) !== -1) {

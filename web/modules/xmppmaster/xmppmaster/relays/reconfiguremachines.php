@@ -21,6 +21,7 @@
  */
 
 if(isset($_POST['jid'], $_POST['switch'])){
+  verifyCSRFToken($_POST);
   if (!isset($_POST["switchsecurity"])) {
       new NotifyWidgetFailure(_("You have to check the box <b>\"I am aware that this action is forcing a <em><b>reconfiguration of all the machines</b></em> managed by the relayserver."));
       header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/xmppRelaysList"));

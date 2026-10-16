@@ -33,10 +33,14 @@ require_once("modules/medulla_server/includes/utilities.php");
 //Force the presence of all computers
 $_SESSION['computerpresence'] = "all_computer";
 
-$delete = isset($_GET['postaction'])?true:false;
+if (isset($_GET['postaction']) && $_GET['postaction'] === 'delete') {
+    http_response_code(405);
+    exit;
+}
 
-if ($delete) {
-    delete_command($_GET['cmd_id']);
+if (isset($_POST['postaction']) && $_POST['postaction'] === 'delete') {
+    verifyCSRFToken($_POST);
+    delete_command($_POST['cmd_id']);
 }
 $p = new PageGenerator(_T("My teams tasks", 'xmppmaster'));
 $p->setSideMenu($sidemenu);

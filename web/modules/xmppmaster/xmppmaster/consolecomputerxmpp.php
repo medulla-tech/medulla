@@ -84,6 +84,9 @@ textarea {
             $re =  xmlrpc_remotecommandshell($command,$machine, intval($timeout));
             $ss = json_decode($re, true);
             if (isset($ss['err'])){
+    if (isset($_POST['command'], $_POST['Machine']) && trim($_POST['Machine']) !== '' && trim($_POST['command']) !== '') {
+            verifyCSRFToken($_POST);
+    }
                 if ( $ss['err'] == 'Timeout Error'){
                     $msg = sprintf(_T("Sorry, the remote machine [%s] takes too much time to answer.", "xmppmaster"), $machine);
                 }else{
@@ -110,6 +113,7 @@ textarea {
 </form>
 
 <form method="post" id="Form">
+    <input type="hidden" name="auth_token" value="<? echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
 
     <table cellspacing="0">
     <input  type="hidden" id="machine" value="<? echo $machine; ?>" name="Machine"/>
