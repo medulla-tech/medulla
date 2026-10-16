@@ -29,10 +29,14 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 require_once("modules/medulla_server/includes/utilities.php");
-$delete = isset($_GET['postaction'])?true:false;
+if (isset($_GET['postaction']) && $_GET['postaction'] === 'delete') {
+    http_response_code(405);
+    exit;
+}
 
-if ($delete) {
-    delete_command($_GET['cmd_id']);
+if (isset($_POST['postaction']) && $_POST['postaction'] === 'delete') {
+    verifyCSRFToken($_POST);
+    delete_command($_POST['cmd_id']);
 }
 $params=$_GET;
 
