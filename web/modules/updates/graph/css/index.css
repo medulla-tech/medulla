@@ -5,16 +5,6 @@
     max-width: 100%;
 }
 
-.approval-table-scroll {
-    max-width: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
-}
-
-.approval-table-scroll table.listinfos {
-    max-width: 100%;
-}
-
 .approval-form table.listinfos input[type="checkbox"] {
     width: 16px;
     height: 16px;
@@ -28,44 +18,15 @@
     cursor: pointer;
 }
 
-/* ===== Deploiement automatique Linux ===== */
-
-.linux-autoupdate-policy {
-    box-sizing: border-box;
-    display: block;
-    width: 100%;
-}
-
-.linux-autoupdate-policy .policy-scope {
+.updates-entity-scope {
     margin: 0 0 12px;
-}
-
-.linux-autoupdate-policy .policy-table-scroll {
-    max-width: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 0 12px 12px 0;
-}
-
-.linux-autoupdate-policy table.listinfos {
-    width: 100%;
-}
-
-.linux-autoupdate-policy table.listinfos input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    margin: 0;
-    cursor: pointer;
-}
-
-.linux-autoupdate-policy table.listinfos label {
-    cursor: pointer;
+    color: var(--color-text-dark);
+    font-size: var(--text-base);
 }
 
 /* Boutons de validation des formulaires du module : alignes a droite, fin du
    formulaire. .form-actions vient de bootstrap-forms.css et pose un fond gris. */
-.approval-form-actions,
-.linux-autoupdate-policy .form-actions {
+.approval-form-actions {
     background: none;
     border-top: none;
     padding: 0;
@@ -105,6 +66,25 @@
 
 .approval-form table.listinfos .family-produit:hover td {
     background-color: var(--color-table-hover);
+}
+
+.approval-form table.listinfos .product-unsupported td {
+    color: var(--color-text-light);
+}
+
+.approval-form table.listinfos .product-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.approval-form table.listinfos .product-line-note {
+    color: var(--color-text-light);
+    font-size: 11px;
+    font-style: italic;
+    white-space: nowrap;
+    cursor: help;
 }
 
 .caption-style {
@@ -152,112 +132,102 @@
     min-width: 220px;
 }
 
-/* ===== Updates sections (white/grey/black lists) ===== */
-
-.updates-section {
-    margin-bottom: 36px;
-}
-
-.updates-section .table-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    margin: 0 0 18px;
-    flex-wrap: wrap;
-}
-
-.updates-section .table-header__title {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--color-primary-dark);
-}
-
-.updates-section .table-header__form {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 0;
-    margin-left: auto;
-}
-
-.updates-section .table-header__form form {
-    margin: 0 !important;
-}
-
-.updates-section .table-header__form .searchbox,
-.updates-section .table-header__form #searchBest {
-    margin: 0;
-}
-
-.updates-section .table-header__form .loader {
-    margin-left: 8px;
-}
-
-.table-header--stacked {
-    flex-direction: row;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 20px;
-}
-
-.table-header--stacked .table-header__title {
-    flex: 1;
-    margin-bottom: 0;
-}
-
-.table-header--stacked .table-header__form {
-    margin-left: auto;
-    width: auto;
-}
-
-@media (max-width: 768px) {
-    .table-header--stacked {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .table-header--stacked .table-header__title {
-        width: 100%;
-        margin-bottom: 4px;
-    }
-
-    .table-header--stacked .table-header__form {
-        width: 100%;
-        margin-left: 0;
-    }
-}
-
-/* ===== Major entities metrics ===== */
-
-.major-entities-metrics table.listinfos {
-    width: 100%;
-    margin: 0;
-}
-
-.major-entities-metrics table.listinfos td {
-    vertical-align: middle;
-}
-
-.major-entities-metrics table.listinfos td:not(:first-child) {
-    text-align: center;
-}
-
-.major-entities-metrics table.listinfos td .medulla-progress__track {
-    margin: 0 auto;
-}
-
 /* ===== Entity compliance ===== */
 
-/* Air sous la barre de recherche, remontee par .ajax-section. */
-.entity-compliance-table {
-    margin-top: 16px;
+/* Selecteur d'entite a gauche de la recherche ; la liste passe dessous. */
+.updates-entity-section {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 15px;
 }
 
-/* Tableaux de synthese : la premiere colonne porte un nombre, pas un libelle. */
-table.listinfos.major-summary thead th,
-table.listinfos.major-summary tbody td {
-    text-align: center;
+.ajax-section.updates-entity-section > form {
+    flex: 1 1 auto;
+    margin-bottom: 0 !important;
+}
+
+.updates-entity-section > .entity-filter {
+    margin: 20px 0 15px;
+}
+
+.updates-entity-section > div:not(.entity-filter) {
+    flex: 0 0 100%;
+    min-width: 0;
+}
+
+.entity-filter {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.updates-status-links {
+    margin: 0 0 12px;
+    text-align: left;
+    font-size: var(--text-base);
+    color: var(--color-text-dark);
+}
+
+.updates-status-links a,
+.updates-status-links a:link,
+.updates-status-links a:visited {
+    color: var(--color-primary);
+    background: none;
+    border: none;
+    text-decoration: none;
+}
+
+.updates-status-links a:hover {
+    text-decoration: underline;
+}
+
+.updates-status-current {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.updates-status-sep {
+    margin: 0 8px;
+    color: var(--color-text-light);
+}
+
+.updates-entity-inheritance {
+    margin-left: 8px;
+    color: var(--color-text-dark);
+    font-size: var(--text-base);
+}
+
+.updates-entity-inheritance a,
+.updates-entity-inheritance a:link,
+.updates-entity-inheritance a:visited {
+    margin-left: 6px;
+    color: var(--color-primary);
+    font-weight: normal;
+    text-decoration: underline;
+}
+
+.entity-filter .updates-entity-inheritance {
+    margin-left: 4px;
+}
+
+.entity-filter select {
+    padding: 5px 10px;
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-sm);
+    min-width: 180px;
+    max-width: 100%;
+}
+
+.updates-settings-form #entity-filter {
+    height: var(--input-height);
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    min-width: 180px;
+    max-width: 100%;
 }
 
 /* En-tetes a infobulle : pas de soulignement, seul le curseur signale. */
@@ -275,68 +245,274 @@ table.listinfos thead th .column-tooltip {
     line-height: 1.35;
 }
 
-.entity-compliance-table table.listinfos {
-    width: 100%;
+/* ===== Largeur des listes ===== */
+
+/* global.css interdit le retour a la ligne dans les cellules : le tableau
+   deborde et la colonne Actions sort de l'ecran. */
+#section table.listinfos tbody td:not(.action),
+#section table.listinfos tbody td:not(.action) .cell-text {
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+
+#section table.listinfos tbody td.action {
+    overflow: visible;
+}
+
+.updates-nowrap {
+    white-space: nowrap;
+}
+
+/* ===== Compteurs nuls des listes ===== */
+
+table.listinfos .updates-count-zero {
+    color: var(--color-text-muted);
+}
+
+/* ===== Windows update status ===== */
+
+table.listinfos .updates-count-critical {
+    color: var(--severity-critical);
+    font-weight: 600;
+}
+
+.updates-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: var(--color-text-white);
+    white-space: normal;
+}
+
+.updates-badge-critical { background-color: var(--severity-critical); }
+.updates-badge-high { background-color: var(--severity-high); }
+.updates-badge-medium { background-color: var(--severity-medium); color: var(--color-text-dark); }
+.updates-badge-low { background-color: var(--severity-low); }
+.updates-badge-none { background-color: var(--severity-none); }
+.updates-badge-unsupported { background-color: var(--severity-high); cursor: help; }
+.updates-badge-untracked { background-color: var(--severity-none); cursor: help; }
+.updates-badge-reboot { background-color: var(--color-primary); cursor: help; }
+
+.updates-offer-icon {
+    --updates-offer-icon-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Ccircle cx='7' cy='7' r='6.5' fill='none' stroke='%23000'/%3E%3Ccircle cx='7' cy='4.25' r='.75'/%3E%3Crect x='6.5' y='6' width='1' height='4.5'/%3E%3C/svg%3E");
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-left: 6px;
+    background-color: var(--color-text-light);
+    -webkit-mask: var(--updates-offer-icon-svg) center / contain no-repeat;
+    mask: var(--updates-offer-icon-svg) center / contain no-repeat;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+    cursor: help;
+}
+
+.updates-tooltip {
+    cursor: help;
+}
+
+.updates-back-link {
+    display: inline-block;
+    margin-bottom: 8px;
+    color: var(--color-primary);
+}
+
+.updates-machine-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 10px 15px;
+    margin: 0 0 10px;
+}
+
+.updates-machine-head form {
+    margin: 0 0 0 auto !important;
+}
+
+.updates-machine-head .searchbox {
+    width: auto;
     margin: 0;
 }
 
-.entity-compliance-table table.listinfos td {
+.updates-machine-list {
+    overflow-x: auto;
+}
+
+.updates-machine-summary {
+    display: grid;
+    grid-template-columns: repeat(3, max-content minmax(0, max-content));
+    justify-content: start;
+    align-items: baseline;
+    gap: 6px 10px;
+    background: var(--gray-50);
+    padding: 10px 15px;
+    border-radius: var(--radius-md);
+    margin: 0;
+}
+
+.updates-machine-summary dt {
+    font-weight: 600;
+}
+
+.updates-machine-summary dd {
+    margin: 0 30px 0 0;
+    overflow-wrap: break-word;
+}
+
+@media (max-width: 800px) {
+    .updates-machine-summary {
+        grid-template-columns: max-content minmax(0, max-content);
+    }
+}
+
+/* ===== Approval ===== */
+
+.updates-approval-form table.listinfos input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+table.listinfos.updates-approval .updates-risk {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     vertical-align: middle;
 }
 
-.entity-compliance-table table.listinfos td:not(:first-child):not(.action) {
-    text-align: center;
+table.listinfos.updates-approval .updates-badge {
+    vertical-align: middle;
+    line-height: normal;
 }
 
-.entity-compliance-table table.listinfos thead th:not(:first-child):not(:last-child) {
-    text-align: center;
+.updates-approval-form .approval-form-actions button + button {
+    margin-left: 8px;
 }
 
-.entity-compliance-table table.listinfos td .medulla-progress__track {
-    margin: 0 auto;
+table.listinfos.updates-approval-bulk th:first-child,
+table.listinfos.updates-approval-bulk td:first-child {
+    width: 1%;
+    white-space: nowrap;
 }
 
-/* ===== Tooltip "Upgrade Not recommended" (prérequis Windows 11) =====
-   Scopé via .win11req-tt : surcharge le style générique .ttable / .tt-section
-   uniquement pour ce tooltip, sans impacter les infobulles machine ailleurs. */
-
-/* Phrase d'en-tête : ton informatif — accent cyan de la charte (pas le bleu
-   translucide de .tt-section ni du blanc criard), casse normale, " : " final.
-   Pour repasser en blanc : remplacer var(--tt-color-label) par #ffffff. */
-.ui-tooltip .win11req-tt .win11req-head .ttabletd {
-    color: var(--tt-color-label) !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    text-transform: none !important;
-    letter-spacing: normal !important;
-}
-.ui-tooltip .win11req-tt .win11req-head .ttabletd::after {
-    content: ":";
+.updates-settings-form input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+    vertical-align: middle;
+    cursor: pointer;
 }
 
-/* Lignes de prérequis : texte courant lisible, sans style "label"
-   (annule .ttable tr td:first-child), préfixe tiret (message informatif) */
-.ui-tooltip .win11req-tt .win11req-row .ttabletd {
-    color: var(--tt-color-text) !important;
-    font-size: var(--tt-font-size) !important;
-    font-weight: 400 !important;
-    text-transform: none !important;
-    letter-spacing: normal !important;
-    white-space: normal !important;
-    padding: 2px 0 !important;
-}
-.ui-tooltip .win11req-tt .win11req-row .ttabletd::before {
-    content: "\2013\00a0";
-    color: var(--tt-color-label);
-    opacity: 0.7;
+.updates-settings-form input[type="checkbox"]:focus {
+    outline: none;
+    box-shadow: none;
 }
 
+.updates-settings-form #window_start,
+.updates-settings-form #window_end,
+.updates-settings-form #upgrade_window_start,
+.updates-settings-form #upgrade_window_end {
+    width: 90px;
+}
 
-/* ===== Popup de deploiement des mises a jour majeures ===== */
+.updates-settings-form .updates-time-range-word {
+    margin: 0 8px;
+}
 
-#Formupdate .deploy-interval-help {
-    display: block;
-    margin-top: 6px;
-    color: #999999;
-    font-style: italic;
+.updates-settings-form .updates-time-range-word-first {
+    margin-left: 0;
+}
+
+.updates-settings-form .updates-settings-note {
+    margin: 8px 0 12px;
+    color: var(--color-text-medium);
+    font-size: var(--text-base);
+}
+
+.updates-stale-notice {
+    margin: 8px 0 12px;
+}
+
+/* ===== Mises a niveau ===== */
+
+.updates-badge-info { background-color: var(--color-info); }
+.updates-badge-progress { background-color: var(--color-primary); }
+.updates-badge-upgrade-ready { background-color: var(--color-info); cursor: help; }
+.updates-badge-upgrade-in-progress { background-color: var(--color-primary); cursor: help; }
+.updates-badge-upgrade-no-report { background-color: var(--severity-none); cursor: help; }
+.updates-badge-upgrade-undetermined { background-color: var(--severity-none); cursor: help; }
+.updates-badge-upgrade-up-to-date { background-color: var(--severity-low); cursor: help; }
+.updates-badge-upgrade-not-eligible { background-color: var(--severity-none); cursor: help; }
+.updates-badge-upgrade-not-concerned { background-color: var(--severity-none); cursor: help; }
+
+.updates-cell-help {
+    cursor: help;
+}
+
+/* Eligibilite d'une mise a niveau : un rond par prerequis dans l'infobulle. */
+.ui-tooltip .updates-req-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 6px;
+    border-radius: 50%;
+    vertical-align: middle;
+    background-color: var(--severity-none);
+}
+
+.ui-tooltip .updates-req-dot-ok { background-color: var(--severity-low); }
+.ui-tooltip .updates-req-dot-ko { background-color: var(--severity-critical); }
+
+/* ul.action porte line-height: 41px ; seul #container le ramene a 18px. */
+.updates-entity-section .listinfos td.action ul.action,
+.updates-machine-list .listinfos td.action ul.action {
+    line-height: 18px;
+}
+
+/* global.css : le survol de ligne recolore les icones plus fort que .inactive. */
+tr:hover td.action ul.action li.inactive a,
+tr:hover td.action ul.action li.inactive a:hover,
+td.action ul.action li.inactive a:hover {
+    filter: brightness(0) saturate(100%) invert(75%) sepia(0%) saturate(0%);
+    opacity: 0.5;
+}
+
+td.action ul.action li.inactive a {
+    cursor: not-allowed;
+}
+
+.updates-machine-none {
+    margin: 0 0 10px;
+    text-align: left;
+}
+
+.updates-machine-actions {
+    margin: 10px 0 0;
+    text-align: left;
+}
+
+.updates-machine-actions button:disabled {
+    background: var(--color-bg-gray);
+    color: var(--color-text-muted);
+    border-color: var(--color-border-medium);
+    cursor: not-allowed;
+}
+
+.updates-group-linux {
+    margin: 0 0 16px;
+}
+
+.updates-upgrade-unfinished {
+    margin-left: 6px;
+    color: var(--severity-high);
+    font-weight: bold;
+    cursor: help;
 }

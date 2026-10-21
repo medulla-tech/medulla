@@ -698,20 +698,6 @@ update_550_to_551() {
     echo "$str"
     write_to_log "$str"
 
-    # Regenerate Windows update database
-    str="[=] Regenerating Windows update database..."
-    echo "$str"
-    write_to_log "$str"
-    /usr/sbin/medulla-generate-winupdate-packages 2>&1 | tee -a /tmp/medulla-generate-winupdate-packages.log
-    if [[ $? -ne 0 ]]; then
-        str="[x] Error regenerating Windows update database."
-        echo "$str"
-        write_to_log "$str"
-    fi
-    str="[v] Windows update database regenerated successfully."
-    echo "$str"
-    write_to_log "$str"
-
     # Remove products section from updates.ini.local
     str="[=] Removing products section from updates.ini.local..."
     echo "$str"
@@ -819,24 +805,6 @@ update_552_to_560() {
     echo "$str"
     write_to_log "$str"
     update_medulla
-
-    # Reconfigure cron job for downloading Windows updates
-    str="[=] Setting up cron job for downloading Windows updates..."
-    echo "$str"
-    write_to_log "$str"
-    # Create /etc/cron.d/medulla_winupdates_dl
-    echo "30 1 * * * root /usr/sbin/medulla-generate-winupdate-packages 2>&1 | tee -a /tmp/medulla-generate-winupdate-packages.log" > /etc/cron.d/medulla_winupdates_dl
-    # Restart cron service to apply changes
-    systemctl restart cron
-    if [[ $? -ne 0 ]]; then
-        str="[x] Error setting up cron job for downloading Windows updates. Aborting."
-        echo "$str"
-        write_to_log "$str"
-        exit 1
-    fi
-    str="[v] Cron job for downloading Windows updates set up successfully."
-    echo "$str"
-    write_to_log "$str"
 
     ## Setup new MMC module: store
     setup_new_mmc_module "store"

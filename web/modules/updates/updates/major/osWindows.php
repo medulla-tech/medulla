@@ -1,40 +1,5 @@
 <?php
-require_once("modules/updates/includes/xmlrpc.php");
-require_once("modules/admin/includes/xmlrpc.php");
-require_once("modules/xmppmaster/includes/xmlrpc.php");
-require_once("modules/updates/includes/updates.inc.php");
-require_once("modules/updates/includes/productapproval.inc.php");
+require_once("modules/updates/includes/html.inc.php");
 
-global $maxperpage;
-$entityuuid = (isset($_GET['entity'])) ? htmlentities($_GET['entity']) : "UUID0";
-$start = (isset($_GET['start'])) ? htmlentities($_GET['start']) : 0;
-$end = (isset($_GET['end'])) ? htmlentities($_GET['end']) : $maxperpage;
-$filter = (isset($_GET['filter'])) ? htmlentities($_GET['filter']) : "";
-$params = ["source" => "xmppmaster"];
-
-updatesShowNoEnabledProductsWarning();
-
-$timerefresh= 90;
-$_GET["source"] = "xmppmaster";
-$ajax = new AjaxPagebartitlletime(urlStrRedirect("updates/updates/ajaxMajorEntitiesList"),
-                                  "EntityCompliancediv",
-                                  getFilteredGetParams(),
-                                  $timerefresh,
-                                  "circularProgress");
-$ajax->display();
+updatesUpgradeTab("tabwin");
 ?>
-<script type="text/javascript">
-// AjaxPagebartitlletime ne définit pas updateSearchParam ; on le fait à la main pour que la pagination fonctionne.
-function updateSearchParam(filter, start, end, max) {
-    // max est l'élément DOM #maxperpage (souvent absent ici), donc on ne le transmet pas :
-    // le backend prend la valeur de $conf["global"]["maxperpage"].
-    jQuery.ajax({
-        url: '<?php echo addslashes(urlStrRedirect("updates/updates/ajaxMajorEntitiesList")); ?>',
-        type: 'get',
-        data: { source: 'xmppmaster', filter: filter, start: start, end: end },
-        success: function(data) {
-            jQuery("#EntityCompliancediv").html(data);
-        }
-    });
-}
-</script>

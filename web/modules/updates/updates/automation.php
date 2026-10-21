@@ -20,16 +20,25 @@
 
 require("localSidebar.php");
 require("graph/navbar.inc.php");
+require_once("modules/updates/includes/html.inc.php");
 
-$p = new TabbedPageGenerator();
+if (!updatesModuleOpen()) {
+    updatesClosedPage(_T("Automatic approval", "updates"), $sidemenu);
+    return;
+}
+
+$p = new PageGenerator(_T("Automatic approval", "updates"));
 $p->setSideMenu($sidemenu);
-$p->setTitle(_T("Automatic Deployment", "updates"));
-
-$p->addTab("tabwin", _T("Windows", "updates"), "",
-           "modules/updates/updates/automation/windowsRules.php", array());
-
-$p->addTab("tablinux", _T("Linux", "updates"), "",
-           "modules/updates/updates/automation/linuxPolicy.php", array());
-
 $p->display();
+updatesStaleNotice();
+
+$visibleTabs = updatesVisibleTabs(updatesAutomationTabs());
+if (empty($visibleTabs)) {
+    return;
+}
+
+$entity = updatesSelectedEntity();
+$tabParams = $entity ? array('location' => $entity['uuid']) : array();
+
+updatesTabbedPage($visibleTabs, $tabParams);
 ?>

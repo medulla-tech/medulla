@@ -2,28 +2,28 @@
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
-
-// require_once("modules/updates/includes/xmlrpc.php");
-// require_once("modules/admin/includes/xmlrpc.php");
-// require_once("modules/xmppmaster/includes/xmlrpc.php");
-// require_once("modules/updates/includes/updates.inc.php");
-
-global $maxperpage;
+require_once("modules/updates/includes/html.inc.php");
 
 // Page atteinte par redirection depuis "index" : force l'entree de menu active.
 $sidemenu->forceActiveItem("index");
 
-$p = new PageGenerator(_T("Entities Compliance", "updates"));
+if (!updatesModuleOpen()) {
+    updatesClosedPage(_T("Update status", "updates"), $sidemenu);
+    return;
+}
+
+$p = new PageGenerator(_T("Update status", "updates"));
 $p->setSideMenu($sidemenu);
 $p->display();
+updatesStaleNotice();
 
+$visibleTabs = updatesVisibleTabs(updatesStatusTabs());
+if (empty($visibleTabs)) {
+    return;
+}
 
-$p = new TabbedPageGenerator();
-$p->addTab("tabwin", _T("Windows", "updates"), "",
-           "modules/updates/updates/entity/ajaxEntityCompliance.php", array());
+$entity = updatesSelectedEntity();
+$tabParams = $entity ? array('location' => $entity['uuid']) : array();
 
-$p->addTab("tablinux", _T("Linux", "updates"), "",
-     "modules/updates/updates/entity/ajaxEntityComplianceLinux.php", array());
-
-$p->display();
+updatesTabbedPage($visibleTabs, $tabParams);
 ?>

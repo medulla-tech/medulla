@@ -378,11 +378,6 @@ msgstr "Déploiement de logiciels sur ce groupe"
 msgid "Update on this group"
 msgstr "Mettre à jour dans ce groupe"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:259
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:286
-msgid "Updates compliance by machines"
-msgstr "Conformité par machines"
-
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:261
 msgid "Deploy specific update on this group"
 msgstr "Déployer mise à jour spécifique sur ce groupe"
@@ -993,3 +988,7 @@ msgstr "avec %d convergences"
 #: modules/dyngroup/dyngroup/ajaxListGroups.php
 msgid "Some groups could not be deleted:"
 msgstr "Certains groupes n'ont pas pu être supprimés :"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php
+msgid "Upgrade this group"
+msgstr "Mettre à niveau ce groupe"

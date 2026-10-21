@@ -1,51 +1,63 @@
 <?php
-/*
- * (c) 2024-2025 Medulla, http://www.medulla-tech.io
- *
- * $Id$
- *
- * This file is part of MMC, http://www.medulla-tech.io
- *
- * MMC is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * any later version.
- *
- * MMC is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with MMC; If not, see <http://www.gnu.org/licenses/>.
- *
- */
-// modules/admin/admin/manage_entity.php
+// SPDX-FileCopyrightText: 2024-2026 Medulla, http://www.medulla-tech.io
+// SPDX-License-Identifier: GPL-3.0-or-later
+// file : web/modules/updates/updates/updatesListWin.php
+
 require("localSidebar.php");
 require("graph/navbar.inc.php");
-require_once("modules/admin/includes/xmlrpc.php");
-require_once("modules/xmppmaster/includes/xmlrpc.php");
-require_once("modules/updates/includes/updates.inc.php");
+require_once("modules/updates/includes/xmlrpc.php");
+require_once("modules/updates/includes/html.inc.php");
 
+if (!updatesModuleOpen()) {
+    updatesClosedPage(_T("Approval", "updates"), $sidemenu);
+    return;
+}
 
-generateEntityPage(_T("Manage Updates Lists", 'updates'),
-                            "ajaxUpdatesListWin",
-                            $sidemenu);
-?>
-<script type="text/javascript">
-document.addEventListener('click', function(event) {
-    var link = event.target.closest('a[href]');
-    if (!link) return;
+$entity = updatesWinProductsEntity();
+$currentStatus = updatesApprovalStatus($_GET['status'] ?? null);
 
-    var requestUrl = new URL(link.href, window.location.href);
-    if (requestUrl.searchParams.get('module') !== 'updates'
-        || requestUrl.searchParams.get('submod') !== 'updates'
-        || !['blackUnban', 'grayEnable'].includes(requestUrl.searchParams.get('action'))) {
-        return;
+// Bulk action on the selected Windows rows of the current status.
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['approval_bulk'])) {
+    verifyCSRFToken($_POST);
+    $status = is_string($_POST['approval_bulk']) ? $_POST['approval_bulk'] : '';
+    $page = updatesApprovalActionPage($status);
+    $ids = array();
+    foreach ((array) ($_POST['update_ids'] ?? array()) as $value) {
+        $id = updatesApprovalId($value);
+        if ($id !== null) {
+            $ids[$id] = true;
+        }
     }
+    $messages = array(
+        'approved' => _T("Selection approved.", "updates"),
+        'declined' => _T("Selection declined.", "updates"),
+    );
+    if (!$entity || !isset($messages[$status]) || !hasCorrectAcl("updates", "updates", $page)) {
+        new NotifyWidgetFailure(_T("The selection could not be saved.", "updates"));
+    } elseif (empty($ids)) {
+        new NotifyWidgetFailure(_T("No update selected.", "updates"));
+    } elseif (xmlrpc_set_windows_approval(updatesEntityId($entity), array_keys($ids), $status) === true) {
+        new NotifyWidgetSuccess($messages[$status]);
+    } else {
+        new NotifyWidgetFailure(_T("The selection could not be saved.", "updates"));
+    }
+    header("Location: " . updatesApprovalUrl($entity, $currentStatus));
+    exit;
+}
 
-    event.preventDefault();
-    postAction(link.href);
-}, true);
-</script>
+$p = new PageGenerator(_T("Approval", "updates"));
+$p->setSideMenu($sidemenu);
+$p->display();
+updatesStaleNotice();
 
+if (!$entity) {
+    EmptyStateBox::show(_T("No entity available for this user.", "updates"));
+    return;
+}
+
+$p = new TabbedPageGenerator();
+$tabParams = array('location' => $entity['uuid']);
+$p->addTab("tabwin", _T("Windows", "updates"), "", "modules/updates/updates/approval/windowsApprovals.php", $tabParams);
+$p->addTab("tablinux", _T("Linux", "updates"), "", "modules/updates/updates/approval/windowsApprovals.php", $tabParams);
+$p->display();
+?>

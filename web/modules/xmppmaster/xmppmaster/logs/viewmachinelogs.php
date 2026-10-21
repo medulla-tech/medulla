@@ -59,9 +59,6 @@ $pkgname = get_pkg_name_from_uuid($deploymachine['package_id']);
 $pkgcreator = get_pkg_creator_from_uuid($deploymachine['package_id']);
 
 $update_datas = [];
-if($isUpdate) {
-    $update_kb = xmlrpc_get_update_kb($deploymachine['package_id']);
-}
 
 $hostname = explode('.', $info['objectdeploy'][0]['host'], 2)[0];
 
@@ -335,7 +332,6 @@ if (safeCount($deploymachine) != 0) {
         echo '<td class="action text-center">';
         echo '<ul class="action">';
         echo '<li class="infoupdate"><a href="https://www.catalog.update.microsoft.com/Search.aspx?q='.$deploymachine['package_id'].'"> </a></li>';
-        echo '<li class="helpupdate"><a href="https://support.microsoft.com/help/'.$update_kb.'"> </a></li>';
         echo '</ul>';
         echo '</td>';
     }

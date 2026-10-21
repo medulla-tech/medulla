@@ -20,17 +20,18 @@
  */
 
 require_once("modules/updates/includes/xmlrpc.php");
+require_once("modules/updates/includes/html.inc.php");
 
-$hasData = xmlrpc_has_update_data();
+updatesRememberEntity();
 
 $sidemenu = new SideMenu();
 $sidemenu->setClass("updates");
 
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Entities Compliance", 'updates'), "updates", "updates",
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Update status", 'updates'), "updates", "updates",
                                             "index"));
 
-if ($hasData) {
-    $sidemenu->addSideMenuItem(new SideMenuItem(_T("OS Upgrades",
+if (updatesModuleOpen()) {
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Upgrades",
                                                    'updates'),
                                                 "updates",
                                                 "updates",
@@ -39,31 +40,29 @@ if ($hasData) {
     // Configuration, dans l'ordre du flux : declarer les produits suivis,
     // arbitrer ce qui remonte, puis automatiser.
     $sidemenu->addSideMenuItem(
-         new SideMenuItem(_T("Products",
+         new SideMenuItem(_T("Tracked products",
                              "updates"),
                           "updates",
                           "updates",
                           "products"));
 
-    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Manage Updates Lists",
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Approval",
                                                    'updates'),
                                                 "updates",
                                                 "updates",
                                                 "updatesListWin"));
 
     $sidemenu->addSideMenuItem(
-         new SideMenuItem(_T("Automatic Deployment",
+         new SideMenuItem(_T("Automatic approval",
                              "updates"),
                           "updates",
                           "updates",
                           "automation"));
+
+    $sidemenu->addSideMenuItem(
+         new SideMenuItem(_T("Settings",
+                             "updates"),
+                          "updates",
+                          "updates",
+                          "settingsWin"));
 }
-
-// $sidemenu->addSideMenuItem(
-//      new SideMenuItem(_T("test os",
-//                          "updates"),
-//                       "updates",
-//                       "updates",
-//                       "testentitylist"));
-
-
