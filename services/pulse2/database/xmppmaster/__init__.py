@@ -5417,6 +5417,23 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
+    def getPendingConvergenceMachineUuids(self, session, command_id, machine_uuids):
+        """MSC dispatch completion does not imply XMPP installation completion."""
+        query = session.query(Deploy.inventoryuuid).filter(
+            Deploy.command == command_id,
+            Deploy.inventoryuuid.in_(machine_uuids),
+            or_(
+                Deploy.state.is_(None),
+                not_(or_(
+                    Deploy.state.like("%SUCCESS%"),
+                    Deploy.state.like("%ABORT%"),
+                    Deploy.state.like("%ERROR%"),
+                )),
+            ),
+        ).distinct()
+        return [row[0] for row in query]
+
+    @DatabaseHelper._sessionm
     def getdeployfromcommandid_for_convergence(self, session, command_id, uuid):
         try:
             if uuid == "UUID_NONE":
