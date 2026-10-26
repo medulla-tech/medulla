@@ -329,6 +329,9 @@ $root = $conf["global"]["root"];
                         && ['index', 'auditteam', 'auditteamconvergence', 'convergence', 'logbygrpmachine', 'logbymachine'].indexOf(action) !== -1
                         && requestUrl.searchParams.get('postaction') === 'delete') {
                         postKeys = ['cmd_id', 'postaction', 'auth_token'];
+                    } else if (module === 'base' && submod === 'computers'
+                        && ['computersgroupsubdel', 'computersgroupcreatesubdel'].indexOf(action) !== -1) {
+                        postKeys = ['id', 'sub_id', 'auth_token'];
                     } else if (module === 'pkgs' && submod === 'pkgs'
                         && action === 'rulesList'
                         && ['raise', 'lower'].indexOf(requestUrl.searchParams.get('mod')) !== -1) {
