@@ -154,12 +154,12 @@ function get_targets_for_coh($coh_ids)
     return xmlCall('msc.get_targets_for_coh', array($coh_ids));
 }
 
-function displayLogs($params)
+function displayLogs($params, $createGroup = false)
 {
 
     $result1 = xmlCall('msc.displayLogs', array($params));
 
-    if (!empty($_GET['create_group'])) {
+    if ($createGroup) {
 
         // Small hack to include all pages
         $params['min'] = 0;
