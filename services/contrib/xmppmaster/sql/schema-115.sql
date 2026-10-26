@@ -54,7 +54,7 @@ BEGIN
             xmppmaster.update_data aa
             JOIN xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
          WHERE
-            aa.title LIKE '%Windows 11 Version 26H2%'
+            aa.title LIKE '%Windows 11, Version 26H2%'
             AND aa.product LIKE '%Windows 11%'
             AND aa.title NOT LIKE '%ARM64%'
             AND aa.title NOT LIKE '%X86%'
