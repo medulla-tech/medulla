@@ -62,6 +62,7 @@ class Panel {
         </label>
         </div></div>';
         echo '<div class="portlet-content">';
+$authToken = json_encode($_SESSION['auth_token'] ?? '');
 echo <<< JSSCRIPT
 <script>
 jQuery(function(){
@@ -126,8 +127,12 @@ jQuery(function(){
 
     jQuery.ajax({
       url: "main.php?module=dashboard&submod=main&action=ajaxSessionPanels",
-      type: 'get',
-      data: {"widget": widgetId, "toggled": input.is(":checked") ? 1 : 0}
+      type: 'post',
+      data: {
+        "widget": widgetId,
+        "toggled": input.is(":checked") ? 1 : 0,
+        "auth_token": $authToken
+      }
     });
   });
 });
