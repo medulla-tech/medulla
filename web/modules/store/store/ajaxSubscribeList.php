@@ -152,7 +152,8 @@ if (typeof window.storeOpenDeploy === 'undefined') {
     window.storeUnsubLabel = <?php echo json_encode(_T('Unsubscribe from this software?', 'store')); ?>;
     window.storeUnsubscribe = function (el) {
         displayConfirmationPopup(window.storeUnsubLabel,
-            'main.php?module=store&submod=store&action=unsubscribe&ids=' + encodeURIComponent(el.getAttribute('data-ids')));
+            'main.php?module=store&submod=store&action=unsubscribe&ids=' + encodeURIComponent(el.getAttribute('data-ids')),
+            null, null, 'POST');
     };
 }
 </script>
