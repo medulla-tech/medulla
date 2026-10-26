@@ -225,6 +225,8 @@ $root = $conf["global"]["root"];
             }
 
             // submits get link style to post request
+            var postActionAuthToken = <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>;
+
             function postAction(url, target, postData, postKeys) {
                 var parts = url.split('?');
                 var path = parts[0];
@@ -372,7 +374,7 @@ $root = $conf["global"]["root"];
 
                 if (!klass)
                     var klass = '';
-                var yesAction = method === 'POST' ? ' onclick="postAction(this.href); return false;"' : '';
+                var yesAction = method === 'POST' ? ' onclick="postAction(this.href, null, {auth_token: postActionAuthToken}); return false;"' : '';
                 var message = '<div style="padding: 10px"><div class="alert alert-info ' + klass + '">' + message + '</div>';
                 message += '<div style="text-align: center"><a class="btn btn-primary" href="' + url_yes + '"' + yesAction + '><?= _('Yes') ?></a>';
 
