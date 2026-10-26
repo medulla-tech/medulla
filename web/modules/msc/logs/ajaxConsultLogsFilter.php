@@ -33,7 +33,6 @@ $start = empty($_GET["start"]) ? 0 : $_GET["start"];
 
 $command_type = False;
 if (!empty($_GET["commands"])) {
-    setCommandsFilter($_GET["commands"]);
     $command_type = $_GET['commands'];
 }
 

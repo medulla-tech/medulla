@@ -39,9 +39,6 @@ $type = empty($_GET["type"]) ? 0 : $_GET["type"];
 $current_state = empty($_GET['currentstate']) ? '' : $_GET['currentstate'];
 $from = empty($_GET["from"]) ? '' : $_GET["from"];
 
-if (!empty($_GET["commands"]))
-    setCommandsFilter($_GET["commands"]);
-
 if ($type == -1) {
     $count = count_all_commandsonhost_by_currentstate($current_state, $filter);
     $cmds = get_all_commandsonhost_by_currentstate($current_state, $start, $start + $maxperpage, $filter);

@@ -248,6 +248,12 @@ class RenderedMSCActions extends HtmlElement {
                         </tr>
                     </table>
                 </div>';
+            print '
+                            </form>
+                        </td>
+                        </tr>
+                    </table>
+                </div>';
         } elseif (!$this->error) {
             print '
                 <div id="msc-standard-host-actions"> <!-- STANDARD HOST ACTIONS -->
@@ -342,7 +348,7 @@ class AjaxFilterCommands extends AjaxFilter {
 
     function __construct($url, $divid = "container", $paramname = 'commands', $params = array(), $formid = 'Form') {
         parent::__construct($url, $divid, $params, $formid);
-        $this->commands = new SelectItem($paramname, 'pushSearch', 'searchfieldreal noborder');
+        $this->commands = new SelectItem($paramname, null, 'searchfieldreal noborder');
         $this->paramname = $paramname;
         $elts = array("mine" => _T("My commands", "msc"), "all" => _T("All users commands", "msc"));
         $this->setElements($elts);
@@ -396,21 +402,26 @@ class AjaxFilterCommands extends AjaxFilter {
                         <label for="cbx_overtimed" style="padding: 7px 10px; position: relative; float: left"><?php print(_T('Overtime', 'msc')); ?></label>
                         <input type="checkbox" name="cbx_state[]" id="cbx_stopped" value="stopped" style="top: 2px; left: 5px; position: relative; float: left" />
                         <label for="cbx_stopped" style="padding: 7px 10px; position: relative; float: left"><?php print(_T('Stopped', 'msc')); ?></label>
-                        <input type="hidden" name="create_group" value="" />
                         <br/>
                         <div style="margin:2px 7px -5px 5px" align="right">
                             <input id="btnCreateGroup"  type="button" value="<?php print _T('Create a group'); ?>" class="btnPrimary">
                         </div>
                         <script type="text/javascript">
                             var $ = jQuery;
+                            var createGroupAuthToken = <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>;
                             $(function() {
                                 $('#btnCreateGroup').click(function(){
-                                    var create_group_field = $(this).parents('form:first').find('input[name=create_group]');
-                                    create_group_field.val('1');
-                                    pushSearch<?php echo $this->divid; ?>();
-                                    setTimeout(function(){
-                                        create_group_field.val('');
-                                    }, 1000);
+                                    var form = $(this).parents('form:first');
+                                    var filter = form.find('input#param').val() || '';
+                                    var commands = form.find('select[name="<?php echo $this->paramname; ?>"]').val() || '';
+                                    var params = <?php echo json_encode($this->params); ?>;
+                                    var url = <?php echo json_encode($this->url); ?> + 'filter=' + encodeURIComponent(filter)
+                                        + '&<?php echo $this->paramname; ?>=' + encodeURIComponent(commands) + params;
+                                    url += '&' + form.serialize();
+                                    jQuery('#<?php echo $this->divid; ?>').load(url, {
+                                        create_group: '1',
+                                        auth_token: createGroupAuthToken
+                                    });
                                 });
                             });
                         </script>
@@ -426,6 +437,19 @@ class AjaxFilterCommands extends AjaxFilter {
                 var $ = jQuery;
                 $(function() {
                     $('#Form input[type=checkbox]').click(pushSearch<?php echo $this->divid; ?>);
+                    $('#<?php echo $this->formid; ?> select[name="<?php echo $this->paramname; ?>"]')
+                        .off('change.mscCommandsFilter')
+                        .on('change.mscCommandsFilter', function() {
+                            var selectedCommands = jQuery(this).val();
+                            clearTimers<?php echo $this->divid; ?>();
+                            jQuery.post(<?php echo json_encode(urlStrRedirect('base/computers/ajaxLogsFilter')); ?>, {
+                                save_commands_filter: '1',
+                                commands: selectedCommands,
+                                auth_token: <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>
+                            }).done(function() {
+                                updateSearch<?php echo $this->divid; ?>();
+                            });
+                        });
                 });
                 jQuery('#param').focus();
                 var refreshtimer = null;
@@ -514,7 +538,7 @@ class AjaxFilterCommandsStates extends AjaxFilter {
         parent::__construct($url, $divid, $params);
 
         /* Commands selection dropdown */
-        $this->commands = new SelectItem($paramname1, 'pushSearch', 'searchfieldreal noborder');
+        $this->commands = new SelectItem($paramname1, null, 'searchfieldreal noborder');
         $this->paramname1 = $paramname1;
         $elts = array("mine" => _T("My commands", "msc"), "all" => _T("All users commands", "msc"));
         $this->commands->setElements($elts);
@@ -569,6 +593,19 @@ class AjaxFilterCommandsStates extends AjaxFilter {
 
             <script type="text/javascript">
                 jQuery('#param').focus();
+                jQuery('#Form select[name="<?php echo $this->paramname1; ?>"]')
+                    .off('change.mscCommandsFilter')
+                    .on('change.mscCommandsFilter', function() {
+                        var selectedCommands = jQuery(this).val();
+                        clearTimers<?php echo $this->divid; ?>();
+                        jQuery.post(<?php echo json_encode(urlStrRedirect('base/computers/ajaxLogsFilter')); ?>, {
+                            save_commands_filter: '1',
+                            commands: selectedCommands,
+                            auth_token: <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>
+                        }).done(function() {
+                            updateStates<?php echo $this->divid; ?>();
+                        });
+                    });
                 var refreshtimer = null;
                 var refreshparamtimer = null;
                 var refreshdelay = <?php echo $this->refresh ?>;
