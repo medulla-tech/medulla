@@ -22,13 +22,18 @@
  *
  */
 
-$id = (isset($_GET['id'])) ? htmlentities($_GET['id']) : NULL;
-$mod = (isset($_GET['mod'])) ? htmlentities($_GET['mod']) : NULL;
-$name = (isset($_GET['name'])) ? htmlentities($_GET['name']) : NULL;
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+  http_response_code(405);
+  exit;
+}
 
-$module = htmlentities($_GET['module']);
-$submod = htmlentities($_GET['submod']);
-$action = htmlentities($_GET['prev_action']);
+verifyCSRFToken($_POST);
+
+$id = (isset($_POST['id'])) ? htmlentities($_POST['id']) : NULL;
+$mod = (isset($_POST['mod'])) ? htmlentities($_POST['mod']) : NULL;
+$name = (isset($_POST['name'])) ? htmlentities($_POST['name']) : NULL;
+
+$action = htmlentities($_POST['prev_action']);
 
 $result = xmlrpc_order_relay_rule($mod, $id);
 if($result['status'] == "success"){
