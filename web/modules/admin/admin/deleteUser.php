@@ -23,11 +23,18 @@
 require("modules/base/includes/users.inc.php");
 require_once("modules/admin/includes/xmlrpc.php");
 
-if (isset($_GET['action'], $_GET['userId'], $_GET['userName']) && $_GET['action'] === 'deleteUser') {
-    $userId     = (int) $_GET['userId'];
-    $login      = htmlspecialchars((string) $_GET['userName'], ENT_QUOTES);
-    $entityId   = isset($_GET['entities_id']) ? (int) $_GET['entities_id'] : 0;
-    $entityName = isset($_GET['entity_name']) ? htmlspecialchars((string) $_GET['entity_name'], ENT_QUOTES) : _T("Unknown", "admin");
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
+verifyCSRFToken($_POST);
+
+if (($_GET['action'] ?? '') === 'deleteUser' && isset($_POST['userId'], $_POST['userName'])) {
+    $userId     = (int) $_POST['userId'];
+    $login      = htmlspecialchars((string) $_POST['userName'], ENT_QUOTES);
+    $entityId   = isset($_POST['entities_id']) ? (int) $_POST['entities_id'] : 0;
+    $entityName = isset($_POST['entity_name']) ? htmlspecialchars((string) $_POST['entity_name'], ENT_QUOTES) : _T("Unknown", "admin");
 
     try {
         // Deletion in GLPI

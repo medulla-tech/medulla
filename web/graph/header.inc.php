@@ -334,6 +334,13 @@ $root = $conf["global"]["root"];
                     } else if (module === 'base' && submod === 'computers'
                         && ['computersgroupsubdel', 'computersgroupcreatesubdel'].indexOf(action) !== -1) {
                         postKeys = ['id', 'sub_id', 'auth_token'];
+                    } else if (module === 'admin' && submod === 'admin'
+                        && ['deleteRelayRule', 'moveRelayRule', 'moveRule'].indexOf(action) !== -1) {
+                        postKeys = null;
+                    } else if (module === 'admin' && submod === 'admin'
+                        && action === 'ajaxRules'
+                        && ['raise', 'down'].indexOf(requestUrl.searchParams.get('mod')) !== -1) {
+                        postKeys = null;
                     } else if (module === 'pkgs' && submod === 'pkgs'
                         && action === 'rulesList'
                         && ['raise', 'lower'].indexOf(requestUrl.searchParams.get('mod')) !== -1) {

@@ -23,16 +23,21 @@
 require("modules/base/includes/users.inc.php");
 require_once("modules/admin/includes/xmlrpc.php");
 
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
 
+verifyCSRFToken($_POST);
 
-if (isset($_GET['userId'], $_GET['entities_id']) &&
-    $_GET['userId'] !== '' &&
-    $_GET['entities_id'] !== '') {
+if (isset($_POST['userId'], $_POST['entities_id']) &&
+    $_POST['userId'] !== '' &&
+    $_POST['entities_id'] !== '') {
 
-    $userId     = (int)$_GET['userId'];
-    $isActive   = isset($_GET['is_active']) ? (int)$_GET['is_active'] : 0;
-    $entityId   = (int)$_GET['entities_id'];
-    $userName   = isset($_GET['userName']) ? htmlspecialchars($_GET['userName']) : _T("Unknown", "admin");
+    $userId     = (int)$_POST['userId'];
+    $isActive   = isset($_POST['is_active']) ? (int)$_POST['is_active'] : 0;
+    $entityId   = (int)$_POST['entities_id'];
+    $userName   = isset($_POST['userName']) ? htmlspecialchars($_POST['userName']) : _T("Unknown", "admin");
     $caller     = $_SESSION['glpi_user']['profile_name'];
     $token      = $_SESSION['glpi_user']['api_token'] ?? null;
 
@@ -62,7 +67,7 @@ if (isset($_GET['userId'], $_GET['entities_id']) &&
         "admin/admin/listUsersofEntity",
         [
             'entityId'   => $entityId,
-            'entityName' => $_GET['entity_name'] ?? ''
+            'entityName' => $_POST['entity_name'] ?? ''
         ]
     ));
     exit;

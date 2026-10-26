@@ -20,8 +20,15 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if(isset($_GET['rule_id'])){
-  $rule_id = htmlentities($_GET['rule_id']);
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+  http_response_code(405);
+  exit;
+}
+
+verifyCSRFToken($_POST);
+
+if(isset($_POST['rule_id'])){
+  $rule_id = htmlentities($_POST['rule_id']);
 
   $result = xmlrpc_delete_rule_relay($rule_id);
   if($result['status'] == 'success'){
@@ -33,22 +40,22 @@ if(isset($_GET['rule_id'])){
   }
 
 
-  if(isset($_GET['prev_action'])){
-    $action = htmlentities($_GET['prev_action']);
-    $id = htmlentities($_GET['rule']);
+  if(isset($_POST['prev_action'])){
+    $action = htmlentities($_POST['prev_action']);
+    $id = htmlentities($_POST['rule']);
   }
   else{
     $action = "rules_tabs";
-    $id = htmlentities($_GET['id']);
+    $id = htmlentities($_POST['id']);
   }
 
   $params = [
     'id'=>$id,
-    'jid'=>$_GET['jid'],
-    'hostname'=>$_GET['hostname']
+    'jid'=>$_POST['jid'],
+    'hostname'=>$_POST['hostname']
   ];
-  if(isset($_GET['name']))
-    $params['name'] = htmlentities($_GET['name']);
+  if(isset($_POST['name']))
+    $params['name'] = htmlentities($_POST['name']);
   header("Location: " . urlStrRedirect("admin/admin/$action", $params));
   exit;
 }
