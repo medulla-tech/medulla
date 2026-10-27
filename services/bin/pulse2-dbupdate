@@ -24,31 +24,148 @@
 
 """ Database version detect and update """
 
+import os
+import re
+import sys
 import logging
 
 from optparse import OptionParser
+from subprocess import Popen, PIPE
 
-from mmc.database.ddl import DBControl
+import MySQLdb
 
 log = logging.getLogger("pulse2-dbupdate")
 
+BLACKLISTED_DATABASES = ("glpi",)
+
+
+def get_script_number(filename):
+    """
+    Extract the schema number of a filename.
+
+    @param filename: filename containing a number to extract
+    @type filename: str
+
+    @return: number of script in fix format xxx
+    @rtype: str
+    """
+    numbers = re.findall(r"\d{3}", os.path.basename(filename))
+    return numbers[0] if len(numbers) == 1 else None
+
+
+def get_scripts(sqldir):
+    """
+    Get the sorted schema scripts (schema-xxx.sql) of a SQL folder.
+
+    @param sqldir: folder holding the SQL scripts
+    @type sqldir: str
+
+    @return: list of absolute filenames
+    @rtype: list
+    """
+    if not os.path.isdir(sqldir):
+        raise Exception(f"SQL schemas not found in {sqldir}")
+
+    return [
+        os.path.join(sqldir, script)
+        for script in sorted(os.listdir(sqldir))
+        if re.fullmatch(r"schema-\d{3}\.sql", script)
+    ]
+
+
+def execute_script(options, filename):
+    """
+    Execute a SQL script with the mysql command line client.
+
+    @param filename: script to execute
+    @type filename: str
+
+    @return: True if the script ran without error
+    @rtype: bool
+    """
+    cmd = ["mysql", options.database, f"-u{options.user}",
+           f"-h{options.host}", f"-P{options.port}"]
+    env = dict(os.environ, MYSQL_PWD=options.password)
+    process = Popen(cmd, stdout=PIPE, stdin=PIPE, stderr=PIPE, env=env)
+    _, err = process.communicate(f"source {filename}\n".encode("utf-8"))
+    err = err.decode("utf-8", errors="replace") if err else ""
+    if err or process.returncode:
+        log.error(f"Error while execute script '{filename}': {err}")
+        return False
+    return True
+
+
 def db_update(options):
     """
-    Call of database update engine.
+    Create or upgrade the database to the last schema version.
 
     @param options: optparse options container
     @type options: optparse.Option
+
+    @return: True if the database is up-to-date
+    @rtype: bool
     """
+    module = options.database
+    if module.lower() in BLACKLISTED_DATABASES:
+        log.debug(f"Database '{module}' is not managed by pulse2-dbupdate")
+        return True
+
+    sqldir = os.path.join(options.prefix, "share", "doc", "pulse2",
+                          "contrib", module, "sql")
+    scripts = get_scripts(sqldir)
+    version_to_install = max(int(get_script_number(s)) for s in scripts)
+
+    conn = MySQLdb.connect(user=options.user, passwd=options.password,
+                           host=options.host, port=int(options.port),
+                           db="mysql")
     try:
-        db_control = DBControl(user=options.user,
-                               passwd=options.password,
-                               host=options.host,
-                               port=int(options.port),
-                               module=options.database,
-                               log=log)
-        db_control.process()
-    except Exception as exc:
-        log.warning(f"An error occured when running dbupdate : {str(exc)}")
+        cursor = conn.cursor()
+        cursor.execute("SELECT 1 FROM information_schema.schemata"
+                       " WHERE schema_name = %s", (module,))
+        if not cursor.fetchall():
+            cursor.execute(f"CREATE DATABASE `{module}`")
+            version_in_db = 0
+        else:
+            cursor.execute("SELECT table_name FROM information_schema.tables"
+                           " WHERE UPPER(table_name) = 'VERSION'"
+                           " AND table_schema = %s", (module,))
+            table = cursor.fetchall()
+            version_in_db = 0
+            if len(table) == 1:
+                cursor.execute(f"SELECT Number FROM `{module}`.`{table[0][0]}`")
+                rows = cursor.fetchall()
+                version_in_db = rows[0][0] if len(rows) == 1 else 0
+    finally:
+        conn.close()
+
+    if version_in_db == version_to_install:
+        log.debug(f"Database '{module}' is up-to-date")
+        return True
+
+    if version_in_db > version_to_install:
+        log.error(f"Database '{module}' version conflict")
+        log.error("Installed version is %d, but you are trying to install"
+                  " the version %d." % (version_in_db, version_to_install))
+        return False
+
+    log.info("'%s' database updated from version %d to %d"
+             % (module, version_in_db, version_to_install))
+    for script in scripts:
+        if version_in_db < int(get_script_number(script)) <= version_to_install:
+            log.debug(f"Installing schema version: v.{get_script_number(script)}")
+            if not execute_script(options, script):
+                if module == "dyngroup":
+                    log.warning("Dyngroup known issue: Maybe your SQL engine is"
+                                " MyISAM, you can check with: SHOW TABLE STATUS")
+                    log.warning("Here is SQL request who will help you to"
+                                " convert from MyISAM to InnoBD engine:")
+                    log.warning('SELECT CONCAT("ALTER TABLE ",table_schema,".",'
+                                'table_name," ENGINE=InnoDB;") FROM'
+                                ' information_schema.tables WHERE'
+                                ' table_schema="dyngroup";')
+                return False
+    return True
+
 
 def options_validate(options):
     """
@@ -102,6 +219,11 @@ if __name__ == "__main__":
                       dest="port",
                       default=3306,
                       help="MySQL port")
+    parser.add_option("--prefix",
+                      dest="prefix",
+                      default="/usr",
+                      help="Installation prefix of the SQL schemas"
+                           " (<prefix>/share/doc/pulse2/contrib/<db>/sql)")
     parser.add_option("-q", "--quiet",
                       action="store_true",
                       dest="verbose",
@@ -115,5 +237,11 @@ if __name__ == "__main__":
     log.addHandler(handler)
     log.setLevel(level)
 
-    if options_validate(options):
-        db_update(options)
+    if not options_validate(options):
+        sys.exit(2)
+
+    try:
+        sys.exit(0 if db_update(options) else 1)
+    except Exception as exc:
+        log.warning(f"An error occured when running dbupdate : {str(exc)}")
+        sys.exit(1)
