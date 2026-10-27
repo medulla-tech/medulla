@@ -157,7 +157,7 @@ if ($local_page->isVisible()) {
     )), ENT_QUOTES, 'UTF-8');
     ?>
 
-    <p><a href="#" onClick="jQuery('__popup_container').load(<?php echo $addUrl; ?>, <?php echo $addData; ?>); return false"><?php echo  _( "Add this page to your favorites") ?></a></p>
+    <p><a href="#" onClick="jQuery('#__popup_container').load(<?php echo $addUrl; ?>, <?php echo $addData; ?>); return false"><?php echo  _( "Add this page to your favorites") ?></a></p>
     <?php
 }
 
