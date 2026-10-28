@@ -22,6 +22,8 @@
 
 require_once("modules/support/includes/xmlrpc.php");
 
+verifyCSRFToken($_GET);
+
 open();
 header("Location: " . urlStrRedirect("base/main/"));
 exit;

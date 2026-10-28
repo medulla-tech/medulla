@@ -259,6 +259,8 @@ class ExternalLdapProvisioner(ProvisionerI):
         l = ldapUserGroupControl()
         userentry = authtoken.getInfos()[1]
         uid = userentry[self.config.ldap_uid][0]
+        if isinstance(uid, bytes):
+            uid = uid.decode("utf-8")
         if l.existUser(uid):
             self.logger.debug(f"User {uid} already exists, so this user won't be added")
         else:

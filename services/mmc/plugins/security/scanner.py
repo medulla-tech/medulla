@@ -10,18 +10,18 @@ to find CVE vulnerabilities. CVEs are stored locally and linked to software.
 
 import logging
 from logging.handlers import RotatingFileHandler
-import re
 import requests
 import time
 import configparser
-from datetime import datetime
 from typing import Optional, Dict, List, Any, Callable
-from threading import Event
-from sqlalchemy import create_engine, text
+from collections import Counter
+from threading import Condition, Event
+from sqlalchemy import bindparam, create_engine, text
 from Cryptodome.Cipher import AES
 from Cryptodome.Util.Padding import pad
 import base64
 import os
+from pulse2.database.security import OS_BUILD, OS_JOINS, OS_LABEL
 
 # Optional: WebSocket support (python-socketio)
 try:
@@ -110,166 +110,102 @@ def get_dyngroup_db_url():
     return f"mysql+pymysql://{dbuser}:{dbpasswd}@{dbhost}:{dbport}/{dbname}"
 
 
-def _ecosystem_from_os(os_name):
-    """Déduit l'ecosystem OSV depuis le nom d'OS GLPI ; '' si non géré (Windows…).
-    Phase 1 : Debian (ex "Debian GNU/Linux 12 (bookworm)" -> "Debian:12"). Sert à
-    router les softs Linux vers OSV côté CVE Central (au lieu de CPE/NVD)."""
-    if not os_name:
-        return ''
-    if 'debian' in os_name.lower():
-        m = re.search(r'\b(\d+)\b', os_name)
-        if m:
-            return f"Debian:{m.group(1)}"
-    return ''
+def _group_machine_ids(group_id):
+    engine = create_engine(get_dyngroup_db_url())
+    try:
+        with engine.connect() as conn:
+            rows = conn.execute(text("""
+                SELECT DISTINCT dm.uuid
+                FROM Results r
+                JOIN Machines dm ON dm.id = r.FK_machines
+                WHERE r.FK_groups = :group_id
+            """), {'group_id': group_id})
+            return [int(uuid[4:]) for (uuid,) in rows if uuid and uuid.startswith('UUID') and uuid[4:].isdigit()]
+    finally:
+        engine.dispose()
 
 
 def get_unique_software_from_glpi(entity_id=None, group_id=None, machine_id=None,
-                                   excluded_vendors=None, excluded_names=None):
+                                  excluded_vendors=None, excluded_names=None):
+    """Unique (name, version, os) software and Windows builds of the targeted machines.
+
+    Raises on database error so that the scan is reported as failed.
     """
-    Get unique software list from GLPI (optionally filtered by entity, group or machine)
+    excluded_vendors = {v.lower() for v in excluded_vendors or [] if v}
+    excluded_names = set(excluded_names or [])
 
-    Args:
-        entity_id: Filter by entity ID (optional)
-        group_id: Filter by group ID (optional)
-        machine_id: Filter by machine GLPI ID (optional)
-        excluded_vendors: List of vendors to exclude (exact match, case-insensitive)
-        excluded_names: List of exact names to exclude (case-sensitive)
+    where = ["c.is_deleted = 0", "c.is_template = 0"]
+    params = {'ext': '%Extension Navigateur%', 'addon': '%Categorie: %'}
+    if machine_id is not None:
+        where.append("c.id = :machine_id")
+        params['machine_id'] = machine_id
+    if entity_id is not None:
+        where.append("c.entities_id = :entity_id")
+        params['entity_id'] = entity_id
+    if group_id is not None:
+        machine_ids = _group_machine_ids(group_id)
+        if not machine_ids:
+            logger.warning(f"No machines found in group {group_id}")
+            return []
+        where.append("c.id IN :machine_ids")
+        params['machine_ids'] = machine_ids
+    where = ' AND '.join(where)
 
-    Returns:
-        List of unique software dicts with name, version, vendor
-    """
-    # Use empty lists if not provided (exclusions come from config)
-    if excluded_vendors is None:
-        excluded_vendors = []
-    if excluded_names is None:
-        excluded_names = []
+    # Le script d'inventaire des extensions note « Categorie: … » en commentaire : extension
+    # de navigateur, ou autre composant (complément Office, thème, pack de langue…).
+    query = text(f"""
+        SELECT s.name, sv.name, m.name,
+               CASE WHEN s.comment LIKE :ext THEN 'browser extension'
+                    WHEN s.comment LIKE :addon THEN 'add-on' ELSE '' END, {OS_LABEL}
+        FROM glpi_items_softwareversions isv
+        JOIN glpi_softwareversions sv ON sv.id = isv.softwareversions_id
+        JOIN glpi_softwares s ON s.id = sv.softwares_id
+        LEFT JOIN glpi_manufacturers m ON m.id = s.manufacturers_id
+        JOIN glpi_computers c ON c.id = isv.items_id {OS_JOINS}
+        WHERE isv.itemtype = 'Computer' AND isv.is_deleted = 0 AND {where}
+        UNION
+        SELECT os.name, {OS_BUILD}, 'Microsoft', 'os', {OS_LABEL}
+        FROM glpi_computers c {OS_JOINS}
+        WHERE {OS_BUILD} IS NOT NULL AND {where}
+    """)
+    if 'machine_ids' in params:
+        query = query.bindparams(bindparam('machine_ids', expanding=True))
 
-    # Prepare lowercase vendors for comparison
-    excluded_vendors_lower = [v.lower() for v in excluded_vendors if v]
+    engine = create_engine(get_glpi_db_url())
     try:
-        engine = create_engine(get_glpi_db_url())
-
-        # Build WHERE clause based on filters
-        where_clause = "WHERE isv.itemtype = 'Computer'"
-        params = {}
-
-        if machine_id is not None:
-            where_clause += " AND c.id = :machine_id"
-            params['machine_id'] = machine_id
-
-        if entity_id is not None:
-            where_clause += " AND c.entities_id = :entity_id"
-            params['entity_id'] = entity_id
-
-        if group_id is not None:
-            # Get machine IDs from dyngroup database (separate connection)
-            try:
-                dyngroup_engine = create_engine(get_dyngroup_db_url())
-                with dyngroup_engine.connect() as dg_conn:
-                    dg_result = dg_conn.execute(text("""
-                        SELECT DISTINCT dm.uuid
-                        FROM Results r
-                        JOIN Machines dm ON dm.id = r.FK_machines
-                        WHERE r.FK_groups = :group_id
-                    """), {'group_id': group_id})
-                    machine_ids = []
-                    for row in dg_result:
-                        uuid_val = row[0]
-                        if uuid_val and uuid_val.startswith('UUID'):
-                            machine_ids.append(int(uuid_val[4:]))
-                dyngroup_engine.dispose()
-                if machine_ids:
-                    ids_str = ','.join(str(mid) for mid in machine_ids)
-                    where_clause += f" AND c.id IN ({ids_str})"
-                else:
-                    logger.warning(f"No machines found in group {group_id}")
-                    return []
-            except Exception as e:
-                logger.error(f"Error getting machines from dyngroup for group {group_id}: {e}")
-                return []
-
-        query = text(f"""
-            SELECT DISTINCT
-                s.name as software_name,
-                sv.name as version,
-                m.name as manufacturer,
-                s.comment as comment,
-                os.name as os_name
-            FROM glpi_items_softwareversions isv
-            JOIN glpi_softwareversions sv ON sv.id = isv.softwareversions_id
-            JOIN glpi_softwares s ON s.id = sv.softwares_id
-            LEFT JOIN glpi_manufacturers m ON m.id = s.manufacturers_id
-            JOIN glpi_computers c ON c.id = isv.items_id
-            LEFT JOIN glpi_items_operatingsystems ios ON ios.items_id = c.id AND ios.itemtype = 'Computer'
-            LEFT JOIN glpi_operatingsystems os ON os.id = ios.operatingsystems_id
-            {where_clause}
-            ORDER BY s.name, sv.name
-        """)
-
-        softwares = []
-        excluded_count = 0
         with engine.connect() as conn:
-            result = conn.execute(query, params)
-            for row in result:
-                sw_name = row[0]
-                sw_version = row[1]
-                sw_vendor = row[2]
-                sw_comment = row[3] or ''
-                os_name = row[4] if len(row) > 4 else None
+            rows = conn.execute(query, params).fetchall()
+    finally:
+        engine.dispose()
 
-                if not sw_name:
-                    continue
+    softwares = {}
+    excluded = 0
+    for name, version, vendor, category, os_name in rows:
+        if not name:
+            continue
+        if (vendor and vendor.lower() in excluded_vendors) or name in excluded_names:
+            excluded += 1
+            continue
+        key = (name, version or '', os_name or '')
+        softwares.setdefault(key, {'name': key[0], 'version': key[1], 'vendor': vendor or '',
+                                   'category': category, 'os': key[2]})
 
-                # Extension de navigateur ? Détecté via le commentaire remonté
-                # par l'inventaire ("Categorie: Extension Navigateur"). Permet à
-                # CVE Central de ne pas confondre une extension avec son navigateur.
-                sw_category = 'browser extension' if 'Extension Navigateur' in sw_comment else ''
-
-                # Check exclusion vendors (exact match, case-insensitive)
-                if sw_vendor and sw_vendor.lower() in excluded_vendors_lower:
-                    excluded_count += 1
-                    logger.debug(f"Excluded by vendor: {sw_name} ({sw_vendor})")
-                    continue
-
-                # Check exclusion names (exact match, case-sensitive)
-                if sw_name in excluded_names:
-                    excluded_count += 1
-                    logger.debug(f"Excluded by name: {sw_name}")
-                    continue
-
-                softwares.append({
-                    'name': sw_name,
-                    'version': sw_version or '',
-                    'vendor': sw_vendor or '',
-                    'category': sw_category,
-                    # ecosystem OSV (ex "Debian:12") pour les machines Linux ->
-                    # CVE Central détecte via OSV (par package) au lieu de CPE/NVD.
-                    'ecosystem': _ecosystem_from_os(os_name)
-                })
-
-        if excluded_count > 0:
-            logger.debug(f"Excluded {excluded_count} software by config rules")
-
-        logger.debug(f"GLPI query returned {len(softwares)} software packages")
-        return softwares
-
-    except Exception as e:
-        logger.error(f"Error getting software from GLPI: {e}")
-        return []
+    logger.debug(f"GLPI inventory: {len(softwares)} software, {excluded} excluded by config")
+    return list(softwares.values())
 
 
 class CVECentralClient:
     """Client for the CVE Central API"""
 
-    def __init__(self, base_url: str, server_id: str, aes_key: str):
+    def __init__(self, base_url: str, server_id: str, aes_key: str, ssl_verify: bool = True):
         self.base_url = base_url.rstrip('/')
         self.server_id = server_id
         self.aes_key = aes_key.encode('utf-8')
+        if len(self.aes_key) != 32:
+            raise ValueError("[cve_central] keyAES32 must be 32 characters")
+        self.ssl_verify = ssl_verify
         self.session = requests.Session()
-        self.session.verify = False
-        import urllib3
-        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        # Supprimer les logs verbeux urllib3/requests
+        self.session.verify = ssl_verify
         logging.getLogger('urllib3').setLevel(logging.WARNING)
         logging.getLogger('requests').setLevel(logging.WARNING)
 
@@ -348,65 +284,35 @@ class CVECentralClient:
              on_progress: Callable = None,
              on_cves: Callable = None,
              timeout: int = 7200) -> Dict:
-        """
-        Run CVE scan via WebSocket with real-time progress.
-
-        CVE Central stocke toutes les CVEs sans filtre.
-        Le filtrage se fait cote client a l'affichage.
-
-        Args:
-            softwares: List of software dicts with name/version/vendor
-            on_progress: Callback(progress_dict) for progress updates
-            on_cves: Callback(cves_list) when CVEs are found
-            timeout: Maximum seconds to wait
-
-        Returns:
-            Dict with scan results
-        """
-        if not WEBSOCKET_AVAILABLE:
-            logger.warning("WebSocket not available (python-socketio not installed), falling back to polling")
-            return {'success': False, 'error': 'WebSocket not available', 'fallback': True}
-
-        results = {
-            'success': False,
-            'cves': [],
-            'softwares_scanned': 0,
-            'cves_found': 0,
-            'error': None
-        }
+        """Run a CVE scan over WebSocket; CVEs are streamed to on_cves(list)."""
+        results = {'success': False, 'softwares_scanned': 0, 'error': None}
         completed = Event()
+        # python-socketio runs each message in its own thread: store them one at a time
+        # and wait for the last ones before reporting the end of the scan.
+        stored = Condition()
+        received = {'cves': 0, 'expected': None}
+        sio = socketio.Client(ssl_verify=self.ssl_verify)
 
-        # Create SocketIO client
-        sio = socketio.Client(ssl_verify=False)
-
-        @sio.on('connect')
-        def on_connect():
-            logger.debug("WebSocket connected to CVE Central")
+        def fail(data, default):
+            logger.error(f"CVE Central: {default}: {data}")
+            results['error'] = (data or {}).get('error') or default
+            completed.set()
 
         @sio.on('disconnect')
         def on_disconnect():
             logger.debug("WebSocket disconnected from CVE Central")
             completed.set()
 
-        @sio.on('authenticated')
-        def on_authenticated(data):
-            logger.debug(f"WebSocket authenticated: {data}")
-
         @sio.on('auth_error')
         def on_auth_error(data):
-            logger.error(f"WebSocket auth error: {data}")
-            results['error'] = data.get('error', 'Authentication failed')
-            completed.set()
+            fail(data, 'Authentication failed')
 
-        @sio.on('scan_started')
-        def on_scan_started(data):
-            logger.debug(f"WebSocket scan_started event: {data}")
-            if on_progress:
-                on_progress({'phase': 'started', 'percent': 0, **data})
+        @sio.on('scan_error')
+        def on_scan_error(data):
+            fail(data, 'Scan error')
 
         @sio.on('progress')
         def on_progress_event(data):
-            logger.debug(f"WebSocket progress: {data}")
             if on_progress:
                 on_progress(data)
 
@@ -414,316 +320,184 @@ class CVECentralClient:
         def on_cves_found(data):
             cves = data.get('cves', [])
             logger.debug(f"CVEs received for {data.get('software')}: {len(cves)}")
-            results['cves'].extend(cves)
-            if on_cves:
-                on_cves(cves)
+            with stored:
+                if on_cves:
+                    on_cves(cves)
+                received['cves'] += len(cves)
+                stored.notify_all()
 
         @sio.on('scan_completed')
         def on_scan_completed(data):
-            logger.debug(f"WebSocket scan_completed event: {data}")
             results['success'] = data.get('success', True)
             results['softwares_scanned'] = data.get('softwares_scanned', 0)
-            results['cves_found'] = data.get('cves_found', 0)
-            results['duration_seconds'] = data.get('duration_seconds', 0)
             results['duration_display'] = data.get('duration_display', '')
-            completed.set()
-
-        @sio.on('scan_error')
-        def on_scan_error(data):
-            logger.error(f"WebSocket scan error: {data}")
-            results['error'] = data.get('error', 'Unknown error')
+            received['expected'] = data.get('cves_found')
+            if not results['success']:
+                results['error'] = data.get('error') or 'Scan reported as failed by CVE Central'
             completed.set()
 
         try:
-            # Connect to CVE Central WebSocket
             ws_url = self.base_url.replace('https://', 'wss://').replace('http://', 'ws://')
             logger.debug(f"Connecting to WebSocket: {ws_url}")
             sio.connect(ws_url, transports=['websocket'])
-
-            # Generate auth data
-            timestamp = str(int(time.time()))
-            signature = self._generate_auth_token()
-
-            # Start scan
             sio.emit('start_scan', {
                 'server_id': self.server_id,
-                'signature': signature,
-                'timestamp': timestamp,
+                'signature': self._generate_auth_token(),
+                'timestamp': str(int(time.time())),
                 'softwares': softwares
             })
-
-            # Wait for completion
             if not completed.wait(timeout=timeout):
-                results['error'] = 'WebSocket scan timeout'
-                logger.warning(f"WebSocket scan timeout after {timeout}s")
-
+                results['error'] = f'No answer from CVE Central after {timeout}s'
+            elif results['success'] and received['expected'] is not None:
+                with stored:
+                    if not stored.wait_for(lambda: received['cves'] >= received['expected'], timeout=300):
+                        results['success'] = False
+                        results['error'] = (f"Incomplete results: {received['cves']}/"
+                                            f"{received['expected']} CVEs received")
         except Exception as e:
-            logger.error(f"WebSocket error: {e}")
-            results['error'] = str(e)
+            results['error'] = f'WebSocket error: {e}'
         finally:
             try:
                 sio.disconnect()
-            except:
+            except Exception:
                 pass
 
+        if not results['success'] and not results['error']:
+            results['error'] = 'Connection closed by CVE Central before the end of the scan'
         return results
 
 
 def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
                  group_id: Optional[int] = None, machine_id: Optional[int] = None,
                  target_name: Optional[str] = None) -> Dict[str, Any]:
-    """
-    Run a full CVE scan:
-    1. Get unique software from GLPI (optionally filtered by entity, group or machine)
-    2. Submit to CVE Central
-    3. Trigger CVE scan on CVE Central
-    4. Get CVEs for our software
-    5. Store CVEs locally and link to software
-
-    Args:
-        scan_id: Existing scan ID (optional, will create one if not provided)
-        entity_id: Filter by entity ID (optional)
-        group_id: Filter by group ID (optional)
-        machine_id: Filter by machine GLPI ID (optional)
-    """
+    """Scan the GLPI software of the target with CVE Central and store the results."""
     from pulse2.database.security import SecurityDatabase
     from mmc.plugins.security.config import SecurityConfig
 
-    # Get configuration from ini file
     config = SecurityConfig("security")
-
-    # Configure logger with level from config
     setup_logger(config.log_level)
 
-    filter_info = ""
-    if machine_id is not None:
-        name_part = f" '{target_name}'" if target_name else ""
-        filter_info = f" (machine{name_part} id={machine_id})"
-    elif entity_id is not None:
-        name_part = f" '{target_name}'" if target_name else ""
-        filter_info = f" (entity{name_part} id={entity_id})"
-    elif group_id is not None:
-        name_part = f" '{target_name}'" if target_name else ""
-        filter_info = f" (group{name_part} id={group_id})"
-    logger.debug(f"CVE scan config: log_level={config.log_level}, url={config.cve_central_url}")
+    target = ""
+    for kind, value in (('machine', machine_id), ('entity', entity_id), ('group', group_id)):
+        if value is not None:
+            name = f" '{target_name}'" if target_name else ""
+            target = f" ({kind}{name} id={value})"
+            break
 
-    # Ensure database is activated
     security_db = SecurityDatabase()
     if not SecurityDatabase.is_activated:
         security_db.activate(config)
-
-    # Create scan record if not provided
     if not scan_id:
         scan_id = security_db.create_scan()
-    cve_central_url = config.cve_central_url
-    cve_central_server_id = config.cve_central_server_id
-    cve_central_keyAES32 = config.cve_central_keyAES32
 
-    stats = {
-        'softwares_sent': 0,
-        'cves_received': 0,
-        'machines_affected': 0,
-        'errors': []
-    }
-
-    # Check configuration
-    if not all([cve_central_url, cve_central_server_id, cve_central_keyAES32]):
-        error_msg = "CVE Central API not configured. Check [cve_central] section in /etc/mmc/plugins/security.ini.local"
-        logger.error(error_msg)
-        security_db.complete_scan(scan_id, 0, 0, 0, error_msg)
-        return {'scan_id': scan_id, 'status': 'failed', 'error': error_msg}
-
-    # Initialize client
-    logger.debug(f"Initializing CVE Central client for {cve_central_url}")
-    cve_client = CVECentralClient(cve_central_url, cve_central_server_id, cve_central_keyAES32)
-
+    stats = {'softwares_sent': 0, 'cves_received': 0}
     try:
-        # Test connection
-        logger.debug("Testing connection to CVE Central...")
-        if not cve_client.test_connection():
-            raise Exception("Cannot connect to CVE Central API")
-        logger.debug("Connection successful")
+        if not all([config.cve_central_url, config.cve_central_server_id, config.cve_central_keyAES32]):
+            raise Exception("CVE Central API not configured. Check [cve_central] section in "
+                            "/etc/mmc/plugins/security.ini.local")
+        if not WEBSOCKET_AVAILABLE:
+            raise Exception("python-socketio not installed. Install it: pip install python-socketio websocket-client")
 
-        # Step 1: Get unique software from GLPI (with optional filters and exclusions)
-        logger.debug(f"Querying GLPI for software (machine_id={machine_id}, entity_id={entity_id}, group_id={group_id})")
+        client = CVECentralClient(config.cve_central_url, config.cve_central_server_id,
+                                  config.cve_central_keyAES32, config.cve_central_ssl_verify)
+        if not client.test_connection():
+            raise Exception("Cannot connect to CVE Central API")
+
+        exclusions = config.get_exclusion_policies()  # relues en base : le relais vit longtemps
         softwares = get_unique_software_from_glpi(
             entity_id=entity_id,
             group_id=group_id,
             machine_id=machine_id,
-            excluded_vendors=config.excluded_vendors,
-            excluded_names=config.excluded_names
+            excluded_vendors=exclusions['vendors'],
+            excluded_names=exclusions['names']
         )
         stats['softwares_sent'] = len(softwares)
-
         if not softwares:
-            logger.warning("No software found in GLPI")
-            security_db.complete_scan(scan_id, 0, 0, 0, "No software in GLPI")
+            logger.warning(f"CVE scan #{scan_id}: no software in GLPI{target}")
+            security_db.complete_scan(scan_id, 0, 0)
             return {'scan_id': scan_id, 'status': 'completed', **stats}
 
-        logger.info(f"CVE scan: {len(softwares)} software{filter_info}")
+        logger.info(f"CVE scan: {len(softwares)} software{target}")
 
-        # Mise à jour différentielle (pas de "vidage") : on garde la liste des
-        # logiciels envoyés et, par logiciel, l'ensemble des CVE confirmées durant
-        # ce scan. En fin de scan (succès), on supprimera seulement les CVE périmées
-        # (cf. security_db.prune_stale_cves). Si le scan échoue, rien n'est touché.
-        glpi_names = list({sw['name'] for sw in softwares if sw.get('name')})
-        confirmed_by_sw = {}
+        # Links are pruned at the end, only for the (name, version) sent in this scan.
+        scanned = {(sw['name'], sw['version']) for sw in softwares}
+        confirmed = {}
+        cve_pks = {}
+        severities = Counter()
 
-        # Pas de filtre au scan - CVE Central stocke tout
-        # Le filtrage se fait a l'affichage via should_display_cve()
-
-        # CVE storage tracking
-        cves_added = set()
-        severity_counts = {'Critical': 0, 'High': 0, 'Medium': 0, 'Low': 0, 'N/A': 0}
-        new_critical_cves = []
-
-        def store_cve(cve_entry):
-            """Store a single CVE entry to database"""
-            nonlocal cves_added, severity_counts, new_critical_cves
-
-            cve_id_str = cve_entry.get('cve_id')
-            if not cve_id_str or cve_id_str in cves_added:
-                return False
-
+        def store(entry):
+            cve_id = entry.get('cve_id')
+            name = entry.get('software_name') or ''
+            glpi_name = entry.get('glpi_software_name') or name
+            version = entry.get('software_version') or ''
+            if not cve_id or not glpi_name:
+                return
+            confirmed.setdefault((glpi_name, version), set()).add(cve_id)
             try:
-                cvss_raw = cve_entry.get('cvss_score')
-                cvss_score = float(cvss_raw) if cvss_raw is not None else None
-                severity = cve_entry.get('severity', 'N/A')
-
-                cve_db_id = security_db.add_cve(
-                    cve_id=cve_id_str,
-                    cvss_score=cvss_score,
-                    severity=severity,
-                    description=cve_entry.get('description', ''),
-                    published_at=cve_entry.get('published_at'),
-                    last_modified=cve_entry.get('last_modified'),
-                    sources=cve_entry.get('sources', []),
-                    source_urls=cve_entry.get('source_urls', {})
-                )
-
-                software_name = cve_entry.get('software_name', '')
-                if software_name:
-                    security_db.link_software_cve(
-                        software_name=software_name,
-                        software_version=cve_entry.get('software_version', ''),
-                        cve_db_id=cve_db_id,
-                        glpi_software_name=cve_entry.get('glpi_software_name') or None,
-                        target_platform=cve_entry.get('target_platform'),
-                        source_package=cve_entry.get('source_package') or None
+                pk = cve_pks.get(cve_id)
+                if pk is None:
+                    cvss = entry.get('cvss_score')
+                    severity = entry.get('severity') or 'N/A'
+                    pk = security_db.add_cve(
+                        cve_id=cve_id,
+                        cvss_score=float(cvss) if cvss is not None else None,
+                        severity=severity,
+                        description=entry.get('description', ''),
+                        published_at=entry.get('published_at'),
+                        last_modified=entry.get('last_modified'),
+                        exploited_since=entry.get('exploited_since') or None,
+                        euvd_id=entry.get('euvd_id') or None,
+                        sources=entry.get('sources', []),
+                        source_urls=entry.get('source_urls', {})
                     )
-
-                sev = severity if severity in severity_counts else 'N/A'
-                severity_counts[sev] = severity_counts.get(sev, 0) + 1
-                if severity == 'Critical':
-                    new_critical_cves.append(cve_id_str)
-
-                cves_added.add(cve_id_str)
-                return True
+                    if pk is None:
+                        raise Exception("CVE not saved")
+                    cve_pks[cve_id] = pk
+                    severities[severity] += 1
+                security_db.link_software_cve(
+                    software_name=name or glpi_name,
+                    software_version=version,
+                    cve_db_id=pk,
+                    glpi_software_name=glpi_name,
+                    target_platform=entry.get('target_platform'),
+                    fix_available=entry.get('fix_available'),
+                    source_package=entry.get('source_package') or None
+                )
             except Exception as e:
-                logger.error(f"Error storing CVE {cve_id_str}: {e}")
-                return False
+                logger.error(f"Error storing {cve_id} for {glpi_name} {version}: {e}")
 
-        # WebSocket scan (seul mode supporté)
-        if not WEBSOCKET_AVAILABLE:
-            raise Exception("python-socketio not installed. Install it: pip install python-socketio websocket-client")
+        logged = {'step': -1}
 
-        def on_ws_progress(data):
-            phase = data.get('phase', '')
-            if phase == 'started':
-                eta = data.get('eta_display', '')
-                count = data.get('softwares_count', 0)
-                if eta:
-                    logger.info(f"Scan started: {count} softwares, ETA {eta}")
-            elif phase == 'scanning':
-                current = data.get('current', 0)
-                total = data.get('total', 0)
-                cves = data.get('cves_found', 0)
-                eta = data.get('eta_display', '')
-                elapsed = data.get('elapsed_seconds', 0)
-                elapsed_display = f"{elapsed // 60}m{elapsed % 60:02d}s" if elapsed >= 60 else f"{elapsed}s"
-                logger.info(f"Scan progress: {current}/{total} - {cves} CVEs - {elapsed_display} elapsed, ETA {eta}")
+        def on_progress(data):
+            step = data.get('percent', 0) // 10
+            if data.get('phase') == 'scanning' and step > logged['step']:
+                logged['step'] = step
+                logger.info(f"Scan progress: {data.get('percent', 0)}% ({data.get('elapsed_seconds', 0)}s)")
 
-        def on_ws_cves(cves_list):
-            # Tracer toutes les CVE renvoyées par logiciel (avant dédup) pour la
-            # mise à jour différentielle de fin de scan.
-            for cve in cves_list:
-                gname = cve.get('glpi_software_name') or cve.get('software_name')
-                cid = cve.get('cve_id')
-                if gname and cid:
-                    confirmed_by_sw.setdefault(gname, set()).add(cid)
-            new_count = sum(1 for cve in cves_list if store_cve(cve))
-            if new_count > 0:
-                logger.debug(f"{new_count} new CVEs stored (total: {len(cves_added)})")
+        def on_cves(cves):
+            for cve in cves:
+                store(cve)
 
-        ws_result = cve_client.scan(
-            softwares=softwares,
-            on_progress=on_ws_progress,
-            on_cves=on_ws_cves,
-            timeout=3600
-        )
+        result = client.scan(softwares=softwares, on_progress=on_progress, on_cves=on_cves, timeout=3600)
+        if not result['success']:
+            raise Exception(f"CVE Central scan failed: {result['error']}")
 
-        if ws_result.get('success'):
-            duration = ws_result.get('duration_display', '')
-            duration_info = f" in {duration}" if duration else ""
-            logger.info(f"Scan completed: {ws_result.get('softwares_scanned', 0)} scanned, {len(cves_added)} CVEs stored{duration_info}")
-        else:
-            error = ws_result.get('error', 'Unknown WebSocket error')
-            raise Exception(f"WebSocket scan failed: {error}")
-
-        stats['cves_received'] = len(cves_added)
-
-        # Mise à jour différentielle : supprimer les CVE périmées des logiciels
-        # scannés (celles qui ne sont plus confirmées). Uniquement en cas de succès
-        # (on n'arrive ici que si le scan WebSocket a réussi) → aucune perte si plantage.
-        pruned = security_db.prune_stale_cves(glpi_names, confirmed_by_sw)
+        stats['cves_received'] = len(cve_pks)
+        pruned = security_db.prune_stale_cves(scanned, confirmed)
         if pruned:
             logger.info(f"Pruned {pruned} stale CVE links after scan")
 
-        # Complete scan (machines_affected is computed globally, not per-entity)
-        security_db.complete_scan(
-            scan_id=scan_id,
-            softwares_sent=stats['softwares_sent'],
-            cves_received=stats['cves_received'],
-            machines_affected=0
-        )
-
-        # Log final summary with severity breakdown
-        severity_summary = f"{severity_counts['Critical']}C/{severity_counts['High']}H/{severity_counts['Medium']}M/{severity_counts['Low']}L"
-        logger.info(f"Scan #{scan_id} completed: {stats['softwares_sent']} software -> {stats['cves_received']} CVEs ({severity_summary})")
-
+        security_db.complete_scan(scan_id, stats['softwares_sent'], stats['cves_received'])
+        duration = result.get('duration_display')
+        logger.info(f"Scan #{scan_id} completed{target}: {stats['softwares_sent']} software -> "
+                    f"{stats['cves_received']} CVEs ({severities['Critical']}C/{severities['High']}H/"
+                    f"{severities['Medium']}M/{severities['Low']}L)" + (f" in {duration}" if duration else ""))
         return {'scan_id': scan_id, 'status': 'completed', **stats}
 
     except Exception as e:
-        logger.error(f"CVE scan failed: {e}")
-        stats['errors'].append(str(e))
-
+        logger.error(f"CVE scan #{scan_id} failed{target}: {e}")
         try:
-            security_db.complete_scan(
-                scan_id=scan_id,
-                softwares_sent=stats['softwares_sent'],
-                cves_received=stats['cves_received'],
-                machines_affected=0,
-                error_message=str(e)
-            )
-        except:
-            pass
-
+            security_db.complete_scan(scan_id, stats['softwares_sent'], stats['cves_received'], error_message=str(e))
+        except Exception as db_error:
+            logger.error(f"Cannot mark scan #{scan_id} as failed: {db_error}")
         return {'scan_id': scan_id, 'status': 'failed', 'error': str(e), **stats}
-
-
-def scan_single_machine(id_glpi: int) -> Dict[str, Any]:
-    """
-    Scan a single machine - scans only software installed on this machine.
-
-    Args:
-        id_glpi: GLPI computer ID
-
-    Returns:
-        dict with success status, vulnerabilities found, and any errors
-    """
-    result = run_cve_scan(machine_id=id_glpi)
-    return {
-        'success': result.get('status') == 'completed',
-        'vulnerabilities_found': result.get('cves_received', 0),
-        'error': result.get('error')
-    }

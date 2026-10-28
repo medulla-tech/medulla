@@ -21,8 +21,8 @@
 -- =======================================
 -- Database xmppmaster
 -- =======================================
--- Fix: Redéfinition des procédures up_init_packages_* avec collation utf8mb3_general_ci
--- Résout l'erreur SQL 42000: COLLATION 'utf8mb4_general_ci' is not valid for CHARACTER SET 'utf8mb3'
+-- Fix: Redefinition des procedures up_init_packages_* avec collation utf8mb3_general_ci
+-- Resout l'erreur SQL 42000: COLLATION 'utf8mb4_general_ci' is not valid for CHARACTER SET 'utf8mb3'
 
 START TRANSACTION;
 
@@ -35,7 +35,7 @@ DROP PROCEDURE IF EXISTS `up_init_packages_Win10_X64_1903`$$
 CREATE PROCEDURE `up_init_packages_Win10_X64_1903`()
 BEGIN
     -- =======================================
-    -- Nom de la table dédiée au produit Windows 10 version 1903 X64
+    -- Nom de la table dediee au produit Windows 10 version 1903 X64
     -- =======================================
     -- Supprime la table si elle existe (sans SQL dynamique)
     DROP TABLE IF EXISTS up_packages_Win10_X64_1903;
@@ -84,7 +84,7 @@ DROP PROCEDURE IF EXISTS `up_init_packages_Win10_X64_21H1`$$
 CREATE PROCEDURE `up_init_packages_Win10_X64_21H1`()
 BEGIN
     -- =======================================
-    -- Nom de la table dédiée au produit Windows 10 version 21H1 X64
+    -- Nom de la table dediee au produit Windows 10 version 21H1 X64
     -- =======================================
     -- Supprime la table si elle existe (sans SQL dynamique)
     DROP TABLE IF EXISTS up_packages_Win10_X64_21H1;
@@ -132,7 +132,7 @@ DROP PROCEDURE IF EXISTS `up_init_packages_Win10_X64_21H2`$$
 CREATE PROCEDURE `up_init_packages_Win10_X64_21H2`()
 BEGIN
     -- =======================================
-    -- Nom de la table dédiée au produit Windows 10 Version 21H2 X64
+    -- Nom de la table dediee au produit Windows 10 Version 21H2 X64
     -- =======================================
     -- Supprime la table si elle existe (sans SQL dynamique)
     DROP TABLE IF EXISTS up_packages_Win10_X64_21H2;
@@ -181,7 +181,7 @@ DROP PROCEDURE IF EXISTS `up_init_packages_Win10_X64_22H2`$$
 CREATE PROCEDURE `up_init_packages_Win10_X64_22H2`()
 BEGIN
     -- =======================================
-    -- Nom de la table dédiée au produit Windows 10 Version 22H2 X64
+    -- Nom de la table dediee au produit Windows 10 Version 22H2 X64
     -- =======================================
     -- Supprime la table si elle existe (sans SQL dynamique)
     DROP TABLE IF EXISTS up_packages_Win10_X64_22H2;
@@ -230,7 +230,7 @@ CREATE PROCEDURE `up_init_packages_Win11_X64_25H2`()
 BEGIN
     -- Supprime la table si elle existe (sans SQL dynamique)
     DROP TABLE IF EXISTS up_packages_Win11_X64_25H2;
-    -- Création de la table avec jointure pour payloadfiles et updateid_package
+    -- Creation de la table avec jointure pour payloadfiles et updateid_package
     CREATE TABLE up_packages_Win11_X64_25H2 AS
          SELECT
             aa.updateid,
@@ -274,12 +274,12 @@ DROP PROCEDURE IF EXISTS `up_init_packages_Win11_X64`$$
 CREATE PROCEDURE `up_init_packages_Win11_X64`()
 BEGIN
     -- =======================================
-    -- Nom de la table dédiée au produit Windows 11 x64 (hors versions H2 spécifiques)
+    -- Nom de la table dediee au produit Windows 11 x64 (hors versions H2 specifiques)
     -- =======================================
     -- Supprime la table si elle existe (sans SQL dynamique)
     DROP TABLE IF EXISTS up_packages_Win11_X64;
     -- =======================================
-    -- Création de la table avec jointure pour payloadfiles et updateid_package
+    -- Creation de la table avec jointure pour payloadfiles et updateid_package
     -- =======================================
     CREATE TABLE up_packages_Win11_X64 AS
          SELECT
@@ -328,12 +328,12 @@ DROP PROCEDURE IF EXISTS `up_init_packages_Win11_X64_21H2`$$
 CREATE PROCEDURE `up_init_packages_Win11_X64_21H2`()
 BEGIN
     -- =======================================
-    -- Nom de la table dédiée au produit Windows 11 Version 21H2 x64
+    -- Nom de la table dediee au produit Windows 11 Version 21H2 x64
     -- =======================================
     -- Supprime la table si elle existe (sans SQL dynamique)
     DROP TABLE IF EXISTS up_packages_Win11_X64_21H2;
     -- =======================================
-    -- Création de la table avec jointure pour payloadfiles et updateid_package
+    -- Creation de la table avec jointure pour payloadfiles et updateid_package
     -- =======================================
     CREATE TABLE up_packages_Win11_X64_21H2 AS
          SELECT
@@ -377,13 +377,13 @@ DROP PROCEDURE IF EXISTS `up_init_packages_Win11_X64_22H2`$$
 CREATE PROCEDURE `up_init_packages_Win11_X64_22H2`()
 BEGIN
     -- =======================================
-    -- Nom de la table dédiée au produit Windows 11 Version 22H2 x64
+    -- Nom de la table dediee au produit Windows 11 Version 22H2 x64
     -- =======================================
 
     -- Supprime la table si elle existe (sans SQL dynamique)
     DROP TABLE IF EXISTS up_packages_Win11_X64_22H2;
     -- =======================================
-    -- Création de la table avec jointure pour payloadfiles et updateid_package
+    -- Creation de la table avec jointure pour payloadfiles et updateid_package
     -- =======================================
         CREATE TABLE up_packages_Win11_X64_22H2 AS
          SELECT
@@ -430,7 +430,7 @@ BEGIN
     -- Supprime la table si elle existe (sans SQL dynamique)
     DROP TABLE IF EXISTS up_packages_Win11_X64_23H2;
 
-    -- Création de la table avec jointure et filtres spécifiques
+    -- Creation de la table avec jointure et filtres specifiques
     CREATE TABLE up_packages_Win11_X64_23H2 AS
         SELECT
             aa.updateid,
@@ -474,7 +474,7 @@ CREATE PROCEDURE `up_init_packages_Win11_X64_26H2`()
 BEGIN
     -- Supprime la table si elle existe (sans SQL dynamique)
     DROP TABLE IF EXISTS up_packages_Win11_X64_26H2;
-    -- Création de la table avec jointure pour payloadfiles et updateid_package
+    -- Creation de la table avec jointure pour payloadfiles et updateid_package
     CREATE TABLE up_packages_Win11_X64_26H2 AS
          SELECT
             aa.updateid,
@@ -519,7 +519,7 @@ CREATE PROCEDURE `up_init_packages_Win11_X64_24H2`()
 BEGIN
     -- Supprime la table si elle existe (sans SQL dynamique)
     DROP TABLE IF EXISTS up_packages_Win11_X64_24H2;
-    -- Création de la table avec jointure pour payloadfiles et updateid_package
+    -- Creation de la table avec jointure pour payloadfiles et updateid_package
     CREATE TABLE up_packages_Win11_X64_24H2 AS
          SELECT
             aa.updateid,
@@ -697,7 +697,7 @@ WHERE CHAR_LENGTH(COALESCE(`package_uuid`, '')) > 36;
 -- PROCEDURE : up_init_packages_Windows_Security_platform
 -- Description :
 --   Cette procedure cree une table temporaire up_packages_Windows_Security_platform
---   filtrée pour Windows Security platform uniquement (titre et produit)
+--   filtree pour Windows Security platform uniquement (titre et produit)
 
 DELIMITER $$
 
@@ -752,7 +752,7 @@ END$$
 
 DELIMITER ;
 
--- Enregistrement de la procédure dans up_list_produit
+-- Enregistrement de la procedure dans up_list_produit
 INSERT IGNORE INTO `xmppmaster`.`up_list_produit` (`name_procedure`) VALUES ('up_init_packages_Windows_Security_platform');
 
 -- Enregistrement du produit dans applicationconfig (active par defaut)
@@ -837,7 +837,7 @@ END$$
 -- PROCEDURE : up_init_table_major_win_complet
 -- Description :
 --   Reconstruit up_major_win puis up_machine_major_windows.
---   is_active est recalculé ligne par ligne selon les règles métier:
+--   is_active est recalcule ligne par ligne selon les règles metier:
 --   - old_version=11 et new_version=11 et oldcode!=newcode => True
 --   - old_version=10 et new_version=11 et is_active=True => True
 --   - sinon => False

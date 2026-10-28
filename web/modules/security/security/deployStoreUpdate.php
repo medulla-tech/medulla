@@ -43,6 +43,7 @@ $store_package_uuid = isset($_POST['store_package_uuid']) ? $_POST['store_packag
 
 // Handle form submission - BEFORE displaying the page
 if (isset($_POST['bconfirm'])) {
+    verifyCSRFToken($_POST);
     $selectedMachines = isset($_POST['machines']) ? $_POST['machines'] : array();
 
     if (empty($selectedMachines)) {
@@ -147,9 +148,7 @@ $p = new PageGenerator(sprintf(_T("Deploy Update: %s", 'security'), htmlspecialc
 $p->setSideMenu($sidemenu);
 $p->display();
 
-// Get user's accessible entities for filtering
-list($listEntities, $valuesEntities) = getEntitiesSelectableElements();
-$location = isset($_GET['location']) ? $_GET['location'] : (count($valuesEntities) > 0 ? implode(',', $valuesEntities) : '');
+$location = SecurityFilter::location();
 
 // Get affected machines
 $machines = xmlrpc_get_machines_for_vulnerable_software($software_name, $software_version, $location);
@@ -268,9 +267,7 @@ $machines = xmlrpc_get_machines_for_vulnerable_software($software_name, $softwar
 }
 </style>
 
-<a href="<?php echo urlStrRedirect('security/security/index'); ?>" class="back-link">
-    &larr; <?php echo _T("Back to CVE Summary", "security"); ?>
-</a>
+<?php SecurityFilter::backLink('index', _T("Back to CVE Summary", "security")); ?>
 
 <div class="deploy-header">
     <h4><?php echo _T("Update Information", "security"); ?></h4>
@@ -299,19 +296,20 @@ $machines = xmlrpc_get_machines_for_vulnerable_software($software_name, $softwar
 <?php endif; ?>
 
 <form method="post" action="">
+    <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
     <input type="hidden" name="software_name" value="<?php echo htmlspecialchars($software_name); ?>" />
     <input type="hidden" name="software_version" value="<?php echo htmlspecialchars($software_version); ?>" />
     <input type="hidden" name="store_version" value="<?php echo htmlspecialchars($store_version); ?>" />
     <input type="hidden" name="store_package_uuid" value="<?php echo htmlspecialchars($store_package_uuid); ?>" />
 
     <div class="machines-section">
-        <h4><?php echo sprintf(_T("Select machines to update (%d affected)", "security"), $machines['total']); ?></h4>
+        <h4><?php echo sprintf(_T("Select machines to update (%d affected)", "security"), intval($machines['total'] ?? 0)); ?></h4>
 
         <div class="select-actions">
             <a onclick="selectAllMachines()"><?php echo _T("Select all", "security"); ?></a>
             <a onclick="selectNoneMachines()"><?php echo _T("Select none", "security"); ?></a>
             <span style="color: #666; margin-left: 20px;">
-                <span id="selectedCount"><?php echo $machines['total']; ?></span> <?php echo _T("selected", "security"); ?>
+                <span id="selectedCount"><?php echo intval($machines['total'] ?? 0); ?></span> <?php echo _T("selected", "security"); ?>
             </span>
         </div>
 

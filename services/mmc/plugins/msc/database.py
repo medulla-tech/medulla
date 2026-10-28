@@ -15,9 +15,10 @@ import re
 import time
 import datetime
 import logging
+from contextlib import contextmanager
 
 # SqlAlchemy
-from sqlalchemy import and_, not_
+from sqlalchemy import and_, not_, or_, text
 from sqlalchemy.orm import create_session
 
 # MMC modules
@@ -36,6 +37,7 @@ from pulse2.database.msc.orm.target import Target
 from pulse2.database.msc.orm.commands import Commands
 from pulse2.database.msc.orm.commands_on_host_phase import CommandsOnHostPhase
 from pulse2.database.msc import CommandsOnHost
+from pulse2.database.xmppmaster import XmppMasterDatabase
 
 
 class MscDatabase(msc.MscDatabase):
@@ -43,6 +45,38 @@ class MscDatabase(msc.MscDatabase):
     Singleton Class to query the msc database.
 
     """
+
+    @contextmanager
+    def convergenceCommandLock(self, cmd_id):
+        """Serialize additions from inventory, cron and explicit rescheduling."""
+        name = "msc.convergence.%s" % cmd_id
+        with self.db.connect() as connection:
+            acquired = connection.execute(
+                text("SELECT GET_LOCK(:name, 10)"), {"name": name}
+            ).scalar()
+            if acquired != 1:
+                raise RuntimeError("Cannot lock convergence command %s" % cmd_id)
+            try:
+                yield
+            finally:
+                released = connection.execute(
+                    text("SELECT RELEASE_LOCK(:name)"), {"name": name}
+                ).scalar()
+                if released != 1:
+                    connection.invalidate()
+                    raise RuntimeError("Cannot release convergence command %s" % cmd_id)
+
+    @DatabaseHelper._sessionm
+    def prepareInventoryConvergenceWindow(self, session, cmd_id):
+        command = session.query(Commands).filter_by(id=cmd_id).one()
+        if command.state != "active":
+            return False
+        now = datetime.datetime.now()
+        if command.end_date <= now:
+            command.start_date = now
+            command.end_date = now + datetime.timedelta(days=1)
+            session.commit()
+        return True
 
     def getMachinesSchedulers(self, target):
         """
@@ -754,7 +788,7 @@ class MscDatabase(msc.MscDatabase):
             return None
 
 
-    def _get_machines_in_command(self, session, cmd_id):
+    def _get_machines_in_command(self, session, cmd_id, machine_uuids=None):
         """
         For a given cmd_id, return machines who are part of this command, except these who are
         in done step in phase table.
@@ -767,12 +801,17 @@ class MscDatabase(msc.MscDatabase):
             .outerjoin(CommandsOnHostPhase)
         )
         query = query.filter(CommandsOnHost.fk_commands == cmd_id)
-        query = query.filter(not_(CommandsOnHostPhase.state.in_(["done"])))
+        if machine_uuids is not None:
+            query = query.filter(Target.target_uuid.in_(machine_uuids))
+        query = query.filter(or_(
+            CommandsOnHostPhase.state.is_(None),
+            not_(CommandsOnHostPhase.state.in_(["done"])),
+        ))
         return [x[1].target_uuid for x in query]
 
     @DatabaseHelper._session
     def _get_convergence_new_machines_to_add(
-        self, session, ctx, cmd_id, convergence_deploy_group_id
+        self, session, ctx, cmd_id, convergence_deploy_group_id, machine_uuids=None
     ):
         """
         Check if machines will be added to convergence command
@@ -781,11 +820,35 @@ class MscDatabase(msc.MscDatabase):
         @see http://projects.mandriva.org/issues/2255:
             if package were already deployed, but was manually removed by a user, it must be redeployed
         """
-        machines_in_command = self._get_machines_in_command(session, cmd_id)
+        filt = {"gid": convergence_deploy_group_id}
+        if machine_uuids is not None:
+            if not machine_uuids:
+                return []
+            filt["uuids"] = list(machine_uuids)
         machines_in_deploy_group = ComputerManager().getRestrictedComputersList(
-            ctx, filt={"gid": convergence_deploy_group_id}, justId=True
+            ctx, filt=filt, justId=True
         )
-        return [x for x in machines_in_deploy_group if x not in machines_in_command]
+        candidates = [
+            x for x in machines_in_deploy_group
+            if machine_uuids is None or x in machine_uuids
+        ]
+        return self._filter_convergence_candidates(cmd_id, candidates)
+
+    @DatabaseHelper._sessionm
+    def _filter_convergence_candidates(self, session, cmd_id, candidates):
+        """Recheck execution state without evaluating the deployment group again."""
+        if not candidates:
+            return []
+        machines_in_command = set(
+            self._get_machines_in_command(session, cmd_id, machine_uuids=candidates)
+        )
+        candidates = [uuid for uuid in candidates if uuid not in machines_in_command]
+        pending = (
+            XmppMasterDatabase().getPendingConvergenceMachineUuids(cmd_id, candidates)
+            if candidates else []
+        )
+        pending = set(pending)
+        return [uuid for uuid in candidates if uuid not in pending]
 
     @DatabaseHelper._sessionm
     def addMachinesToCommand(

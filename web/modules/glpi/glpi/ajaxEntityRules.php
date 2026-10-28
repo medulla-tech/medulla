@@ -67,8 +67,8 @@ $n = new OptimizedListInfos($cols['name'], _T('Rule name', 'glpi'));
 $n->first_elt_padding = '0';
 
 $n->addActionItem(new ActionItem(_T("Edit rule", "glpi"), "addEntityRule", "edit", "rule", "base", "computers"));
-$n->addActionItem(new ActionPopupItem(_T("Move rule up", "glpi"), "moveRuleUp", "up", "rule", "base", "computers"));
-$n->addActionItem(new ActionPopupItem(_T("Move rule down", "glpi"), "moveRuleDown", "down", "rule", "base", "computers"));
+$n->addActionItem(new ActionPopupItem(_T("Move rule up", "glpi"), "moveRuleUp", "up", "rule", "base", "computers", null, false, array("auth_token" => $_SESSION['auth_token'] ?? '')));
+$n->addActionItem(new ActionPopupItem(_T("Move rule down", "glpi"), "moveRuleDown", "down", "rule", "base", "computers", null, false, array("auth_token" => $_SESSION['auth_token'] ?? '')));
 $n->addActionItem(new ActionPopupItem(_T("Delete rule", "glpi"), "deleteEntityRule", "delete", "rule", "base", "computers"));
 
 

@@ -1438,7 +1438,7 @@ class LdapUserGroupControl:
 
         # Make a home string if none was given
         if not homeDir:
-            homeDir = os.path.join(self.defaultHomeDir, uid)
+            homeDir = os.path.join(self.defaultHomeDir, delete_diacritics(uid))
         if not self.isAuthorizedHome(os.path.realpath(homeDir)):
             raise Exception(f"{homeDir} is not an authorized home dir.")
         if not checkExists or not self.userHomeAction:
@@ -1536,7 +1536,7 @@ class LdapUserGroupControl:
             [(groupdn, AT.GROUP), (userdn, AT.USER)],
         )
 
-        operations = [(ldap.MOD_DELETE, "memberUid", bytes(uiduser, "utf-8"))]
+        operations = [(ldap.MOD_DELETE, "memberUid", bytes(delete_diacritics(uiduser), "utf-8"))]
         if self.posixGroupIsRFC2307bis():
             operations.append((ldap.MOD_DELETE, "uniqueMember", bytes(userdn, "utf-8")))
 
@@ -1554,7 +1554,7 @@ class LdapUserGroupControl:
         @param uid: login of the user
         @type uid: unicode
         """
-        if ret := self.search(f"memberUid={uid}", self.baseGroupsDN):
+        if ret := self.search(f"memberUid={delete_diacritics(uid)}", self.baseGroupsDN):
             for result in ret:
                 group = result[0][1]["cn"][0]
                 self.delUserFromGroup(group.decode("utf-8"), uid)
@@ -1588,7 +1588,7 @@ class LdapUserGroupControl:
         @param uid: login of the user
         @type uid: unicode
         """
-        ret = self.search(f"memberUid={uid}", self.baseGroupsDN)
+        ret = self.search(f"memberUid={delete_diacritics(uid)}", self.baseGroupsDN)
         resArray = []
         if ret:
             resArray.extend(result[0][1]["cn"][0] for result in ret)
@@ -1665,7 +1665,7 @@ class LdapUserGroupControl:
             [(groupdn, AT.GROUP), (userdn, AT.USER)],
         )
 
-        operations = [(ldap.MOD_ADD, "memberUid", bytes(uid, "utf-8"))]
+        operations = [(ldap.MOD_ADD, "memberUid", bytes(delete_diacritics(uid), "utf-8"))]
         if self.posixGroupIsRFC2307bis():
             operations.append((ldap.MOD_ADD, "uniqueMember", bytes(userdn, "utf-8")))
 
@@ -2093,7 +2093,7 @@ class LdapUserGroupControl:
         searchScope = ldap.SCOPE_SUBTREE
         retrieveAttributes = None
 
-        searchFilter = f"memberUid={pattern}"
+        searchFilter = f"memberUid={delete_diacritics(pattern)}"
 
         try:
             ldap_result_id = self.l.search(

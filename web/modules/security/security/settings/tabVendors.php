@@ -28,11 +28,12 @@ $currentUser = $_SESSION['login'] ?? 'unknown';
 
 // Handle form submission for adding vendor exclusion
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['badd_vendor'])) {
+    verifyCSRFToken($_POST);
     $vendorName = trim($_POST['new_vendor_name'] ?? '');
 
     if (!empty($vendorName)) {
         if (ExclusionHelper::addExclusion('vendors', $vendorName, $currentUser)) {
-            new NotifyWidgetSuccess(sprintf(_T("'%s' added to excluded vendors", "security"), $vendorName));
+            new NotifyWidgetSuccess(sprintf(_T("'%s' added to excluded vendors", "security"), htmlspecialchars($vendorName)));
         } else {
             new NotifyWidgetFailure(_T("Failed to add vendor exclusion", "security"));
         }

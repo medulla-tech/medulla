@@ -32,8 +32,6 @@ require("localSidebar.php");
 require_once("modules/admin/includes/xmlrpc.php");
 require_once("modules/medulla_server/includes/xmlrpc.inc.php");
 
-require("modules/updates/includes/dev_trace_ajax_view.inc.php");
-
 global $maxperpage;
 $entityuuid = (isset($_GET['entity'])) ? htmlentities($_GET['entity']) : "UUID0";
 $start = (isset($_GET['start'])) ? htmlentities($_GET['start']) : 0;

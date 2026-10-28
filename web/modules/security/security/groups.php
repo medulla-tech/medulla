@@ -22,20 +22,17 @@
 
 require("graph/navbar.inc.php");
 require("localSidebar.php");
-require_once("modules/security/includes/xmlrpc.php");
 
-$p = new PageGenerator(_T("Results by Group", 'security'));
+$p = new PageGenerator(_T("Groups", 'security'));
 $p->setSideMenu($sidemenu);
 $p->display();
-
-// Get current user's login for ShareGroup filtering
-$userLogin = $_SESSION['login'];
+require_once("modules/security/includes/html.inc.php");
+SecurityFilter::script();
 ?>
-
 
 <div class="search-wrapper" style="margin-bottom: 15px;">
 <?php
-$ajax = new AjaxFilter(urlStrRedirect("security/security/ajaxGroupsList") . "&user_login=" . urlencode($userLogin));
+$ajax = new AjaxFilter(urlStrRedirect("security/security/ajaxGroupsList", array('back' => SecurityFilter::here())));
 $ajax->display();
 ?>
 </div>

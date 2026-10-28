@@ -96,9 +96,10 @@ def activate():
         scheduleCheckStatus(config.check_db_interval)
 
     # Add convergence reschedule task in the task manager
+    DyngroupDatabase().ensureInventoryConvergenceQueue()
     TaskManager().addTask(
         "msc.convergence_reschedule",
-        (convergence_reschedule,),
+        (convergence_scheduled,),
         cron_expression=config.convergence_reschedule,
     )
     return True
@@ -1124,9 +1125,11 @@ def _get_convergence_soon_ended_commands(all=False):
     return xmlrpcCleanup(ret)
 
 
-def _get_convergence_new_machines_to_add(ctx, cmd_id, convergence_deploy_group_id):
+def _get_convergence_new_machines_to_add(
+    ctx, cmd_id, convergence_deploy_group_id, machine_uuids=None
+):
     ret = MscDatabase()._get_convergence_new_machines_to_add(
-        ctx, cmd_id, convergence_deploy_group_id
+        ctx, cmd_id, convergence_deploy_group_id, machine_uuids=machine_uuids
     )
     return xmlrpcCleanup(ret)
 
@@ -1134,9 +1137,17 @@ def _get_convergence_new_machines_to_add(ctx, cmd_id, convergence_deploy_group_i
 def _add_machines_to_convergence_command(
     ctx, cmd_id, new_machine_ids, convergence_group_id, phases={}
 ):
-    return MscDatabase().addMachinesToCommand(
-        ctx, cmd_id, new_machine_ids, convergence_group_id, phases=phases
-    )
+    database = MscDatabase()
+    with database.convergenceCommandLock(cmd_id):
+        eligible = _get_convergence_new_machines_to_add(
+            ctx, cmd_id, convergence_group_id
+        )
+        targets = [uuid for uuid in new_machine_ids if uuid in eligible]
+        if not targets:
+            return cmd_id
+        return database.addMachinesToCommand(
+            ctx, cmd_id, targets, convergence_group_id, phases=phases
+        )
 
 
 def _get_convergence_phases(cmd_id, deploy_group_id):
@@ -1170,6 +1181,90 @@ def getContext(user="root"):
     s.userid = user
     s.userdn = LdapUserGroupControl().searchUserDN(s.userid)
     return s
+
+
+def convergence_scheduled():
+    """Reuse one group evaluation per command for inventory and window maintenance."""
+    logger = logging.getLogger()
+    database = DyngroupDatabase()
+    started = time.monotonic()
+    try:
+        with MscDatabase().convergenceCommandLock("inventory"):
+            requests = database.getInventoryConvergenceRequests()
+            machine_uuids = {row[1] for row in requests}
+            active_commands = database._get_convergence_active_commands_ids()
+            due_commands = set(
+                MscDatabase()._get_convergence_soon_ended_commands(
+                    cmd_ids=active_commands
+                )
+            ) if active_commands else set()
+            failed = False
+            for cmd_id in active_commands:
+                renew_window = cmd_id in due_commands
+                if not machine_uuids and not renew_window:
+                    continue
+                try:
+                    _convergence_scheduled_command(cmd_id, machine_uuids, renew_window)
+                except Exception:
+                    failed = True
+                    logger.exception(
+                        "Scheduled convergence failed: command=%s machines=%s; "
+                        "notifications retained for retry",
+                        cmd_id, len(machine_uuids),
+                    )
+            if requests and not failed:
+                database.acknowledgeInventoryConvergenceRequests(requests)
+            logger.info(
+                "Scheduled convergence pass: requests=%s machines=%s failed=%s duration=%.3fs",
+                len(requests), len(machine_uuids), failed, time.monotonic() - started,
+            )
+    except Exception:
+        # ScheduledCall stops permanently if an exception escapes the task.
+        logger.exception("Scheduled convergence pass failed; will retry next scheduled run")
+
+
+def _convergence_scheduled_command(cmd_id, machine_uuids, renew_window):
+    database = MscDatabase()
+    with database.convergenceCommandLock(cmd_id):
+        if cmd_id not in DyngroupDatabase()._get_convergence_active_commands_ids():
+            return
+        deploy_group_id, user = _get_convergence_deploy_group_id_and_user(cmd_id)
+        ctx = getContext(user=user)
+        group_members = ComputerManager().getRestrictedComputersList(
+            ctx, filt={"gid": deploy_group_id}, justId=True
+        )
+        candidates = list(dict.fromkeys(
+            uuid for uuid in group_members if renew_window or uuid in machine_uuids
+        ))
+        phases = None
+        added = 0
+        for offset in range(0, len(candidates), 1000):
+            targets = database._filter_convergence_candidates(
+                cmd_id, candidates[offset:offset + 1000]
+            )
+            if not targets:
+                continue
+            if phases is None:
+                phases = _get_convergence_phases(cmd_id, deploy_group_id)
+                if not isinstance(phases, dict):
+                    raise ValueError("Invalid convergence phases for command %s" % cmd_id)
+            if not database.prepareInventoryConvergenceWindow(cmd_id):
+                return
+            result = database.addMachinesToCommand(
+                ctx, cmd_id, targets, deploy_group_id, phases=phases
+            )
+            if result != cmd_id:
+                raise RuntimeError(
+                    "Scheduled convergence addition failed for command %s: %s"
+                    % (cmd_id, result)
+                )
+            added += len(targets)
+        if renew_window:
+            _update_convergence_dates(cmd_id)
+        logging.getLogger().info(
+            "Scheduled convergence evaluated: command=%s candidates=%s added=%s renew_window=%s",
+            cmd_id, len(candidates), added, renew_window,
+        )
 
 
 def convergence_reschedule(all=False):

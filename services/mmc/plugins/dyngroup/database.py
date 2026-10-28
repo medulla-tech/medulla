@@ -10,7 +10,7 @@ Add a specific mmc-agent plugin level
 import logging
 
 # SqlAlchemy
-from sqlalchemy import and_, or_, asc, select, func
+from sqlalchemy import and_, or_, asc, select, func, Column, Integer, MetaData, String, Table, text
 from sqlalchemy.orm import aliased
 from sqlalchemy.orm import create_session
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
@@ -50,6 +50,40 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
 
     ####################################
     ## USERS ACCESS
+
+    def ensureInventoryConvergenceQueue(self):
+        queue = Table(
+            "substitute_inventory_convergence",
+            MetaData(),
+            Column("id", Integer, primary_key=True, autoincrement=True),
+            Column("machine_uuid", String(64), nullable=False, unique=True),
+            Column("revision", Integer, nullable=False, server_default="1"),
+            mysql_engine="InnoDB",
+        )
+        queue.create(self.db, checkfirst=True)
+        self.inventory_convergence_queue = queue
+
+    def getInventoryConvergenceRequests(self):
+        """Freeze IDs and revisions in one read; later updates remain pending."""
+        with self.db.connect() as connection:
+            return connection.execute(
+                self.inventory_convergence_queue.select()
+                .order_by(self.inventory_convergence_queue.c.id)
+            ).fetchall()
+
+    def acknowledgeInventoryConvergenceRequests(self, requests):
+        for offset in range(0, len(requests), 1000):
+            with self.db.begin() as connection:
+                connection.execute(
+                    text(
+                        "DELETE FROM substitute_inventory_convergence "
+                        "WHERE id = :request_id AND revision = :revision"
+                    ),
+                    [
+                        {"request_id": row[0], "revision": row[2]}
+                        for row in requests[offset:offset + 1000]
+                    ],
+                )
 
     ####################################
     ## MACHINES ACCESS

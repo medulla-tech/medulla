@@ -33,47 +33,47 @@ USE `xmppmaster`;
 -- Created   : (date du jour)
 --
 -- Purpose   :
---   Recherche les mises à jour de sécurité (KB) manquantes dans une table
---   spécifique de packages selon la famille du produit (Windows, Office, Visual Studio…).
---   Génère dynamiquement une requête SQL adaptée au type de produit.
+--   Recherche les mises a jour de securite (KB) manquantes dans une table
+--   specifique de packages selon la famille du produit (Windows, Office, Visual Studio…).
+--   Genere dynamiquement une requête SQL adaptee au type de produit.
 --
 -- Parameters :
 --   IN tablesearch VARCHAR(1024)
---       → Nom de la table produit à interroger (ex : 'up_packages_Win10_X64_22H2')
+--       → Nom de la table produit a interroger (ex : 'up_packages_Win10_X64_22H2')
 --   IN KB_LIST VARCHAR(2048)
---       → Liste de KBs (identifiants de correctifs) déjà connus, séparés par des virgules.
+--       → Liste de KBs (identifiants de correctifs) deja connus, separes par des virgules.
 --
 -- Behavior :
---   - Si KB_LIST est vide ou NULL → la procédure se termine immédiatement.
---   - Selon la table passée en argument :
+--   - Si KB_LIST est vide ou NULL → la procedure se termine immediatement.
+--   - Selon la table passee en argument :
 --       • Windows (Win10, Win11, Server, MSOS) :
---            Recherche les dernières révisions non obsolètes (supersededby = '')
+--            Recherche les dernieres revisions non obsoletes (supersededby = '')
 --            et dont les KB ne figurent pas dans KB_LIST.
 --       • Office (2003–2016) :
---            Recherche les dernières mises à jour de sécurité uniquement.
+--            Recherche les dernieres mises a jour de securite uniquement.
 --       • Visual Studio (2005–2022) :
---            Idem, limité aux "Security Updates".
+--            Idem, limite aux "Security Updates".
 --       • Win_Malicious_X64 :
---            Sélectionne le dernier correctif non présent dans KB_LIST.
+--            Selectionne le dernier correctif non present dans KB_LIST.
 --       • Autres tables :
 --            Retourne le contenu complet de xmppmaster.update_data (fallback).
 --
 -- Output :
---   - Exécute dynamiquement un SELECT correspondant au produit demandé.
---   - Retourne le ou les enregistrements des mises à jour KB non encore présentes.
+--   - Execute dynamiquement un SELECT correspondant au produit demande.
+--   - Retourne le ou les enregistrements des mises a jour KB non encore presentes.
 --
 -- Notes :
---   - Utilise SQL dynamique (PREPARE / EXECUTE) pour exécuter la requête construite.
+--   - Utilise SQL dynamique (PREPARE / EXECUTE) pour executer la requête construite.
 --   - Les sous-requêtes "max(revisionid)" permettent d’obtenir uniquement
---     les révisions les plus récentes par famille de patch.
---   - Si une table n’est pas reconnue dans les listes prévues, la procédure
---     renvoie par défaut le contenu de xmppmaster.update_data.
+--     les revisions les plus recentes par famille de patch.
+--   - Si une table n’est pas reconnue dans les listes prevues, la procedure
+--     renvoie par defaut le contenu de xmppmaster.update_data.
 --
 -- Example usage :
 --   CALL up_search_kb_update('up_packages_Win10_X64_22H2', 'KB5030219,KB5030300');
 --
 -- Expected result :
---   → Retourne toutes les mises à jour KB non présentes dans la liste donnée.
+--   → Retourne toutes les mises a jour KB non presentes dans la liste donnee.
 -- =======================================
 
 USE `xmppmaster`;
@@ -89,7 +89,7 @@ CREATE PROCEDURE `up_search_kb_update`(
 BEGIN
     DECLARE result VARCHAR(50);
 
-    -- Vérifier si KB_LIST est vide
+    -- Verifier si KB_LIST est vide
     end_procedure:
     BEGIN
         IF KB_LIST IS NULL OR KB_LIST = '' THEN
@@ -196,28 +196,28 @@ CREATE TABLE IF NOT EXISTS up_windows_kb_uninstall (
     -- Identifiant unique de la mise a jour Windows
     updateid VARCHAR(38) NOT NULL,
 
-    -- Nom de la machine concernée
+    -- Nom de la machine concernee
     hostname VARCHAR(45) NOT NULL,
 
-    -- Numéro de la KB (ex: KB1234567)
+    -- Numero de la KB (ex: KB1234567)
     kb VARCHAR(45) DEFAULT '',
 
     -- Identifiant du job (ex: GLPI, Ansible, etc.)
     jid VARCHAR(255),
 
-    -- ID de l'entité (ex: GLPI entities_id)
+    -- ID de l'entite (ex: GLPI entities_id)
     entities_id INT DEFAULT 0,
 
-    -- Nombre de tentatives de désinstallation
+    -- Nombre de tentatives de desinstallation
     count_uninstall INT DEFAULT 0,
 
-    -- Statut de la désinstallation (ex: "FAILED", "SUCCESS", "PENDING")
+    -- Statut de la desinstallation (ex: "FAILED", "SUCCESS", "PENDING")
     status VARCHAR(255),
 
-    -- Clé primaire simple
+    -- Cle primaire simple
     PRIMARY KEY (id),
 
-    -- Clé unique métier (pour éviter les doublons updateid+hostname)
+    -- Cle unique metier (pour eviter les doublons updateid+hostname)
     UNIQUE KEY uniq_update_host (updateid, hostname),
 
     -- Index pour optimiser les requêtes sur updateid et jid

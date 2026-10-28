@@ -21,99 +21,31 @@
  */
 
 require_once("modules/security/includes/xmlrpc.php");
+require_once("modules/security/includes/html.inc.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
-// Get filter parameters
-$software_name = isset($_GET["software_name"]) ? $_GET["software_name"] : "";
-$software_version = isset($_GET["software_version"]) ? $_GET["software_version"] : "";
-$filter = isset($_GET["filter"]) ? $_GET["filter"] : "";
+$software_name = $_GET["software_name"] ?? "";
+$software_version = $_GET["software_version"] ?? "";
+$filter = $_GET["filter"] ?? "";
 $start = isset($_GET["start"]) ? intval($_GET["start"]) : 0;
-$severity = isset($_GET["severity"]) && $_GET["severity"] !== "" ? $_GET["severity"] : null;
+$severity = SecurityFilter::severity();
 
-if (empty($software_name)) {
-    echo '<div class="empty-message">';
-    echo '<p>' . _T("Invalid software", "security") . '</p>';
-    echo '</div>';
+if ($software_name === '') {
+    echo '<div class="empty-message"><p>' . _T("Invalid software", "security") . '</p></div>';
     return;
 }
 
-// Get data from backend
 $result = xmlrpc_get_software_cves($software_name, $software_version, $start, $maxperpage, $filter, $severity);
-$data = $result['data'];
-$count = $result['total'];
+$count = $result['total'] ?? 0;
 
-// Prepare arrays for display
-$cveIds = array();
-$severities = array();
-$cvssScores = array();
-$descriptions = array();
-$publishedDates = array();
-$params = array();
-$cssClasses = array();
-
-foreach ($data as $row) {
-    $cveIds[] = $row['cve_id'];
-
-    // Severity with color badge
-    $sev = $row['severity'];
-    $sevClass = $sev === 'N/A' ? 'na' : strtolower($sev);
-    $severities[] = '<span class="badge badge-' . $sevClass . '">' . $sev . '</span>';
-
-    // CVSS Score
-    $cvss = floatval($row['cvss_score']);
-    $cvssScores[] = number_format($cvss, 1);
-
-    // Description (truncated)
-    $desc = $row['description'] ? $row['description'] : '';
-    if (strlen($desc) > 100) {
-        $desc = substr($desc, 0, 100) . '...';
-    }
-    $descriptions[] = htmlspecialchars($desc);
-
-    // Published date
-    $pubDate = '';
-    if (!empty($row['published_at'])) {
-        $pubDate = date('Y-m-d', strtotime($row['published_at']));
-    }
-    $publishedDates[] = $pubDate;
-
-    // Params for actions
-    $params[] = array('cve_id' => $row['cve_id']);
-
-    // CSS class : "alternate" garde le zébrage 1 ligne/2, "severity-*" le liseré.
-    $cssClasses[] = 'severity-' . $sevClass . ' alternate';
-}
-
-// Actions
-$detailAction = new ActionItem(_T("View Details", "security"), "cveDetail", "display", "", "security", "security");
-
-// Display the list
 if ($count > 0) {
-    $n = new OptimizedListInfos($cveIds, _T("CVE ID", "security"));
-    $n->setResizable();
-    $n->setTableCssClass("security-table");
-    $n->disableFirstColumnActionLink();
-    $n->setCssClasses($cssClasses);
-    $n->addExtraInfo($severities, _T("Severity", "security"));
-    $n->addExtraInfo($cvssScores, _T("CVSS", "security"));
-    $n->addExtraInfo($descriptions, _T("Description", "security"));
-    $n->addExtraInfo($publishedDates, _T("Published", "security"));
-    $n->setItemCount($count);
-    $n->setNavBar(new AjaxNavBar($count, $filter));
-    $n->setParamInfo($params);
-    $n->addActionItem($detailAction);
-    $n->start = 0;
-    $n->end = $count;
-    $n->display();
+    SecurityLists::cves($result['data'] ?? array(), $count, $filter);
 } else {
-    echo '<div class="empty-message">';
-    if ($filter || $severity) {
-        echo '<p>' . _T("No CVEs match your filter criteria", "security") . '</p>';
-    } else {
-        echo '<p>' . _T("No CVEs found for this software", "security") . '</p>';
-    }
-    echo '</div>';
+    $message = ($filter !== '' || $severity)
+        ? _T("No CVEs match your filter criteria", "security")
+        : _T("No CVEs found for this software", "security");
+    echo '<div class="empty-message"><p>' . $message . '</p></div>';
 }
 ?>

@@ -26,6 +26,7 @@
 //die($_GET['uuid']."   ". $_GET['name']."   ".$_GET['value']);
 if (isset ($_GET['uuid']) && isset($_GET['name']) && isset ($_GET['value']) )
 {
+    verifyCSRFToken($_GET);
     require_once("modules/glpi/includes/xmlrpc.php");
     setGlpiEditableValue($_GET['uuid'], $_GET['name'],$_GET['value']);
 }
