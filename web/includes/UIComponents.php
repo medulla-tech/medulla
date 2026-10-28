@@ -377,10 +377,9 @@ class BulkSelectBar
     function escapeHtml(t) { var d = document.createElement('div'); d.appendChild(document.createTextNode(t)); return d.innerHTML; }
 
     function doBulkDelete(ids) {
-        var params = '';
-        for (var j = 0; j < ids.length; j++) { if (j) params += '&'; params += 'gid[]=' + encodeURIComponent(ids[j]); }
+        var params = 'auth_token=' + encodeURIComponent(authToken);
         params += '&type=' + encodeURIComponent(itemType);
-        params += '&auth_token=' + encodeURIComponent(authToken);
+        for (var j = 0; j < ids.length; j++) { params += '&gid[]=' + encodeURIComponent(ids[j]); }
         var xhr = new XMLHttpRequest();
         xhr.open('POST', deleteUrl, true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
