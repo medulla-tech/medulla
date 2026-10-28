@@ -605,6 +605,7 @@ class ActionAjaxPopup extends ActionItem
     private $_confirmMessage = '';
     private $_width = 400;
     private $_replaceContent = true;
+    private $_method = 'GET';
 
     public function __construct(
         $desc,
@@ -617,12 +618,14 @@ class ActionAjaxPopup extends ActionItem
         $tab = null,
         $width = 400,
         $mod = false,
-        $replace_content = true
+        $replace_content = true,
+        $method = 'GET'
     ) {
         parent::__construct($desc, $action, $classCss, $paramString, $module, $submod, $tab, $mod);
         $this->_confirmMessage = $confirmMessage;
         $this->_width = $width;
         $this->_replaceContent = $replace_content;
+        $this->_method = strtoupper($method);
     }
 
     public function render($text, $extraParams = array(), $title = '', $hoverClass = '')
@@ -656,6 +659,7 @@ class ActionAjaxPopup extends ActionItem
             json_encode($targetUrl, JSON_UNESCAPED_SLASHES),
             (int) $this->_width,
             $this->_replaceContent ? 'true' : 'false',
+            json_encode($this->_method),
         ]);
 
         $html = '<a href="#" class="' . $allClasses . '"' . $titleAttr . '
@@ -703,7 +707,7 @@ class ActionAjaxPopup extends ActionItem
             $popup.fadeOut(200);
         }
 
-        function ActionAjaxPopup_showPopup(message, targetUrl, width, replaceContent) {
+        function ActionAjaxPopup_showPopup(message, targetUrl, width, replaceContent, method) {
             // Si pas de message de confirmation, on fait un autoload dans la popup
             if (message === '') {
                 if (!jQuery('#actionConfirmPopup').length) {
@@ -766,9 +770,24 @@ class ActionAjaxPopup extends ActionItem
 
             jQuery('#popupYes').on('click', function() {
                 jQuery('#popupResult').html('<em>' + ActionAjaxPopup_i18n.loading + '</em>').show();
-                jQuery.ajax({
-                    url: targetUrl,
-                    type: 'GET',
+                var request = {url: targetUrl, type: method || 'GET'};
+                if (method === 'POST') {
+                    var requestUrl = new URL(targetUrl, window.location.href);
+                    var routing = new URLSearchParams();
+                    var postData = {};
+                    var routingKeys = ['module', 'submod', 'action', 'tab'];
+                    requestUrl.searchParams.forEach(function(value, key) {
+                        if (routingKeys.indexOf(key) !== -1) {
+                            routing.append(key, value);
+                        } else {
+                            postData[key] = value;
+                        }
+                    });
+                    postData.auth_token = postActionAuthToken;
+                    request.url = requestUrl.pathname + '?' + routing.toString();
+                    request.data = postData;
+                }
+                jQuery.ajax(Object.assign(request, {
                     success: function(data) {
                         if (replaceContent) {
                             // Remplace le contenu du div de la popup
@@ -787,7 +806,7 @@ class ActionAjaxPopup extends ActionItem
                     error: function(xhr) {
                         jQuery('#popupResult').html('<span class="text-error">Erreur AJAX : ' + xhr.status + '</span>').show();
                     }
-                });
+                }));
             });
 
             return false;
@@ -906,7 +925,7 @@ class ActionConfirmItem extends ActionItem
             ENT_QUOTES,
             'UTF-8'
         );
-        $methodArgument = $this->confirmationMethod === 'POST' ? ", 'POST'" : "";
+        $methodArgument = $this->confirmationMethod === 'POST' ? ", null, null, 'POST'" : "";
 
         echo "<li class=\"" . $this->classCss . "\">";
         echo "<a title=\"" . $this->desc . "\" href=\"#\" ";
@@ -3861,7 +3880,7 @@ function getFilteredGetParams(?array $array = null, ?array $keysToRemove = null)
     $array = $array ?? $_GET;
 
     // Définir les clés à supprimer (par défaut)
-    $keysToRemove = $keysToRemove ?? ['module', 'submod', 'action' ];
+    $keysToRemove = $keysToRemove ?? ['module', 'submod', 'action', 'auth_token'];
 
     // Retourner un nouveau tableau sans les clés indésirables
     return array_diff_key($array, array_flip($keysToRemove));
@@ -4097,7 +4116,10 @@ class Form extends HtmlContainer
 
     public function end()
     {
-        $str = '<input type="hidden" name="auth_token" value="' . $_SESSION['auth_token'] . '">'."\n";
+        $method = strtoupper(trim((string)($this->options['method'] ?? 'POST')));
+        $str = $method === 'POST'
+            ? '<input type="hidden" name="auth_token" value="' . htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8') . '">' . "\n"
+            : '';
         foreach ($this->buttons as $button) {
             $str .= "\n$button\n";
         }

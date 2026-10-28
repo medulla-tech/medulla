@@ -26,17 +26,15 @@ require_once("includes/xmlrpc.inc.php");
 require_once('modules/backuppc/includes/xmlrpc.php');
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-$cn = "";
-if (isset( $_POST["uuid"])) {
-    verifyCSRFToken($_POST);
-    $filter = array('hostname' => $_POST["uuid"]);
-    $cl = getRestrictedComputersList(0, -1, $filter, False);
-    foreach ($cl as $k => $v) {
-        $cn = $v[1]['cn'][0];
-    }
-    // xmlrpc_getPresenceuuid
-    // xmlrpc_getjidMachinefromuuid
+$backupHost = $_POST['backupHost'] ?? '';
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST' || $backupHost === '') {
+    http_response_code(405);
+    exit;
 }
+
+verifyCSRFToken($_POST);
+
+$cn = $_POST['cn'] ?? $backupHost;
 xmlrpc_setfromxmppmasterlogxmpp("Stoping Full backup on machine $cn",
                                 "BPC",
                                 '',
@@ -48,9 +46,6 @@ xmlrpc_setfromxmppmasterlogxmpp("Stoping Full backup on machine $cn",
                                 '',
                                 "session user ".$_SESSION["login"],
                                 'Backup | Full backup Starting | Manual');
-stop_backup($_POST["uuid"]);
-?>
-<script type="text/javascript">
-    pushSearch();
-    closePopup();
-</script>
+stop_backup($backupHost);
+header("Location: " . urlStrRedirect("backuppc/backuppc/index"));
+exit;

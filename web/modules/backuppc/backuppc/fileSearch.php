@@ -183,7 +183,9 @@ $f->display();
 
 // ===== AJAX FILE TABLE ==============================================
 
-$ajax = new AjaxFilterLocation(urlStrRedirect("backuppc/backuppc/ajaxFileSearch"), 'container', 'location', $_POST);
+$ajaxParams = $_POST;
+unset($ajaxParams['auth_token']);
+$ajax = new AjaxFilterLocation(urlStrRedirect("backuppc/backuppc/ajaxFileSearch"), 'container', 'location', $ajaxParams);
 
 $fils = array('.');
 $fils_v = array('.');

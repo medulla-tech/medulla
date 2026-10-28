@@ -12,21 +12,28 @@ require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
 require_once("modules/updates/includes/xmlrpc.php");
 
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
+verifyCSRFToken($_POST);
+$requestData = $_POST;
 
 try {
     // Vérification des paramètres obligatoires
     $requiredParams = ['entity_id', 'typeaction', 'grp', 'namegrp'];
     foreach ($requiredParams as $param) {
-        if (!array_key_exists($param, $_GET)) {
+        if (!array_key_exists($param, $requestData)) {
             throw new Exception("Paramètre '$param' manquant.");
         }
     }
 
     // Récupération des machines
     $namemachine = xmlrpc_get_machines_update_grp(
-        $_GET['entity_id'],
-        $_GET['typeaction'],
-        $_GET['grp']
+        $requestData['entity_id'],
+        $requestData['typeaction'],
+        $requestData['grp']
     );
 
     if ($namemachine === false || empty($namemachine)) {
@@ -35,7 +42,7 @@ try {
 
     // Création du groupe
     $group = new Group();
-    $groupCreated = $group->create($_GET['namegrp'], false);
+    $groupCreated = $group->create($requestData['namegrp'], false);
 
     if (!$groupCreated) {
         throw new Exception("Échec de la création du groupe.");
@@ -53,7 +60,7 @@ try {
     ?>
     <div class="alert alert-success" style="padding: 10px; background: #dff0d8; color: #3c763d; border: 1px solid #d6e9c6; border-radius: 4px;">
         <strong>Succès !</strong><br>
-        Création du groupe <strong>'<?php echo htmlspecialchars($_GET['namegrp']); ?>'</strong> réussie.
+        Création du groupe <strong>'<?php echo htmlspecialchars($requestData['namegrp']); ?>'</strong> réussie.
     </div>
     <?php
 
@@ -62,7 +69,7 @@ try {
     ?>
     <div class="alert alert-danger" style="padding: 10px; background: #f2dfdf; color: #a94442; border: 1px solid #ebccd1; border-radius: 4px;">
         <strong>Erreur !</strong><br>
-        Erreur lors de la création du groupe <strong>'<?php echo htmlspecialchars($_GET['namegrp']); ?>'</strong> :
+        Erreur lors de la création du groupe <strong>'<?php echo htmlspecialchars($requestData['namegrp']); ?>'</strong> :
         <br>
         <?php echo htmlspecialchars($e->getMessage()); ?>
     </div>

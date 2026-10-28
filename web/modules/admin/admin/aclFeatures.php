@@ -65,6 +65,8 @@ if (is_array($currentSelections)) {
 
 // Handle POST (save)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_acl'])) {
+    verifyCSRFToken($_POST);
+
     foreach ($profiles as $pIdx => $profile) {
         $featuresDict = [];
         foreach ($featureDefs as $fkey => $fdef) {
@@ -302,6 +304,7 @@ foreach ($featureDefs as $fkey => $fdef) {
         <div class="manage-profiles-section">
             <div class="info-header"><?php echo _T("Add a profile", "admin"); ?></div>
             <form method="post" action="<?php echo urlStrRedirect("admin/admin/addAclProfile"); ?>" class="manage-profiles-add">
+                <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
                 <input type="text" name="profile_name" placeholder="<?php echo _T("New profile name", "admin"); ?>"
                        pattern="[\p{L}\p{N}_\- ]+" required>
                 <button type="submit" class="btnPrimary"><?php echo _T("Add", "admin"); ?></button>

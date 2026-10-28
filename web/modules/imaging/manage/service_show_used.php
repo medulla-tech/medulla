@@ -35,6 +35,8 @@ $location = getCurrentLocation();
  * ******************** */
 
 if (isset($_POST['removeServices'])) {
+    verifyCSRFToken($_POST);
+
     $bootServicesToDelFromTarget = array(); // Boot Services who will be removed from a computer
     $bootServicesToDelFromLocation = array(); // Boot Services who will be removed from a imaging server
 
@@ -160,6 +162,7 @@ $label = urldecode($_GET['itemlabel']);
 $targets = xmlrpc_isServiceUsed($item_uuid);
 ?>
 <form name="showTarget" action="<?php echo urlStr("imaging/manage/service_show_used", $params) ?>" method="post">
+    <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
     <p><?php printf(_T("Show all targets that use that image in their boot menu", "imaging")); ?></p>
 <?php
 foreach ($targets as $target) {

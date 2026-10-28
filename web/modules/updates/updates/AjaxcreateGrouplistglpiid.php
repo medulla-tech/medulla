@@ -9,6 +9,8 @@ require_once("../../dyngroup/includes/dyngroup.php");
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    verifyCSRFToken($_POST);
+
     $entityid = $_POST['entityid'] ?? '';
     $typeaction = $_POST['typeaction'] ?? 'windows';
 

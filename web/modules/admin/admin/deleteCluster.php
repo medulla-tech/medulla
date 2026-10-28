@@ -5,6 +5,8 @@ $id_cluster = $_GET['id'];
 $cluster_name = $_GET['name'];
 
 if (isset($_POST["bconfirm"])) {
+    verifyCSRFToken($_POST);
+
     $result = xmlrpc_delete_cluster($id_cluster);
     if($result['state'] == 'success'){
         new NotifyWidgetSuccess(_T("The cluster <b>$cluster_name</b> has been deleted", "admin"));

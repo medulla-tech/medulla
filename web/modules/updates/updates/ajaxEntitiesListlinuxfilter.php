@@ -74,7 +74,8 @@ $_entities = getUserLocations();
             null,                     // Onglet
             $width,                   // Largeur popup
             false,                    // Mode modal
-            true                      // Remplacer popup par résultat AJAX
+            true,                     // Remplacer popup par résultat AJAX
+            'POST'
         );
     }
 
