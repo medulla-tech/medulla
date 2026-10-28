@@ -299,6 +299,8 @@ function item_edit() {
         $f->pop();
         $f->display();
     } else {
+        verifyCSRFToken($_POST);
+
         // set new values
         if(isset($_GET['gid'])) {
             $type = 'group';

@@ -30,7 +30,7 @@ if (((isset($_GET['reset_defaultMenu']) && $_GET['reset_defaultMenu'] == 1)
     exit;
 }
 
-if (isset($_POST['reset_defaultMenu']) || isset($_POST['leave_group'])) {
+if (isset($_POST['reset_defaultMenu']) || isset($_POST['leave_group']) || isset($_POST['bsync'])) {
     verifyCSRFToken($_POST);
 }
 

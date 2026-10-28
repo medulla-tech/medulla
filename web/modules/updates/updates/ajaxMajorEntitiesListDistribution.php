@@ -368,7 +368,8 @@ foreach ($statversion['by_entity'] as $entityId => $ent) {
         null,
         450,
         false,
-        true
+        true,
+        'POST'
     );
 
     /*

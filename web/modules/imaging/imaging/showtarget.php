@@ -30,6 +30,8 @@ include('modules/imaging/includes/xmlrpc.inc.php');
  * ************** */
 
 if (isset($_POST['removeMasters'])) {
+    verifyCSRFToken($_POST);
+
     $imagesToDelFromTarget = array(); // Masters who will be removed from a computer
     $imagesToDelFromLocation = array(); // Masters who will be removed from a imaging server
 
@@ -120,6 +122,7 @@ $ret = xmlrpc_areImagesUsed(array(array($id, $tid, $type)));
 $ret = $ret[$id];
 ?>
 <form name="showTarget" action="<?php echo urlStr("base/computers/showtarget", $params) ?>" method="post">
+    <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
     <p><?php printf(_T("Show all targets that use that image in their boot menu", "imaging")); ?></p>
     <hr />
     <p><?php printf(_T("If you want to remove this master from one or more targets, check these targets and click on the remove button", "imaging")); ?></p>

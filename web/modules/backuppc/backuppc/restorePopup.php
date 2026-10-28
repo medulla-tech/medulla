@@ -40,11 +40,10 @@
 
 jQuery(function(){
 
-//Extract first information send : initial host
-tabl = jQuery('#restorefiles').serializeArray();
-host = tabl[0];
+// Select the initial host without depending on serialized form field order.
+host = jQuery('#restorefiles input[name="host"]').val();
 //modify "selected" attr when id = initial host
-jQuery("#"+host.value).attr('selected','selected');
+jQuery("#"+host.toUpperCase()).attr('selected','selected');
 
     jQuery('input#btnRestoreDirect3').click(function(){
 			  jQuery('#sharedest').val('/');

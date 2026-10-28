@@ -182,6 +182,8 @@ $opts = array(
  * Enter here on page validation
  */
 if (isset($_POST["bvalid"])) {
+    verifyCSRFToken($_POST);
+
     /*
      * type: 'group' for a profile, '' for a single computer
      */

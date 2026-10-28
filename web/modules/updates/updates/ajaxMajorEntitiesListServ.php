@@ -197,7 +197,8 @@ $emptydeployAll = new EmptyActionItem1(_T("There are no major updates to deploy 
         null, // tab
         450, // largeur
         false, // mod
-        true // remplace le popup avec le result de ajax
+        true, // remplace le popup avec le result de ajax
+        'POST'
     );
 
     // Générer la chaîne de date et heure

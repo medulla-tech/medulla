@@ -28,6 +28,8 @@ require_once("modules/xmppmaster/includes/html.inc.php");
 
 
 if(isset($_POST['bconfirm'])){
+  verifyCSRFToken($_POST);
+
   $relay_id = htmlentities($_POST['relay_id']);
   $rule_id = htmlentities($_POST['rule']);
   $order = htmlentities($_POST['rule_order']);

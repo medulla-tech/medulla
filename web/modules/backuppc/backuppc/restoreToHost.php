@@ -35,6 +35,7 @@ $dir = $_POST['dir'];
 $hostdest = $_POST['hostdest'];
 $sharedest = $_POST['sharedest'];
 
+unset($_POST['auth_token']);
 $_GET = array_merge($_GET,$_POST);
 
 // unset no-files vars

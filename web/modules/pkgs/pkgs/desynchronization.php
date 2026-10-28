@@ -137,6 +137,9 @@ else{
   else{
     $f = new PopupForm(_T("Delete the $label from pending", 'pkgs'));
     $f->setLevel('danger');
+    $f->add(new HiddenTpl('pid'), array('value' => $_GET['pid'], 'hide' => True));
+    $f->add(new HiddenTpl('plabel'), array('value' => $_GET['plabel'], 'hide' => True));
+    $f->add(new HiddenTpl('pversion'), array('value' => $_GET['pversion'], 'hide' => True));
     $f->addDangerButton("package");
     $f->addCancelButton("bback");
     $f->display();

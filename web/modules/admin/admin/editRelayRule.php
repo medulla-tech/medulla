@@ -29,6 +29,8 @@ require_once("modules/xmppmaster/includes/html.inc.php");
 
 
 if(isset($_POST['bconfirm'])){
+  verifyCSRFToken($_POST);
+
   $selected_rule = htmlentities($_POST['selected_rule']);
   $rule_id = htmlentities($_POST['rule']);
   $relay_id = htmlentities($_POST['relay']);
