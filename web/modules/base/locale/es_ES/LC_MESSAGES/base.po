@@ -2656,3 +2656,7 @@ msgstr "Para activar estas funcionalidades, le invitamos a suscribir un contrato
 
 msgid "Loading..."
 msgstr "Cargando..."
+
+#: graph/header.inc.php:71
+msgid "Search..."
+msgstr "Introducir una palabra clave..."

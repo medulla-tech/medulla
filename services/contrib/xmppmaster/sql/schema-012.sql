@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `xmppmaster`.`historylogs` (
   `who` varchar(45)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- ici quand on supprime un enregistrement dans la table logs. celui ci est ajouté par trigger dans la base history.
+-- ici quand on supprime un enregistrement dans la table logs. celui ci est ajoute par trigger dans la base history.
 
 
 DROP TRIGGER IF EXISTS trig_apres_delete_logs;

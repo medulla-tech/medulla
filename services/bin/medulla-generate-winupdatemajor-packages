@@ -312,58 +312,118 @@ generate_package() {
                 "actionlabel": "upd_70a70cc9"
             }, 
             {
+                "action": "action_loop_question",
                 "step": 1,
+                "codereturn": "",
+                "actionlabel": "QUESTION_RELEASE_UPDATE",
+                "titlemessage": "$(printf '%s' 'Windows Release Update' | base64 -w0)",
+                "sizeheader": "15",
+                "message": "$(printf '%s' 'A Windows release update is ready to install. Do you want to start it now?' | base64 -w0)",
+                "sizemessage": "10",
+                "textbuttonyes": "Yes",
+                "textbuttonno": "No",
+                "gotoyes": "INSTALL",
+                "gotolookterminate": "ABORT_BY_USER",
+                "gotonouser": "INSTALL",
+                "gototimeout": "ABORT_BY_TIMEOUT",
+                "timeout": "800",
+                "loopnumber": "1",
+                "timeloop": "900"
+            },
+            {
+                "step": 2,
                 "action": "action_comment",
-                "actionlabel": "release_user_context",
+                "actionlabel": "INSTALL",
                 "comment": "@@@IF|@@@USER_CONNECTED@@@|Windows release update: connected user=@@@CONNECTED_USER@@@; target release=@@@TARGET_RELEASE@@@|Windows release update: no connected user; target release=@@@TARGET_RELEASE@@@@@@"
+            },
+            {
+                "step": 3,
+                "action": "action_comment",
+                "actionlabel": "RELEASE_UPDATE_CONFIRMED",
+                "comment": "Windows release update execution confirmed: ISO control started"
             },
             {
                 "command": "$(echo $COMMAND | base64 -w0)",
                 "30@lastlines": "30@lastlines",
-                "actionlabel": "02d57e96",
+                "actionlabel": "RUN_UPDATE_ISO",
                 "codereturn": "",
-                "step": 2,
-                "error": 7,
+                "step": 4,
                 "action": "actionprocessscript",
-                "timeout": "3600",
-                "gotoreturncode@3010": "REBOOTREQUIRED"
+                "timeout": "7200",
+                "error": 14,
+                "gotoreturncode@3010": "REBOOTREQUIRED",
+                "gotoreturncode@!=0": "END_ERROR"
             },
             {
                 "action": "actionwaitandgoto",
-                "step": 3,
+                "step": 5,
                 "codereturn": "",
                 "actionlabel": "wait_cc66c870",
                 "waiting": "1",
                 "goto": "END_SUCCESS"
             },
             {
-                "step": 4,
+                "step": 6,
                 "action": "action_comment",
                 "actionlabel": "REBOOTREQUIRED",
                 "comment": "The update has been installed but a reboot is required to apply it."
             },
             {
                 "action": "action_notification",
-                "step": 5,
+                "step": 7,
                 "codereturn": "",
                 "actionlabel": "notif_ee9943f2",
-                "titlemessage": "V2luZG93cyBVcGRhdGUgLSBSZWJvb3Q=",
+                "titlemessage": "V2luZG93cyBVcGRhdGUgLSBSZXN0YXJ0",
                 "sizeheader": "15",
-                "message": "QW4gdXBkYXRlIGhhcyBiZWVuIGluc3RhbGxlZCBvbiB5b3VyIGNvbXB1dGVyIGJ5IE1lZHVsbGEuIFBsZWFzZSByZWJvb3Qgd2hlbiBwb3NzaWJsZSB0byBhcHBseSB0aGUgdXBkYXRlLg0KDQpVbmUgbWlzZSDDoCBqb3VyIGEgw6l0w6kgaW5zdGFsbMOpZSBzdXIgdm90cmUgb3JkaW5hdGV1ciBwYXIgTWVkdWxsYS4gUGVuc2V6IMOgIHJlZMOpbWFycmVyIHF1YW5kIGMnZXN0IHBvc3NpYmxlIGFmaW4gcXVlIGxhIG1pc2Ugw6Agam91ciBzb2l0IGFwcGxpcXXDqWUu",
+                "message": "VGhlIFdpbmRvd3MgcmVsZWFzZSB1cGRhdGUgcmVxdWlyZXMgYSByZXN0YXJ0LiBUaGlzIGNvbXB1dGVyIHdpbGwgcmVzdGFydCBub3cgdG8gY29tcGxldGUgdGhlIHVwZGF0ZS4gU2F2ZSB5b3VyIHdvcmsu",
                 "sizemessage": "10",
                 "textbuttonyes": "OK",
                 "timeout": "800"
             },
             {
+                "step": 8,
+                "action": "actionrestart",
+                "actionlabel": "RESTART_AFTER_RELEASE_UPDATE",
+                "targetrestart": "MA"
+            },
+            {
+                "step": 9,
                 "action": "actionsuccescompletedend",
-                "step": 6,
                 "actionlabel": "END_SUCCESS",
                 "clear": "False",
-                "inventory": "noforced"
+                "inventory": "forced"
+            },
+            {
+                "step": 10,
+                "action": "action_comment",
+                "actionlabel": "ABORT_BY_TIMEOUT",
+                "comment": "Windows release update aborted: user response timed out @@@CONNECTED_USER@@@"
+            },
+            {
+                "action": "actionwaitandgoto",
+                "step": 11,
+                "codereturn": "",
+                "actionlabel": "wait_abort_by_timeout",
+                "waiting": "1",
+                "goto": "END_ERROR"
+            },
+            {
+                "step": 12,
+                "action": "action_comment",
+                "actionlabel": "ABORT_BY_USER",
+                "comment": "Windows release update aborted by user @@@CONNECTED_USER@@@"
+            },
+            {
+                "action": "actionwaitandgoto",
+                "step": 13,
+                "codereturn": "",
+                "actionlabel": "wait_abort_by_user",
+                "waiting": "1",
+                "goto": "END_ERROR"
             },
             {
                 "action": "actionerrorcompletedend",
-                "step": 7,
+                "step": 14,
                 "actionlabel": "END_ERROR"
             }
         ]
@@ -372,13 +432,20 @@ generate_package() {
         "win": {
             "label": {
                 "upd_70a70cc9": 0,
-                "release_user_context": 1,
-                "02d57e96": 2,
-                "wait_cc66c870": 3,
-                "REBOOTREQUIRED": 4,
-                "notif_ee9943f2": 5,
-                "END_SUCCESS": 6,
-                "END_ERROR": 7
+                "QUESTION_RELEASE_UPDATE": 1,
+                "INSTALL": 2,
+                "RELEASE_UPDATE_CONFIRMED": 3,
+                "RUN_UPDATE_ISO": 4,
+                "wait_cc66c870": 5,
+                "REBOOTREQUIRED": 6,
+                "notif_ee9943f2": 7,
+                "RESTART_AFTER_RELEASE_UPDATE": 8,
+                "END_SUCCESS": 9,
+                "ABORT_BY_TIMEOUT": 10,
+                "wait_abort_by_timeout": 11,
+                "ABORT_BY_USER": 12,
+                "wait_abort_by_user": 13,
+                "END_ERROR": 14
             }
         },
         "os": [

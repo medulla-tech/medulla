@@ -1,4 +1,5 @@
 <?php
+
 /**
  * (c) 2015 siveo, http://www.siveo.net/
  *
@@ -19,22 +20,22 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/
+ */
 $url = array();
-if(isset($_GET['agenttype']) && $_GET['agenttype'] == 'relayserver' or isset($_GET['uninventoried'])) {
+if (isset($_GET['agenttype']) && $_GET['agenttype'] == 'relayserver' or isset($_GET['uninventoried'])) {
     $_GET['cn'] = $_GET['hostname'];
 }
 
 $hostname = !empty($_GET['hostname']) ? htmlentities($_GET['hostname']) : "";
 $_GET['cn'] = !empty($_GET['cn']) ? htmlentities($_GET['cn']) : $hostname;
 
-if(isset($_GET['cn'])) {
+if (isset($_GET['cn'])) {
     $zz = xmlrpc_getGuacamoleRelayServerMachineHostnameProto($_GET['cn']);
     $dd = $zz['machine'];
     $ee = $zz['proto'];
     foreach ($ee as $k) {
         $cux[$k[0]] = $k[1];
-        $cux_id_hex = bin2hex($k[1]).'00'.bin2hex('c').'00'.bin2hex('mysql');
+        $cux_id_hex = bin2hex($k[1]) . '00' . bin2hex('c') . '00' . bin2hex('mysql');
         $cux_id = base64_encode(hex2bin($cux_id_hex));
         $url[$k[0]] = str_replace('@@CUX_ID@@', $cux_id, $dd['urlguacamole']);
     }
@@ -104,43 +105,62 @@ $isServer = ($dd['agenttype'] == "relayserver");
 </div>
 
 <script type="text/javascript">
-var uuid = '<?php echo $_GET['objectUUID']; ?>';
-var cn = '<?php echo $_GET['cn']; ?>';
-var authToken = <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>;
+    var uuid = '<?php echo $_GET['objectUUID']; ?>';
+    var cn = '<?php echo $_GET['cn']; ?>';
+    var authToken = <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>;
+    var authToken = <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>;
 
-<?php if (isset($url['SSH'])): ?>
-jQuery('#ssh').on('click', function(){
-    var ssh_url = '<?php echo $url['SSH']; ?>';
-    var ssh_cux = '<?php echo $cux['SSH']; ?>';
-    jQuery.post("modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", { uuid: uuid, cn: cn, cux_id: ssh_cux, cux_type: "SSH", auth_token: authToken })
-    .done(function(data) {
-        window.open(ssh_url);
-        alert("The SSH control session opens in a new window", "", "alert-info");
-    });
-});
-<?php endif; ?>
+    <?php if (isset($url['SSH'])): ?>
+        jQuery('#ssh').on('click', function() {
+            var ssh_url = '<?php echo $url['SSH']; ?>';
+            var ssh_cux = '<?php echo $cux['SSH']; ?>';
+            jQuery.post("modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", {
+                    uuid: uuid,
+                    cn: cn,
+                    cux_id: ssh_cux,
+                    cux_type: "SSH",
+                    auth_token: authToken
+                })
+                .done(function(data) {
+                    window.open(ssh_url);
+                    alert("The SSH control session opens in a new window", "", "alert-info");
+                });
+        });
+    <?php endif; ?>
 
-<?php if (isset($url['RDP'])): ?>
-jQuery('#rdp').on('click', function(){
-    var rdp_url = '<?php echo $url['RDP']; ?>';
-    var rdp_cux = '<?php echo $cux['RDP']; ?>';
-    jQuery.post("modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", { uuid: uuid, cn: cn, cux_id: rdp_cux, cux_type: "RDP", auth_token: authToken })
-    .done(function(data) {
-        window.open(rdp_url);
-        alert("The RDP control session opens in a new window", "", "alert-info");
-    });
-});
-<?php endif; ?>
+    <?php if (isset($url['RDP'])): ?>
+        jQuery('#rdp').on('click', function() {
+            var rdp_url = '<?php echo $url['RDP']; ?>';
+            var rdp_cux = '<?php echo $cux['RDP']; ?>';
+            jQuery.post("modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", {
+                    uuid: uuid,
+                    cn: cn,
+                    cux_id: rdp_cux,
+                    cux_type: "RDP",
+                    auth_token: authToken
+                })
+                .done(function(data) {
+                    window.open(rdp_url);
+                    alert("The RDP control session opens in a new window", "", "alert-info");
+                });
+        });
+    <?php endif; ?>
 
-<?php if (isset($url['VNC'])): ?>
-jQuery('#vnc').on('click', function(){
-    var vnc_url = '<?php echo $url['VNC']; ?>';
-    var vnc_cux = '<?php echo $cux['VNC']; ?>';
-    jQuery.post("modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", { uuid: uuid, cn: cn, cux_id: vnc_cux, cux_type: "VNC", auth_token: authToken })
-    .done(function(data) {
-        window.open(vnc_url);
-        alert("The VNC control session opens in a new window", "", "alert-info");
-    });
-});
-<?php endif; ?>
+    <?php if (isset($url['VNC'])): ?>
+        jQuery('#vnc').on('click', function() {
+            var vnc_url = '<?php echo $url['VNC']; ?>';
+            var vnc_cux = '<?php echo $cux['VNC']; ?>';
+            jQuery.post("modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", {
+                    uuid: uuid,
+                    cn: cn,
+                    cux_id: vnc_cux,
+                    cux_type: "VNC",
+                    auth_token: authToken
+                })
+                .done(function(data) {
+                    window.open(vnc_url);
+                    alert("The VNC control session opens in a new window", "", "alert-info");
+                });
+        });
+    <?php endif; ?>
 </script>

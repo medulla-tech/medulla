@@ -42,7 +42,7 @@ CREATE PROCEDURE `mmc_restart_deploy_sessionid`(IN IN_sessid VARCHAR(255), in fo
 BEGIN
 -- parameters
 -- IN_sessid session id deployement
--- force_redeploy = 1 ne tient pas compte des états a ignorée (variable ignorestatus)
+-- force_redeploy = 1 ne tient pas compte des etats a ignoree (variable ignorestatus)
 -- rechedule_deploy = 1 replanifie ledeployment entre maintenant et 1 jour
 -- list a mettre a jour pour interdir le redoployement sur ces etats
 SET @ignorestatus0 = "DEPLOYMENT SUCCESS";
@@ -90,7 +90,7 @@ SET @ignorestatus = "'DEPLOYMENT SUCCESS','WAITING MACHINE ONLINE'";
 
 -- parameters
 -- cmd_id command id msc groupe ou machine individuel
--- force_redeploy = 1 ne tient pas compte des états a ignorée (variable ignorestatus)
+-- force_redeploy = 1 ne tient pas compte des etats a ignoree (variable ignorestatus)
 -- rechedule_deploy = 1 replanifie ledeployment entre maintenant et 1 jour
 
 IF force_redeploy > 0 THEN

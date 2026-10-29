@@ -23,108 +23,108 @@
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/security/includes/xmlrpc.php");
+require_once("modules/security/includes/html.inc.php");
 
-$cve_id = isset($_GET['cve_id']) ? htmlspecialchars($_GET['cve_id']) : '';
+$cve_id = strtoupper(trim($_GET['cve_id'] ?? ''));
+$validId = preg_match('/^CVE-\d{4}-\d{4,}$/', $cve_id) === 1;
 
-$p = new PageGenerator(sprintf(_T("CVE Details: %s", 'security'), $cve_id));
+$p = new PageGenerator(sprintf(_T("CVE Details: %s", 'security'), $validId ? $cve_id : ''));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-if (empty($cve_id)) {
+if (!$validId) {
     echo '<p class="error">' . _T("Invalid CVE ID", "security") . '</p>';
     return;
 }
 
-// Get user's accessible entities for filtering
-list($listEntities, $valuesEntities) = getEntitiesSelectableElements();
-$location = implode(',', $valuesEntities);
-
-// Get CVE details from backend (filtered by user's entities)
-$cve = xmlrpc_get_cve_details($cve_id, $location);
+$cve = xmlrpc_get_cve_details($cve_id, SecurityFilter::location());
 
 if (!$cve) {
     echo '<p class="error">' . _T("CVE not found", "security") . '</p>';
     return;
 }
 
-// Determine severity class for styling
-$severityClass = $cve['severity'] === 'N/A' ? 'na' : strtolower($cve['severity']);
+$severityClass = SecurityBadge::severityClass($cve['severity']);
 
-// Determine CVSS class
-$cvss = floatval($cve['cvss_score']);
-if ($cvss >= 9.0) $cvssClass = 'cvss-critical';
-elseif ($cvss >= 7.0) $cvssClass = 'cvss-high';
-elseif ($cvss >= 4.0) $cvssClass = 'cvss-medium';
-else $cvssClass = 'cvss-low';
+$sourceNames = array(
+    'nvd' => 'NVD',
+    'cve' => 'CVE.org',
+    'euvd' => 'EUVD (ENISA)',
+    'debian' => 'Debian',
+    'ubuntu' => 'Ubuntu',
+);
+$links = array();
+foreach ($cve['source_urls'] ?? array() as $src => $url) {
+    if (!is_string($url) || !preg_match('#^https?://#i', $url)) {
+        continue;
+    }
+    $name = $sourceNames[$src] ?? strtoupper($src);
+    $links[] = '<a href="' . htmlspecialchars($url) . '" target="_blank" rel="noopener noreferrer">' . htmlspecialchars($name) . '</a>';
+}
+if (empty($links)) {
+    $links[] = '<a href="https://nvd.nist.gov/vuln/detail/' . urlencode($cve_id) . '" target="_blank" rel="noopener noreferrer">NVD</a>';
+}
+
+// One row per machine, listing its affected software
+$machinesByHost = array();
+foreach ($cve['machines'] ?? array() as $machine) {
+    $id = $machine['id_glpi'];
+    if (!isset($machinesByHost[$id])) {
+        $machinesByHost[$id] = array(
+            'id_glpi' => $id,
+            'hostname' => $machine['hostname'],
+            'softwares' => array()
+        );
+    }
+    $machinesByHost[$id]['softwares'][] = array(
+        'name' => $machine['software_name'],
+        'version' => $machine['software_version']
+    );
+}
 ?>
 
-
-<a href="<?php echo urlStrRedirect('security/security/index'); ?>" class="back-link">
-    &larr; <?php echo _T("Back to CVE list", "security"); ?>
-</a>
+<?php SecurityFilter::backLink('allcves', _T("Back to CVE list", "security")); ?>
 
 <div class="cve-header severity-<?php echo $severityClass; ?>">
     <div class="cve-title"><?php echo htmlspecialchars($cve['cve_id']); ?></div>
     <div class="cve-meta">
         <div class="cve-meta-item">
-            <strong><?php echo _T("Severity", "security"); ?>:</strong>
-            <span class="badge badge-<?php echo $severityClass; ?>">
-                <?php echo htmlspecialchars($cve['severity']); ?>
-            </span>
+            <strong><?php echo _T("Risk", "security"); ?>:</strong>
+            <?php echo SecurityBadge::risk($cve['cvss_score'], $cve['severity']); ?>
         </div>
+        <?php if (!empty($cve['exploited_since'])): ?>
         <div class="cve-meta-item">
-            <strong><?php echo _T("CVSS Score", "security"); ?>:</strong>
-            <span class="cvss-score <?php echo $cvssClass; ?>"><?php echo number_format($cve['cvss_score'], 1); ?></span>
-        </div>
-        <?php if ($cve['published_at']): ?>
-        <div class="cve-meta-item">
-            <strong><?php echo _T("Published", "security"); ?>:</strong>
-            <span><?php echo date('Y-m-d', strtotime($cve['published_at'])); ?></span>
+            <span class="exploited-flag">⚠ <?php echo htmlspecialchars(SecurityBadge::exploitedText($cve['exploited_since'])); ?></span>
         </div>
         <?php endif; ?>
-        <?php if ($cve['last_modified']): ?>
+        <?php if (!empty($cve['published_at'])): ?>
+        <div class="cve-meta-item">
+            <strong><?php echo _T("Published", "security"); ?>:</strong>
+            <span><?php echo SecurityFormat::date($cve['published_at']); ?></span>
+        </div>
+        <?php endif; ?>
+        <?php if (!empty($cve['last_modified'])): ?>
         <div class="cve-meta-item">
             <strong><?php echo _T("Last Modified", "security"); ?>:</strong>
-            <span><?php echo date('Y-m-d', strtotime($cve['last_modified'])); ?></span>
+            <span><?php echo SecurityFormat::date($cve['last_modified']); ?></span>
+        </div>
+        <?php endif; ?>
+        <?php if (!empty($cve['euvd_id'])): ?>
+        <div class="cve-meta-item">
+            <strong><?php echo _T("EUVD ID", "security"); ?>:</strong>
+            <span><?php echo htmlspecialchars($cve['euvd_id']); ?></span>
         </div>
         <?php endif; ?>
     </div>
     <div class="external-links">
-        <?php
-        // Source URLs are now provided by CVE Central API (no more hardcoded URLs)
-        $source_urls = isset($cve['source_urls']) && is_array($cve['source_urls']) ? $cve['source_urls'] : array();
-        $sources = isset($cve['sources']) && is_array($cve['sources']) ? $cve['sources'] : array();
-
-        // Source display names
-        $source_names = array(
-            'nvd' => 'NVD',
-            'circl' => 'CIRCL',
-            'euvd' => 'EUVD'
-        );
-
-        // If source_urls available from API, use them directly
-        if (!empty($source_urls)) {
-            echo '<strong>' . _T("View on", "security") . ':</strong> ';
-            $links = array();
-            foreach ($source_urls as $src => $url) {
-                $name = isset($source_names[$src]) ? $source_names[$src] : strtoupper($src);
-                $links[] = '<a href="' . htmlspecialchars($url) . '" target="_blank">' . $name . '</a>';
-            }
-            echo implode(' | ', $links);
-        } elseif (!empty($sources)) {
-            // Fallback: sources list without URLs (legacy data) - use NVD as default
-            echo '<a href="https://nvd.nist.gov/vuln/detail/' . urlencode($cve['cve_id']) . '" target="_blank">' . _T("View on NVD", "security") . ' &rarr;</a>';
-        } else {
-            // No sources at all - fallback to NVD
-            echo '<a href="https://nvd.nist.gov/vuln/detail/' . urlencode($cve['cve_id']) . '" target="_blank">' . _T("View on NVD", "security") . ' &rarr;</a>';
-        }
-        ?>
+        <strong><?php echo _T("View on", "security"); ?>:</strong>
+        <?php echo implode(' | ', $links); ?>
     </div>
 </div>
 
 <h3 class="section-title"><?php echo _T("Description", "security"); ?></h3>
 <div class="cve-description">
-    <?php echo nl2br(htmlspecialchars($cve['description'] ? $cve['description'] : _T("No description available", "security"))); ?>
+    <?php echo nl2br(htmlspecialchars(($cve['description'] ?? '') ?: _T("No description available", "security"))); ?>
 </div>
 
 <?php if (!empty($cve['softwares'])): ?>
@@ -134,70 +134,44 @@ else $cvssClass = 'cvss-low';
     <li>
         <strong><?php echo htmlspecialchars($sw['name']); ?></strong>
         <span class="software-version">v<?php echo htmlspecialchars($sw['version']); ?></span>
+        <?php echo SecurityBadge::fix($sw['fix_available'] ?? null); ?>
     </li>
     <?php endforeach; ?>
 </ul>
 <?php endif; ?>
 
-<?php
-// Group machines by hostname to avoid duplicates
-$machinesByHost = array();
-foreach ($cve['machines'] as $machine) {
-    $hostname = $machine['hostname'];
-    if (!isset($machinesByHost[$hostname])) {
-        $machinesByHost[$hostname] = array(
-            'id_glpi' => $machine['id_glpi'],
-            'hostname' => $hostname,
-            'softwares' => array()
-        );
-    }
-    $machinesByHost[$hostname]['softwares'][] = array(
-        'name' => $machine['software_name'],
-        'version' => $machine['software_version']
-    );
-}
-$uniqueMachineCount = count($machinesByHost);
-?>
-
 <h3 class="section-title">
     <?php echo _T("Affected Machines", "security"); ?>
-    <span class="section-count">
-        (<?php echo $uniqueMachineCount; ?>)
-    </span>
+    <span class="section-count">(<?php echo count($machinesByHost); ?>)</span>
 </h3>
 
-<?php if (!empty($machinesByHost)): ?>
-<table class="machines-table">
-    <thead>
-        <tr>
-            <th><?php echo _T("Hostname", "security"); ?></th>
-            <th><?php echo _T("Affected Software", "security"); ?></th>
-            <th><?php echo _T("Actions", "security"); ?></th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($machinesByHost as $machine): ?>
-        <tr>
-            <td><?php echo htmlspecialchars($machine['hostname']); ?></td>
-            <td>
-                <?php foreach ($machine['softwares'] as $sw): ?>
-                <div class="software-item">
-                    <?php echo htmlspecialchars($sw['name']); ?>
-                    <span class="software-version">v<?php echo htmlspecialchars($sw['version']); ?></span>
-                </div>
-                <?php endforeach; ?>
-            </td>
-            <td>
-                <a href="<?php echo urlStrRedirect('security/security/machineDetail', array('id_glpi' => $machine['id_glpi'], 'hostname' => $machine['hostname'])); ?>">
-                    <?php echo _T("View all CVEs", "security"); ?>
-                </a>
-            </td>
-        </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
-<?php else: ?>
+<?php
+if (!empty($machinesByHost)) {
+    $hostnames = array();
+    $softwares = array();
+    $params = array();
+    foreach ($machinesByHost as $machine) {
+        $hostnames[] = htmlspecialchars($machine['hostname']);
+        $lines = array();
+        foreach ($machine['softwares'] as $sw) {
+            $lines[] = htmlspecialchars($sw['name']) . ' <span class="cell-sub">' . htmlspecialchars($sw['version']) . '</span>';
+        }
+        $softwares[] = implode('<br/>', $lines);
+        $params[] = array('id_glpi' => $machine['id_glpi'], 'hostname' => $machine['hostname'], 'back' => SecurityFilter::here());
+    }
+    $n = new OptimizedListInfos($hostnames, _T("Machine", "security"));
+    $n->setTableCssClass("security-table");
+    $n->disableFirstColumnActionLink();
+    $n->addExtraInfoRaw($softwares, _T("Affected Software", "security"));
+    $n->setParamInfo($params);
+    $n->addActionItem(new ActionItem(_T("View CVEs", "security"), "machineDetail", "display", "", "security", "security"));
+    $n->setItemCount(count($hostnames));
+    $n->start = 0;
+    $n->end = count($hostnames);
+    $n->display(0, 0);
+} else {
+?>
 <div class="empty-message">
     <p><?php echo _T("No machines currently affected by this CVE", "security"); ?></p>
 </div>
-<?php endif; ?>
+<?php } ?>

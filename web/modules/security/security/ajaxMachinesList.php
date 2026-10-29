@@ -26,52 +26,39 @@ require_once("modules/security/includes/html.inc.php");
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
-// Get filter parameters
-$filter = isset($_GET["filter"]) ? $_GET["filter"] : "";
+$filter = $_GET["filter"] ?? "";
 $start = isset($_GET["start"]) ? intval($_GET["start"]) : 0;
-$location = isset($_GET["location"]) ? $_GET["location"] : "";
+$location = SecurityFilter::location();
 
-// Get policies to determine which columns to show
-$policies = xmlrpc_get_policies();
-$minSeverity = $policies['display']['min_severity'] ?? 'None';
-$showSeverity = SeverityHelper::getVisibility($minSeverity);
-
-// Check if a global scan is running
+// A machine scan cannot start while a global scan is running
 $summary = xmlrpc_get_dashboard_summary($location);
-$globalScanRunning = isset($summary['last_scan']['status']) && $summary['last_scan']['status'] === 'running';
+$globalScanRunning = ($summary['last_scan']['status'] ?? '') === 'running';
 
-// Get data from backend
-$result = xmlrpc_get_machines_summary($start, $maxperpage, $filter, $location);
-$data = $result['data'];
-$count = $result['total'];
+$result = xmlrpc_get_machines_summary(
+    $start,
+    $maxperpage,
+    $filter,
+    $location,
+    SecurityFilter::platform(),
+    false,
+    SecurityFilter::group()
+);
+$data = $result['data'] ?? array();
+$count = $result['total'] ?? 0;
 
-// Prepare arrays for display
 $hostnames = array();
-$riskScores = array();
-$criticalCounts = array();
-$highCounts = array();
-$mediumCounts = array();
-$lowCounts = array();
-$totalCounts = array();
 $params = array();
-
 foreach ($data as $row) {
-    $hostnames[] = $row['hostname'];
-    $riskScores[] = SecurityBadge::score($row['risk_score']);
-    $criticalCounts[] = SecurityBadge::count($row['critical'], 'critical');
-    $highCounts[] = SecurityBadge::count($row['high'], 'high');
-    $mediumCounts[] = SecurityBadge::count($row['medium'], 'medium');
-    $lowCounts[] = SecurityBadge::count($row['low'], 'low');
-    $totalCounts[] = $row['total_cves'];
+    $hostnames[] = htmlspecialchars($row['hostname']);
     $params[] = array(
         'id_glpi' => $row['id_glpi'],
         'hostname' => $row['hostname'],
         'machine_id' => $row['id_glpi'],
-        'machine_name' => $row['hostname']
+        'machine_name' => $row['hostname'],
+        'back' => SecurityFilter::back()
     );
 }
 
-// Actions
 $detailAction = new ActionItem(_T("View CVEs", "security"), "machineDetail", "display", "", "security", "security");
 if ($globalScanRunning) {
     $scanAction = new EmptyActionItem1(_T("Scan unavailable: a global scan is in progress", "security"), "ajaxScanMachine", "scang");
@@ -82,18 +69,12 @@ if ($globalScanRunning) {
 $excludeAction = new ActionPopupItem(_T("Exclude from reports", "security"), "ajaxAddExclusion", "delete", "", "security", "security");
 $excludeAction->setWidth(450);
 
-// Display the list
 if ($count > 0) {
     $n = new OptimizedListInfos($hostnames, _T("Machine", "security"));
     $n->setResizable();
     $n->setTableCssClass("security-table");
     $n->disableFirstColumnActionLink();
-    $n->addExtraInfoCentered($riskScores, _T("Risk Score", "security"));
-    if ($showSeverity['critical']) $n->addExtraInfoCentered($criticalCounts, _T("Critical", "security"));
-    if ($showSeverity['high']) $n->addExtraInfoCentered($highCounts, _T("High", "security"));
-    if ($showSeverity['medium']) $n->addExtraInfoCentered($mediumCounts, _T("Medium", "security"));
-    if ($showSeverity['low']) $n->addExtraInfoCentered($lowCounts, _T("Low", "security"));
-    $n->addExtraInfoCentered($totalCounts, _T("Total", "security"));
+    SecurityColumns::add($n, $data, 'risk_score');
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $filter));
     $n->setParamInfo($params);
