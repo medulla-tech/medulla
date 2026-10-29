@@ -30,7 +30,8 @@ require_once('modules/msc/includes/utilities.php');
 require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 
 function action($action, $target, $is_advanced) {
-    $from = $_GET['from'];
+    $requestData = $_POST;
+    $from = $requestData['from'] ?? '';
     $path = explode('|', $from);
     $module = $path[0];
     $submod = $path[1];
@@ -43,17 +44,17 @@ function action($action, $target, $is_advanced) {
     } else {
         $current_lang = substr($_SESSION["lang"], 0, 2);
     }
-    if (safeCount($_GET["gid"]) > 0) {
+    if (!empty($requestData["gid"])) {
         $type = 'group';
     } else {
         $type = '';
     }
 
     if ($is_advanced) {
-        $group = (isset($_GET['gid'])) ? 'group' : '';
+        $group = (isset($requestData['gid'])) ? 'group' : '';
         $params = array('from' => 'base|computers|' . $group . 'msctabs|tablaunch');
         foreach (array('gid', 'uuid', 'hostname') as $param) {
-            $params[$param] = $_GET[$param];
+            $params[$param] = $requestData[$param] ?? '';
         }
 
         $qa = msc_script_detailled_info($action);
@@ -100,42 +101,46 @@ function action($action, $target, $is_advanced) {
             new NotifyWidgetFailure(_T('Failed to retrieve this quick action.', 'msc'));
         }
     } else {
-        $id = add_command_quick_with_id($action, $target, $current_lang, $_GET["gid"]);
+        $id = add_command_quick_with_id($action, $target, $current_lang, $requestData["gid"] ?? '');
         if ($id != -1) {
             scheduler_start_these_commands("", array($id));
             // if on a single computer
-            if (safeCount($_GET["gid"]) > 0) {
+            if (!empty($requestData["gid"])) {
                 $actionpage = 'groupmsctabs';
                 $tab = 'grouptablogs';
             } else {
                 $actionpage = 'msctabs';
                 $tab = 'tablogs';
             }
-            header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => $tab, 'uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'cmd_id' => $id, 'gid' => $_GET['gid'])));
+            header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => $tab, 'uuid' => $requestData['uuid'] ?? '', 'hostname' => $requestData['hostname'] ?? '', 'cmd_id' => $id, 'gid' => $requestData['gid'] ?? '')));
             exit;
         }
     }
 }
-
-$action = $_GET['launchAction'];
 
 if (isset($_POST["bconfirm"]) || isset($_POST["badvanced"])) {
     verifyCSRFToken($_POST);
 
     $is_advanced = isset($_POST["badvanced"]);
     /* quick action on a single target */
-    if (isset($_GET['uuid'])) {
-        $machine = getMachine(array('uuid' => $_GET['uuid']), True);
-        action($_GET['launchAction'], array($machine->uuid), $is_advanced);
+    if (isset($_POST['uuid'])) {
+        $machine = getMachine(array('uuid' => $_POST['uuid']), True);
+        action($_POST['launchAction'], array($machine->uuid), $is_advanced);
     }
 
     /* single action post on a group */
-    if (isset($_GET['gid'])) {
-        $group = new Group($_GET['gid'], true);
-        action($_GET['launchAction'], null, $is_advanced);
+    if (isset($_POST['gid'])) {
+        $group = new Group($_POST['gid'], true);
+        action($_POST['launchAction'], null, $is_advanced);
     }
 } else {
     $f = new PopupForm(_T("Please confirm you really want to perform this action", "msc"));
+    $f->options['action'] = urlStrRedirect('base/computers/start_quick_action');
+    foreach (array('launchAction', 'uuid', 'gid', 'hostname', 'from') as $param) {
+        if (isset($_GET[$param])) {
+            $f->add(new HiddenTpl($param), array('value' => $_GET[$param], 'hide' => True));
+        }
+    }
     $f->addValidateButton("bconfirm");
     $f->addButton("badvanced", _T('Advanced', 'msc'));
     $f->addCancelButton("bback");

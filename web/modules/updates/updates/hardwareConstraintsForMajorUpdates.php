@@ -54,6 +54,7 @@ echo '
 <form id="myForm">
     <input type="hidden" name="entityid" value="'.htmlspecialchars($entityid).'">
     <input type="hidden" name="typeaction" value="'.htmlspecialchars($typeaction).'">
+    <input type="hidden" name="auth_token" value="'.htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8').'">
     <button class="btn btn-primary" type="submit">Create Group</button>
 </form>';
 $list_Machine_outdated_major_update = xmlrpc_get_outdated_major_os_updates_by_entity($entityid,

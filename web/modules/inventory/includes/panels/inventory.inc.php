@@ -115,6 +115,16 @@ class InventoryPanel extends Panel {
         );
     }
     $('inventory-graphs').insert('</ul>');
+    jQuery(document).on('click.inventoryGroupPost', '#inventory-graphs a[href]', function(event) {
+        var requestUrl = new URL(this.href, window.location.href);
+        if (requestUrl.searchParams.get('module') !== 'inventory'
+            || requestUrl.searchParams.get('submod') !== 'inventory'
+            || requestUrl.searchParams.get('action') !== 'createStaticGroup') {
+            return;
+        }
+        event.preventDefault();
+        postAction(this.href);
+    });
 
     </script>
     <style type="text/css">

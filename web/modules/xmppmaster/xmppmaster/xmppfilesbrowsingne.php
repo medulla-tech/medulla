@@ -21,6 +21,17 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *  file xmppfilesbrowsingne.php
  */
+require_once("modules/xmppmaster/includes/xmlrpc.php");
+if (isset($_GET['create_transfer_directory'])) {
+    http_response_code(405);
+    exit;
+}
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['create_transfer_directory'])) {
+    verifyCSRFToken($_POST);
+    header('Content-Type: application/json');
+    echo json_encode(xmlrpc_create_local_dir_transfert($_POST['pathroot'], $_POST['hostname']));
+    exit;
+}
 ?>
 
 <?php
@@ -61,9 +72,8 @@ include_once('modules/medulla_server/includes/menu_actionaudit.php');
 // creation repertoire namemachine si non existe.
 // et recuperation pathcurent pour cette machine
 // eg /var/lib/pulse2/transfertfiles/machine25pulse
-$filecurentdir = xmlrpc_create_local_dir_transfert(xmlrpc_localfilesystem("")['path_abs_current'], $ma['hostname']);
-
-$curentdir = $filecurentdir['path_abs_current'];
+$lifdirlocal = xmlrpc_localfilesystem("");
+$curentdir = $lifdirlocal['path_abs_current'];
 echo '<script type="text/javascript">';
 
 if (stristr($ma['platform'], "win")) {
@@ -124,7 +134,7 @@ echo '</script>';
     <form>
         <input id ="path_abs_current_local" type="hidden" name="path_abs_current_local" value="%s">
         <input id ="parentdirlocal" type="hidden" name="parentdirlocal" value="%s">
-    </form>' ,$curentdir, $filecurentdir['parentdir']);
+    </form>' ,$curentdir, $lifdirlocal['parentdir']);
     ?>
        <div class ="piedbrowser"><h2></h2></div>
 
@@ -192,7 +202,21 @@ echo '</script>';
         nameremotepath = "";
         absolutepath ="";
         init = 1;
-        local();
+        jQuery.ajax({
+            url: "main.php?module=xmppmaster&submod=xmppmaster&action=xmppfilesbrowsingne",
+            type: "POST",
+            dataType: "json",
+            data: {
+                create_transfer_directory: '1',
+                pathroot: <?php echo json_encode($lifdirlocal['path_abs_current']); ?>,
+                hostname: <?php echo json_encode($ma['hostname']); ?>,
+                auth_token: <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>
+            }
+        }).done(function(directory) {
+            jQuery('#path_abs_current_local').val(directory.path_abs_current);
+            jQuery('#parentdirlocal').val(directory.parentdir);
+            local();
+        });
         remote("@1@");
 	jQuery('#directoryremote')
 		.on("changed.jstree", function (e, data) {
@@ -358,15 +382,22 @@ echo '</script>';
                             'class':'btnPrimary',
                             style:"color:#FFFFFF;background-color: #000000;",
                             click:function() {
-                                jQuery.get( "modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php",  {
+                                jQuery.ajax({
+                                    url: "modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php",
+                                    type: "POST",
+                                    data: {
                                     dest : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp+"/",
                                     src  : source,
                                     directory : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp,
-                                    "jidmachine" : jid }, function( data ) {
+                                    "jidmachine" : jid,
+                                    "auth_token" : <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>
+                                    },
+                                    success: function(data) {
                                         //appel boit de dialog action bien prise en compte
                                         jQuery('#dialog-notification-download-file').attr('title', '<?php echo _T("The folder copy has been requested successfully", "xmppmaster"); ?>');
                                         confirmation_information(data);
                                         //jQuery("#messageaction").html(data); //action message afficher en haut de page
+                                    }
                                 });
                                 jQuery( this ).dialog( "close" );
                             }
@@ -413,15 +444,22 @@ echo '</script>';
                                 'class':'btnPrimary',
                                 style:"color:#FFFFFF;background-color: #000000;",
                                 click:function() {
-                                    jQuery.get( "modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php",  {
+                                        jQuery.ajax({
+                                            url: "modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php",
+                                            type: "POST",
+                                            data: {
                                             dest : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp + "/" + filenamelocal,
                                             src : jQuery('input[name=path_abs_current_remote]').val() + seperator +  filenameremote,
                                             directory : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp,
-                                            "jidmachine" : jid }, function( data ) {
+                                            "jidmachine" : jid,
+                                            "auth_token" : <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>
+                                            },
+                                            success: function(data) {
                                                 jQuery('#dialog-notification-download-file').attr('title', '<?php echo _T("The file copy has been requested successfully", "xmppmaster"); ?>');
                                                 confirmation_information(data);
                                                 //jQuery("#messageaction").html(data); //action message afficher en haut de page
-                                    });
+                                            }
+                                        });
                                     jQuery( this ).dialog( "close" );
                                 }
                             },

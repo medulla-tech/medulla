@@ -137,6 +137,9 @@ class RpcProxy(RpcProxyI):
         )
 
     def getReport(self, uuid, lang):
+        ctx = self.currentContext
+        if not Inventory().doesUserHaveAccessToMachine(ctx, uuid):
+            return False
         xsl = XLSGenerator("/var/tmp/report-" + uuid + ".xls", lang)
         xsl.get_summary_sheet(
             self.getLastMachineInventoryPart2("Summary", {"uuid": uuid})
@@ -216,8 +219,8 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         if uuid == "":
             return False
-        #        if not ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
-        #            return False
+        if not Inventory().doesUserHaveAccessToMachine(ctx, uuid):
+            return False
         return xmlrpcCleanup(Inventory().inventoryExists(ctx, uuid))
 
     def getInventoryEM(self, col):

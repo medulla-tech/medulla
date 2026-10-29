@@ -167,15 +167,13 @@ $jid = $_GET['jid'] ?? '';
 </div>
 
 <!-- Hidden forms -->
-<form name="formcmdcustom" id="formcmdcustom" action="main.php" method="GET" style="display:none;">
-    <input type="hidden" name="module" value="xmppmaster">
-    <input type="hidden" name="submod" value="xmppmaster">
-    <input type="hidden" name="action" value="ActionQuickconsole">
+<form name="formcmdcustom" id="formcmdcustom" action="main.php?module=xmppmaster&amp;submod=xmppmaster&amp;action=ActionQuickconsole" method="POST" style="display:none;">
     <?php foreach ($_GET as $key => $valu): ?>
-        <?php if (!in_array($key, ['displayName', 'owner_realname', 'owner_firstname', 'mod', 'action'])): ?>
+        <?php if (!in_array($key, ['module', 'submod', 'displayName', 'owner_realname', 'owner_firstname', 'mod', 'action'])): ?>
             <input type="hidden" name="<?php echo htmlspecialchars($key); ?>" value="<?php echo htmlspecialchars($valu); ?>">
         <?php endif; ?>
     <?php endforeach; ?>
+    <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
     <input id="namecmd" type="hidden" name="namecmd" value="">
     <input id="customcmd" type="hidden" name="customcmd" value="">
     <input id="description" type="hidden" name="description" value="">
@@ -258,21 +256,21 @@ jQuery('#checkboxshutdown').click(function() {
 
 jQuery('#wol, #wol0').on('click', function() {
     uuid['wol'] = jQuery('#checkboxwol').is(':checked');
-    jQuery.get("modules/xmppmaster/xmppmaster/actionwakeonlan.php", uuid)
+    jQuery.post("modules/xmppmaster/xmppmaster/actionwakeonlan.php", uuid)
         .done(function(data) {
             alert("Wake on LAN sent to: " + uuid['cn'], "", "alert-info");
         });
 });
 
 jQuery('#inventory, #inventory0').on('click', function() {
-    jQuery.get("modules/xmppmaster/xmppmaster/actioninventory.php", uuid)
+    jQuery.post("modules/xmppmaster/xmppmaster/actioninventory.php", uuid)
         .done(function(data) {
             window.location.href = window.location.href;
         });
 });
 
 jQuery('#reboot, #reboot0').on('click', function() {
-    jQuery.get("modules/xmppmaster/xmppmaster/actionrestart.php", uuid)
+    jQuery.post("modules/xmppmaster/xmppmaster/actionrestart.php", uuid)
         .done(function(data) {
             alert("Reboot sent to: " + uuid['cn'], "", "alert-info");
         });
@@ -281,7 +279,7 @@ jQuery('#reboot, #reboot0').on('click', function() {
 jQuery('#shutdown, #shutdown0').on('click', function() {
     uuid['time'] = jQuery('#mytimeshutdown').val();
     uuid['msg'] = jQuery('#msgshutdown').val();
-    jQuery.get("modules/xmppmaster/xmppmaster/actionshutdown.php", uuid)
+    jQuery.post("modules/xmppmaster/xmppmaster/actionshutdown.php", uuid)
         .done(function(data) {
             alert("Shutdown sent to: " + uuid['cn'], "", "alert-info");
         });
@@ -289,14 +287,14 @@ jQuery('#shutdown, #shutdown0').on('click', function() {
 
 jQuery('#vncchangeperms, #vncchangeperms0').on('click', function() {
     uuid['askpermission'] = jQuery('#checkboxvncchangeperms').is(":checked") ? 1 : 0;
-    jQuery.get("modules/xmppmaster/xmppmaster/actionvncchangeperms.php", uuid)
+    jQuery.post("modules/xmppmaster/xmppmaster/actionvncchangeperms.php", uuid)
         .done(function(data) {
             alert("VNC settings changed for: " + uuid['cn'], "", "alert-info");
         });
 });
 
 jQuery('#installkey, #installkey0').on('click', function() {
-    jQuery.get("modules/xmppmaster/xmppmaster/actionkeyinstall.php", uuid)
+    jQuery.post("modules/xmppmaster/xmppmaster/actionkeyinstall.php", uuid)
         .done(function(data) {
             var obj = jQuery.parseJSON(data);
             alert("SSH key installed on: " + obj.hostname, "", "alert-info");

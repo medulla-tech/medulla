@@ -8,9 +8,13 @@ echo '$_POST<br>';
 print_r($_POST);
 echo '</pre>';*/
     // appelle la procedure stockee pour relancer les deployements.
-    extract($_GET);
+    if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+        http_response_code(405);
+        exit;
+    }
 
-    verifyCSRFToken($_GET);
+    verifyCSRFToken($_POST);
+    extract($_POST);
 
     if (isset($gr_cmd_id)){ $cmd_id=$gr_cmd_id;}else{unset($sessionid);}
 

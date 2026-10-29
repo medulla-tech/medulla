@@ -37,24 +37,29 @@ require_once("../../medulla_server/includes/locations_xmlrpc.inc.php");
 
 
 
-verifyCSRFToken($_GET);
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
 
-switch($_GET['action']){
+verifyCSRFToken($_POST);
+
+switch($_POST['action']){
     case "deployquick":
         // work for one machine
-        echo xmlrpc_callvncchangeperms($_GET['objectUUID'], $_GET['askpermission']);
-        xmlrpc_setfromxmppmasterlogxmpp("QA : user ".$_SESSION['login']." requests VNC permissions change on machine : ".$_GET['cn'],
+        echo xmlrpc_callvncchangeperms($_POST['objectUUID'], $_POST['askpermission']);
+        xmlrpc_setfromxmppmasterlogxmpp("QA : user ".$_SESSION['login']." requests VNC permissions change on machine : ".$_POST['cn'],
                                     "QA",
                                     '',
                                     0,
-                                    $_GET['cn'],
+                                    $_POST['cn'],
                                     'Manuel',
                                     '',
                                     '',
                                     '',
                                     "session user ".$_SESSION["login"],
                                     'QuickAction | VNC permissions change');
-        $result = $_GET;
+        $result = $_POST;
         echo json_encode($result);
         break;
     case "deployquickgroup":
@@ -66,12 +71,12 @@ switch($_GET['action']){
         $machine_already_present = array();
         $machine_not_present     = array();
         $result = array();
-        $list = getRestrictedComputersList(0, -1, array('gid' => $_GET['gid']), False);
-        xmlrpc_setfromxmppmasterlogxmpp("QA : user ".$_SESSION['login']." requests VNC permissions change on Group : ".$_GET['groupname'],
+        $list = getRestrictedComputersList(0, -1, array('gid' => $_POST['gid']), False);
+        xmlrpc_setfromxmppmasterlogxmpp("QA : user ".$_SESSION['login']." requests VNC permissions change on Group : ".$_POST['groupname'],
                                         "QA",
                                         '' ,
                                         0,
-                                        'Grp : '.$_GET['groupname'],
+                                        'Grp : '.$_POST['groupname'],
                                         'Manuel',
                                         '',
                                         '',
@@ -88,7 +93,7 @@ switch($_GET['action']){
             else{
                 $presence[] = 1;
                 $machine_already_present[] =  $value[1]['cn'][0];
-                xmlrpc_callvncchangeperms($key, $_GET['askpermission']);
+                xmlrpc_callvncchangeperms($key, $_POST['askpermission']);
                 xmlrpc_setfromxmppmasterlogxmpp("QA : user ".$_SESSION['login']." requests VNC permissions change on machine : ".$value[1]['cn'][0],
                                             "QA",
                                             '',

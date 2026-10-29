@@ -23,6 +23,17 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+if (((isset($_GET['reset_defaultMenu']) && $_GET['reset_defaultMenu'] == 1)
+        || isset($_GET['leave_group']))
+    && (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST')) {
+    http_response_code(405);
+    exit;
+}
+
+if (isset($_POST['reset_defaultMenu']) || isset($_POST['leave_group']) || isset($_POST['bsync'])) {
+    verifyCSRFToken($_POST);
+}
+
 if ($_GET['module'] == 'base' && $_GET['submod'] == 'computers') {
     require("modules/base/computers/localSidebar.php");
 } else {
@@ -67,8 +78,8 @@ function resetDefaultMenus($uuids)
     }
 }
 
-if (isset($_GET['reset_defaultMenu']) && $_GET['reset_defaultMenu'] == 1) {
-    if(isset($_GET['target']) && $_GET['target'] == "all") {
+if (isset($_POST['reset_defaultMenu']) && $_POST['reset_defaultMenu'] == 1) {
+    if(isset($_POST['target']) && $_POST['target'] == "all") {
         $location = htmlentities($_GET['location']);
         $menusIds = xmlrpc_getMenusbylocation($location);
         resetDefaultMenus($menusIds);
@@ -84,10 +95,10 @@ if (isset($_GET['reset_defaultMenu']) && $_GET['reset_defaultMenu'] == 1) {
 // Leave a group and reset default bootmenu
 //  ===============================================================
 
-if (isset($_GET['leave_group'], $_GET['group_uuid'], $params['uuid'])) {
+if (isset($_POST['leave_group'], $_POST['group_uuid'], $params['uuid'])) {
     // Leave the group
     $uuid = $params['uuid'];
-    $ret = __xmlrpc_delmembers_to_group($_GET['group_uuid'], array($uuid => array('uuid' => $uuid)));
+    $ret = __xmlrpc_delmembers_to_group($_POST['group_uuid'], array($uuid => array('uuid' => $uuid)));
     if (!isXMLRPCError() && $ret) {
         resetDefaultMenu($params['uuid']);
     }

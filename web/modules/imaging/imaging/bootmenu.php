@@ -50,8 +50,8 @@ if (isset($params['hostname']) && !isset($target_name)) {
 }
 function item_up() {
     $params = getParams();
-    $item_uuid = $_GET['itemid'];
-    $label = $_GET['itemlabel'];
+    $item_uuid = $_POST['itemid'];
+    $label = $_POST['itemlabel'];
     if (isset($_GET['hostname'])) {
         $target_name = $_GET['hostname'];
     } elseif (isset($_GET['target_name'])) {
@@ -118,8 +118,8 @@ function item_up() {
 
 function item_down() {
     $params = getParams();
-    $item_uuid = $_GET['itemid'];
-    $label = $_GET['itemlabel'];
+    $item_uuid = $_POST['itemid'];
+    $label = $_POST['itemlabel'];
     $uuid = $params['uuid'];
     if (isset($_GET['hostname'])) {
         $target_name = $_GET['hostname'];
@@ -299,6 +299,8 @@ function item_edit() {
         $f->pop();
         $f->display();
     } else {
+        verifyCSRFToken($_POST);
+
         // set new values
         if(isset($_GET['gid'])) {
             $type = 'group';
@@ -535,21 +537,22 @@ function item_list() {
 }
 
 if (($type == '' && (xmlrpc_isComputerRegistered($target_uuid) || xmlrpc_isComputerInProfileRegistered($target_uuid))) || ($type == 'group' && xmlrpc_isProfileRegistered($target_uuid)))  {
-    if (isset($_GET['mod'])) {
-        $mod = $_GET['mod'];
-    } else {
-        $mod = "none";
+    if (isset($_GET['mod']) && in_array($_GET['mod'], array('up', 'down'))
+        && (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST')) {
+        http_response_code(405);
+        exit;
+    }
+
+    $mod = $_POST['mod'] ?? ($_GET['mod'] ?? 'none');
+    if (in_array($mod, array('up', 'down')) && ($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
+        verifyCSRFToken($_POST);
     }
 
     switch($mod) {
         case 'up':
-            verifyCSRFToken($_GET);
-
             item_up();
             break;
         case 'down':
-            verifyCSRFToken($_GET);
-
             item_down();
             break;
         case 'edit':

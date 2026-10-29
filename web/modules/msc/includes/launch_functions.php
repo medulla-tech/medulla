@@ -216,7 +216,7 @@ function start_a_command($proxy = array(), $activate = true) {
 
             header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $tab,
                                                                                 'uuid' => $uuid,
-                                                                                'hostname' => (isset($_GET['hostname'])) ?$_GET['hostname'] : "",
+                                                                                'hostname' => (isset($post['hostname'])) ? $post['hostname'] : "",
                                                                                 'gid' => $gid,
                                                                                 'cmd_id' => $id,
                                                                                 "login"=>$_SESSION['login'])));
@@ -267,13 +267,13 @@ function start_a_command($proxy = array(), $activate = true) {
             $cmd_type = 2; // Convergence command type
 
             $parameterspacquage = '';
-            if($_GET['polarity'] == 'positive' && $_GET['switch_polarity'] == true){
+            if($_POST['polarity'] == 'positive' && $_POST['switch_polarity'] == true){
                 $parameterspacquage = '{"section":"uninstall"}';
             }
-            else if($_GET['polarity'] == 'uninstall' && $_GET['switch_polarity'] == true){
+            else if($_POST['polarity'] == 'uninstall' && $_POST['switch_polarity'] == true){
                 $parameterspacquage = false;
             }
-            else if($_GET['polarity'] == 'positive' && $_GET['switch_polarity'] == false){
+            else if($_POST['polarity'] == 'positive' && $_POST['switch_polarity'] == false){
                 $parameterspacquage = false;
             }
             else{
@@ -297,9 +297,9 @@ function start_a_command($proxy = array(), $activate = true) {
                 $parameterspacquage = '';
                 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
                     $syncthing = (isset($post['syncthing']) && $post['syncthing']) ? 1: 0;
-                    if(isset($_GET['polarity'], $_GET['switch_polarity']) ){
-                        if($_GET['switch_polarity'] == true){
-                            $params['ltitle'] = $_GET['ltitle'];
+                    if(isset($_POST['polarity'], $_POST['switch_polarity']) ){
+                        if($_POST['switch_polarity'] == true){
+                            $params['ltitle'] = $_POST['ltitle'];
                             // reverse the deploy and done group bool
                             $deployGroup = new Group($deploy_group_id, true);
                             $doneGroup = new Group($done_group_id, true);
@@ -337,7 +337,7 @@ function start_a_command($proxy = array(), $activate = true) {
                 //$package = to_package(getPackageDetails($p_api, $pid));
                 $package = to_package(xmpp_getPackageDetail($pid));
 
-                if(isset($_GET['polarity']) && $_GET['polarity'] == 'install'){
+                if(isset($_POST['polarity']) && $_POST['polarity'] == 'install'){
                     $convergence_groups = $group->createConvergenceGroups($package);
                 }
                 else{
@@ -364,8 +364,8 @@ function start_a_command($proxy = array(), $activate = true) {
 
 
             }
-            if(isset($_GET['previous']) && $_GET['previous'] != '') {
-                header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/" . $_GET['previous']));
+            if(isset($_POST['previous']) && $_POST['previous'] != '') {
+                header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/" . $_POST['previous']));
                 exit;
             } else {
                 header("Location: " . urlStrRedirect("base/computers/groupmsctabs", array('gid' => $gid)));

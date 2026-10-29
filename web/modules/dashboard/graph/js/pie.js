@@ -131,8 +131,12 @@ function customPie(selector, datas){
       d3.select(this).attr("d", s(i));
     })
     .on("click", function(d,i){
-      if(typeof(i.data.href) != "undefined" && i.data.href != "")
-        window.location.replace(i.data.href)
+      if(typeof(i.data.href) != "undefined" && i.data.href != "") {
+        if (i.data.method === "POST")
+          postAction(i.data.href);
+        else
+          window.location.replace(i.data.href);
+      }
     });
 
   //Add label text below (stacked vertically)
@@ -166,8 +170,16 @@ function customPie(selector, datas){
       var hasTooltip = d.data.tooltip ? true : false;
       var style = hasTooltip ? 'color:#333;text-decoration:none;font-size:13px;border-bottom:1px dashed #999;' : 'color:#333;text-decoration:none;font-size:13px;';
       var suffix = hasTooltip ? ' <span style="color:#999;font-size:11px;margin-left:4px;">ⓘ</span>' : '';
+      var postActionAttr = d.data.method === 'POST' ? ' data-post-action="true"' : '';
       return '<span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:'+colors(i)+';margin-right:8px;flex-shrink:0;"></span>' +
-        '<a href="'+(d.data.href || '#')+'" style="'+style+'">' + label + ' : ' + d.data.value + '</a>' + suffix;
+        '<a href="'+(d.data.href || '#')+'"'+postActionAttr+' style="'+style+'">' + label + ' : ' + d.data.value + '</a>' + suffix;
+    });
+
+  jQuery("#"+selector)
+    .off("click.glpiPostAction", "a[data-post-action]")
+    .on("click.glpiPostAction", "a[data-post-action]", function(event) {
+      event.preventDefault();
+      postAction(this.href);
     });
 
   // Apply jQuery UI tooltip on items with data-tooltip

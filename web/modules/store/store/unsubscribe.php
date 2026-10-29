@@ -22,7 +22,14 @@
 
 require_once("modules/store/includes/xmlrpc.php");
 
-$ids = array_filter(array_map('intval', explode(',', $_GET['ids'] ?? '')));
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
+verifyCSRFToken($_POST);
+
+$ids = array_filter(array_map('intval', explode(',', $_POST['ids'] ?? '')));
 if (!empty($ids)) {
     $subs = xmlrpc_get_client_subscriptions();
     $subs = is_array($subs) ? array_map('intval', $subs) : array();

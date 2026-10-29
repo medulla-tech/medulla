@@ -30,7 +30,16 @@ $p = new PageGenerator(_T("Update machines name cache in dyngroup", 'dyngroup'))
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$ret = updateMachineCache();
-print sprintf(_T("update machine cache : %s machines", "dyngroup"), $ret);
+if (isset($_POST['update_cache'])) {
+	verifyCSRFToken($_POST);
+	$ret = updateMachineCache();
+	print sprintf(_T("update machine cache : %s machines", "dyngroup"), $ret);
+} else {
+	$form = new ValidatingForm(array(
+		'action' => urlStrRedirect('base/computers/updateMachineCache')
+	));
+	$form->addValidateButton('update_cache');
+	$form->display();
+}
 
 ?>

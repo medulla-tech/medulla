@@ -38,19 +38,24 @@ require_once('../includes/xmlrpc.php');
 
 require_once("../../medulla_server/includes/locations_xmlrpc.inc.php");
 
-verifyCSRFToken($_GET);
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
 
-xmlrpc_runXmppReverseSSHforGuacamole($_GET['uuid'], $_GET['cux_id'], $_GET['cux_type']);
+verifyCSRFToken($_POST);
 
-xmlrpc_setfromxmppmasterlogxmpp('Reverse SSH for Guacamole on machine '. $_GET['cn']."[".$_GET['uuid']."]".', connecion id: '.$_GET['cux_id'].', connection type: '.$_GET['cux_type'],
+xmlrpc_runXmppReverseSSHforGuacamole($_POST['uuid'], $_POST['cux_id'], $_POST['cux_type']);
+
+xmlrpc_setfromxmppmasterlogxmpp('Reverse SSH for Guacamole on machine '. $_POST['cn']."[".$_POST['uuid']."]".', connecion id: '.$_POST['cux_id'].', connection type: '.$_POST['cux_type'],
                                 $type = "Remote",
                                 $sessionname = '' ,
                                 $priority = 0,
-                                $who = $_GET['cn'],
+                                $who = $_POST['cn'],
                                 $how = 'xmpp',
                                 $why = '',
                                 $action = 'Reverse SSH for Guacamole on machine',
-                                $touser =  $_GET['cn'],
+                                $touser =  $_POST['cn'],
                                 $fromuser = "session user ".$_SESSION["login"],
                                 'Remote_desktop | Guacamole');
 // Wait for the reverse SSH connection to be established before redirecting to the Guacamole URL

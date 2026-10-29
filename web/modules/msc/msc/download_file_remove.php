@@ -26,12 +26,15 @@ require('modules/msc/includes/scheduler_xmlrpc.php');
 if (isset($_POST["bconfirm"])) {
     verifyCSRFToken($_POST);
 
-    msc_remove_downloaded_files(array($_GET['id']));
+    msc_remove_downloaded_files(array($_POST['id']));
     if (!isXMLRPCError()) new NotifyWidgetSuccess(_T("The file has been deleted.", "msc"));
-    header("Location: " . urlStrRedirect("base/computers/download_file", array("objectUUID" => $_GET["objectUUID"])));
+    header("Location: " . urlStrRedirect("base/computers/download_file", array("objectUUID" => $_POST["objectUUID"])));
     exit;
 } else {
     $f = new PopupWindowForm(_T("Please confirm file deletion", "msc"));
+    $f->options['action'] = urlStrRedirect('base/computers/download_file_remove');
+    $f->add(new HiddenTpl('id'), array('value' => $_GET['id'], 'hide' => True));
+    $f->add(new HiddenTpl('objectUUID'), array('value' => $_GET['objectUUID'], 'hide' => True));
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();

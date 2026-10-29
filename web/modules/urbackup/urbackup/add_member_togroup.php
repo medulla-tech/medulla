@@ -26,11 +26,13 @@ require_once("modules/urbackup/includes/xmlrpc.php");
 
 $group_id = htmlspecialchars($_GET["groupid"]);
 
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST' || empty($_POST['client'])) {
+    http_response_code(405);
+    exit;
+}
+
+verifyCSRFToken($_POST);
 $client_id = $_POST['client'];
-if ($client_id == "")
-    $client_id = htmlspecialchars($_GET["clientid"]);
-else
-    verifyCSRFToken($_POST);
 
 $group_name = htmlspecialchars($_GET["groupname"]);
 

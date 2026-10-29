@@ -88,11 +88,13 @@ if (
     $choix = $parametresCGI[0];
 }
 
+$ajaxParams = $_POST;
+unset($ajaxParams['auth_token']);
 $ajax = new AjaxLocation(
      urlStrRedirect("updates/updates/ajaxApproveRules"),
       "mondivlocation",           // div qui affiche la liste des produits
       "selected_location",      // paramètre : $_GET['selected_location']
-          $_POST
+          $ajaxParams
   );
 
 $ajax->setElements($completename);

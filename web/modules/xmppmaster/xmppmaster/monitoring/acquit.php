@@ -24,6 +24,7 @@
 
 extract($_GET);
 if (isset($_POST["bconfirm"])) {
+  verifyCSRFToken($_POST);
   $id = htmlentities($_POST['id']);
   $user = htmlentities($_POST['user']);
 

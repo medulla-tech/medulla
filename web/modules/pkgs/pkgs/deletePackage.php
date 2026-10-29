@@ -31,7 +31,7 @@ if(isset($_POST['bconfirm']))
 {
   verifyCSRFToken($_POST);
 
-  $id = (int)$_GET['id'];
+  $id = (int)$_POST['id'];
 
   $result = delete_extension($id);
 
@@ -39,6 +39,7 @@ if(isset($_POST['bconfirm']))
 }
     $f = new PopupForm(_T("Delete this rule"));
     $f->setLevel('danger');
+    $f->add(new HiddenTpl('id'), array('value' => (int)$_GET['id'], 'hide' => True));
     $f->addDangerButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();

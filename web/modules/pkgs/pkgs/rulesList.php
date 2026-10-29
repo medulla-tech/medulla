@@ -22,6 +22,12 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+if (isset($_GET['id'], $_GET['mod']) && in_array($_GET['mod'], ['raise', 'lower'], true))
+{
+  http_response_code(405);
+  exit;
+}
+
 require("graph/navbar.inc.php");
 require("modules/pkgs/pkgs/localSidebar.php");
 require_once("modules/pkgs/includes/xmlrpc.php");
@@ -35,18 +41,20 @@ if(isset($_GET['success'], $_GET['name']) )
   new NotifyWidgetSuccess(sprintf(_T("The rule %s has been removed", "pkgs"),$_GET['name']));
 }
 
-if(isset($_GET['id'], $_GET['mod']))
+if (isset($_POST['id'], $_POST['mod']) && in_array($_POST['mod'], ['raise', 'lower'], true))
 {
-  $_GET['id'] = (int)$_GET['id'];
-  $_GET['mod'] = htmlentities($_GET['mod']);
+  verifyCSRFToken($_POST);
+  $id = (int)$_POST['id'];
+  $mod = htmlentities($_POST['mod']);
 
-  if($_GET['mod'] == "raise")
-    raise_extension($_GET['id']);
+  if($mod == "raise")
+    raise_extension($id);
 
-  if($_GET['mod'] == "lower")
-    lower_extension($_GET['id']);
+  if($mod == "lower")
+    lower_extension($id);
 
   header("Location: " . urlStrRedirect("pkgs/pkgs/rulesList"));
+  exit;
 }
 
 

@@ -37,11 +37,16 @@ require_once('../includes/xmlrpc.php');
 
 require_once("../../medulla_server/includes/locations_xmlrpc.inc.php");
 
-verifyCSRFToken($_GET);
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
 
-switch($_GET['action']){
+verifyCSRFToken($_POST);
+
+switch($_POST['action']){
     case "deployquick":
-        $infos = xmlrpc_getGuacamoleRelayServerMachineUuid($_GET['objectUUID']);
+        $infos = xmlrpc_getGuacamoleRelayServerMachineUuid($_POST['objectUUID']);
         $tab = array( 'jidAM' => $infos['jid'], 'jidARS' => $infos['groupdeploy']);
         $data =json_encode($infos);
         xmlrpc_callinstallkey($infos['jid'],$infos['groupdeploy'] );
@@ -59,7 +64,7 @@ switch($_GET['action']){
         $machine_already_present = array();
         $machine_not_present     = array();
         $result = array();
-        $list = getRestrictedComputersList(0, -1, array('gid' => $_GET['gid']), False);
+        $list = getRestrictedComputersList(0, -1, array('gid' => $_POST['gid']), False);
         // todo add message for log history critere QuickAction | Inventory | Inventory requested
 
         foreach($list as $key =>$value){

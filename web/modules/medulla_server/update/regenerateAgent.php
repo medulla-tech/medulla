@@ -22,7 +22,12 @@
 */
 require_once("modules/medulla_server/includes/xmlrpc.inc.php");
 
-verifyCSRFToken($_GET);
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
+verifyCSRFToken($_POST);
 
 $res = xmlrpc_regenerate_agent();
 

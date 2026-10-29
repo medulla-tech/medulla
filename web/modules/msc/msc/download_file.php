@@ -23,18 +23,24 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+if (isset($_POST["bconfirm"])) {
+    verifyCSRFToken($_POST);
+}
+
 require('modules/msc/includes/machines.inc.php');
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require('modules/msc/includes/scheduler_xmlrpc.php');
 require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 
+$objectUUID = $_POST['objectUUID'] ?? $_GET['objectUUID'];
+
 $p = new PageGenerator(_T("Download file page", "msc"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
 if (isset($_POST["bconfirm"])) {
-    $ret = msc_download_file($_GET['objectUUID']);
+    $ret = msc_download_file($objectUUID);
     if (is_array($ret) && ($ret[0] === True)) {
         new NotifyWidgetSuccess(_T('The download is in progress.', 'msc'));
     } else {
@@ -46,13 +52,14 @@ if (isset($_POST["bconfirm"])) {
     }
 }
 
-$ajax = new AjaxFilter(urlStrRedirect('base/computers/ajaxDownloadFile', array('objectUUID' => $_GET['objectUUID'])));
+$ajax = new AjaxFilter(urlStrRedirect('base/computers/ajaxDownloadFile', array('objectUUID' => $objectUUID)));
 $ajax->setRefresh(web_def_refresh_time());
 $ajax->display();
 
-$f = new Form(array('id' => 'dl'));
+$f = new Form(array('id' => 'dl', 'action' => urlStrRedirect('base/computers/download_file')));
+$f->add(new HiddenTpl('objectUUID'), array('value' => $objectUUID, 'hide' => True));
 $f->addSummary(_T('Click below to start downloading file from this computer. Warning: the download may last a long time', 'msc'));
-$computer = getMachine(array('uuid'=>$_GET['objectUUID']), $ping = False);
+$computer = getMachine(array('uuid' => $objectUUID), $ping = False);
 $f->addButton('bconfirm', sprintf(_T('Start download from computer %s', 'msc'), $computer->hostname));
 $f->display();
 

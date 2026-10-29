@@ -22,17 +22,22 @@
 
 include("modules/services/includes/services-xmlrpc.inc.php");
 
-verifyCSRFToken($_GET);
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
 
-$service = $_GET['service'];
+verifyCSRFToken($_POST);
+
+$service = $_POST['service'] ?? '';
 $action = $_GET['action'];
 $result = call_user_func($action . "Service", $service);
 
-if (isset($_GET['parent'])) {
-    header("Location: " . urlStrRedirect("services/control/" . $_GET['parent']));
+if (isset($_POST['parent'])) {
+    header("Location: " . urlStrRedirect("services/control/" . $_POST['parent']));
     exit;
 }
-if (isset($_GET['output']) && isset($_GET['output']) == "json") {
+if (isset($_POST['output']) && $_POST['output'] === "json") {
     header('Cache-Control: no-cache, must-revalidate');
     header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
     header('Content-type: application/json');

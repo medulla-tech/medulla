@@ -25,9 +25,15 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/msc/includes/package_api.php");
 
-$packageuuid =  base64_decode ( $_GET['pid']);
-$label = base64_decode ( $_GET['plabel']);
-$version = base64_decode ( $_GET['pversion']);
+$requestData = $_GET;
+if (isset($_POST['package']) || isset($_POST['jid'])) {
+  verifyCSRFToken($_POST);
+  $requestData = $_POST;
+}
+
+$packageuuid = base64_decode($requestData['pid']);
+$label = base64_decode($requestData['plabel']);
+$version = base64_decode($requestData['pversion']);
 //interoge la table syncthingsync
 $infopackage = xmlrpc_pkgs_get_info_synchro_packageid($packageuuid);
 
@@ -36,15 +42,11 @@ $relayserverlist =  $infopackage[1];
 
 if(isset($_POST['package']))
 {
-  verifyCSRFToken($_POST);
-
   xmlrpc_delete_from_pending($packageuuid, []);
   header("Location: " . urlStrRedirect("pkgs/pkgs/pending", array('deletependingsuccess' => 'package', 'name'=>$label)));
 }
 else if(isset($_POST['jid']))
 {
-  verifyCSRFToken($_POST);
-
   xmlrpc_delete_from_pending($packageuuid, $_POST['relays']);
 
   $relaylist = [];
@@ -77,7 +79,11 @@ else{
 
     echo '<div id="package" class="spaced">';
     $fpackage = new PopupForm(_T('Remove package '.$label.' from pending', 'pkgs'));
+    $fpackage->options['action'] = urlStrRedirect('pkgs/pkgs/desynchronization');
     $fpackage->setLevel('danger');
+    $fpackage->add(new HiddenTpl('pid'), array('value' => $_GET['pid'], 'hide' => True));
+    $fpackage->add(new HiddenTpl('plabel'), array('value' => $_GET['plabel'], 'hide' => True));
+    $fpackage->add(new HiddenTpl('pversion'), array('value' => $_GET['pversion'], 'hide' => True));
     $fpackage->addDangerButton("package");
     $fpackage->addCancelButton("bback");
     $fpackage->display();
@@ -85,7 +91,11 @@ else{
 
     echo '<div id="jid" class="spaced">';
     $fjid = new PopupForm(_T('Remove specific jids from '.$label.' package pending', 'pkgs'));
+    $fjid->options['action'] = urlStrRedirect('pkgs/pkgs/desynchronization');
     $fjid->setLevel('danger');
+    $fjid->add(new HiddenTpl('pid'), array('value' => $_GET['pid'], 'hide' => True));
+    $fjid->add(new HiddenTpl('plabel'), array('value' => $_GET['plabel'], 'hide' => True));
+    $fjid->add(new HiddenTpl('pversion'), array('value' => $_GET['pversion'], 'hide' => True));
     $fjid->addDangerButton("jid");
 
     foreach($nosynchrolist as $relay){
@@ -127,6 +137,9 @@ else{
   else{
     $f = new PopupForm(_T("Delete the $label from pending", 'pkgs'));
     $f->setLevel('danger');
+    $f->add(new HiddenTpl('pid'), array('value' => $_GET['pid'], 'hide' => True));
+    $f->add(new HiddenTpl('plabel'), array('value' => $_GET['plabel'], 'hide' => True));
+    $f->add(new HiddenTpl('pversion'), array('value' => $_GET['pversion'], 'hide' => True));
     $f->addDangerButton("package");
     $f->addCancelButton("bback");
     $f->display();

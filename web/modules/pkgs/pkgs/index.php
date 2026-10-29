@@ -41,3 +41,15 @@ $ajax->display();
 $ajax->displayDivToUpdate();
 
 ?>
+<script type="text/javascript">
+jQuery(document).on('click.packagesGroupPost', 'a[href]', function(event) {
+	var requestUrl = new URL(this.href, window.location.href);
+	if (requestUrl.searchParams.get('module') !== 'pkgs'
+		|| requestUrl.searchParams.get('submod') !== 'pkgs'
+		|| requestUrl.searchParams.get('action') !== 'createGroupLicence') {
+		return;
+	}
+	event.preventDefault();
+	postAction(this.href);
+});
+</script>

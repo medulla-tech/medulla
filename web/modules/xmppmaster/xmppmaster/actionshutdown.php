@@ -35,17 +35,22 @@ require_once('../includes/xmlrpc.php');
 
 require_once("../../medulla_server/includes/locations_xmlrpc.inc.php");
 
-verifyCSRFToken($_GET);
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
 
-switch($_GET['action']){
+verifyCSRFToken($_POST);
+
+switch($_POST['action']){
     case "deployquick":
         // work for one machine
-        $jid = xmlrpc_callshutdown($_GET['objectUUID'], $_GET['time'], $_GET['msg']);
-        xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] ask a shutdown [time : ".$_GET['time']."s] to presente [ Machine : \"".$_GET['cn']."\"][jid : \"".$jid."\"]",
+        $jid = xmlrpc_callshutdown($_POST['objectUUID'], $_POST['time'], $_POST['msg']);
+        xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] ask a shutdown [time : ".$_POST['time']."s] to presente [ Machine : \"".$_POST['cn']."\"][jid : \"".$jid."\"]",
                                         "QA",
                                         '' ,
                                         0,
-                                        $_GET['cn'],
+                                        $_POST['cn'],
                                         'Manuel',
                                         '',
                                         '',
@@ -53,7 +58,7 @@ switch($_GET['action']){
                                         "session user ".$_SESSION["login"],
                                         'QuickAction | Shutdown sent');
 
-        $result = $_GET;
+        $result = $_POST;
         echo json_encode($result);
         break;
     case "deployquickgroup":
@@ -65,12 +70,12 @@ switch($_GET['action']){
         $machine_already_present = array();
         $machine_not_present     = array();
         $result = array();
-        $list = getRestrictedComputersList(0, -1, array('gid' => $_GET['gid']), False);
-        xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] ask a shutdown to machines on Group : [\"".$_GET['groupname']."\"]",
+        $list = getRestrictedComputersList(0, -1, array('gid' => $_POST['gid']), False);
+        xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] ask a shutdown to machines on Group : [\"".$_POST['groupname']."\"]",
                                         "QA",
                                         '' ,
                                         0,
-                                        'Grp : '.$_GET['groupname'],
+                                        'Grp : '.$_POST['groupname'],
                                         'Manuel',
                                         '',
                                         '',
@@ -87,10 +92,10 @@ switch($_GET['action']){
             else{
                 $presence[] = 1;
                 $machine_already_present[] =  $value[1]['cn'][0];
-                $jid = xmlrpc_callshutdown($key,  $_GET['time'], $_GET['msg']);
+                $jid = xmlrpc_callshutdown($key,  $_POST['time'], $_POST['msg']);
                 xmlrpc_setfromxmppmasterlogxmpp("QA : [user : \"".$_SESSION["login"]."\"] ".
-                                                    "[Group :\"".$_GET['groupname'].
-                                                    "\"] shutdown [time : ".$_GET['time']."s] to presente machine\"".$value[1]['cn'][0]."\" [jid : \"".$jid."\"]",
+                                                    "[Group :\"".$_POST['groupname'].
+                                                    "\"] shutdown [time : ".$_POST['time']."s] to presente machine\"".$value[1]['cn'][0]."\" [jid : \"".$jid."\"]",
                                                 "QA",
                                                 '' ,
                                                 0,

@@ -30,13 +30,18 @@ require_once("../../../includes/i18n.inc.php");
 require_once("../../../includes/acl.inc.php");
 require_once("../../../includes/session.inc.php");
 
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
 
-extract($_GET);
+verifyCSRFToken($_POST);
+extract($_POST);
 
 xmlrpc_createdirectoryuser($directory);
 
 
-xmlrpc_CallXmppPluginmmc("downloadfileexpert", Array($_GET));
+xmlrpc_CallXmppPluginmmc("downloadfileexpert", $_POST);
 // messArray
 
 // dest, src, jidmachine

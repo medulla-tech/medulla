@@ -23,11 +23,16 @@
 
 require_once("modules/updates/includes/xmlrpc.php");
 
-verifyCSRFToken($_GET);
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
 
-$updateid = htmlentities($_GET['updateid']);
-$title = htmlentities($_GET['title']);
-$identity = isset($_GET['entityid']) ? $_GET['entityid'] : -1;
+verifyCSRFToken($_POST);
+
+$updateid = htmlentities($_POST['updateid']);
+$title = htmlentities($_POST['title']);
+$identity = isset($_POST['entityid']) ? $_POST['entityid'] : -1;
 
 $result = xmlrpc_grey_update($updateid, $identity, 1);
 if($result){
@@ -38,6 +43,6 @@ else{
     $str = sprintf(_T("The update %s (%s) hasn't been enabled.", "updates"), $title, $updateid);
     new NotifyWidgetFailure($str);
 }
-header('location: '.urlStrRedirect("updates/updates/updatesListWin", getFilteredGetParams()));
+header('location: '.urlStrRedirect("updates/updates/updatesListWin", getFilteredGetParams($_POST)));
 exit;
 ?>

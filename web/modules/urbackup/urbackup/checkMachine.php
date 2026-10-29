@@ -20,14 +20,19 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/urbackup/includes/xmlrpc.php");
 
-$clientname = htmlspecialchars($_GET["cn"]);
-$jidMachine = htmlspecialchars($_GET["jid"]);
+verifyCSRFToken($_POST);
 
-verifyCSRFToken($_GET);
+$clientname = htmlspecialchars($_POST["cn"]);
+$jidMachine = htmlspecialchars($_POST["jid"]);
 
 $p = new PageGenerator(_T("Assign profile to computer ".$clientname, 'urbackup'));
 $p->setSideMenu($sidemenu);

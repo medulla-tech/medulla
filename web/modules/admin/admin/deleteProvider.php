@@ -22,9 +22,16 @@
  */
 require_once("modules/admin/includes/xmlrpc.php");
 
-$idRaw  = $_POST['id']            ?? $_GET['id']            ?? null;
-$name   = $_POST['name']          ?? $_GET['name']          ?? '';
-$client = $_POST['client_name']   ?? $_GET['client_name']   ?? '';
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
+verifyCSRFToken($_POST);
+
+$idRaw  = $_POST['id'] ?? null;
+$name   = $_POST['name'] ?? '';
+$client = $_POST['client_name'] ?? '';
 
 if (!is_string($idRaw) || !preg_match('/^\d+$/', $idRaw)) {
     new NotifyWidgetFailure(_("Invalid provider ID."));
