@@ -174,6 +174,23 @@ class RpcProxy(RpcProxyI):
     ##
     # machines
     ##
+    def convergence_add_host(self, machine_uuid=None, group_id=None):
+        """Evaluate convergences for hosts or a Medulla group; root only."""
+        if self.currentContext.userid != "root":
+            logging.getLogger().warning(
+                "Host convergence denied: user=%s",
+                self.currentContext.userid,
+            )
+            raise PermissionError("Host convergence requires the root account")
+        if group_id is not None:
+            if machine_uuid is not None and machine_uuid != []:
+                logging.getLogger().warning(
+                    "Host convergence rejected: both hosts and group supplied"
+                )
+                raise ValueError("Supply either hosts or a group, not both")
+            return _convergence_add_group(group_id)
+        return _convergence_add_host(machine_uuid)
+
     @with_optional_xmpp_context
     def getMachine(self, params, ctx=None):
         """
@@ -1223,11 +1240,76 @@ def convergence_scheduled():
         logger.exception("Scheduled convergence pass failed; will retry next scheduled run")
 
 
+def _normalize_convergence_machine_uuids(machine_uuids):
+    values = machine_uuids if isinstance(machine_uuids, (list, tuple)) else [machine_uuids]
+    normalized = []
+    for value in values:
+        if isinstance(value, bool) or not isinstance(value, (str, int)):
+            logging.getLogger().warning("Host convergence rejected: invalid machine ID")
+            raise ValueError("Expected a positive GLPI computer ID, optionally prefixed UUID")
+        match = re.fullmatch(r"(?:UUID)?([0-9]+)", str(value), re.IGNORECASE)
+        if not match or int(match.group(1)) <= 0:
+            logging.getLogger().warning("Host convergence rejected: invalid machine ID")
+            raise ValueError("Expected a positive GLPI computer ID, optionally prefixed UUID")
+        normalized.append("UUID%s" % int(match.group(1)))
+    return list(dict.fromkeys(normalized))
+
+
+def _convergence_add_group(group_id):
+    if (
+        isinstance(group_id, bool)
+        or not isinstance(group_id, (str, int))
+        or not re.fullmatch(r"[0-9]+", str(group_id))
+        or int(group_id) <= 0
+    ):
+        logging.getLogger().warning("Group convergence rejected: invalid group ID")
+        raise ValueError("Expected a positive Medulla group ID")
+    group_id = int(group_id)
+    ctx = getContext()
+    if not DyngroupDatabase().get_group(ctx, group_id, ro=True):
+        logging.getLogger().warning(
+            "Group convergence rejected: group=%s not found or inaccessible", group_id
+        )
+        raise ValueError("Medulla group not found or inaccessible")
+    members = ComputerManager().getRestrictedComputersList(
+        ctx, filt={"gid": group_id}, justId=True
+    )
+    logging.getLogger().info(
+        "Group convergence requested: group=%s machines=%s", group_id, len(members)
+    )
+    return _convergence_add_host(members)
+
+
+def _convergence_add_host(machine_uuid):
+    """Schedule one host or a batch without consuming inventory requests."""
+    logger = logging.getLogger()
+    machine_uuids = set(_normalize_convergence_machine_uuids(machine_uuid))
+    if not machine_uuids:
+        logger.info("Host convergence completed: empty host selection")
+        return []
+    added_commands = []
+    try:
+        for cmd_id in DyngroupDatabase()._get_convergence_active_commands_ids():
+            if _convergence_scheduled_command(cmd_id, machine_uuids, False):
+                added_commands.append(cmd_id)
+    except Exception:
+        logger.exception(
+            "Host convergence failed: machines=%s already_added_commands=%s",
+            len(machine_uuids), added_commands,
+        )
+        raise
+    logger.info(
+        "Host convergence completed: machines=%s added_commands=%s",
+        len(machine_uuids), added_commands,
+    )
+    return added_commands
+
+
 def _convergence_scheduled_command(cmd_id, machine_uuids, renew_window):
     database = MscDatabase()
     with database.convergenceCommandLock(cmd_id):
         if cmd_id not in DyngroupDatabase()._get_convergence_active_commands_ids():
-            return
+            return 0
         deploy_group_id, user = _get_convergence_deploy_group_id_and_user(cmd_id)
         ctx = getContext(user=user)
         group_members = ComputerManager().getRestrictedComputersList(
@@ -1249,7 +1331,7 @@ def _convergence_scheduled_command(cmd_id, machine_uuids, renew_window):
                 if not isinstance(phases, dict):
                     raise ValueError("Invalid convergence phases for command %s" % cmd_id)
             if not database.prepareInventoryConvergenceWindow(cmd_id):
-                return
+                return 0
             result = database.addMachinesToCommand(
                 ctx, cmd_id, targets, deploy_group_id, phases=phases
             )
@@ -1265,6 +1347,7 @@ def _convergence_scheduled_command(cmd_id, machine_uuids, renew_window):
             "Scheduled convergence evaluated: command=%s candidates=%s added=%s renew_window=%s",
             cmd_id, len(candidates), added, renew_window,
         )
+        return added
 
 
 def convergence_reschedule(all=False):
