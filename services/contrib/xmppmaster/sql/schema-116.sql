@@ -9,6 +9,8 @@
 
 USE `xmppmaster`;
 
+START TRANSACTION;
+
 DROP PROCEDURE IF EXISTS `mmc_restart_blocked_deployments_transfer_error`;
 
 DELIMITER $$
@@ -96,4 +98,28 @@ BEGIN
 END$$
 DELIMITER ;
 
+UPDATE qa_custom_command
+SET customcmd = 'powershell.exe -NoProfile -Command "Get-CimInstance Win32_Process | Select-Object HandleCount,Name,Priority,ProcessId,ThreadCount,WorkingSetSize | Format-Table -AutoSize"',
+    description = 'Get list of processes with PowerShell CIM'
+WHERE `user` = 'allusers'
+  AND os = 'windows'
+  AND namecmd = 'Show process List'
+  AND customcmd = 'wmic process list brief';
+
+UPDATE qa_custom_command
+SET customcmd = 'powershell.exe -NoProfile -Command "Get-CimInstance Win32_Service | Select-Object ExitCode,Name,ProcessId,StartMode,State,Status | Format-Table -AutoSize"'
+WHERE `user` = 'allusers'
+  AND os = 'windows'
+  AND namecmd = 'Show services List'
+  AND customcmd = 'wmic service list brief';
+
+UPDATE qa_custom_command
+SET customcmd = 'powershell.exe -NoProfile -Command "Get-CimInstance Win32_ComputerSystem | Select-Object UserName | Format-Table -AutoSize"'
+WHERE `user` = 'allusers'
+  AND os = 'windows'
+  AND namecmd = 'Show connected users list'
+  AND customcmd = 'wmic computersystem get username';
+
 UPDATE version SET Number = 116;
+
+COMMIT;
