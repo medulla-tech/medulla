@@ -1,0 +1,592 @@
+# Spanish translations of the "Parcourir mon parc" (Browse my fleet) page.
+# Merged into modules/admin/locale/es_ES/LC_MESSAGES/admin.mo at deploy time.
+msgid ""
+msgstr ""
+"Project-Id-Version: medulla\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es_ES\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Browse my fleet"
+msgstr "Explorar mi parque"
+
+msgid "yes"
+msgstr "sí"
+
+msgid "no"
+msgstr "no"
+
+msgid "running"
+msgstr "en curso"
+
+msgid "finished"
+msgstr "finalizado"
+
+msgid "error"
+msgstr "error"
+
+msgid "cancelled"
+msgstr "cancelado"
+
+msgid "No machine selected"
+msgstr "Ninguna máquina seleccionada"
+
+msgid "Delete this group?"
+msgstr "¿Eliminar este grupo?"
+
+msgid "Group name"
+msgstr "Nombre del grupo"
+
+msgid "already equipped"
+msgstr "ya equipado"
+
+msgid "selected"
+msgstr "seleccionada(s)"
+
+msgid "Discover the fleet"
+msgstr "Descubrir el parque"
+
+msgid "Network scan (nmap)"
+msgstr "Escaneo de red (nmap)"
+
+msgid "Active Directory"
+msgstr "Active Directory"
+
+msgid "Network or machine (CIDR)"
+msgstr "Red o máquina (CIDR)"
+
+msgid "Active Directory server"
+msgstr "Servidor Active Directory"
+
+msgid "Organizational unit"
+msgstr "Unidad organizativa"
+
+msgid "All the directory"
+msgstr "Todo el directorio"
+
+msgid "List the OUs"
+msgstr "Listar las UO"
+
+msgid "Domain (NetBIOS)"
+msgstr "Dominio (NetBIOS)"
+
+msgid "Host name filter"
+msgstr "Filtro por nombre"
+
+msgid "optional"
+msgstr "opcional"
+
+msgid "Port (5985 winrm / 22 ssh / 445 smb)"
+msgstr "Puerto (5985 winrm / 22 ssh / 445 smb)"
+
+msgid "User name"
+msgstr "Usuario"
+
+msgid "Password"
+msgstr "Contraseña"
+
+msgid "SSH key (ssh only, optional)"
+msgstr "Clave SSH (solo ssh, opcional)"
+
+msgid "Agent to deploy"
+msgstr "Agente a desplegar"
+
+msgid "Ignore the HTTPS certificate"
+msgstr "Ignorar el certificado HTTPS"
+
+msgid "Needed when the Medulla server uses a self signed certificate"
+msgstr "Necesario cuando el servidor Medulla usa un certificado autofirmado"
+
+msgid "No agent available on the server"
+msgstr "Ningún agente disponible en el servidor"
+
+msgid "Loading..."
+msgstr "Cargando..."
+
+msgid "Remote control"
+msgstr "Control remoto"
+
+msgid "Method"
+msgstr "Método"
+
+msgid "Cannot open the remote session"
+msgstr "No se puede abrir la sesión remota"
+
+msgid "Remote session opened"
+msgstr "Sesión remota abierta"
+
+msgid "Empty answer from the MMC agent"
+msgstr "Respuesta vacía del agente MMC"
+
+msgid "The MMC agent did not answer in time"
+msgstr "El agente MMC no respondió a tiempo"
+
+msgid "MMC agent unreachable"
+msgstr "Agente MMC inaccesible"
+
+msgid "Your MMC session has expired, reload the page"
+msgstr "Su sesión MMC ha caducado, recargue la página"
+
+msgid "Start the discovery"
+msgstr "Iniciar el descubrimiento"
+
+msgid "Check the prerequisites"
+msgstr "Comprobar los requisitos"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Machines found"
+msgstr "Máquinas encontradas"
+
+msgid "Filter"
+msgstr "Filtrar"
+
+msgid "Select all"
+msgstr "Seleccionar todo"
+
+msgid "Reinstall"
+msgstr "Reinstalar"
+
+msgid "Name"
+msgstr "Nombre"
+
+msgid "IP address"
+msgstr "Dirección IP"
+
+msgid "Source"
+msgstr "Origen"
+
+msgid "System"
+msgstr "Sistema"
+
+msgid "Agent"
+msgstr "Agente"
+
+msgid "No machine yet, start a discovery."
+msgstr "Aún no hay máquinas, inicie un descubrimiento."
+
+msgid "Install the agent on the selection"
+msgstr "Instalar el agente en la selección"
+
+msgid "Description"
+msgstr "Descripción"
+
+msgid "Group"
+msgstr "Grupo"
+
+msgid "Machines"
+msgstr "Máquinas"
+
+msgid "Updated"
+msgstr "Actualizado"
+
+msgid "Actions"
+msgstr "Acciones"
+
+msgid "No group yet."
+msgstr "Aún no hay grupos."
+
+msgid "Recent jobs"
+msgstr "Tareas recientes"
+
+msgid "Job"
+msgstr "Tarea"
+
+msgid "Action"
+msgstr "Acción"
+
+msgid "Target"
+msgstr "Destino"
+
+msgid "State"
+msgstr "Estado"
+
+msgid "No job yet."
+msgstr "Aún no hay tareas."
+
+msgid "Access denied"
+msgstr "Acceso denegado"
+
+msgid "This action requires a POST request"
+msgstr "Esta acción requiere una petición POST"
+
+msgid "Unknown command"
+msgstr "Comando desconocido"
+
+msgid "The Active Directory server is required"
+msgstr "Se requiere el servidor Active Directory"
+
+msgid "Cancellation failed"
+msgstr "No se pudo cancelar"
+
+msgid "Cancellation requested"
+msgstr "Cancelación solicitada"
+
+msgid "Cannot start the job"
+msgstr "No se puede iniciar la tarea"
+
+msgid "Stop this running job?"
+msgstr "¿Detener esta tarea en curso?"
+
+msgid "Delete"
+msgstr "Eliminar"
+
+msgid "Follow"
+msgstr "Seguir"
+
+msgid "The group could not be deleted"
+msgstr "No se pudo eliminar el grupo"
+
+msgid "Group deleted"
+msgstr "Grupo eliminado"
+
+msgid "A group name is required"
+msgstr "Se requiere un nombre de grupo"
+
+msgid "The group could not be saved"
+msgstr "No se pudo guardar el grupo"
+
+msgid "Group '%s' saved (%d)"
+msgstr "Grupo '%s' guardado (%d)"
+
+msgid "The group could not be read"
+msgstr "No se pudo leer el grupo"
+
+msgid "Install"
+msgstr "Instalar"
+
+msgid "Install the PowerShell prerequisites"
+msgstr "Instalar los requisitos de PowerShell"
+
+msgid "This job is already finished"
+msgstr "Esta tarea ya ha finalizado"
+
+msgid "Discovery"
+msgstr "Descubrimiento"
+
+msgid "Installation (%d machines)"
+msgstr "Instalación (%d máquinas)"
+
+msgid "List of OUs"
+msgstr "Lista de las UO"
+
+msgid "Installing the prerequisites"
+msgstr "Instalación de los requisitos"
+
+msgid "No result for this filter"
+msgstr "Ningún resultado para este filtro"
+
+msgid "Every prerequisite is available"
+msgstr "Todos los requisitos están presentes"
+
+msgid "Missing prerequisites:"
+msgstr "Requisitos que faltan:"
+
+msgid "Prerequisites unreadable:"
+msgstr "Requisitos ilegibles:"
+
+msgid "Status unavailable"
+msgstr "Estado no disponible"
+
+msgid "Hide"
+msgstr "Ocultar"
+
+msgid "List the OUs to choose a branch."
+msgstr "Liste las UO para elegir una rama."
+
+msgid "No organizational unit holds a machine."
+msgstr "Ninguna unidad organizativa contiene equipos."
+
+msgid "Container"
+msgstr "Contenedor"
+
+msgid "Running search cancelled (mode changed)."
+msgstr "Búsqueda en curso cancelada (cambio de modo)."
+
+msgid "A domain account is required: fill in the login and the password."
+msgstr "Se requiere una cuenta de dominio: complete el usuario y la contraseña."
+
+msgid "A login and a password (or an SSH key) are required to start the search."
+msgstr "Se requieren un usuario y una contraseña (o una clave SSH) para iniciar la búsqueda."
+
+msgid "A login is required to go with the SSH key."
+msgstr "Se requiere un usuario junto con la clave SSH."
+
+msgid "Generic agent (install-agent.ps1)"
+msgstr "Agente genérico (install-agent.ps1)"
+
+msgid "Log too long: the oldest lines are not shown"
+msgstr "Registro demasiado largo: no se muestran las líneas más antiguas"
+
+msgid "The browser blocked the remote session window: allow pop-ups for this site and try again"
+msgstr "El navegador bloqueó la ventana de control remoto: permita las ventanas emergentes para este sitio e inténtelo de nuevo"
+
+msgid "Unexpected answer from the MMC agent (%s)"
+msgstr "Respuesta inesperada del agente MMC (%s)"
+
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgid "Create"
+msgstr "Crear"
+
+msgid "Stop the job"
+msgstr "Detener la tarea"
+
+msgid "Description (optional)"
+msgstr "Descripción (opcional)"
+
+msgid "A group with this name already exists"
+msgstr "Ya existe un grupo con este nombre"
+
+msgid "Agent installation groups"
+msgstr "Grupos de instalación del agente"
+
+msgid "Create an agent installation group"
+msgstr "Crear un grupo de instalación del agente"
+
+msgid "Save the selection as an agent installation group"
+msgstr "Guardar la selección como grupo de instalación del agente"
+
+msgid "An agent installation group keeps the selection to deploy the agent later."
+msgstr "Un grupo de instalación del agente guarda la selección para desplegar el agente después."
+
+msgid "%d selected machine(s). An agent installation group keeps this selection so the agent can be deployed on it later: the machines do not need the agent yet."
+msgstr "%d máquina(s) seleccionada(s). Un grupo de instalación del agente guarda esta selección para desplegar el agente después: las máquinas aún no necesitan el agente."
+
+msgid "No installation has been started from this group yet"
+msgstr "Aún no se ha iniciado ninguna instalación desde este grupo"
+
+msgid "Installation of group '%s'"
+msgstr "Instalación del grupo '%s'"
+
+msgid "Result: %d installed, %d failed"
+msgstr "Resultado: %d instalada(s), %d con error"
+
+msgid "Failed machine"
+msgstr "Máquina con error"
+
+msgid "Failed at step"
+msgstr "Error en el paso"
+
+msgid "Cause"
+msgstr "Causa"
+
+msgid "Remote message"
+msgstr "Mensaje remoto"
+
+msgid "Show the log"
+msgstr "Ver el registro"
+
+msgid "Hide the log"
+msgstr "Ocultar el registro"
+
+msgid "Machine log unavailable"
+msgstr "Registro de la máquina no disponible"
+
+msgid "Connection"
+msgstr "Conexión"
+
+msgid "System detection"
+msgstr "Detección del sistema"
+
+msgid "Preparation"
+msgstr "Preparación"
+
+msgid "File transfer"
+msgstr "Transferencia del archivo"
+
+msgid "Agent download"
+msgstr "Descarga del agente"
+
+msgid "Agent installation"
+msgstr "Instalación del agente"
+
+msgid "Unknown step"
+msgstr "Paso desconocido"
+
+msgid "Authentication refused (user, password or key)"
+msgstr "Autenticación rechazada (usuario, contraseña o clave)"
+
+msgid "The machine name cannot be resolved"
+msgstr "El nombre de la máquina no se resuelve"
+
+msgid "Connection refused (service stopped or firewall)"
+msgstr "Conexión rechazada (servicio detenido o cortafuegos)"
+
+msgid "Machine unreachable (network, firewall or powered off)"
+msgstr "Máquina inaccesible (red, cortafuegos o apagada)"
+
+msgid "This account needs sudo without password"
+msgstr "Esta cuenta necesita sudo sin contraseña"
+
+msgid "SSH host key rejected"
+msgstr "Clave de host SSH rechazada"
+
+msgid "WinRM unreachable or not configured"
+msgstr "WinRM inaccesible o no configurado"
+
+msgid "The machine needs administrator rights over SMB (account must be local administrator)"
+msgstr "La cuenta debe ser administrador local de la máquina (recurso C$ y servicios denegados)"
+
+msgid "The administrative share C$ is not available (SMB disabled or filtered)"
+msgstr "El recurso administrativo C$ no está disponible (SMB desactivado o filtrado)"
+
+msgid "The SMB client (python3-impacket) is not installed on the Medulla server"
+msgstr "El cliente SMB (python3-impacket) no está instalado en el servidor Medulla"
+
+msgid "Not enough disk space on the machine"
+msgstr "Espacio en disco insuficiente en la máquina"
+
+msgid "The machine could not download the agent"
+msgstr "La máquina no pudo descargar el agente"
+
+msgid "The installer returned an error"
+msgstr "El instalador devolvió un error"
+
+msgid "The agent file could not be copied"
+msgstr "No se pudo copiar el archivo del agente"
+
+msgid "The installation took too long"
+msgstr "La instalación superó el tiempo límite"
+
+msgid "No macOS agent package for this architecture"
+msgstr "Ningún paquete de agente macOS para esta arquitectura"
+
+msgid "The installation process ended unexpectedly"
+msgstr "El proceso de instalación terminó inesperadamente"
+
+msgid "To install manually, run this on the machine:"
+msgstr "Para instalar manualmente, ejecute en la máquina:"
+
+msgid "Unknown error"
+msgstr "Error desconocido"
+
+msgid "Invalid machine"
+msgstr "Máquina no válida"
+
+msgid "Invalid port"
+msgstr "Puerto no válido"
+
+msgid "Credentials are too long"
+msgstr "Las credenciales son demasiado largas"
+
+msgid "Invalid name filter"
+msgstr "Filtro de nombre no válido"
+
+msgid "An Active Directory server is required"
+msgstr "Se requiere un servidor Active Directory"
+
+msgid "A user name and a password are required for Active Directory"
+msgstr "Se requieren un nombre de usuario y una contraseña para Active Directory"
+
+msgid "Invalid organizational unit"
+msgstr "Unidad organizativa no válida"
+
+msgid "Too many machines selected (512 maximum)"
+msgstr "Demasiadas máquinas seleccionadas (máximo 512)"
+
+msgid "Invalid ssh key path"
+msgstr "Ruta de clave SSH no válida"
+
+msgid "Unsupported action"
+msgstr "Acción no admitida"
+
+msgid "Invalid user name"
+msgstr "Nombre de usuario no válido"
+
+msgid "Too many jobs are already running, please wait"
+msgstr "Ya hay demasiadas tareas en curso, espere"
+
+msgid "No machine given"
+msgstr "Ninguna máquina indicada"
+
+msgid "Too many machines (512 maximum)"
+msgstr "Demasiadas máquinas (máximo 512)"
+
+msgid "Invalid job identifier"
+msgstr "Identificador de tarea no válido"
+
+msgid "Unknown job"
+msgstr "Tarea desconocida"
+
+msgid "The job is not running anymore"
+msgstr "La tarea ya no está en curso"
+
+msgid "No log for this machine"
+msgstr "Ningún registro para esta máquina"
+
+msgid "Invalid group name"
+msgstr "Nombre de grupo no válido"
+
+msgid "Unknown group"
+msgstr "Grupo desconocido"
+
+msgid "The group must contain at least one machine"
+msgstr "El grupo debe contener al menos una máquina"
+
+msgid "Guacamole did not return any token"
+msgstr "Guacamole no devolvió ningún token"
+
+msgid "guacamole_baseurl is not configured"
+msgstr "guacamole_baseurl no está configurado"
+
+msgid "guacamole_baseurl does not carry any credential"
+msgstr "guacamole_baseurl no contiene ninguna credencial"
+
+msgid "Invalid SSH key path"
+msgstr "Ruta de clave SSH no válida"
+
+msgid "SSH key must live in an allowed directory (/root/.ssh or /home/*/.ssh)"
+msgstr "La clave SSH debe estar en un directorio permitido (/root/.ssh o /home/*/.ssh)"
+
+msgid "SSH key not found"
+msgstr "Clave SSH no encontrada"
+
+msgid "This file is not a private key"
+msgstr "Este archivo no es una clave privada"
+
+msgid "The job stopped unexpectedly, check the server logs"
+msgstr "La tarea se detuvo inesperadamente, consulte los registros del servidor"
+
+msgid "Unsupported protocol: %s"
+msgstr "Protocolo no admitido: %s"
+
+msgid "Invalid machine: %s"
+msgstr "Máquina no válida: %s"
+
+msgid "Unknown agent: %s"
+msgstr "Agente desconocido: %s"
+
+msgid "Guacamole refused the connection (HTTP %s)"
+msgstr "Guacamole rechazó la conexión (HTTP %s)"
+
+msgid "Guacamole unreachable: %s"
+msgstr "Guacamole no es accesible: %s"
+
+msgid "Guacamole: cannot %s the connection (HTTP %s)"
+msgstr "Guacamole: no se puede %s la conexión (HTTP %s)"
+
+msgid "%s is missing or not executable"
+msgstr "%s no existe o no es ejecutable"
+
+msgid "Network too large: use a /%d prefix or longer"
+msgstr "Red demasiado grande: use un prefijo /%d o más largo"
+
+msgid "Cannot read the SSH key: %s"
+msgstr "No se puede leer la clave SSH: %s"
+
+msgid "Fleet"
+msgstr "Parque"
+
+msgid "PowerShell WSMan client (PSWSMan)"
+msgstr "cliente WSMan de PowerShell (PSWSMan)"
+
+msgid "mysql client"
+msgstr "cliente mysql"
+
+msgid "Active Directory query failed"
+msgstr "La consulta de Active Directory falló"
