@@ -110,6 +110,7 @@ foreach ($featureDefs as $fkey => $fdef) {
 
 <form method="post" action="<?php echo urlStrRedirect("admin/admin/aclFeatures"); ?>">
     <input type="hidden" name="save_acl" value="1">
+    <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
 
     <?php
     // Show "Manage profiles" only if the user has the add or delete right.
