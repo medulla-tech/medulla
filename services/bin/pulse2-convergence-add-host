@@ -1,0 +1,81 @@
+#!/usr/bin/env python3
+"""Schedule convergence actions for computers or a group through pulse2-debug."""
+
+import argparse
+from pathlib import Path
+import re
+import subprocess
+import sys
+
+
+METHOD = "msc.convergence_add_host"
+
+
+def machine_uuid(value):
+    match = re.fullmatch(r"(?:UUID)?([0-9]+)", value, re.IGNORECASE)
+    if not match or int(match.group(1)) <= 0:
+        raise argparse.ArgumentTypeError(
+            "Expected a positive GLPI computer ID, e.g. 9, UUID9 or uuid9"
+        )
+    return "UUID%s" % int(match.group(1))
+
+
+def group_id(value):
+    if not re.fullmatch(r"[0-9]+", value) or int(value) <= 0:
+        raise argparse.ArgumentTypeError("Expected a positive Medulla group ID")
+    return int(value)
+
+
+def build_command(uuids, group=None):
+    # The raw proxy propagates connection errors without console retries.
+    arguments = repr(uuids) if group is None else f"[], {group!r}"
+    return (
+        f"if {METHOD!r} not in PROXYCLASS.proxy.system.listMethods():\n"
+        f"    raise RuntimeError('MMC method unavailable: {METHOD}')\n"
+        f"result = msc_.convergence_add_host({arguments})\n"
+        "print('Commands with an added target:', repr(result))\n"
+    )
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(
+        description=(
+            "Schedule eligible convergence actions for computers or a group using "
+            "pulse2-debug. Requires the MMC root account and the "
+            "msc.convergence_add_host method. Does not wait for installation."
+        )
+    )
+    parser.add_argument(
+        "uuid", type=machine_uuid, nargs="*",
+        help="One or more GLPI computer IDs: 9, UUID9 or uuid9",
+    )
+    parser.add_argument("--group", type=group_id, help="Medulla group ID instead of hosts")
+    parser.add_argument(
+        "--console",
+        default=str(Path(__file__).resolve().with_name("pulse2-debug")),
+        help="Path to pulse2-debug (default: alongside this script)",
+    )
+    args = parser.parse_args(argv)
+    if bool(args.uuid) == (args.group is not None):
+        parser.error("Supply hosts or --group, but not both")
+    uuids = list(dict.fromkeys(args.uuid)) if args.group is None else None
+    try:
+        result = subprocess.run(
+            [args.console, "-c", build_command(uuids, args.group)],
+            check=False,
+        )
+    except OSError as exc:
+        print(f"Cannot start pulse2-debug: {exc}", file=sys.stderr)
+        return 1
+    if result.returncode != 0:
+        print(
+            f"pulse2-debug failed (exit code {result.returncode}); "
+            "no automatic retry was made. Check MMC logs before retrying.",
+            file=sys.stderr,
+        )
+        return result.returncode if result.returncode > 0 else 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
