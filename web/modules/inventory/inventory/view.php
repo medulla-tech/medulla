@@ -46,6 +46,11 @@ if (isset($_POST["inventaire"])) {
     $p->display();
 
     $inv = getLastMachineInventoryFull($_GET["inventaire"]);
+    if (!is_array($inv) || empty($inv)) {
+        echo "<tr><td>" . _T("Inventory not found or you do not have permission to view it.", "inventory") . "</td></tr>";
+        echo "</table>";
+        return;
+    }
 
     $uniq = array('Bios', 'Hardware');
     $display = array('Summary', 'Network', 'Controller', 'Drive', 'Input', 'Memory', 'Monitor', 'Port', 'Printer', 'Sound', 'Storage', 'VideoCard', 'Software');
