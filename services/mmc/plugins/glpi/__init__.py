@@ -202,6 +202,78 @@ class RpcProxy(RpcProxyI):
             entities = infos['liste_entities_user']
         return xmlrpcCleanup(Glpi().get_phone_inventories_for_dashboard(entities))
 
+    def _has_inventory_machine_access(self, uuid):
+        return ComputerLocationManager().doesUserHaveAccessToMachine(
+            self.currentContext, uuid
+        )
+
+    def getLastMachineInventoryFull(self, uuid):
+        if not self._has_inventory_machine_access(uuid):
+            return False
+        return xmlrpcCleanup(Glpi().getLastMachineInventoryFull(uuid))
+
+    def inventoryExists(self, uuid):
+        if not self._has_inventory_machine_access(uuid):
+            return False
+        return xmlrpcCleanup(Glpi().inventoryExists(uuid))
+
+    def getLastMachineInventoryPart(
+        self, uuid, part, minbound=0, maxbound=-1, filt=None, options=None
+    ):
+        if not self._has_inventory_machine_access(uuid):
+            return False
+        options = options or {}
+        return xmlrpcCleanup(
+            Glpi().getLastMachineInventoryPart(
+                uuid, part, minbound, maxbound, filt, options
+            )
+        )
+
+    def countLastMachineInventoryPart(self, uuid, part, filt=None, options=None):
+        if not self._has_inventory_machine_access(uuid):
+            return 0
+        options = options or {}
+        return xmlrpcCleanup(
+            Glpi().countLastMachineInventoryPart(uuid, part, filt, options)
+        )
+
+    def getMachineInfoImaging(self, uuid):
+        if not self._has_inventory_machine_access(uuid):
+            return False
+        return xmlrpcCleanup(Glpi().getMachineInfoImaging(uuid))
+
+    def getReport(self, uuid, lang):
+        if not self._has_inventory_machine_access(uuid):
+            return False
+
+        def get_part(part, minbound=0, maxbound=-1, filt=None, options=None):
+            return xmlrpcCleanup(
+                Glpi().getLastMachineInventoryPart(
+                    uuid, part, minbound, maxbound, filt, options
+                )
+            )
+
+        xsl = XLSGenerator("/var/tmp/report-" + uuid + ".xls", lang)
+        xsl.get_summary_sheet(get_part("Summary"))
+        xsl.get_hardware_sheet(
+            get_part("Processors"),
+            get_part("Controllers"),
+            get_part("GraphicCards"),
+            get_part("SoundCards"),
+        )
+        xsl.get_network_sheet(get_part("Network"))
+        xsl.get_storage_sheet(get_part("Storage"))
+        xsl.get_software_sheet(
+            get_part("Softwares", options={"hide_win_updates": True})
+        )
+        xsl.save()
+        return xmlrpcCleanup(xsl.path)
+
+    def setGlpiEditableValue(self, uuid, name, value):
+        if not self._has_inventory_machine_access(uuid):
+            return False
+        return xmlrpcCleanup(Glpi().setGlpiEditableValue(uuid, name, value))
+
 def getLicensesComputer(vendor, software, version):
     return getLicensesCount(vendor, software, version, 3)
 
@@ -233,57 +305,9 @@ def getLicensesCount(vendor, software, version, valcount=1):
     return rr
 
 
-def getLastMachineInventoryFull(uuid):
-    return xmlrpcCleanup(Glpi().getLastMachineInventoryFull(uuid))
-
-
 def getdbreadonly():
     config = GlpiConfig("glpi")
     return xmlrpcCleanup(config.dbreadonly)
-
-
-def inventoryExists(uuid):
-    return xmlrpcCleanup(Glpi().inventoryExists(uuid))
-
-
-def getReport(uuid, lang):
-    xsl = XLSGenerator("/var/tmp/report-" + uuid + ".xls", lang)
-    xsl.get_summary_sheet(getLastMachineInventoryPart(uuid, "Summary"))
-    xsl.get_hardware_sheet(
-        getLastMachineInventoryPart(uuid, "Processors"),
-        getLastMachineInventoryPart(uuid, "Controllers"),
-        getLastMachineInventoryPart(uuid, "GraphicCards"),
-        getLastMachineInventoryPart(uuid, "SoundCards"),
-    )
-    xsl.get_network_sheet(getLastMachineInventoryPart(uuid, "Network"))
-    xsl.get_storage_sheet(getLastMachineInventoryPart(uuid, "Storage"))
-    xsl.get_software_sheet(
-        getLastMachineInventoryPart(
-            uuid, "Softwares", 0, -1, None, {"hide_win_updates": True}
-        )
-    )
-    xsl.save()
-    return xmlrpcCleanup(xsl.path)
-
-
-def getMachineInfoImaging(uuid):
-    return xmlrpcCleanup(Glpi().getMachineInfoImaging(uuid))
-
-
-def getLastMachineInventoryPart(
-    uuid, part, minbound=0, maxbound=-1, filt=None, options={}
-):
-    return xmlrpcCleanup(
-        Glpi().getLastMachineInventoryPart(
-            uuid, part, minbound, maxbound, filt, options
-        )
-    )
-
-
-def countLastMachineInventoryPart(uuid, part, filt=None, options={}):
-    return xmlrpcCleanup(
-        Glpi().countLastMachineInventoryPart(uuid, part, filt, options)
-    )
 
 
 def getMachineMac(uuid):
@@ -292,10 +316,6 @@ def getMachineMac(uuid):
 
 def getMachineIp(uuid):
     return xmlrpcCleanup(Glpi().getMachineIp(uuid))
-
-
-def setGlpiEditableValue(uuid, name, value):
-    return xmlrpcCleanup(Glpi().setGlpiEditableValue(uuid, name, value))
 
 
 # TODO
