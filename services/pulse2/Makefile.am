@@ -40,7 +40,7 @@ pythonmodules = apis apis.clients database database.admin database.dyngroup \
 	database.backuppc database.urbackup\
 	database.pkgs database.pkgs.orm \
 	database.updates database.mastering database.mobile database.security \
-	database.store \
+	database.store database.reflex \
 	dlp dlp.api dlp.tests \
 	cm cm.tests tests
 
