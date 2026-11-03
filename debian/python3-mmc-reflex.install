@@ -1,0 +1,3 @@
+etc/mmc/plugins/reflex.ini
+usr/lib/python3/*-packages/mmc/plugins/reflex
+usr/share/doc/pulse2/contrib/reflex/
