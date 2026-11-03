@@ -22,6 +22,8 @@
 */
 require_once("modules/medulla_server/includes/xmlrpc.inc.php");
 
+verifyCSRFToken($_GET);
+
 $res = xmlrpc_regenerate_agent();
 
 if($res) {

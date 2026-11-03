@@ -44,7 +44,16 @@ if(isset($_POST['name'], $_POST['active'])) {
     // Add the profile to the database
     $result = xmlrpc_create_profile($name, $owner, $ous, htmlentities($_POST['active']), $packages, strtolower(str_replace(" ", "_", $source)));
 
-    new NotifyWidgetSuccess(sprintf(_T("Profile %s successfully added", "kiosk"), $name));
+    header('Content-Type: application/json');
+    if ($result === false) {
+        echo json_encode([
+            "status" => "exists",
+            "message" => sprintf(_T("A profile named %s already exists", "kiosk"), htmlspecialchars($name, ENT_QUOTES, 'UTF-8')),
+        ]);
+    } else {
+        new NotifyWidgetSuccess(sprintf(_T("Profile %s successfully added", "kiosk"), $name));
+        echo json_encode(["status" => "ok"]);
+    }
 } else {
     new NotifyWidgetWarning(sprintf(_T('Unable to create the profile %s', 'kiosk'), $name));
 }

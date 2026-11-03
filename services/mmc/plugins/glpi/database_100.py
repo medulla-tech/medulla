@@ -9366,9 +9366,14 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
                     gi.completename AS complet_entity_name_,
                     gi.name AS entity_name_,
                     gp.name AS profile_name,
-                    (SELECT GROUP_CONCAT(gi2.id ORDER BY gi2.id SEPARATOR ',')
-                        FROM glpi_entities gi2
-                        WHERE gi2.completename LIKE CONCAT(gi.completename, '%')
+                    (SELECT GROUP_CONCAT(DISTINCT gi2.id ORDER BY gi2.id SEPARATOR ',')
+                        FROM glpi_profiles_users gpu
+                        JOIN glpi_entities ge ON ge.id = gpu.entities_id
+                        JOIN glpi_entities gi2
+                            ON gi2.id = ge.id
+                            OR (gpu.is_recursive = 1
+                                AND gi2.completename LIKE CONCAT(ge.completename, ' > %'))
+                        WHERE gpu.users_id = gu.id
                     ) AS liste_entities_user,
                     COALESCE(
                         (SELECT ga.app_token

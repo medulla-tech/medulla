@@ -6,54 +6,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // file : web/modules/updates/includes/xmlrpc.php
 
-if (!function_exists('updates_is_dev_trace_enabled')) {
-    function updates_is_dev_trace_enabled()
-    {
-        if (function_exists('mmc_is_dev_trace_enabled')) {
-            return mmc_is_dev_trace_enabled();
-        }
-
-        $iniValue = strtolower(trim((string) get_cfg_var('medulla.dev'))) ?: strtolower(trim((string) ini_get('medulla.dev')));
-        $iniEnabled = in_array($iniValue, ['1', 'true', 'on', 'yes'], true);
-        
-        $getValue = isset($_GET['dev']) ? strtolower(trim((string) $_GET['dev'])) : '';
-        if ($getValue === '' && isset($_GET['trace'])) {
-            $getValue = strtolower(trim((string) $_GET['trace']));
-        }
-        $getEnabled = in_array($getValue, ['1', 'true', 'on', 'yes'], true);
-        
-        return $iniEnabled || $getEnabled;
-    }
-}
-
-if (!function_exists('updates_dev_trace')) {
-    function updates_dev_trace($level = 'INFO', $message = '', $context = array())
-    {
-        if (!updates_is_dev_trace_enabled()) {
-            return;
-        }
-
-        $allowedLevels = ['DEBUG', 'INFO', 'WARNING', 'ERROR'];
-        $level = strtoupper(trim((string) $level));
-        if (!in_array($level, $allowedLevels, true)) {
-            $level = 'INFO';
-        }
-
-        if (function_exists('mmc_render_dev_trace_window')) {
-            mmc_render_dev_trace_window('UPDATES', $level, $message, $context);
-            return;
-        }
-    }
-}
-
-if (!defined('MMC_UPDATES_AUTO_TRACE_DONE')) {
-    define('MMC_UPDATES_AUTO_TRACE_DONE', true);
-    if (function_exists('mmc_trace_updates_auto_from_include')) {
-        mmc_trace_updates_auto_from_include('INFO');
-    }
-}
-
-
 function xmlrpc_has_update_data()
 {
     return xmlCall("updates.has_update_data");
@@ -205,13 +157,16 @@ function xmlrpc_get_os_update_major_details($entity_id,
                                             $typeaction,
                                             $filter="",
                                             $start=0,
-                                            $limit=-1)
+                                            $limit=-1,
+                                            $update_type="")
 {
     return xmlCall("updates.get_os_update_major_details", [ $entity_id,
                                                             $typeaction,
                                                             $filter,
                                                             $start,
-                                                            $limit]);
+                                                            $limit,
+                                                            true,
+                                                            $update_type]);
 }
 
 /**

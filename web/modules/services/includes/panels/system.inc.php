@@ -36,12 +36,12 @@ class SystemPanel extends Panel {
                 <script type="text/javascript">
                     reboot = function() {
                         var message = "<strong>' . _T("The server will reboot. Are you sure ?", "services") . '</strong>";
-                        var url = "' . urlStrRedirect('services/control/reboot') . '";
+                        var url = "' . urlStrRedirect('services/control/reboot', array("auth_token" => $_SESSION['auth_token'] ?? '')) . '";
                         displayConfirmationPopup(message, url);
                     }
                     poweroff = function() {
                         var message = "<strong>' . _T("The server will be poweroff. Are you sure ?", "services") . '</strong>";
-                        var url = "' . urlStrRedirect('services/control/reboot') . '";
+                        var url = "' . urlStrRedirect('services/control/reboot', array("auth_token" => $_SESSION['auth_token'] ?? '')) . '";
                         displayConfirmationPopup(message, url);
                     }
                 </script>

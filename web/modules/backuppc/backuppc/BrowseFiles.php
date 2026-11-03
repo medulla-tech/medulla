@@ -59,7 +59,7 @@ include("modules/backuppc/backuppc/ajaxDownloadsTable.php");
     }
 
     function RestoreFile(paramstr) {
-        jQuery('#restoreDiv').load('<?php echo urlStrRedirect("backuppc/backuppc/ajaxRestoreFile"); ?>&' + paramstr);
+        jQuery('#restoreDiv').load('<?php echo urlStrRedirect("backuppc/backuppc/ajaxRestoreFile"); ?>&auth_token=<?php echo urlencode($_SESSION['auth_token'] ?? ''); ?>&' + paramstr);
         setTimeout("refresh();closePopup();", 4000);
     }
 

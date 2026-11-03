@@ -34,7 +34,7 @@ ADD COLUMN `is_active` VARCHAR(10) DEFAULT '1' AFTER `isolang`;
 -- =======================================
 -- add office 2019
 -- =======================================
--- Insertion des données pour les produits Microsoft
+-- Insertion des donnees pour les produits Microsoft
 INSERT IGNORE INTO `applicationconfig` (`id`, `key`, `value`, `comment`, `context`, `module`, `enable`) VALUES
 (43,'table produits','up_packages_office_2019_64bit','Microsoft Office suite bureautique','entity','xmppmaster/update',0);
 
@@ -110,14 +110,14 @@ DELIMITER ;
 
 -- -----------------------------------------------------
 --
--- Procédure stockée pour initialiser et synchroniser la table `up_machine_major_windows`
--- à partir des données de la table `up_major_win`.
+-- Procedure stockee pour initialiser et synchroniser la table `up_machine_major_windows`
+-- a partir des donnees de la table `up_major_win`.
 --
--- Cette procédure effectue les opérations suivantes :
--- 1. Supprime et recrée la table `up_major_win`.
--- 2. Insère des données dans `up_major_win` à partir de plusieurs jointures.
--- 3. Lit les données de `up_major_win` et insère les enregistrements dans `up_machine_major_windows`
---    uniquement si les enregistrements n'existent pas déjà.
+-- Cette procedure effectue les operations suivantes :
+-- 1. Supprime et recree la table `up_major_win`.
+-- 2. Insere des donnees dans `up_major_win` a partir de plusieurs jointures.
+-- 3. Lit les donnees de `up_major_win` et insere les enregistrements dans `up_machine_major_windows`
+--    uniquement si les enregistrements n'existent pas deja.
 --
 -- -----------------------------------------------------
 
@@ -134,7 +134,7 @@ USE `xmppmaster`$$
 CREATE PROCEDURE `up_init_table_major_win_complet`()
 BEGIN
     -- ------------------------------------------------------------------
-    -- Déclarations de variables
+    -- Declarations de variables
     -- ------------------------------------------------------------------
     DECLARE done INT DEFAULT FALSE;
     DECLARE id_machine INT;
@@ -160,7 +160,7 @@ BEGIN
     DECLARE visolang VARCHAR(10);
 
     -- ------------------------------------------------------------------
-    -- Définition du curseur sur la table temporaire up_major_win
+    -- Definition du curseur sur la table temporaire up_major_win
     -- ------------------------------------------------------------------
     DECLARE cur CURSOR FOR
         SELECT xmpp_id, package_uuid, NULL AS kb, NULL AS msrcseverity,
@@ -172,7 +172,7 @@ BEGIN
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
     -- ------------------------------------------------------------------
-    -- Phase 1 : (Re)création et alimentation de la table up_major_win
+    -- Phase 1 : (Re)creation et alimentation de la table up_major_win
     -- ------------------------------------------------------------------
     START TRANSACTION;
 
@@ -211,7 +211,7 @@ BEGIN
     );
 
     -- ------------------------------------------------------------------
-    -- Insertion optimisée avec découpage en CTE
+    -- Insertion optimisee avec decoupage en CTE
     -- ------------------------------------------------------------------
     INSERT IGNORE INTO up_major_win (
         xmpp_id, glpi_id, ent_id,
@@ -291,7 +291,7 @@ BEGIN
             LEAVE read_loop;
         END IF;
 
-        -- Insertion uniquement si la mise à jour est active
+        -- Insertion uniquement si la mise a jour est active
         IF vis_active IS NULL OR vis_active = '1' OR LOWER(vis_active) = 'true' THEN
 
             IF NOT EXISTS (

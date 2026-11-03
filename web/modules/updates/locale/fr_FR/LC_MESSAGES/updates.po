@@ -1563,3 +1563,15 @@ msgstr "Mises à jour du noyau de la distribution."
 
 msgid "Security fixes published by the distribution."
 msgstr "Correctifs de sécurité publiés par la distribution."
+
+msgid "All"
+msgstr "Tous"
+
+msgid "Windows 10 → Windows 11"
+msgstr "Windows 10 → Windows 11"
+
+msgid "Windows 11 → latest version"
+msgstr "Windows 11 → dernière version"
+
+msgid "No products are enabled on the Microsoft Products Approval page. Please select the products whose updates you want to manage in Medulla."
+msgstr "Aucun produit n'est activé sur la page d'approbation des produits Microsoft. Sélectionnez les produits dont vous souhaitez gérer les mises à jour dans Medulla."

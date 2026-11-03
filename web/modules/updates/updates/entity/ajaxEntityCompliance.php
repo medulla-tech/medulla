@@ -32,6 +32,7 @@
 // require("graph/navbar.inc.php");
 // require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/updates/includes/xmlrpc.php");
+require_once("modules/updates/includes/productapproval.inc.php");
 // echo "<br><br><br>";
 
 
@@ -65,6 +66,7 @@ require_once("modules/updates/includes/xmlrpc.php");
 <?php
 
 // print_r( getFilteredGetParams());
+updatesShowNoEnabledProductsWarning();
 echo '<div class="ajax-section">';
 $ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxEntitiesListwindows"), "container", [], 'formRunning');
 

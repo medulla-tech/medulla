@@ -54,7 +54,7 @@ ADD COLUMN `keysyncthing` VARCHAR(75) NULL DEFAULT '\"\"'  AFTER `moderelayserve
 
 -- -----------------------------------------------------
 -- Table `xmppmaster`.`.has_login_command`
--- Valeur par défaut = 0
+-- Valeur par defaut = 0
 -- -----------------------------------------------------
 
 Alter TABLE xmppmaster.has_login_command

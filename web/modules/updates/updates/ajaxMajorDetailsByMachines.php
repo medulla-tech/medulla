@@ -101,7 +101,9 @@ foreach ($statglpiversion['id_machine'] as $key => $valeur) {
         $idmachinefrom_xmpp_or_glpi => $valeur,
         'cn' => $statglpiversion['machine'][$key] ?? '',
         'platform' => $statglpiversion['platform'][$key] ?? '',
+        'lang_code' => $statglpiversion['lang_code'][$key] ?? '',
         'version' => $statglpiversion['version'][$key] ?? '',
+        'newcode' => $statglpiversion['newcode'][$key] ?? '',
         'update' => $statglpiversion['update'][$key] ?? '',
         'uuid_inventorymachine' => $statglpiversion['uuid_inventorymachine'][$key] ?? '',
         'package_id' => $statglpiversion['package_id'][$key] ?? '',
@@ -112,8 +114,10 @@ foreach ($statglpiversion['id_machine'] as $key => $valeur) {
 $n = new OptimizedListInfos($statglpiversion["machine"], _T("Machine name", "updates"));
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($statglpiversion["platform"], _T("Platform", "updates"));
-$n->addExtraInfoCentered($statglpiversion["version"], _T("Version", "updates"));
-$n->addExtraInfo($statglpiversion["update"], _T("Upgrade", "updates"));
+$n->addExtraInfoCentered($statglpiversion["lang_code"], _T("Language Code", "updates"));
+$n->addExtraInfoCentered($statglpiversion["version"], _T("Current version", "updates"));
+$n->addExtraInfoCentered($statglpiversion["newcode"], _T("Target version", "updates"));
+$n->addExtraInfo($statglpiversion["update"], _T("Upgrade type", "updates"));
 $n->addActionItemArray($actionspeclistUpds);
 $n->addActionItemArray($actiondetailsByMachslog);
 // arrInfo contient déjà le slice paginé (LIMIT côté SQL via xmlrpc),

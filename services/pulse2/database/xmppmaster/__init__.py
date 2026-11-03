@@ -577,6 +577,42 @@ class XmppMasterDatabase(DatabaseHelper):
             logger.error(f"An error occurred while fetching products for entity_id={identity}: {str(e)}")
             return {"id": [], "name_procedure": [], "enable": [], "comment": []} if colonne else []
 
+    @DatabaseHelper._sessionm
+    def count_enabled_products(self, session, entity_ids=None):
+        """
+        Compte les produits actives dans 'up_list_produit', avec le meme filtre
+        applicationconfig que get_approve_products.
+
+        Paramètres :
+        - entity_ids (list of int) : entites a prendre en compte. Vide ou None : toutes.
+
+        Retourne :
+        - int : nombre de produits actives, -1 en cas d'erreur.
+        """
+        try:
+            sql = """
+                SELECT COUNT(*)
+                FROM xmppmaster.up_list_produit upl
+                INNER JOIN xmppmaster.applicationconfig ac
+                    ON ac.value = upl.name_procedure
+                WHERE upl.enable = 1
+                  AND ac.`key` = 'table produits'
+                  AND ac.context = 'entity'
+                  AND ac.module = 'xmppmaster/update'
+                  AND ac.enable = 1
+            """
+            params = {}
+            if entity_ids:
+                sql += " AND upl.entity_id IN :entity_ids"
+                params["entity_ids"] = list(entity_ids)
+            query = text(sql)
+            if params:
+                query = query.bindparams(bindparam("entity_ids", expanding=True))
+            return int(session.execute(query, params).scalar() or 0)
+        except Exception as e:
+            logger.error(f"An error occurred while counting enabled products for entity_ids={entity_ids}: {str(e)}")
+            return -1
+
 
     @DatabaseHelper._sessionm
     def update_approve_products(self, session, updatesproduct, entity_id=None):
@@ -1890,155 +1926,71 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         return [x[0] for x in result]
 
-    @DatabaseHelper._sessionm
-    def get_stat_ars_machine(self, session, listarsjid):
-        listin = ",".join(["'%s'" % x for x in listarsjid])
-        sql = (
-            """
+    RELAY_MACHINE_STAT_COUNTERS = [
+        "total_machines", "inventoried", "uninventoried", "uninventoried_offline",
+        "uninventoried_online", "inventoried_offline", "inventoried_online",
+        "mach_on", "mach_off", "nblinuxmachine", "nbwindows", "nbdarwin",
+        "nbAMD64", "nbARM64", "with_uuid_serial", "bothclass", "publicclass",
+        "privateclass", "nb_ou_user", "nb_OU_mach", "kioskon", "kioskoff",
+        "nbmachinereconf",
+    ]
+
+    def _relay_machine_stats_sql(self, where_extra=""):
+        """
+        Agrégats des postes (agenttype = 'machine') par groupdeploy,
+        c'est-à-dire par jid du relais auquel ils sont rattachés.
+        """
+        uninv = "COALESCE(TRIM(uuid_inventorymachine), '') = ''"
+        inv = "COALESCE(TRIM(uuid_inventorymachine), '') != ''"
+        return f"""
             SELECT
                 groupdeploy,
-                SUM(CASE
-                    WHEN (LOCATE('linux', platform)) THEN 1
-                    ELSE 0
-                END) AS nblinuxmachine,
-                SUM(CASE
-                    WHEN (LOCATE('windows', platform)) THEN 1
-                    ELSE 0
-                END) AS nbwindows,
-                SUM(CASE
-                    WHEN (LOCATE('darwin', platform)) THEN 1
-                    ELSE 0
-                END) AS nbdarwin,
-                SUM(CASE
-                    WHEN (enabled = '1') THEN 1
-                    ELSE 0
-                END) AS mach_on,
-                SUM(CASE
-                    WHEN (enabled = '0') THEN 1
-                    ELSE 0
-                END) AS mach_off,
-                SUM(CASE
-                    WHEN SUBSTRING(uuid_inventorymachine,1,1) = "U"
-                    THEN
-                    0
-                    ELSE
-                    1
-                END) AS uninventoried,
-                SUM(CASE
-                    WHEN  SUBSTRING(uuid_inventorymachine,1,1) = "U"
-                    THEN
-                        1
-                    ELSE 0
-                END) AS inventoried,
-                SUM(CASE
-                    WHEN
-                        (enabled = '1'
-                            AND  SUBSTRING(uuid_inventorymachine,1,1) = "U"  )
-                    THEN
-                        0
-                    ELSE 1
-                END) AS uninventoried_online,
-                SUM(CASE
-                    WHEN
-                        (enabled = '0'
-                            AND  SUBSTRING(uuid_inventorymachine,1,1) = "U"  )
-                    THEN
-                        0
-                    ELSE 1
-                END) AS uninventoried_offline,
-                SUM(CASE
-                    WHEN
-                        (enabled = 1
-                            AND  SUBSTRING(uuid_inventorymachine,1,1) = "U"  )
-                    THEN
-                        1
-                    ELSE 0
-                END) AS inventoried_online,
-                SUM(CASE
-                    WHEN
-                        (enabled = '0'
-                            AND  SUBSTRING(uuid_inventorymachine,1,1) = "U"  )
-                    THEN
-                        1
-                    ELSE 0
-                END) AS inventoried_offline,
-                SUM(CASE
-                    WHEN id THEN 1
-                    ELSE 0
-                END) AS nbmachine,
-                SUM(CASE
-                    WHEN (COALESCE(uuid_serial_machine, '') != '') THEN 1
-                    ELSE 0
-                END) AS with_uuid_serial,
-                SUM(CASE
-                    WHEN (classutil = 'both') THEN 1
-                    ELSE 0
-                END) AS bothclass,
-                SUM(CASE
-                    WHEN (classutil = 'public') THEN 1
-                    ELSE 0
-                END) AS publicclass,
-                SUM(CASE
-                    WHEN (classutil = 'private') THEN 1
-                    ELSE 0
-                END) AS privateclass,
-                SUM(CASE
-                    WHEN (COALESCE(ad_ou_user, '') != '') THEN 1
-                    ELSE 0
-                END) AS nb_ou_user,
-                SUM(CASE
-                    WHEN (COALESCE(ad_ou_machine, '') != '') THEN 1
-                    ELSE 0
-                END) AS nb_OU_mach,
-                SUM(CASE
-                    WHEN (kiosk_presence = 'True') THEN 1
-                    ELSE 0
-                END) AS kioskon,
-                SUM(CASE
-                    WHEN (kiosk_presence = 'FALSE') THEN 1
-                    ELSE 0
-                END) AS kioskoff,
-                SUM(CASE
-                    WHEN need_reconf THEN 1
-                    ELSE 0
-                END) AS nbmachinereconf
-            FROM
-                machines
-            WHERE
-                groupdeploy IN (%s)
-                    AND agenttype = 'machine'
-            GROUP BY groupdeploy;"""
-            % listin
-        )
-        # logger.error("sql\n%s"%sql)
+                COUNT(*) AS total_machines,
+                SUM(CASE WHEN {inv} THEN 1 ELSE 0 END) AS inventoried,
+                SUM(CASE WHEN {uninv} THEN 1 ELSE 0 END) AS uninventoried,
+                SUM(CASE WHEN {uninv} AND enabled = 0 THEN 1 ELSE 0 END) AS uninventoried_offline,
+                SUM(CASE WHEN {uninv} AND enabled = 1 THEN 1 ELSE 0 END) AS uninventoried_online,
+                SUM(CASE WHEN {inv} AND enabled = 0 THEN 1 ELSE 0 END) AS inventoried_offline,
+                SUM(CASE WHEN {inv} AND enabled = 1 THEN 1 ELSE 0 END) AS inventoried_online,
+                SUM(CASE WHEN enabled = 1 THEN 1 ELSE 0 END) AS mach_on,
+                SUM(CASE WHEN enabled = 0 THEN 1 ELSE 0 END) AS mach_off,
+                SUM(CASE WHEN LOCATE('linux', platform) > 0 THEN 1 ELSE 0 END) AS nblinuxmachine,
+                SUM(CASE WHEN LOCATE('windows', platform) > 0 THEN 1 ELSE 0 END) AS nbwindows,
+                SUM(CASE WHEN LOCATE('darwin', platform) > 0 THEN 1 ELSE 0 END) AS nbdarwin,
+                SUM(CASE WHEN archi REGEXP '^x86_64|^AMD64' THEN 1 ELSE 0 END) AS nbAMD64,
+                SUM(CASE WHEN archi REGEXP '^ARM64' THEN 1 ELSE 0 END) AS nbARM64,
+                SUM(CASE WHEN COALESCE(uuid_serial_machine, '') != '' THEN 1 ELSE 0 END) AS with_uuid_serial,
+                SUM(CASE WHEN classutil = 'both' THEN 1 ELSE 0 END) AS bothclass,
+                SUM(CASE WHEN classutil = 'public' THEN 1 ELSE 0 END) AS publicclass,
+                SUM(CASE WHEN classutil = 'private' THEN 1 ELSE 0 END) AS privateclass,
+                SUM(CASE WHEN COALESCE(ad_ou_user, '') != '' THEN 1 ELSE 0 END) AS nb_ou_user,
+                SUM(CASE WHEN COALESCE(ad_ou_machine, '') != '' THEN 1 ELSE 0 END) AS nb_OU_mach,
+                SUM(CASE WHEN kiosk_presence = 'True' THEN 1 ELSE 0 END) AS kioskon,
+                SUM(CASE WHEN kiosk_presence = 'FALSE' THEN 1 ELSE 0 END) AS kioskoff,
+                SUM(CASE WHEN need_reconf THEN 1 ELSE 0 END) AS nbmachinereconf
+            FROM machines
+            WHERE agenttype = 'machine' {where_extra}
+            GROUP BY groupdeploy
+        """
+
+    @DatabaseHelper._sessionm
+    def get_stat_ars_machine(self, session, listarsjid):
+        listarsjid = [x for x in listarsjid if x]
+        if not listarsjid:
+            return {}
+        listin = ",".join(["'%s'" % x for x in listarsjid])
+        sql = self._relay_machine_stats_sql("AND groupdeploy IN (%s)" % listin)
         result = session.execute(sql)
         session.commit()
         session.flush()
         resultatout = {}
-        if result:
-            for row in result:
-                resultatout[row[0]] = {}
-                resultatout[row[0]]["nblinuxmachine"] = int(row[1])
-                resultatout[row[0]]["nbwindows"] = int(row[2])
-                resultatout[row[0]]["nbdarwin"] = int(row[3])
-                resultatout[row[0]]["mach_on"] = int(row[4])
-                resultatout[row[0]]["mach_off"] = int(row[5])
-                resultatout[row[0]]["uninventoried"] = int(row[6])
-                resultatout[row[0]]["inventoried"] = int(row[7])
-                resultatout[row[0]]["uninventoried_online"] = int(row[8])
-                resultatout[row[0]]["uninventoried_offline"] = int(row[9])
-                resultatout[row[0]]["inventoried_online"] = int(row[10])
-                resultatout[row[0]]["inventoried_offline"] = int(row[11])
-                resultatout[row[0]]["nbmachine"] = int(row[12])
-                resultatout[row[0]]["with_uuid_serial"] = int(row[13])
-                resultatout[row[0]]["bothclass"] = int(row[14])
-                resultatout[row[0]]["publicclass"] = int(row[15])
-                resultatout[row[0]]["privateclass"] = int(row[16])
-                resultatout[row[0]]["nb_ou_user"] = int(row[17])
-                resultatout[row[0]]["nb_OU_mach"] = int(row[18])
-                resultatout[row[0]]["kioskon"] = int(row[19])
-                resultatout[row[0]]["kioskoff"] = int(row[20])
-                resultatout[row[0]]["nbmachinereconf"] = int(row[21])
+        for row in result:
+            stats = {
+                col: int(getattr(row, col) or 0)
+                for col in self.RELAY_MACHINE_STAT_COUNTERS
+            }
+            stats["nbmachine"] = stats["total_machines"]
+            resultatout[row.groupdeploy] = stats
         return resultatout
 
     @DatabaseHelper._sessionm
@@ -11625,6 +11577,10 @@ class XmppMasterDatabase(DatabaseHelper):
 
         where_sql = " AND ".join(where_clauses)
 
+        counters_sql = ",\n                ".join(
+            f"MAX(st.{col}) AS {col}" for col in self.RELAY_MACHINE_STAT_COUNTERS
+        )
+
         # Requête principale
         sql = f"""
             SELECT
@@ -11642,33 +11598,12 @@ class XmppMasterDatabase(DatabaseHelper):
                 c.description AS cluster_description,
 
                 -- Compteurs
-                COUNT(m.id) AS total_machines,
-                SUM(CASE WHEN SUBSTRING(m.uuid_inventorymachine,1,1) = 'U' THEN 1 ELSE 0 END) AS inventoried,
-                SUM(CASE WHEN SUBSTRING(m.uuid_inventorymachine,1,1) != 'U' THEN 1 ELSE 0 END) AS uninventoried,
-                SUM(CASE WHEN SUBSTRING(m.uuid_inventorymachine,1,1) != 'U' AND m.enabled = 0 THEN 1 ELSE 0 END) AS uninventoried_offline,
-                SUM(CASE WHEN SUBSTRING(m.uuid_inventorymachine,1,1) != 'U' AND m.enabled = 1 THEN 1 ELSE 0 END) AS uninventoried_online,
-                SUM(CASE WHEN SUBSTRING(m.uuid_inventorymachine,1,1) = 'U' AND m.enabled = 0 THEN 1 ELSE 0 END) AS inventoried_offline,
-                SUM(CASE WHEN SUBSTRING(m.uuid_inventorymachine,1,1) = 'U' AND m.enabled = 1 THEN 1 ELSE 0 END) AS inventoried_online,
-                SUM(CASE WHEN m.enabled = 1 THEN 1 ELSE 0 END) AS mach_on,
-                SUM(CASE WHEN m.enabled = 0 THEN 1 ELSE 0 END) AS mach_off,
-                SUM(CASE WHEN m.platform REGEXP '^linux.*' THEN 1 ELSE 0 END) AS nblinuxmachine,
-                SUM(CASE WHEN m.platform REGEXP '^Microsoft.*' THEN 1 ELSE 0 END) AS nbwindows,
-                SUM(CASE WHEN LOCATE('darwin', m.platform) > 0 THEN 1 ELSE 0 END) AS nbdarwin,
-                SUM(CASE WHEN m.archi REGEXP '^x86_64|^AMD64' THEN 1 ELSE 0 END) AS nbAMD64,
-                SUM(CASE WHEN m.archi REGEXP '^ARM64' THEN 1 ELSE 0 END) AS nbARM64,
-                SUM(CASE WHEN COALESCE(m.uuid_serial_machine,'') != '' THEN 1 ELSE 0 END) AS with_uuid_serial,
-                SUM(CASE WHEN rs.classutil = 'both' THEN 1 ELSE 0 END) AS bothclass,
-                SUM(CASE WHEN rs.classutil = 'public' THEN 1 ELSE 0 END) AS publicclass,
-                SUM(CASE WHEN rs.classutil = 'private' THEN 1 ELSE 0 END) AS privateclass,
-                SUM(CASE WHEN COALESCE(m.ad_ou_user,'') != '' THEN 1 ELSE 0 END) AS nb_ou_user,
-                SUM(CASE WHEN COALESCE(m.ad_ou_machine,'') != '' THEN 1 ELSE 0 END) AS nb_OU_mach,
-                SUM(CASE WHEN m.kiosk_presence = 'True' THEN 1 ELSE 0 END) AS kioskon,
-                SUM(CASE WHEN m.kiosk_presence = 'FALSE' THEN 1 ELSE 0 END) AS kioskoff,
-                SUM(CASE WHEN m.need_reconf THEN 1 ELSE 0 END) AS nbmachinereconf
+                {counters_sql}
             FROM relayserver rs
             LEFT JOIN has_cluster_ars hca ON hca.id_ars = rs.id
             LEFT JOIN cluster_ars c       ON c.id = hca.id_cluster
             LEFT JOIN machines m          ON m.hostname = rs.nameserver
+            LEFT JOIN ({self._relay_machine_stats_sql()}) st ON st.groupdeploy = rs.jid
             WHERE {where_sql}
             GROUP BY rs.id
         """
@@ -11701,14 +11636,7 @@ class XmppMasterDatabase(DatabaseHelper):
         ]
 
         # Sous-ensemble des colonnes qui sont des compteurs -> doivent être forcées en int
-        counters = [
-            "total_machines", "inventoried", "uninventoried", "uninventoried_offline",
-            "uninventoried_online", "inventoried_offline", "inventoried_online",
-            "mach_on", "mach_off", "nblinuxmachine", "nbwindows", "nbdarwin",
-            "nbAMD64", "nbARM64", "with_uuid_serial", "bothclass", "publicclass",
-            "privateclass", "nb_ou_user", "nb_OU_mach", "kioskon", "kioskoff",
-            "nbmachinereconf"
-        ]
+        counters = self.RELAY_MACHINE_STAT_COUNTERS
         # Init dictionnaire vide avec listes
         result = {col: [] for col in columns}
         result["enabled_css"] = []  # calculé à part
@@ -15115,8 +15043,10 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
         """
         Récupère les statistiques de conformité des mises à jour Windows par entité (version SQL optimisée).
 
-        Cette fonction consolide les informations de conformité des machines Windows
-        au niveau de chaque entité GLPI, en utilisant la table `local_glpi_machines`.
+        Cette fonction matérialise d'abord le périmètre des machines GLPI, puis
+        agrège localement les mises à jour Windows par entité. Cette séparation
+        conserve l'entité GLPI comme source de vérité sans joindre les tables
+        FEDERATED pendant le comptage coûteux.
 
         Args:
             session (Session):
@@ -15147,69 +15077,193 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                 - `totalmach` (int) : Nombre total de machines Windows enregistrées.
         """
 
-        # Construction dynamique des filtres
-        filter_sql = []
-        filter_noncompliant_sql = []
-
-        if config is not None and getattr(config, "filter_on", None) is not None:
-            for key, values in config.filter_on.items():
-                if not values:
+        def normalize_entity_ids(values):
+            normalized_ids = []
+            for value in values or []:
+                try:
+                    entity_id = int(value)
+                except (TypeError, ValueError):
                     continue
-                if key == "entity":
-                    filter_sql.append(f"lm.entities_id IN ({','.join(map(str, values))})")
-                elif key == "state":
-                    filter_noncompliant_sql.append(f"lgf.states_id IN ({','.join(map(str, values))})")
-                elif key == "type":
-                    filter_noncompliant_sql.append(f"lgf.computertypes_id IN ({','.join(map(str, values))})")
+                if entity_id not in normalized_ids:
+                    normalized_ids.append(entity_id)
+            return normalized_ids
 
-        # Clause WHERE commune
-        where_conditions = [
-            "m.agenttype = 'machine'",
-            "m.platform LIKE 'Microsoft Windows%'",
-        ]
-        if entities:
-            where_conditions.append(f"lm.entities_id IN ({','.join(map(str, entities))})")
-        if filter_sql:
-            where_conditions.extend(filter_sql)
+        filters = getattr(config, "filter_on", {}) if config is not None else {}
+        filters = filters or {}
+        requested_entities = normalize_entity_ids(entities)
+        filtered_entities = normalize_entity_ids(filters.get("entity"))
+        state_filters = normalize_entity_ids(filters.get("state"))
+        type_filters = normalize_entity_ids(filters.get("type"))
 
-        # Clause WHERE spécifique non-conformité
-        where_noncompliant = ""
-        if filter_noncompliant_sql:
-            where_noncompliant = " AND " + " AND ".join(filter_noncompliant_sql)
+        if (entities and not requested_entities) or (
+            filters.get("entity") and not filtered_entities
+        ):
+            return []
 
-        # Requête SQL unifiée
-        sql = f"""
-            SELECT
-                lm.entities_id AS entity_id,
-                COUNT(DISTINCT m.id) AS totalmach,
-                COUNT(DISTINCT uma.id_machine) AS nbmachines,
-                COUNT(DISTINCT uma.update_id) AS nbupdates
-            FROM
-                machines m
+        # State and type filters historically apply through local_glpi_filters
+        # after updates are joined. Keep this path unchanged until their GLPI
+        # data is materialized locally too.
+        if state_filters or type_filters:
+            where_conditions = [
+                "m.agenttype = 'machine'",
+                "m.platform LIKE 'Microsoft Windows%'",
+            ]
+            if requested_entities:
+                where_conditions.append(
+                    f"lm.entities_id IN ({','.join(map(str, requested_entities))})"
+                )
+            if filtered_entities:
+                where_conditions.append(
+                    f"lm.entities_id IN ({','.join(map(str, filtered_entities))})"
+                )
+            if state_filters:
+                where_conditions.append(
+                    f"lgf.states_id IN ({','.join(map(str, state_filters))})"
+                )
+            if type_filters:
+                where_conditions.append(
+                    f"lgf.computertypes_id IN ({','.join(map(str, type_filters))})"
+                )
+
+            sql = f"""
+                SELECT
+                    lm.entities_id AS entity_id,
+                    COUNT(DISTINCT m.id) AS totalmach,
+                    COUNT(DISTINCT uma.id_machine) AS nbmachines,
+                    COUNT(DISTINCT uma.update_id) AS nbupdates
+                FROM machines m
                 JOIN xmppmaster.local_glpi_machines lm ON lm.id = m.id_glpi
                 LEFT JOIN up_machine_activated uma ON uma.id_machine = m.id
                 LEFT JOIN local_glpi_filters lgf ON lgf.id = uma.glpi_id
-            WHERE
-                {' AND '.join(where_conditions)}
-                {where_noncompliant}
-            GROUP BY
-                lm.entities_id
-            ORDER BY
-                lm.entities_id;
-        """
+                WHERE {' AND '.join(where_conditions)}
+                GROUP BY lm.entities_id
+                ORDER BY lm.entities_id;
+            """
+            logger.debug("SQL conformité Windows avec filtres GLPI : %s", sql)
+            rows = session.execute(sql)
+        else:
+            scope_conditions = []
+            scope_params = {}
+            if requested_entities:
+                scope_conditions.append("lm.entities_id IN :requested_entities")
+                scope_params["requested_entities"] = requested_entities
+            if filtered_entities:
+                scope_conditions.append("lm.entities_id IN :filtered_entities")
+                scope_params["filtered_entities"] = filtered_entities
 
-        logger.debug("SQL conformité Windows : %s", sql)
+            scope_sql = """
+                SELECT
+                    lm.id AS glpi_id,
+                    lm.entities_id AS entity_id
+                FROM xmppmaster.local_glpi_machines lm
+            """
+            if scope_conditions:
+                scope_sql += " WHERE " + " AND ".join(scope_conditions)
 
-        result = []
-        for row in session.execute(sql):
-            result.append({
+            scope_statement = text(scope_sql)
+            if requested_entities:
+                scope_statement = scope_statement.bindparams(
+                    bindparam("requested_entities", expanding=True)
+                )
+            if filtered_entities:
+                scope_statement = scope_statement.bindparams(
+                    bindparam("filtered_entities", expanding=True)
+                )
+
+            scope = [
+                {
+                    "glpi_id": row.glpi_id,
+                    "entity_id": row.entity_id,
+                }
+                for row in session.execute(scope_statement, scope_params)
+            ]
+            if not scope:
+                return []
+
+            temporary_table_created = False
+            try:
+                session.execute("DROP TEMPORARY TABLE IF EXISTS tmp_conformity_scope")
+                session.execute(
+                    """
+                    CREATE TEMPORARY TABLE tmp_conformity_scope (
+                        glpi_id INT NOT NULL PRIMARY KEY,
+                        entity_id INT NOT NULL
+                    ) ENGINE=MEMORY
+                    """
+                )
+                temporary_table_created = True
+                session.execute(
+                    text(
+                        """
+                        INSERT INTO tmp_conformity_scope (glpi_id, entity_id)
+                        VALUES (:glpi_id, :entity_id)
+                        """
+                    ),
+                    scope,
+                )
+                session.execute(
+                    "DROP TEMPORARY TABLE IF EXISTS tmp_conformity_active_inventory"
+                )
+                session.execute(
+                    """
+                    CREATE TEMPORARY TABLE tmp_conformity_active_inventory (
+                        uuid_inventorymachine VARCHAR(255) NOT NULL PRIMARY KEY
+                    ) ENGINE=MEMORY
+                    """
+                )
+                session.execute(
+                    """
+                    INSERT INTO tmp_conformity_active_inventory (uuid_inventorymachine)
+                    SELECT CONCAT('UUID', lm.id)
+                    FROM xmppmaster.local_glpi_machines lm
+                    WHERE lm.is_deleted = 0 AND lm.is_template = 0
+                    """
+                )
+
+                sql = """
+                    SELECT
+                        scope.entity_id AS entity_id,
+                        COUNT(DISTINCT m.id) AS totalmach,
+                        COUNT(DISTINCT uma.id_machine) AS nbmachines,
+                        COUNT(DISTINCT uma.update_id) AS nbupdates
+                    FROM machines m
+                    JOIN tmp_conformity_scope scope ON scope.glpi_id = m.id_glpi
+                    LEFT JOIN (
+                        SELECT candidate.id AS id_machine, umw.update_id
+                        FROM tmp_conformity_scope candidate_scope
+                        JOIN machines candidate ON candidate.id_glpi = candidate_scope.glpi_id
+                        JOIN up_machine_windows umw ON umw.id_machine = candidate.id
+                        JOIN tmp_conformity_active_inventory active_inventory
+                            ON active_inventory.uuid_inventorymachine = candidate.uuid_inventorymachine
+                        LEFT JOIN up_white_list uwl ON uwl.updateid = umw.update_id
+                        LEFT JOIN up_gray_list ugl ON ugl.updateid = umw.update_id
+                        WHERE candidate.platform LIKE 'Microsoft Windows%'
+                          AND (ugl.valided = 1 OR uwl.valided = 1)
+                    ) uma ON uma.id_machine = m.id
+                    WHERE
+                        m.agenttype = 'machine'
+                        AND m.platform LIKE 'Microsoft Windows%'
+                    GROUP BY scope.entity_id
+                    ORDER BY scope.entity_id;
+                """
+                logger.debug("SQL conformité Windows locale : %s", sql)
+                rows = session.execute(sql).fetchall()
+            finally:
+                if temporary_table_created:
+                    session.execute(
+                        "DROP TEMPORARY TABLE IF EXISTS tmp_conformity_active_inventory"
+                    )
+                    session.execute("DROP TEMPORARY TABLE IF EXISTS tmp_conformity_scope")
+
+        return [
+            {
                 "entity": str(row.entity_id),
                 "nbmachines": row.nbmachines or 0,
                 "nbupdates": row.nbupdates or 0,
                 "totalmach": row.totalmach or 0,
-            })
-
-        return result
+            }
+            for row in rows
+        ]
 
 
     @DatabaseHelper._sessionm
@@ -15326,8 +15380,13 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
         where_clauses = ["m.agenttype = 'machine'"]
 
         if location:
+            # The GLPI entity is authoritative after a machine move. The local
+            # XMPP entity mapping can remain stale until the next inventory.
             where_clauses.append(
-                f"m.glpi_entity_id = (SELECT id FROM glpi_entity WHERE glpi_id = {location})"
+                "m.id_glpi IN ("
+                "SELECT lm.id FROM xmppmaster.local_glpi_machines lm "
+                f"WHERE lm.entities_id = {location}"
+                ")"
             )
 
         if criterion:
@@ -17928,7 +17987,10 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                 ROUND(SUM(CASE WHEN security_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_security_percent,
                 ROUND(SUM(CASE WHEN kernel_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_kernel_percent,
                 ROUND(SUM(CASE WHEN other_count = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS compliance_other_percent
-            FROM up_machine_linux
+            FROM up_machine_linux AS up
+            INNER JOIN machines AS ma
+                ON ma.uuid_serial_machine = up.harduuid
+               AND ma.agenttype = 'machine'
         """
 
         params = {}
@@ -19647,6 +19709,7 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
             JOIN xmppmaster.up_packages_major_Lang_code lc
                 ON lc.lang_code = SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 3), '@', -1)
                 AND lc.major = SUBSTRING(s.name, LENGTH(s.name) - LOCATE('-', REVERSE(s.name)) + 2)
+                AND lc.enabled = 1
             WHERE
                 SUBSTRING_INDEX(s.name, '-', -1) > 10
                 AND (:entity_id IS NULL OR :entity_id = -1 OR e.id = :entity_id)
@@ -19714,105 +19777,6 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
 
         return result
 
-    # @DatabaseHelper._sessionm
-    # def get_outdated_major_os_updates_by_entity(self,
-    #                                             session,
-    #                                             entity_id,
-    #                                             typeaction,
-    #                                             start=0,
-    #                                             limit=-1,
-    #                                             filter="",
-    #                                             # colonne=True):
-    #     """
-    #     Récupère les informations des machines dont les mises à jour majeures du système d'exploitation sont obsolètes ou déconseillées,
-    #     avec la possibilité de filtrer par entité ou nom d'hôte, et de paginer les résultats.
-    #
-    #     :param session: session SQLAlchemy (injectée automatiquement par le décorateur)
-    #     :param entity_id: ID de l'entité, ou None/-1 pour toutes les entités
-    #     :param filter: filtre sur le hostname (optionnel)
-    #     :param start: index de départ pour la pagination
-    #     :param limit: nombre de lignes à retourner (-1 = pas de limite)
-    #     :param colonne: si True, retourne les données par colonne, sinon par ligne
-    #     :return: dict contenant les résultats, avec nb_total_element, nb_element et les données
-    #     """
-    #     sql = '''
-    #         SELECT SQL_CALC_FOUND_ROWS
-    #             mx.id AS xmpp_id,
-    #             m.id AS glpi_id,
-    #             e.id AS ent_id,
-    #             mx.hostname,
-    #             mx.enabled,
-    #             mx.jid,
-    #             mx.uuid_serial_machine AS serial,
-    #             mx.platform AS platform,
-    #             s.name,
-    #             s.comment,
-    #             e.completename AS entity,
-    #             lc.lang_code,
-    #             lc.iso_filename,
-    #             lc.package_uuid,
-    #             SUBSTRING(s.name, LOCATE('_', s.name) + 1, LOCATE('@', s.name) - LOCATE('_', s.name) - 1) AS old_version,
-    #             SUBSTRING_INDEX(s.name, '-', -1) AS new_version,
-    #             SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 2), '@', -1) AS oldcode,
-    #             SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 5), '@', -1), '_', 2), '_', -1) AS newcode,
-    #             SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 3), '@', -1) AS isolang
-    #         FROM xmppmaster.local_glpi_items_softwareversions si
-    #         JOIN xmppmaster.local_glpi_softwareversions sv ON si.softwareversions_id = sv.id
-    #         JOIN xmppmaster.local_glpi_machines m ON si.items_id = m.id
-    #         JOIN xmppmaster.local_glpi_softwares s ON sv.softwares_id = s.id
-    #         JOIN xmppmaster.local_glpi_entities e ON e.id = m.entities_id
-    #         JOIN xmppmaster.machines mx ON NULLIF(REPLACE(mx.uuid_inventorymachine, 'UUID', ''),'') = si.items_id
-    #         JOIN xmppmaster.up_packages_major_Lang_code lc
-    #             ON lc.lang_code = SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 3), '@', -1)
-    #             AND lc.major = SUBSTRING(s.name, LENGTH(s.name) - LOCATE('-', REVERSE(s.name)) + 2)
-    #         WHERE
-    #             SUBSTRING_INDEX(s.name, '-', -1) > 10
-    #             AND (:entity_id IS NULL OR :entity_id = -1 OR e.id = :entity_id)
-    #             AND s.name LIKE 'Medulla\_%'
-    #             AND (
-    #                 SUBSTRING(s.name, LOCATE('_', s.name) + 1, LOCATE('@', s.name) - LOCATE('_', s.name) - 1) != SUBSTRING_INDEX(s.name, '@', -1)
-    #                 OR SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 2), '@', -1) != SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 5), '@', -1), '_', 2), '_', -1)
-    #             )
-    #             AND (
-    #                 s.name NOT LIKE '%False%'
-    #                 OR NOT SUBSTRING_INDEX(s.name, '-', -1) != '11'
-    #             )
-    #         ORDER BY mx.hostname
-    #     '''
-    #
-    #     if limit != -1:
-    #         sql += " LIMIT :limit OFFSET :start"
-    #
-    #     sql_text = text(sql)
-    #     params = {
-    #         'entity_id': entity_id if entity_id is not None else -1,
-    #         'filter': f"%{filter}%",
-    #         'limit': int(limit),
-    #         'start': int(start)
-    #     }
-    #
-    #     logger.debug(
-    #         "Executing SQL query for outdated major OS updates: %s", sql)
-    #     logger.debug("Parameters: %s", params)
-    #
-    #     rows = session.execute(sql_text, params).fetchall()
-    #
-    #     count_sql = text("SELECT FOUND_ROWS();")
-    #     total = session.execute(count_sql).scalar()
-    #
-    #     result = {
-    #         'nb_total_element': total,
-    #         'nb_element': len(rows)
-    #     }
-    #
-    #     if colonne:
-    #         result.update({key: [row[key] if row[key] is not None else "" for row in rows]
-    #                       for key in rows[0].keys()} if rows else {})
-    #     else:
-    #         result['details'] = [dict(row._mapping) for row in rows]
-    #
-    #     return result
-
     @DatabaseHelper._sessionm
     def get_os_update_major_details(self,
                                     session,
@@ -19821,7 +19785,8 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                                     filter="",
                                     start=0,
                                     limit=-1,
-                                    colonne=True):
+                                    colonne=True,
+                                    update_type=""):
         """
             Récupère les détails des machines avec des systèmes d'exploitation Windows ou Windows Server à partir de la base de données XMPPMaster.
 
@@ -19841,6 +19806,7 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                 start (int) : Le décalage pour commencer à retourner les lignes.
                 limit (int) : Le nombre maximum de lignes à retourner. Si -1, pas de limitation.
                 colonne (bool) : Si True, retourne les résultats dans un format en colonnes. La valeur par défaut est True.
+                update_type (str) : "W10to11" ou "W11to11" pour ne garder que ce type de mise à jour. Toute autre valeur : pas de filtre.
 
             Retourne :
                 dict : Un dictionnaire contenant :
@@ -19854,6 +19820,18 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                     - 'W11to11' : Mise à jour entre versions de Windows 11.
                     - 'not update' : Aucune mise à jour majeure nécessaire.
         """
+        update_type_sql = {
+            "W10to11": '''
+                AND TRIM(COALESCE(old_version, '')) = '10'
+                AND TRIM(COALESCE(new_version, '')) = '11'
+            ''',
+            "W11to11": '''
+                AND TRIM(COALESCE(old_version, '')) = '11'
+                AND TRIM(COALESCE(new_version, '')) = '11'
+                AND UPPER(TRIM(COALESCE(oldcode, ''))) != UPPER(TRIM(COALESCE(newcode, '')))
+            ''',
+        }
+
         # Base de la requête SQL
         total_os_sql = '''
             SELECT
@@ -19865,8 +19843,10 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                 up_mach.platform AS platform,
                 up_mach.entity AS entity,
                 up_mach.ent_id AS entity_id,
+                up_mach.lang_code AS lang_code,
                 up_mach.kb AS installeur,
                 up_mach.oldcode AS version,
+                up_mach.newcode AS newcode,
                 CASE
                     WHEN old_version = 10 AND new_version = 11 THEN 'W10to11'
                     WHEN old_version = 11
@@ -19909,6 +19889,9 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
         if filter:
             total_os_sql += " AND up_mach.hostname LIKE :filter"
 
+        if isinstance(update_type, str):
+            total_os_sql += update_type_sql.get(update_type, "")
+
         # Ajouter ORDER BY et LIMIT/OFFSET si nécessaire
         total_os_sql += " ORDER BY up_mach.hostname "
         if limit != -1:
@@ -19948,9 +19931,11 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                 'entity_id': [row.entity_id if row.entity_id is not None else "" for row in entity_result],
                 'machine': [row.machine if row.machine is not None else "" for row in entity_result],
                 'platform': [row.platform if row.platform is not None else "" for row in entity_result],
+                'lang_code': [row.lang_code if row.lang_code is not None else "" for row in entity_result],
                 'package_id': [row.package_id if row.package_id is not None else "" for row in entity_result],
                 'installeur': [row.installeur if row.installeur is not None else "" for row in entity_result],
                 'version': [row.version if row.version is not None else "" for row in entity_result],
+                'newcode': [row.newcode if row.newcode is not None else "" for row in entity_result],
                 'update': [row.update if row.update is not None else "" for row in entity_result]
             })
         else:
@@ -19963,9 +19948,11 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                     'uuid_inventorymachine': row.uuid_inventorymachine if row.uuid_inventorymachine is not None else "",
                     'machine': row.machine if row.machine is not None else "",
                     'platform': row.platform if row.platform is not None else "",
+                    'lang_code': row.lang_code if row.lang_code is not None else "",
                     'package_id': row.package_id if row.package_id is not None else "",
                     'installeur': row.installeur if row.installeur is not None else "",
                     'version': row.version if row.version is not None else "",
+                    'newcode': row.newcode if row.newcode is not None else "",
                     'update': row.update if row.update is not None else ""
                 }
                 for row in entity_result
@@ -20308,6 +20295,31 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
         # Fetch the result
         deployment_exists = result.fetchone()[0]
         # Return True if deployment exists, otherwise False
+        return deployment_exists
+
+    @DatabaseHelper._sessionm
+    def deployment_is_running_on_machine(self, session, jidmachine):
+        """
+        Retourne True si un déploiement non terminé existe pour la machine.
+
+        Règle métier : un upgrade majeur ne doit pas démarrer si un autre
+        déploiement est déjà actif sur la machine.
+        """
+        datenow = datetime.now()
+
+        deployment_exists = (
+            session.query(Deploy.id)
+            .filter(
+                and_(
+                    Deploy.jidmachine == jidmachine,
+                    Deploy.state.like("DEPLOYMENT START%"),
+                    or_(Deploy.endcmd.is_(None), Deploy.endcmd >= datenow),
+                )
+            )
+            .first()
+            is not None
+        )
+
         return deployment_exists
 
     @DatabaseHelper._sessionm

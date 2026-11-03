@@ -134,13 +134,6 @@ foreach ($_entities as $entity) {
  */
 $entities = array_slice($filtered_entities, $start, $maxperpage, false);
 
-updates_dev_trace("INFO", "Entities loaded", array(
-    "distribution" => $distribution,
-    "filtered_count" => count($filtered_entities),
-    "page_count" => count($entities),
-    "entity_ids" => implode(",", array_slice($listentity, 0, 5))
-));
-
 /**
  * ------------------------------------------------------------------
  * RÉCUPÉRATION DES STATISTIQUES DE CONFORMITÉ
@@ -192,13 +185,6 @@ foreach ($entities as $entity) {
 }
 
 $statversion['by_entity'] = $normalizedByEntity;
-
-updates_dev_trace("INFO", "Stats returned from RPC", array(
-    "total_outdated" => $statversion['total_outdated'] ?? 'MISSING',
-    "by_entity_count" => count($statversion['by_entity'] ?? []),
-    "has_by_entity" => isset($statversion['by_entity']) ? 'YES' : 'NO',
-    "statversion_keys" => implode(",", array_keys($statversion ?? []))
-));
 
 /**
  * Informations de version

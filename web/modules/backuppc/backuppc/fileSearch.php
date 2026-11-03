@@ -242,7 +242,7 @@ $ajax->displayDivToUpdate();
     }
 
     function RestoreFile(paramstr) {
-        jQuery('#restoreDiv').load('<?php echo urlStrRedirect("backuppc/backuppc/ajaxRestoreFile"); ?>&' + paramstr);
+        jQuery('#restoreDiv').load('<?php echo urlStrRedirect("backuppc/backuppc/ajaxRestoreFile"); ?>&auth_token=<?php echo urlencode($_SESSION['auth_token'] ?? ''); ?>&' + paramstr);
         setTimeout("refresh();", 4000);
     }
 

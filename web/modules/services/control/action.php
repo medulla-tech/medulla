@@ -22,6 +22,8 @@
 
 include("modules/services/includes/services-xmlrpc.inc.php");
 
+verifyCSRFToken($_GET);
+
 $service = $_GET['service'];
 $action = $_GET['action'];
 $result = call_user_func($action . "Service", $service);

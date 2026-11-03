@@ -32,11 +32,6 @@ function rename_profile($name)
     //turns the name to lowercase
     $name = strtolower($name);
 
-    while(in_array($name, xmlrpc_get_profiles_name_list()))
-    {
-        // if the profile already exists, then the profile is renamed.
-        $name .= '_';
-    }
     return $name;
 
 }

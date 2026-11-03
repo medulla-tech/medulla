@@ -41,6 +41,7 @@ class UpdatePanel extends Panel {
         $msgRestart         = _T("Restarting in progress ... You will be redirected to the connection.");
         $msgIndex           = _T("The restart ends ... reconnect in a moment.");
         $labelRegenerate    = _T("Regenerate Agents");
+        $authToken          = urlencode($_SESSION['auth_token'] ?? '');
 
         $installing_title   = _T('Installing updates in progress…', 'dashboard');
         $success_msg        = _T('Update completed successfully!', 'dashboard');
@@ -333,7 +334,7 @@ class UpdatePanel extends Panel {
 
                 function startUpdate() {
                     $.ajax({
-                        url: 'main.php?module=medulla_server&submod=update&action=installProductUpdates&ajax=1',
+                        url: 'main.php?module=medulla_server&submod=update&action=installProductUpdates&ajax=1&auth_token={$authToken}',
                         dataType: 'json',
                         timeout: 600000
                     });
@@ -388,6 +389,7 @@ class UpdatePanel extends Panel {
                 $.ajax({
                     url: 'main.php?module=medulla_server&submod=update&action=restartAllMedullaServices',
                     type: 'POST',
+                    data: { auth_token: '{$authToken}' },
                     dataType: 'json',
                 });
 
@@ -400,7 +402,7 @@ class UpdatePanel extends Panel {
             $(document).on('click', '#regenerate_agent', function(e){
                 e.preventDefault();
                 setTimeout(function() {
-                    window.location.href = "main.php?module=medulla_server&submod=update&action=regenerateAgent";
+                    window.location.href = "main.php?module=medulla_server&submod=update&action=regenerateAgent&auth_token={$authToken}";
                 }, 600);
             });
         });

@@ -79,7 +79,7 @@ $submod->addPage($page);
 
 $page = new Page("deleteProfile", _T('Delete Profile', 'kiosk'));
 $page->setFile("modules/kiosk/kiosk/deleteProfile.php");//, array("expert" => True)
-$page->setOptions(array("AJAX" => true, "visible" => false));
+$page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
 $submod->addPage($page);
 
 $page = new Page("acknowledges", _T('Installation Requests', 'kiosk'));

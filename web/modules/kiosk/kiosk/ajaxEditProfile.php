@@ -33,8 +33,17 @@ if(isset($_POST['id'], $_POST['name'], $_POST['active'])) {
     $ous = (is_string($_POST['ous']) && $_POST['ous'] == "none") ? "" : $_POST['ous'];
     $packages = isset($_POST['packages']) ? $_POST['packages'] : $_POST['sources'];
 
-    xmlrpc_update_profile($login, $_POST['id'], htmlentities($_POST['name']), $ous, $_POST['active'], $packages, strtolower(str_replace(" ", "_", $_POST['source'])));
-    new NotifyWidgetSuccess(sprintf(_T('The profile %s has been updated', 'kiosk'), htmlentities($_POST['name'])));
+    $result = xmlrpc_update_profile($login, $_POST['id'], htmlentities($_POST['name']), $ous, $_POST['active'], $packages, strtolower(str_replace(" ", "_", $_POST['source'])));
+    header('Content-Type: application/json');
+    if ($result === false) {
+        echo json_encode([
+            "status" => "exists",
+            "message" => sprintf(_T("A profile named %s already exists", "kiosk"), htmlentities($_POST['name'])),
+        ]);
+    } else {
+        new NotifyWidgetSuccess(sprintf(_T('The profile %s has been updated', 'kiosk'), htmlentities($_POST['name'])));
+        echo json_encode(["status" => "ok"]);
+    }
 
 } else {
     new NotifyWidgetSuccess(sprintf(_T('Unable to update the profile', 'kiosk')));

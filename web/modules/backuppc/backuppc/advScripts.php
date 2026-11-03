@@ -28,6 +28,7 @@ require_once("modules/backuppc/includes/html.inc.php");
 // ===========================================================================
 // Receive form data
 if (isset($_POST['bAdvScripts'])){
+    verifyCSRFToken($_POST);
 
     $host = $_POST['host'];
 

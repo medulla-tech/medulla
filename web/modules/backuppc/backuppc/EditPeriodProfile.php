@@ -34,6 +34,7 @@ $ID = intval(@max($_GET['id'],$_POST['id']));
 
 // Receiving POST DATA
 if (isset($_POST['bconfirm'])){
+    verifyCSRFToken($_POST);
     $cfg = array(
         'profilename' => $_POST['profilename'],
         'full'  => fmtFloat(fmtfloat($_POST['full'])-0.03),

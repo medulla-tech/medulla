@@ -430,32 +430,6 @@ $end_date = date("Y-m-d H:i:s", $_end_date);
 
 if(isset($_POST['bconfirm'], $_POST['start_date'], $_POST['end_date'], $_POST['deployment_intervals'])) {
     verifyCSRFToken($_POST);
- //    [module] => updates
- //    [submod] => updates
- //    [action] => deployUpdateLinuxType
- //    [entity_id] => 0
- //    [completename] => Medulla
- //    [compliance_total_percent] => 0
- //    [compliance_security_percent] => 0
- //    [compliance_kernel_percent] => 50
- //    [compliance_other_percent] => 50
- //    [machines_not_up_to_date] => 4
- //    [machines_up_to_date] => 0
- //    [machines_security_not_ok] => 4
- //    [machines_kernel_not_ok] => 2
- //    [machines_other_not_ok] => 2
- //    [total_machines] => 4
- //    [mod] => action_update_kernel_all_linux_entity
- //    [updateid] =>
- //    [old_start_date] => 2026-02-27 12:42:50
- //    [start_date] => 2026-02-27 12:42:50
- //    [old_end_date] => 2026-03-06 12:42:50
- //    [end_date] => 2026-03-06 12:42:50
- //    [deployment_intervals] =>
- //    [auth_token] => 83b75bffbcd0088ee06c4c8ef7a3aa1a
- //    [bconfirm] => Valider
-$request->dump();
-// , $deployName, htmlentities($_SESSION['login']), $startdate, $enddate, $deployment_intervals
 
     $loginname = htmlentities($_SESSION['login']);
     $startdate = htmlentities($_POST['start_date']);

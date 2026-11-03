@@ -8,6 +8,8 @@
 
 
 require_once("modules/updates/includes/xmlrpc.php");
+require_once("modules/updates/includes/entityselection.inc.php");
+require_once("modules/updates/includes/productapproval.inc.php");
 
 
 // Configuration des trois listes (Grey/White/Black). Centralisée pour éviter les duplications.
@@ -56,6 +58,8 @@ if ($type !== null) {
 
 // Mode "shell" : on rend les onglets et un container vide, le contenu est chargé en AJAX au clic.
 $selected_location = $_GET['selected_location'] ?? [];
+$selectedEntityId = updatesResolveEntityId(updatesSelectedLocation(), -1);
+updatesShowNoEnabledProductsWarning($selectedEntityId >= 0 ? [$selectedEntityId] : null);
 ?>
 <div class="tabselector">
     <ul>

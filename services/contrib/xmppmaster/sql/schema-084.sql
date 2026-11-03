@@ -22,8 +22,8 @@
 START TRANSACTION;
 USE `xmppmaster`;
 -- ----------------------------------------------------------------------
--- Crée la table `up_history` s'il n'existe pas déjà.
--- Cette table permet de garder une trace des updates effectuées sur les machines
+-- Cree la table `up_history` s'il n'existe pas deja.
+-- Cette table permet de garder une trace des updates effectuees sur les machines
 -- ----------------------------------------------------------------------
 
 create table if not exists up_history(

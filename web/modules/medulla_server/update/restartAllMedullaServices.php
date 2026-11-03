@@ -22,6 +22,8 @@
  */
 require_once("modules/medulla_server/includes/xmlrpc.inc.php");
 
+verifyCSRFToken($_POST);
+
 try {
     $pid = xmlrpc_restart_all_services();
     if ($pid) {

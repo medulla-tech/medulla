@@ -36,6 +36,9 @@
 .acl-actions-bottom {
     margin-top: 15px;
 }
+.acl-table-scroll {
+    overflow-x: auto;
+}
 .acl-table {
     width: 100%;
 }

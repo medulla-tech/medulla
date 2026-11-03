@@ -38,6 +38,7 @@ $uuid = $_GET['objectUUID'];
 // ==========================================================
 
 if (isset($_POST['setBackup'],$_POST['host'])) {
+    verifyCSRFToken($_POST);
     $response = set_backup_for_host($_POST['host']);
     // Checking reponse
     if (isset($response)) {
@@ -108,6 +109,7 @@ if (isset($_POST['setBackup'],$_POST['host'])) {
 
 if (isset($_POST['bconfirm'],$_POST['host'])){
 
+    verifyCSRFToken($_POST);
     $backup_port_reverse_ssh = get_host_backup_reverse_port($_POST['host']);
     $rsync_path = get_host_rsync_path($_POST['host']);
 

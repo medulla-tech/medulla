@@ -935,3 +935,7 @@ msgstr ""
 #: modules/updates/updates/ajaxLinuxAutoUpdatePolicy.php
 msgid "Security fixes published by the distribution."
 msgstr ""
+
+#: modules/updates/includes/productapproval.inc.php
+msgid "No products are enabled on the Microsoft Products Approval page. Please select the products whose updates you want to manage in Medulla."
+msgstr ""

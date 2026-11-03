@@ -145,6 +145,7 @@ if ($errorFormat == "true")
 </p>
 <br>
 <form name="form" action="main.php?module=urbackup&amp;submod=urbackup&amp;action=validate_edit_group&amp;groupid=<?php echo $group_id; ?>&amp;groupname=<?php echo $group_name; ?>&amp;current_inter_incr_backup=<?php echo $interval_incremental_backup; ?>&amp;current_inter_full_backup=<?php echo $interval_full_backup; ?>&amp;current_exclude_files=<?php echo $current_value_exclude_files; ?>&amp;current_include_files=<?php echo $current_value_include_files; ?>&amp;current_default_dirs=<?php echo $current_value_default_dirs; ?>" method="post">
+    <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
     <label><?php echo _T("Interval for incremental file backups (hour)", "urbackup"); ?></label><input required type="number" min="1" max="730" value="<?php echo $interval_incremental_backup; ?>" type="text" name="update_freq_incr" id="update_freq_incr"/><br>
     <label><?php echo _T("Interval for full file backups (day)", "urbackup"); ?></label><input required type="number" min="1" max="365" value="<?php echo $interval_full_backup; ?>" type="text" name="update_freq_full" id="update_freq_full"/><br>
     <label><?php echo _T("Excluded files", "urbackup"); ?></label><input style="width:100%;" value="<?php echo $current_value_exclude_files; ?>" type="text" name="exclude_files" id="exclude_files"/><br>

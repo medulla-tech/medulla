@@ -161,6 +161,19 @@ class RpcProxy(RpcProxyI):
         return XmppMasterDatabase().get_approve_products(identity,
                                                          colonne=True)
 
+    def count_enabled_products(self, entity_ids=None):
+        if not isinstance(entity_ids, (list, tuple)):
+            entity_ids = [] if entity_ids in (None, "") else [entity_ids]
+        ids = []
+        for entity_id in entity_ids:
+            if isinstance(entity_id, bool):
+                continue
+            try:
+                ids.append(int(entity_id))
+            except (TypeError, ValueError):
+                continue
+        return XmppMasterDatabase().count_enabled_products(ids)
+
 
     @with_optional_xmpp_context
     def get_auto_approve_rules(self, identity, colonne=True, ctx=None):
@@ -385,7 +398,7 @@ class RpcProxy(RpcProxyI):
             return res
 
         stat_ars_machine = XmppMasterDatabase(
-        ).get_stat_ars_machine(ars_list["jid"])
+        ).get_stat_ars_machine(ars_list["jid_from_relayserver"])
         ars_list["total_machines"] = []
         ars_list["uninventoried"] = []
         ars_list["publicclass"] = []
@@ -407,7 +420,7 @@ class RpcProxy(RpcProxyI):
         ars_list["uninventoried_offline"] = []
         ars_list["nbwindows"] = []
         ars_list["nb_ou_user"] = []
-        for jid in ars_list["jid"]:
+        for jid in ars_list["jid_from_relayserver"]:
             if jid in stat_ars_machine:
                 ars_list["total_machines"].append(
                     stat_ars_machine[jid]["nbmachine"])

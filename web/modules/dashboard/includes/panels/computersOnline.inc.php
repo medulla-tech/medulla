@@ -37,7 +37,7 @@ class ComputersOnlinePanel extends Panel
 {
     public function display_content()
     {
-        $urlRedirect = urlStrRedirect("base/computers/createMachinesStaticGroup");
+        $urlRedirect = urlStrRedirect("base/computers/createMachinesStaticGroup", array("auth_token" => $_SESSION['auth_token'] ?? ''));
         $counts = get_computer_count_for_dashboard();
 
         $total_machines = $counts['total'];

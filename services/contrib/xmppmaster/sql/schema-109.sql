@@ -152,11 +152,11 @@ CREATE TABLE up_linux_os_versions (
     release_version VARCHAR(20) NOT NULL COMMENT 'Version de la distribution',
     target_version VARCHAR(20) NULL COMMENT 'Version cible de mise a niveau majeure',
     name VARCHAR(255) NULL COMMENT 'Nom de la release (jessie, bullseye, jammy, Wilma, etc.)',
-    is_managed TINYINT(1) NOT NULL DEFAULT 1 COMMENT 'Indique si cette version est gérée/supportée',
+    is_managed TINYINT(1) NOT NULL DEFAULT 1 COMMENT 'Indique si cette version est geree/supportee',
     is_current_stable TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Compatibilite historique: non pilote par Approved Linux releases',
     is_recommended TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Version majeure la plus haute cible pour la mise a jour',
-    end_vendor_support DATETIME DEFAULT NULL COMMENT 'Fin du support standard éditeur',
-    end_extended_support DATETIME DEFAULT NULL COMMENT 'Fin du support étendu',
+    end_vendor_support DATETIME DEFAULT NULL COMMENT 'Fin du support standard editeur',
+    end_extended_support DATETIME DEFAULT NULL COMMENT 'Fin du support etendu',
     description VARCHAR(255) DEFAULT NULL COMMENT 'Description',
     package VARCHAR(36) DEFAULT 'dfd3b8dc-linuxupdategenericcommand_p' COMMENT 'UUID package generique Linux update',
     packagename VARCHAR(45) DEFAULT 'linux-update-generic-command' COMMENT 'Nom package generique',
@@ -171,7 +171,7 @@ CREATE TABLE up_linux_os_versions (
     KEY idx_vendor_support (end_vendor_support),
     KEY idx_extended_support (end_extended_support)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
-COMMENT='Versions des systèmes d exploitation Linux';
+COMMENT='Versions des systemes d exploitation Linux';
 
 -- Normalisation de compatibilite: 1 seule ligne par entity+distribution+release_version
 -- conserve uniquement la ligne la plus recente (id le plus eleve)
@@ -369,7 +369,7 @@ END$$
 DELIMITER ;
 
 
--- 5. Table des mises à jour des machines
+-- 5. Table des mises a jour des machines
 CREATE TABLE IF NOT EXISTS up_machine_update_linux (
     id INT(11) NOT NULL AUTO_INCREMENT,
     machine_id INT(11) NOT NULL,

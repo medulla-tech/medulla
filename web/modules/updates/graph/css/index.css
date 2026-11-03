@@ -332,3 +332,11 @@ table.listinfos thead th .column-tooltip {
 }
 
 
+/* ===== Popup de deploiement des mises a jour majeures ===== */
+
+#Formupdate .deploy-interval-help {
+    display: block;
+    margin-top: 6px;
+    color: #999999;
+    font-style: italic;
+}

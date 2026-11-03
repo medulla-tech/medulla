@@ -26,6 +26,7 @@ require_once("modules/update/includes/xmlrpc.inc.php");
 
 
 if (isset($_GET['id'])) {
+    verifyCSRFToken($_GET);
     // Delete selected rule
     moveEntityRuleDown($_GET["id"]);
 }

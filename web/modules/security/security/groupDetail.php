@@ -25,36 +25,32 @@ require("localSidebar.php");
 require_once("modules/security/includes/xmlrpc.php");
 
 $group_id = isset($_GET['group_id']) ? intval($_GET['group_id']) : 0;
-$group_name = isset($_GET['group_name']) ? htmlspecialchars($_GET['group_name']) : '';
+$group_name = $_GET['group_name'] ?? '';
 
-$p = new PageGenerator(sprintf(_T("Machines in group: %s", 'security'), $group_name));
+$p = new PageGenerator(sprintf(_T("Machines in group: %s", 'security'), htmlspecialchars($group_name)));
 $p->setSideMenu($sidemenu);
 $p->display();
+require_once("modules/security/includes/html.inc.php");
+SecurityFilter::script();
 
 if ($group_id <= 0) {
     echo '<p class="error">' . _T("Invalid group", "security") . '</p>';
     return;
 }
 
-// Get total count for summary
 $summary = xmlrpc_get_group_machines($group_id, 0, 1, '');
-$totalMachines = $summary['total'];
 ?>
 
-
-<a href="<?php echo urlStrRedirect('security/security/groups'); ?>" class="back-link">
-    &larr; <?php echo _T("Back to groups list", "security"); ?>
-</a>
+<?php SecurityFilter::backLink('groups', _T("Back to groups list", "security")); ?>
 
 <div class="summary-box">
-    <strong><?php echo _T("Group", "security"); ?>:</strong> <?php echo $group_name; ?> &nbsp;|&nbsp;
-    <strong><?php echo _T("Total Machines", "security"); ?>:</strong> <?php echo $totalMachines; ?>
+    <strong><?php echo _T("Group", "security"); ?>:</strong> <?php echo htmlspecialchars($group_name); ?> &nbsp;|&nbsp;
+    <strong><?php echo _T("Total Machines", "security"); ?>:</strong> <?php echo intval($summary['total'] ?? 0); ?>
 </div>
 
 <div class="search-wrapper" style="margin-bottom: 15px;">
 <?php
-$ajaxUrl = urlStrRedirect("security/security/ajaxGroupMachinesList") . "&group_id=" . $group_id;
-$ajax = new AjaxFilter($ajaxUrl);
+$ajax = new AjaxFilter(urlStrRedirect("security/security/ajaxGroupMachinesList", array('group_id' => $group_id, 'back' => SecurityFilter::here())));
 $ajax->display();
 ?>
 </div>

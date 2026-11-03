@@ -45,7 +45,24 @@ if ($count == 0) {
 }
 
 $action_editProfiles = new ActionItem(_T("Edit Profile", 'kiosk'), "edit", "edit", "profile", "kiosk", "kiosk");
-$action_deleteProfile = new ActionItem(_T("Delete Profile", 'kiosk'), "deleteProfile", "delete", "profile", "kiosk", "kiosk");
+$action_deleteProfile = new ActionPopupItem(_T("Delete Profile", 'kiosk'), "deleteProfile", "delete", "profile", "kiosk", "kiosk");
+
+$bulkBar = new BulkSelectBar(
+    urlStrRedirect("kiosk/kiosk/deleteProfile"),
+    '0',
+    'profile-select',
+    [
+        'deleteSelected'    => _T("Delete selected", "kiosk"),
+        'cancel'            => _T("Cancel", "kiosk"),
+        'selectionMode'     => _T("Selection mode", "kiosk"),
+        'confirmDeleteOne'  => _T("Delete this profile?", "kiosk"),
+        'confirmDeleteMany' => _T("Delete %d profiles?", "kiosk"),
+        'confirm'           => _T("Delete", "kiosk"),
+        'partialErrors'     => _T("Some profiles could not be deleted:", "kiosk"),
+        'deleteError'       => _T("An error occurred while deleting.", "kiosk"),
+        'close'             => _T("Close", "kiosk"),
+    ]
+);
 
 $profiles_name = [];
 $profiles_date = [];
@@ -57,18 +74,19 @@ $action_acknowledge = [];
 $params = [];
 
 foreach($profiles as $element) {
-    $profiles_name[] = $element['name'];
+    $profiles_name[] = htmlspecialchars($element['name'], ENT_QUOTES, 'UTF-8');
     $profiles_status[] = ($element['active'] == 1) ? _T("Active", "kiosk") : _T("Inactive", "kiosk");
     $params[] = ['id' => $element['id'], 'name' => $element['name']];
 
     $action_edit[] = $action_editProfiles;
     $action_delete[] = $action_deleteProfile;
+    $bulkBar->addItem((int)$element['id'], $element['name']);
 }
 
 // Avoiding the CSS selector (tr id) to start with a number
 $ids_kiosk = [];
 foreach($profiles as $index => $name_kiosk) {
-    $ids_kiosk[] = 'k_'.$name_kiosk['name'];
+    $ids_kiosk[] = htmlspecialchars('k_'.$name_kiosk['name'], ENT_QUOTES, 'UTF-8');
 }
 
 $n = new OptimizedListInfos($profiles_name, _T("Profile Name", "kiosk"));
@@ -90,3 +108,5 @@ $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->start = 0;
 $n->end = $count;
 $n->display();
+
+$bulkBar->display();

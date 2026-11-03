@@ -24,62 +24,59 @@ require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/security/includes/xmlrpc.php");
 require_once("modules/security/includes/html.inc.php");
-require_once("modules/medulla_server/includes/utilities.php");
 
-$p = new PageGenerator(_T("All CVEs", 'security'));
+$p = new PageGenerator(_T("CVEs", 'security'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-// Get user's accessible entities
-list($listEntities, $valuesEntities) = getEntitiesSelectableElements();
-$valuesWithAll = array_merge([implode(',', $valuesEntities)], $valuesEntities);
-$listWithAll = array_merge([_T("All my entities", "security")], $listEntities);
+list($entityLabels, $entityValues) = SecurityFilter::entities();
+$location = SecurityFilter::location();
+$severity = (string)SecurityFilter::severity();
+$exploitedOnly = SecurityFilter::exploitedOnly();
+$platform = SecurityFilter::platform();
 
-// Get current filters
-$location = isset($_GET['location']) ? $_GET['location'] : (count($valuesWithAll) > 0 ? $valuesWithAll[0] : '');
-$currentSeverity = isset($_GET['severity']) ? $_GET['severity'] : '';
-
-// Get policies to determine which severity options to show
-$policies = xmlrpc_get_policies();
-$minSeverity = $policies['display']['min_severity'] ?? 'None';
-$showSeverity = SeverityHelper::getVisibility($minSeverity);
+SecurityFilter::script();
 ?>
 
-
-<!-- Filters row: entity + severity on left, search on right -->
 <div class="filters-row">
     <div class="filters-left">
-        <div class="entity-filter">
-            <label for="entity-filter"><?php echo _T("Entity", "security"); ?>:</label>
-            <select id="entity-filter" onchange="updateFilter()">
-                <?php foreach ($listWithAll as $key => $label): ?>
-                <option value="<?php echo htmlspecialchars($valuesWithAll[$key]); ?>"
-                    <?php echo ($valuesWithAll[$key] == $location) ? 'selected' : ''; ?>>
-                    <?php echo htmlspecialchars($label); ?>
-                </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
+        <?php SecurityFilter::entitySelect($location); ?>
+        <?php SecurityFilter::platformSelect($platform); ?>
         <div class="severity-filter">
             <label for="severity-filter"><?php echo _T("Severity", "security"); ?>:</label>
-            <select id="severity-filter" onchange="updateFilter()">
-                <option value=""><?php echo _T("All", "security"); ?></option>
-                <?php if ($showSeverity['critical']): ?><option value="Critical" <?php echo $currentSeverity === 'Critical' ? 'selected' : ''; ?>><?php echo _T("Critical", "security"); ?></option><?php endif; ?>
-                <?php if ($showSeverity['high']): ?><option value="High" <?php echo $currentSeverity === 'High' ? 'selected' : ''; ?>><?php echo _T("High", "security"); ?></option><?php endif; ?>
-                <?php if ($showSeverity['medium']): ?><option value="Medium" <?php echo $currentSeverity === 'Medium' ? 'selected' : ''; ?>><?php echo _T("Medium", "security"); ?></option><?php endif; ?>
-                <?php if ($showSeverity['low']): ?><option value="Low" <?php echo $currentSeverity === 'Low' ? 'selected' : ''; ?>><?php echo _T("Low", "security"); ?></option><?php endif; ?>
-            </select>
+            <?php SecurityFilter::severitySelect($severity); ?>
         </div>
-        <button class="btn btnPrimary" onclick="openExportPopup()" title="<?php echo _T('Export CVE IDs as CSV', 'security'); ?>">
-            <?php echo _T('Export CSV', 'security'); ?>
-        </button>
+        <div class="severity-filter">
+            <label>
+                <input type="checkbox" id="exploited-filter" <?php echo $exploitedOnly ? 'checked' : ''; ?>
+                       onchange="securityApplyFilter('exploited_only', this.checked ? '1' : '')" />
+                <?php echo _T("Exploited only", "security"); ?>
+            </label>
+        </div>
     </div>
     <div class="search-wrapper">
     <?php
-    $ajax = new AjaxFilter(urlStrRedirect("security/security/ajaxCVEList") . "&location=" . urlencode($location) . "&severity=" . urlencode($currentSeverity));
+    $ajax = new AjaxFilter(urlStrRedirect("security/security/ajaxCVEList", array(
+        'location' => $location,
+        'severity' => $severity,
+        'platform' => $platform,
+        'exploited_only' => $exploitedOnly ? '1' : '',
+        'back' => SecurityFilter::here(),
+    )));
     $ajax->display();
     ?>
     </div>
+</div>
+
+<div class="list-actions">
+    <button class="btn btnPrimary" onclick="openExportPopup()" title="<?php echo _T('Export CVE IDs as CSV', 'security'); ?>">
+        <?php echo _T('Export CSV', 'security'); ?>
+    </button>
+    <?php if ($severity !== ''): ?>
+    <button class="btn btnSecondary" onclick="createGroupFromSeverity()">
+        <?php echo _T("Create a group with the affected machines", "security"); ?>
+    </button>
+    <?php endif; ?>
 </div>
 
 <!-- Export popup -->
@@ -92,21 +89,18 @@ $showSeverity = SeverityHelper::getVisibility($minSeverity);
             <div style="display: grid; grid-template-columns: auto 1fr; gap: 10px 16px; align-items: center;">
                 <label><?php echo _T('Entity', 'security'); ?> :</label>
                 <select id="export-entity">
-                    <?php foreach ($listWithAll as $key => $label): ?>
-                    <option value="<?php echo htmlspecialchars($valuesWithAll[$key]); ?>">
-                        <?php echo htmlspecialchars($label); ?>
+                    <?php foreach ($entityValues as $i => $value): ?>
+                    <option value="<?php echo htmlspecialchars($value); ?>" <?php echo $value === $location ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($entityLabels[$i]); ?>
                     </option>
                     <?php endforeach; ?>
                 </select>
 
                 <label><?php echo _T('Severity', 'security'); ?> :</label>
-                <select id="export-severity">
-                    <option value=""><?php echo _T('All', 'security'); ?></option>
-                    <?php if ($showSeverity['critical']): ?><option value="Critical"><?php echo _T('Critical', 'security'); ?></option><?php endif; ?>
-                    <?php if ($showSeverity['high']): ?><option value="High"><?php echo _T('High', 'security'); ?></option><?php endif; ?>
-                    <?php if ($showSeverity['medium']): ?><option value="Medium"><?php echo _T('Medium', 'security'); ?></option><?php endif; ?>
-                    <?php if ($showSeverity['low']): ?><option value="Low"><?php echo _T('Low', 'security'); ?></option><?php endif; ?>
-                </select>
+                <?php SecurityFilter::severitySelect($severity, 'export-severity', ''); ?>
+
+                <label><?php echo _T('Exploited only', 'security'); ?> :</label>
+                <input type="checkbox" id="export-exploited" <?php echo $exploitedOnly ? 'checked' : ''; ?> />
 
                 <label><?php echo _T('Number of CVEs', 'security'); ?> :</label>
                 <select id="export-limit">
@@ -120,9 +114,10 @@ $showSeverity = SeverityHelper::getVisibility($minSeverity);
 
                 <label style="align-self: start; padding-top: 2px;"><?php echo _T('Columns', 'security'); ?> :</label>
                 <div style="display: flex; flex-wrap: wrap; gap: 4px 16px;">
-                    <label><input type="checkbox" class="export-col" value="cve_id" checked disabled> CVE ID</label>
+                    <label><input type="checkbox" class="export-col" value="cve_id" checked disabled> <?php echo _T('CVE ID', 'security'); ?></label>
                     <label><input type="checkbox" class="export-col" value="severity"> <?php echo _T('Severity', 'security'); ?></label>
-                    <label><input type="checkbox" class="export-col" value="cvss_score"> CVSS</label>
+                    <label><input type="checkbox" class="export-col" value="cvss_score"> <?php echo _T('CVSS', 'security'); ?></label>
+                    <label><input type="checkbox" class="export-col" value="exploited_since"> <?php echo _T('Exploited since', 'security'); ?></label>
                     <label><input type="checkbox" class="export-col" value="description"> <?php echo _T('Description', 'security'); ?></label>
                     <label><input type="checkbox" class="export-col" value="machines_affected"> <?php echo _T('Machines', 'security'); ?></label>
                     <label><input type="checkbox" class="export-col" value="software"> <?php echo _T('Software', 'security'); ?></label>
@@ -141,26 +136,12 @@ $ajax->displayDivToUpdate();
 ?>
 
 <script>
-function updateFilter() {
-    var location = document.getElementById('entity-filter').value;
-    var severity = document.getElementById('severity-filter').value;
-
-    var url = '<?php echo urlStrRedirect("security/security/ajaxCVEList"); ?>';
-    url += '&location=' + encodeURIComponent(location);
-    url += '&severity=' + encodeURIComponent(severity);
-
-    var filterInput = document.querySelector('input[name="param"]');
-    if (filterInput) {
-        url += '&filter=' + encodeURIComponent(filterInput.value);
-    }
-
-    jQuery('#container').load(url);
+function createGroupFromSeverity() {
+    var url = '<?php echo urlStrRedirect("security/security/ajaxCreateGroupFromSeverity", array('severity' => $severity, 'location' => $location)); ?>';
+    PopupWindow(null, url, 300);
 }
 
 function openExportPopup() {
-    jQuery('#export-entity').val(jQuery('#entity-filter').val());
-    jQuery('#export-severity').val(jQuery('#severity-filter').val());
-
     jQuery('#export-overlay').fadeIn();
     var $popup = jQuery('#export-popup');
     $popup.show();
@@ -178,20 +159,20 @@ function closeExportPopup() {
 }
 
 function doExport() {
-    var location = document.getElementById('export-entity').value;
-    var severity = document.getElementById('export-severity').value;
-    var limit = document.getElementById('export-limit').value;
-
     var columns = [];
     jQuery('.export-col:checked').each(function() {
         columns.push(jQuery(this).val());
     });
 
     var url = '<?php echo urlStrRedirect("security/security/exportCves"); ?>';
-    url += '&location=' + encodeURIComponent(location);
-    url += '&severity=' + encodeURIComponent(severity);
-    url += '&limit=' + encodeURIComponent(limit);
+    url += '&location=' + encodeURIComponent(jQuery('#export-entity').val());
+    url += '&severity=' + encodeURIComponent(jQuery('#export-severity').val());
+    url += '&platform=<?php echo urlencode($platform); ?>';
+    url += '&limit=' + encodeURIComponent(jQuery('#export-limit').val());
     url += '&columns=' + encodeURIComponent(columns.join(','));
+    if (jQuery('#export-exploited').is(':checked')) {
+        url += '&exploited_only=1';
+    }
 
     window.location.href = url;
     closeExportPopup();
