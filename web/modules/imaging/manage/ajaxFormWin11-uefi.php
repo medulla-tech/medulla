@@ -23,6 +23,8 @@
 
 $strin='<?';
 $strou='?>';
+require_once("../../../includes/config.inc.php");
+require_once("../../../includes/session.inc.php");
 ?>
 <style type="text/css">
     #ProductKey1, #ProductKey2, #ProductKey3, #ProductKey4, #ProductKey5{
@@ -617,7 +619,7 @@ var template = [
 ].join('\r\n');
 </script>
 <?php
-require("../../../includes/config.inc.php");
+require_once("../../../includes/config.inc.php");
 require("../../../includes/i18n.inc.php");
 require("../../../includes/acl.inc.php");
 require("../../../includes/PageGenerator.php");

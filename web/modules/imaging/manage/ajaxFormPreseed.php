@@ -22,6 +22,8 @@
  */
  $strin='<?';
  $strou='?>';
+require_once("../../../includes/config.inc.php");
+require_once("../../../includes/session.inc.php");
  ?>
 
 <script type="text/javascript">
@@ -137,7 +139,7 @@ var template = [
 </script>
 
 <?php
-require("../../../includes/config.inc.php");
+require_once("../../../includes/config.inc.php");
 require("../../../includes/i18n.inc.php");
 require("../../../includes/acl.inc.php");
 require("../../../includes/PageGenerator.php");
