@@ -51,6 +51,8 @@ global $SYNCHROSTATE_INIT_ERROR;
 $location = getCurrentLocation();
 
 if (isset($_POST['bsync'])) {
+    verifyCSRFToken($_POST);
+
     $params['bsync'] = '1';
     $ret = xmlrpc_synchroLocation($_POST['location_uuid']);
     // goto images list

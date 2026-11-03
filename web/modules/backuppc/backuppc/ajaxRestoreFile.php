@@ -25,9 +25,14 @@
 require_once("includes/xmlrpc.inc.php");
 require_once('modules/backuppc/includes/xmlrpc.php');
 
-verifyCSRFToken($_GET);
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+	http_response_code(405);
+	exit;
+}
 
-restore_file($_GET['host'], $_GET['backupnum'], $_GET['sharename'], $_GET['dir'], '0');
+verifyCSRFToken($_POST);
+
+restore_file($_POST['host'], $_POST['backupnum'], $_POST['sharename'], $_POST['dir'], '0');
 
 new NotifyWidgetSuccess(_T('Your file is being prepared, please wait.'));
 

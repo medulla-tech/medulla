@@ -27,7 +27,12 @@ require_once("modules/dyngroup/includes/dyngroup.php"); # for Group Class
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
 
-verifyCSRFToken($_GET);
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
+verifyCSRFToken($_POST);
 
 $groupnames = array(
     'green'   => _T("Antivirus status is OK at %s", "glpi"),
@@ -37,7 +42,7 @@ $groupnames = array(
     'stale'   => _T("Antivirus information is unreliable at %s", "glpi"),
 );
 
-$state = isset($_GET['group']) ? $_GET['group'] : '';
+$state = isset($_POST['group']) ? $_POST['group'] : '';
 if (!array_key_exists($state, $groupnames)) {
     new NotifyWidgetFailure(_T("Unknown antivirus status", "glpi"));
     header("Location: " . urlStrRedirect("dashboard/main/default"));

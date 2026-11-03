@@ -26,7 +26,12 @@ require_once("modules/dyngroup/includes/xmlrpc.php");
 require_once("modules/backuppc/includes/xmlrpc.php"); // For get_all_hosts
 require_once("modules/glpi/includes/xmlrpc.php"); // For xmlrpc_get_all_uuids_and_hostnames
 
-verifyCSRFToken($_GET);
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
+verifyCSRFToken($_POST);
 
 // Get all the machines
 $all_machines = xmlrpc_get_all_uuids_and_hostnames();
@@ -53,7 +58,7 @@ foreach($all_machines as $machine)
         $machines_in_backup[] = $machine;
 }
 
-if($_GET['backup'] == 'yes'){
+if($_POST['backup'] == 'yes'){
     $groupname = sprintf (_T("Machines backup configured at %s", "glpi"), date("Y-m-d H:i:s"));
     $groupmembers = $machines_in_backup;
 }

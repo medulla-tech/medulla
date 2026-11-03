@@ -33,3 +33,16 @@ $p->display();
 $ajax->displayDivToUpdate();
 
 ?>
+<script type="text/javascript">
+jQuery(document).on('click.servicesControlPost', 'a', function(e) {
+	var actionUrl = new URL(this.href, window.location.href);
+	var action = actionUrl.searchParams.get('action');
+	if (actionUrl.searchParams.get('module') !== 'services'
+		|| actionUrl.searchParams.get('submod') !== 'control'
+		|| ['start', 'stop', 'restart', 'reload'].indexOf(action) === -1) {
+		return;
+	}
+	e.preventDefault();
+	postAction(this.href);
+});
+</script>

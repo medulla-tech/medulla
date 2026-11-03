@@ -1,6 +1,12 @@
 <?php
 require_once 'modules/msc/includes/commands_xmlrpc.inc.php';
 require_once 'modules/msc/includes/scheduler_xmlrpc.php';
+
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+	http_response_code(405);
+	exit;
+}
+
 $input = file_get_contents('php://input');
 $data = json_decode($input, true);
 

@@ -20,17 +20,22 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/urbackup/includes/xmlrpc.php");
 
-$type_backup = htmlspecialchars($_GET["backuptype"]);
-$client_id = htmlspecialchars($_GET["clientid"]);
-$client_name = htmlspecialchars($_GET["clientname"]);
-$groupe_name = htmlspecialchars($_GET["groupname"]);
-$jid_machine = htmlspecialchars($_GET["jidmachine"]);
+verifyCSRFToken($_POST);
 
-verifyCSRFToken($_GET);
+$type_backup = htmlspecialchars($_POST["backuptype"]);
+$client_id = htmlspecialchars($_POST["clientid"]);
+$client_name = htmlspecialchars($_POST["clientname"]);
+$groupe_name = htmlspecialchars($_POST["groupname"]);
+$jid_machine = htmlspecialchars($_POST["jidmachine"]);
 
 $p = new PageGenerator(_T("Start ".$type_backup." backup", 'urbackup'));
 $p->setSideMenu($sidemenu);

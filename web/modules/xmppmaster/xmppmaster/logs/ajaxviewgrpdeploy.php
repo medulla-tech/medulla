@@ -1015,6 +1015,8 @@ function fillSearch(content){
         $aborted = 0;
         $errors = 0;
     }
+    echo 'datas.forEach(function(item) { item.method = "POST"; });';
+    echo 'if(typeof(datas2) != "undefined"){ datas2.forEach(function(item) { item.method = "POST"; }); }';
     echo 'chart("holder", datas);';
     echo 'if(typeof(datas2) != "undefined"){';
     echo 'chart("holder2", datas2);';

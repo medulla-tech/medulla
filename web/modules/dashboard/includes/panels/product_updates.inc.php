@@ -334,7 +334,9 @@ class UpdatePanel extends Panel {
 
                 function startUpdate() {
                     $.ajax({
-                        url: 'main.php?module=medulla_server&submod=update&action=installProductUpdates&ajax=1&auth_token={$authToken}',
+                        url: 'main.php?module=medulla_server&submod=update&action=installProductUpdates',
+                        type: 'POST',
+                        data: { ajax: '1', auth_token: '{$authToken}' },
                         dataType: 'json',
                         timeout: 600000
                     });
@@ -402,7 +404,9 @@ class UpdatePanel extends Panel {
             $(document).on('click', '#regenerate_agent', function(e){
                 e.preventDefault();
                 setTimeout(function() {
-                    window.location.href = "main.php?module=medulla_server&submod=update&action=regenerateAgent&auth_token={$authToken}";
+                    postAction("main.php?module=medulla_server&submod=update&action=regenerateAgent", null, {
+                        auth_token: '{$authToken}'
+                    });
                 }, 600);
             });
         });

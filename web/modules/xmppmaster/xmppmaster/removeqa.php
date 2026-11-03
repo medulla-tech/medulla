@@ -25,13 +25,13 @@
 
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-extract($_GET);
-
 if (isset($_POST["bconfirm"])) {
-    xmlrpc_delQa_custom_command($user, $os, $namecmd );
+    verifyCSRFToken($_POST);
+    xmlrpc_delQa_custom_command($_POST['user'], $_POST['os'], $_POST['namecmd']);
     header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/customQA", array()));
 }
 else{
+    extract($_GET);
     $f = new PopupForm(sprintf(_T("Delete this Quick Action :%s"),$namecmd));
     $f->setLevel('danger');
     $hidden = new HiddenTpl("namecmd");

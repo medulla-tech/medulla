@@ -76,7 +76,11 @@ foreach ($providers as $p) {
             _T("Delete provider <strong>%s</strong> for client <strong>%s</strong> ?", "admin"),
             htmlspecialchars($provName,   ENT_QUOTES, 'UTF-8'),
             htmlspecialchars($provClient, ENT_QUOTES, 'UTF-8')
-        )
+            ),
+            null,
+            300,
+            false,
+            'POST'
     );
 
     $params[] = [

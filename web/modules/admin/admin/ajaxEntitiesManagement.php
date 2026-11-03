@@ -185,7 +185,11 @@ if ($facilitylevel <= 1) {
             "",
             "admin",
             "admin",
-            $deleteConfirmMessage
+            $deleteConfirmMessage,
+            null,
+            300,
+            false,
+            'POST'
         );
 
     // ---- strict deactivation on the root entity (id = 0) ----

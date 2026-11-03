@@ -58,6 +58,7 @@ function sendForm(){
     datas['owner'] = jQuery("[name='owner']").val();
     datas['source'] = jQuery("#source").val();
     datas['id'] = jQuery("[name='id']").val();
+    datas['auth_token'] = jQuery("[name='auth_token']").val();
     datas['ous'] = ous;
     datas['packages'] = generate_json();
 

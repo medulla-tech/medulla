@@ -26,6 +26,15 @@
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 
+if (($_GET['mod'] ?? '') === 'add') {
+    http_response_code(405);
+    exit;
+}
+
+if (($_POST['mod'] ?? '') === 'add') {
+    verifyCSRFToken($_POST);
+}
+
 if (isset($_GET['gid']) && $_GET['gid'] != '') {
     $type = 'group';
     $target_uuid = isset($_GET['gid']) ? $_GET['gid'] : "";
@@ -43,7 +52,9 @@ if (isset($_GET['gid']) && $_GET['gid'] != '') {
 }
 
 if (($type == '' && (xmlrpc_isComputerRegistered($target_uuid) || xmlrpc_isComputerInProfileRegistered($target_uuid))) || ($type == 'group' && xmlrpc_isProfileRegistered($target_uuid)))  {
-    if (isset($_GET['mod'])) {
+    if (isset($_POST['mod'])) {
+        $mod = $_POST['mod'];
+    } elseif (isset($_GET['mod'])) {
         $mod = $_GET['mod'];
     } else {
         $mod = "none";
@@ -51,8 +62,8 @@ if (($type == '' && (xmlrpc_isComputerRegistered($target_uuid) || xmlrpc_isCompu
 
     function service_add($type, $target_uuid) {
         $params = getParams();
-        $item_uuid = $_GET['itemid'];
-        $label = urldecode($_GET['itemlabel']);
+        $item_uuid = $_POST['itemid'];
+        $label = urldecode($_POST['itemlabel']);
 
         $ret = xmlrpc_addServiceToTarget($item_uuid, $target_uuid, $type);
 

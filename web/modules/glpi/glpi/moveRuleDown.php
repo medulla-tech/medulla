@@ -25,10 +25,15 @@
 require_once("modules/update/includes/xmlrpc.inc.php");
 
 
-if (isset($_GET['id'])) {
-    verifyCSRFToken($_GET);
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
+if (isset($_POST['id'])) {
+    verifyCSRFToken($_POST);
     // Delete selected rule
-    moveEntityRuleDown($_GET["id"]);
+    moveEntityRuleDown($_POST["id"]);
 }
 ?>
 <script type="text/javascript">

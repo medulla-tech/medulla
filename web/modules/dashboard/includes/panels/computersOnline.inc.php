@@ -72,9 +72,9 @@ class ComputersOnlinePanel extends Panel
           $phoneSectionHtml
           <script>
             var onlineDatas = [
-              {'label': '$offline_text', 'value': $machines_offline, "href": "$urlRedirect&machines=offline"},
+              {'label': '$offline_text', 'value': $machines_offline, "href": "$urlRedirect&machines=offline", "method": "POST"},
               {'label': '', 'value': 0, "href": ""},
-              {"label": "$online_text", "value":$machines_online, "href":"$urlRedirect&machines=online"},
+              {"label": "$online_text", "value":$machines_online, "href":"$urlRedirect&machines=online", "method": "POST"},
             ];
             donut("computersonline-graph", onlineDatas, "Total", $total_machines);
 

@@ -84,7 +84,8 @@ class os_repartitionPanel extends Panel {
 
     $pcs = array_map(function($pcs) {
     // android hmdm devices redirect to mobile devices list
-    if ($pcs['os'] === 'Android' && $pcs['version'] === 'HMDM') {
+    $isStaticGroup = !($pcs['os'] === 'Android' && $pcs['version'] === 'HMDM');
+    if (!$isStaticGroup) {
         $href = urlStrRedirect("mobile/mobile/index");
         $pcs['version'] = 'Mobile';
     } else {
@@ -97,6 +98,9 @@ class os_repartitionPanel extends Panel {
         'version' => $pcs['version'],
         'href' => $href,
     );
+    if ($isStaticGroup) {
+        $item['method'] = 'POST';
+    }
     if (isset($pcs['tooltip'])) {
         $item['tooltip'] = $pcs['tooltip'];
     }

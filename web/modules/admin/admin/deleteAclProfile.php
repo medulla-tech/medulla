@@ -33,6 +33,8 @@ if ($profileName === '' || in_array($profileName, $protectedProfiles, true)) {
 }
 
 if (isset($_POST["bconfirm"])) {
+    verifyCSRFToken($_POST);
+
     $tokenuser = (isset($_SESSION['glpi_user']) && is_array($_SESSION['glpi_user']))
         ? ($_SESSION['glpi_user']['api_token'] ?? null) : null;
     $res = xmlrpc_delete_acl_profile($profileName, $tokenuser);

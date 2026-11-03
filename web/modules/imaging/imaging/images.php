@@ -153,12 +153,14 @@ function image_edit($target_uuid, $type, $item_uuid)
             $f->addButton("bvalid_master", _T("Save", "imaging"));
             $f->display();
         } elseif (isset($_POST['bvalid_master'])) {
+            verifyCSRFToken($_POST);
             $params['post_install_scripts'] = $p_order;
             $params['is_master'] = true;
             $ret = xmlrpc_editImage($item_uuid, $target_uuid, $params, $type);
             header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
             exit;
         } elseif (isset($_POST['bconvert_image'])) {
+            verifyCSRFToken($_POST);
             $params['is_master'] = false;
             $ret = xmlrpc_editImage($item_uuid, $target_uuid, $params, $type);
             header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));

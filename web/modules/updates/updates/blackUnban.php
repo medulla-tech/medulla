@@ -23,14 +23,19 @@
 
 require_once("modules/updates/includes/xmlrpc.php");
 
-verifyCSRFToken($_GET);
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
 
-$updateid = htmlentities($_GET['updateid']);
-$id = htmlentities($_GET['id']);
-$title = htmlentities($_GET['title']);
+verifyCSRFToken($_POST);
+
+$updateid = htmlentities($_POST['updateid']);
+$id = htmlentities($_POST['id']);
+$title = htmlentities($_POST['title']);
 
 
-$result = xmlrpc_delete_rule($id, $_GET['entityid']);
+$result = xmlrpc_delete_rule($id, $_POST['entityid']);
 if($result){
     $str = sprintf(_T("The package %s (%s) has been unbanned.", "updates"), $title, $updateid);
     new NotifyWidgetSuccess($str);
@@ -39,7 +44,7 @@ else{
     $str = sprintf(_T("The package %s (%s) hasn't been unbanned.", "updates"), $title, $updateid);
     new NotifyWidgetFailure($str);
 }
-header('location: '.urlStrRedirect("updates/updates/updatesListWin", getFilteredGetParams()));
+header('location: '.urlStrRedirect("updates/updates/updatesListWin", getFilteredGetParams($_POST)));
 exit;
 
 ?>

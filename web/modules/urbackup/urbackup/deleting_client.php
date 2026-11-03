@@ -1,17 +1,22 @@
 <?php
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/urbackup/includes/xmlrpc.php");
 
-$group_id = htmlspecialchars($_GET["groupid"]);
-$groupname = htmlspecialchars($_GET["groupname"]);
-$jidMachine = htmlspecialchars($_GET["jidmachine"]);
-$clientid = htmlspecialchars($_GET["clientid"]);
-$clientname = htmlspecialchars($_GET["clientname"]);
-$editclient = htmlspecialchars($_GET["editclient"]);
-$authkey = htmlspecialchars($_GET["authkey"]);
+verifyCSRFToken($_POST);
 
-verifyCSRFToken($_GET);
+$group_id = htmlspecialchars($_POST["groupid"]);
+$groupname = htmlspecialchars($_POST["groupname"]);
+$jidMachine = htmlspecialchars($_POST["jidmachine"]);
+$clientid = htmlspecialchars($_POST["clientid"]);
+$clientname = htmlspecialchars($_POST["clientname"]);
+$editclient = htmlspecialchars($_POST["editclient"]);
+$authkey = htmlspecialchars($_POST["authkey"]);
 
 $p = new PageGenerator(_T("Enable or disable client", 'urbackup'));
 $p->setSideMenu($sidemenu);

@@ -23,6 +23,8 @@ require_once("modules/kiosk/includes/xmlrpc.php");
 
 if(isset($_POST['bvalidate'])){
 
+    verifyCSRFToken($_POST);
+
     $id = htmlentities($_POST['id']);
     $acknowledgedbyuser = htmlentities($_POST['acknowledgedbyuser']);
     $askuser = htmlentities($_POST['askuser']);

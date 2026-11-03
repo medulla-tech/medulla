@@ -20,22 +20,27 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/urbackup/includes/xmlrpc.php");
+
+verifyCSRFToken($_POST);
 
 $p = new PageGenerator(_T("Restore file", 'urbackup'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-verifyCSRFToken($_GET);
-
-$client_id = htmlspecialchars($_GET["clientid"]);
-$backup_id = htmlspecialchars($_GET["backupid"]);
-$volume_name = htmlspecialchars($_GET["volumename"]);
-$shahash = htmlspecialchars($_GET["shahash"]);
-$path = htmlspecialchars($_GET["beforepath"]);
-$filename = htmlspecialchars($_GET["filename"]);
+$client_id = htmlspecialchars($_POST["clientid"]);
+$backup_id = htmlspecialchars($_POST["backupid"]);
+$volume_name = htmlspecialchars($_POST["volumename"]);
+$shahash = htmlspecialchars($_POST["shahash"]);
+$path = htmlspecialchars($_POST["beforepath"]);
+$filename = htmlspecialchars($_POST["filename"]);
 ?>
 <br>
 <?php

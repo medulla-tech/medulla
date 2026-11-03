@@ -200,7 +200,8 @@ $action_no_update_other_all_linux_entity = new EmptyActionItem1(
             null,                     // Onglet
             $width,                   // Largeur popup
             false,                    // Mode modal
-            true                      // Remplacer popup par résultat AJAX
+            true,                     // Remplacer popup par résultat AJAX
+            'POST'
         );
     }
     function question_custom_colonne($colonne, $nameentitycomplete, $distribution){

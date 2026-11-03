@@ -23,6 +23,11 @@
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
  *
  */
+if (isset($_GET['delete_file'], $_GET['filename'], $_GET['packageUuid'])) {
+    http_response_code(405);
+    exit;
+}
+
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 ?>
@@ -167,14 +172,13 @@ $p_api_id = base64_decode($_GET['p_api']);
 $p_api_id = "UUID/package_api_get1";
 //$p_api_id = "UUID/package_api_get1";
 
-$pid = base64_decode($_GET['pid']);
+$pid = base64_decode($_GET['pid'] ?? $_POST['pid'] ?? '');
 //Result for root, pkgs.removeFilesFromPackage: ([['Administratif.zip'], []],)
 
-if (isset($_GET['delete_file'], $_GET['filename'],$_GET['packageUuid'])) {
-    //$ret = removeFilesFromPackage($p_api_id, $pid, array($_GET['filename']));
-    // RPC method call from user root: pkgs.removeFilesFromPackage(['firefox-64.0.tar.bz2'], '')
+if (isset($_POST['delete_file'], $_POST['filename'], $_POST['packageUuid'])) {
+    verifyCSRFToken($_POST);
 
-    $ret = removeFilesFromPackage($_GET['packageUuid'], array($_GET['filename']));
+    $ret = removeFilesFromPackage($_POST['packageUuid'], array($_POST['filename']));
     if (!isXMLRPCError() and is_array($ret)) {
         $errorexplain = "";
         $successexplain = "";
@@ -198,7 +202,7 @@ if (isset($_GET['delete_file'], $_GET['filename'],$_GET['packageUuid'])) {
         $str = _T("Failed to delete files", "pkgs");
         new NotifyWidgetFailure($str);
     }
-    header("Location: " . urlStrRedirect("pkgs/pkgs/edit", array('p_api' => $_GET['p_api'], 'pid' => $_GET['pid'], 'packageUuid' => $_GET['packageUuid'])));
+    header("Location: " . urlStrRedirect("pkgs/pkgs/edit", array('p_api' => $_POST['p_api'], 'pid' => $_POST['pid'], 'packageUuid' => $_POST['packageUuid'])));
     exit(0);
 }
 $formElt = new HiddenTpl("id");//use in js for createUploader
@@ -503,7 +507,8 @@ foreach ($package['files'] as $file) {
         'pid' => $_GET['pid'],
         'packageUuid' => $_GET['packageUuid'],
         'filename' => $file['name'],
-        'delete_file' => 1
+        'delete_file' => 1,
+        'auth_token' => $_SESSION['auth_token'] ?? ''
     );
     //     $viewVersionsActions[] = $viewVersionsAction;
     //     $cssClasses[] = 'file';
@@ -520,7 +525,7 @@ $n->start = isset($_GET['start']) ? $_GET['start'] : 0;
 $n->end = 1000;
 $n->setParamInfo($params); // Setting url params
 
-$n->addActionItem(new ActionConfirmItem(_T("Delete file", 'pkgs'), "edit", "delete", "filename", "pkgs", "pkgs", _T('Are you sure you want to delete this file?', 'pkgs')));
+$n->addActionItem(new ActionConfirmItem(_T("Delete file", 'pkgs'), "edit", "delete", "filename", "pkgs", "pkgs", _T('Are you sure you want to delete this file?', 'pkgs'), null, 300, false, 'POST'));
 
 /* =================   END FILE LIST   ===================== */
 

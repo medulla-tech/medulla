@@ -112,7 +112,7 @@ var authToken = <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>;
 jQuery('#ssh').on('click', function(){
     var ssh_url = '<?php echo $url['SSH']; ?>';
     var ssh_cux = '<?php echo $cux['SSH']; ?>';
-    jQuery.get("modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", { uuid: uuid, cn: cn, cux_id: ssh_cux, cux_type: "SSH", auth_token: authToken })
+    jQuery.post("modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", { uuid: uuid, cn: cn, cux_id: ssh_cux, cux_type: "SSH", auth_token: authToken })
     .done(function(data) {
         window.open(ssh_url);
         alert("The SSH control session opens in a new window", "", "alert-info");
@@ -124,7 +124,7 @@ jQuery('#ssh').on('click', function(){
 jQuery('#rdp').on('click', function(){
     var rdp_url = '<?php echo $url['RDP']; ?>';
     var rdp_cux = '<?php echo $cux['RDP']; ?>';
-    jQuery.get("modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", { uuid: uuid, cn: cn, cux_id: rdp_cux, cux_type: "RDP", auth_token: authToken })
+    jQuery.post("modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", { uuid: uuid, cn: cn, cux_id: rdp_cux, cux_type: "RDP", auth_token: authToken })
     .done(function(data) {
         window.open(rdp_url);
         alert("The RDP control session opens in a new window", "", "alert-info");
@@ -136,7 +136,7 @@ jQuery('#rdp').on('click', function(){
 jQuery('#vnc').on('click', function(){
     var vnc_url = '<?php echo $url['VNC']; ?>';
     var vnc_cux = '<?php echo $cux['VNC']; ?>';
-    jQuery.get("modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", { uuid: uuid, cn: cn, cux_id: vnc_cux, cux_type: "VNC", auth_token: authToken })
+    jQuery.post("modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", { uuid: uuid, cn: cn, cux_id: vnc_cux, cux_type: "VNC", auth_token: authToken })
     .done(function(data) {
         window.open(vnc_url);
         alert("The VNC control session opens in a new window", "", "alert-info");

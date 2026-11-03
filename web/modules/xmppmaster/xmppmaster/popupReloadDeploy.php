@@ -2,7 +2,7 @@
 if (isset($_POST["bconfirm"])) {
     verifyCSRFToken($_POST);
 
-    header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/reloaddeploy", $_POST));
+    header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/reloaddeploy"), true, 307);
     exit;
 }
 
@@ -15,6 +15,7 @@ if(isset($_GET['cn'])){
 else{
   $f = new PopupForm(_T("Reload the deployment","xmppmaster"), 'popupReloadDeploy');
 }
+$f->options["action"] = urlStrRedirect("xmppmaster/xmppmaster/reloaddeploy");
 // Keep module/submod/action in $_GET so the Confirm button passes its ACL
 // check; just don't forward them (nor cn/hostname, added below) as hidden fields.
 $skipHidden = array("module", "submod", "action", "mod", "cn", "hostname");

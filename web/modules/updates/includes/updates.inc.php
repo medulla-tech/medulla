@@ -105,11 +105,13 @@ function generateEntityPage(string $pageTitle,
     $ajaxUrl = urlStrRedirect("$module/$module/$ajaxDestination");
 
     // --- Initialisation du composant AjaxLocation ---
+    $ajaxParams = $_POST;
+    unset($ajaxParams['auth_token']);
     $ajax = new AjaxLocation(
         $ajaxUrl,
         "mondivlocationEntityCompliance", // div à mettre à jour
         "selected_location",              // paramètre transmis à l'AJAX
-        $_POST
+        $ajaxParams
     );
 
     $ajax->setElements($completename);

@@ -37,6 +37,8 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 $location = getCurrentLocation();
 
 if (isset($_POST["bconfirm"])) {
+    verifyCSRFToken($_POST);
+
     $from = $_POST['from'];
     $loc_id = $_POST['loc_id'];
     $loc_name = $_POST['loc_name'];
