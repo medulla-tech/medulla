@@ -27,6 +27,31 @@ require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 include_once('modules/medulla_server/includes/menu_actionaudit.php');
+
+$requestedUuid = isset($_GET['uuid']) ? trim($_GET['uuid']) : '';
+$requestedJid = isset($_GET['jid']) ? trim($_GET['jid']) : '';
+$commandId = isset($_GET['cmd_id']) ? $_GET['cmd_id'] : '';
+
+if ($requestedUuid !== '') {
+    $resultAQformachine = xmlrpc_getQAforMachine($commandId, $requestedUuid);
+} elseif ($requestedJid !== '') {
+    $resultAQformachine = xmlrpc_getQAforMachineByJid($commandId, $requestedJid);
+} else {
+    $resultAQformachine = [];
+}
+
+if (empty($resultAQformachine)) {
+    http_response_code(404);
+    echo _T("Quick action result not found", "xmppmaster");
+    exit;
+}
+
+$custom_command = xmlrpc_getCommand_qa_by_cmdid($commandId, $requestedUuid, $requestedJid);
+if (empty($custom_command['id'])) {
+    http_response_code(404);
+    echo _T("Quick action result not found", "xmppmaster");
+    exit;
+}
 ?>
 <style type='text/css'>
 .qa-container {
@@ -169,13 +194,23 @@ include_once('modules/medulla_server/includes/menu_actionaudit.php');
 
 <?php
 // Retrieve machine information
-if($_GET['uuid'] != '') {
-    $machinelist = getRestrictedComputersList(0, -1, array('uuid' => $_GET['uuid']), false);
-    $machine = $machinelist[$_GET['uuid']][1];
+if($requestedUuid !== '') {
+    $machinelist = getRestrictedComputersList(0, -1, array('uuid' => $requestedUuid), false);
+    if (empty($machinelist[$requestedUuid][1])) {
+        http_response_code(404);
+        echo _T("Quick action result not found", "xmppmaster");
+        exit;
+    }
+    $machine = $machinelist[$requestedUuid][1];
     $namemachine = $machine['cn'][0];
     $usermachine = $machine['user'][0];
-} elseif(isset($_GET['jid']) && $_GET['jid'] != "") {
-    $xmppmachine = xmlrpc_getMachinefromjid(htmlentities($_GET['jid']));
+} elseif($requestedJid !== "") {
+    $xmppmachine = xmlrpc_getMachinefromjid(htmlentities($requestedJid));
+    if (empty($xmppmachine['hostname'])) {
+        http_response_code(404);
+        echo _T("Quick action result not found", "xmppmaster");
+        exit;
+    }
     $namemachine = $xmppmachine["hostname"];
     $usermachine = "";
 } else {
@@ -187,19 +222,10 @@ $p = new PageGenerator(_T("Quick action on machine", 'xmppmaster')." : $namemach
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$custom_command = xmlrpc_getCommand_qa_by_cmdid($_GET['cmd_id']);
 $startdate = $custom_command['command_start'];
 
 $result = "";
 $listmessage = array();
-
-if($_GET['uuid'] != '') {
-    $resultAQformachine = xmlrpc_getQAforMachine($_GET['cmd_id'], $_GET['uuid']);
-} elseif(isset($_GET['jid']) && $_GET['jid'] != "") {
-    $resultAQformachine = xmlrpc_getQAforMachineByJid($_GET['cmd_id'], $_GET['jid']);
-} else {
-    $resultAQformachine = [];
-}
 
 if (safeCount($resultAQformachine) != 0) {
     foreach($resultAQformachine as $message) {
