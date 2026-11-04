@@ -29,6 +29,7 @@ from pulse2.database.xmppmaster import XmppMasterDatabase
 from pulse2.database.pkgs import PkgsDatabase
 from mmc.plugins.msc.database import MscDatabase
 from mmc.plugins.glpi.database import Glpi
+from pulse2.managers.location import ComputerLocationManager
 
 
 # from pulse2.database.admin import AdminDatabase
@@ -653,9 +654,12 @@ class RpcProxy(RpcProxyI):
         result = XmppMasterDatabase().get_count_agent_for_dashboard(entities)
         return result
 
-    def getCommand_action_time(self, during_the_last_seconds, start, stop, filt):
+    @with_optional_xmpp_context
+    def getCommand_action_time(self, during_the_last_seconds, start, stop, filt, ctx=None):
+        infos = ctx.get_session_info()['mondict']
+        entities = infos.get('liste_entities_user', [])
         return XmppMasterDatabase().getCommand_action_time(
-            during_the_last_seconds, start, stop, filt
+            during_the_last_seconds, start, stop, filt, entities
         )
 
 
@@ -1337,20 +1341,59 @@ class RpcProxy(RpcProxyI):
         )
 
 
-    def getCommand_qa_by_cmdid(self, cmdid):
+    def _has_quick_action_target_access(self, ctx, uuidmachine='', jid=''):
+        if ctx is None:
+            return False
+        target_uuid = str(uuidmachine or '').strip()
+        if not target_uuid and jid:
+            machine = XmppMasterDatabase().getMachinefromjid(jid)
+            target_uuid = str(machine.get('uuid_inventorymachine') or '').strip()
+        if not target_uuid:
+            return False
+        if target_uuid[:4].upper() == 'UUID':
+            target_uuid = 'UUID' + target_uuid[4:]
+        else:
+            target_uuid = 'UUID' + target_uuid
+        try:
+            return ComputerLocationManager().doesUserHaveAccessToMachine(ctx, target_uuid)
+        except Exception as e:
+            logging.getLogger().error('Unable to verify quick-action target access: %s', e)
+            return False
+
+    @with_optional_xmpp_context
+    def getCommand_qa_by_cmdid(self, cmdid, uuidmachine='', jid='', ctx=None):
+        if not self._has_quick_action_target_access(ctx, uuidmachine, jid):
+            return {}
+        if uuidmachine:
+            target_uuid = str(uuidmachine).strip()
+            if target_uuid[:4].upper() == 'UUID':
+                target_uuid = 'UUID' + target_uuid[4:]
+            else:
+                target_uuid = 'UUID' + target_uuid
+            target_results = XmppMasterDatabase().getQAforMachine(cmdid, target_uuid)
+        else:
+            target_results = XmppMasterDatabase().getQAforMachineByJid(cmdid, jid)
+        if not target_results:
+            return {}
         return XmppMasterDatabase().getCommand_qa_by_cmdid(cmdid)
 
+    @with_optional_xmpp_context
+    def getQAforMachine(self, cmd_id, uuidmachine, ctx=None):
+        if not self._has_quick_action_target_access(ctx, uuidmachine):
+            return []
+        target_uuid = str(uuidmachine).strip()
+        if target_uuid[:4].upper() == 'UUID':
+            target_uuid = 'UUID' + target_uuid[4:]
+        else:
+            target_uuid = 'UUID' + target_uuid
+        return XmppMasterDatabase().getQAforMachine(cmd_id, target_uuid)
 
-    def getQAforMachine(self, cmd_id, uuidmachine):
-        resultdata = XmppMasterDatabase().getQAforMachine(cmd_id, uuidmachine)
-        if resultdata[0][3] == "result":
-            resultdata[0][4] = resultdata[0][4]
-        return resultdata
-
-
-    def getQAforMachineByJid(self, cmd_id, jid):
+    @with_optional_xmpp_context
+    def getQAforMachineByJid(self, cmd_id, jid, ctx=None):
+        if not self._has_quick_action_target_access(ctx, jid=jid):
+            return []
         resultdata = XmppMasterDatabase().getQAforMachineByJid(cmd_id, jid)
-        if resultdata[0][3] == "result":
+        if resultdata and resultdata[0][3] == "result":
             # encode 64 str? to transfer xmlrpc if string with sequence escape
             resultdata[0][4] = base64.b64encode(resultdata[0][4])
         return resultdata

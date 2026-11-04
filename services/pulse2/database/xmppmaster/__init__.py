@@ -2322,7 +2322,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getCommand_action_time(
-        self, session, during_the_last_seconds, start, stop, filter=None
+        self, session, during_the_last_seconds, start, stop, filter=None, entity_ids=None
     ):
         try:
             command_qa = session.query(
@@ -2334,8 +2334,33 @@ class XmppMasterDatabase(DatabaseHelper):
                 Command_qa.command_grp.label("command_grp"),
                 Command_qa.command_machine.label("command_machine"),
                 Command_action.target.label("target"),
-                Command_qa.jid_machine.label("jid_machine"),
+                Command_action.jid_target.label("jid_machine"),
             ).outerjoin(Command_action, Command_qa.id == Command_action.command_id)
+            allowed_entities = []
+            for entity_id in entity_ids or []:
+                try:
+                    allowed_entities.append(int(entity_id))
+                except (TypeError, ValueError):
+                    continue
+            command_qa = command_qa.join(
+                Machines,
+                or_(
+                    and_(
+                        Command_action.target != "",
+                        Machines.uuid_inventorymachine == Command_action.target,
+                    ),
+                    and_(
+                        or_(
+                            Command_action.target == "",
+                            Command_action.target.is_(None),
+                        ),
+                        Command_action.jid_target != "",
+                        Machines.jid == Command_action.jid_target,
+                    ),
+                ),
+            ).join(
+                Glpi_entity, Machines.glpi_entity_id == Glpi_entity.id
+            ).filter(Glpi_entity.glpi_id.in_(allowed_entities))
             # si on veut passer par les groupe avant d'aller sur les machine.
             # command_qa = command_qa.group_by(Command_qa.id)
             command_qa = command_qa.order_by(desc(Command_qa.id))

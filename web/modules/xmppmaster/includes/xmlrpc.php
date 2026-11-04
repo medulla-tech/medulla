@@ -653,9 +653,9 @@ function xmlrpc_getCommand_action_time($duration, $start, $stop, $filter)
     return xmlCall("xmppmaster.getCommand_action_time", array($duration, $start, $stop, $filter));
 }
 
-function xmlrpc_getCommand_qa_by_cmdid($cmdid)
+function xmlrpc_getCommand_qa_by_cmdid($cmdid, $uuid = "", $jid = "")
 {
-    return xmlCall("xmppmaster.getCommand_qa_by_cmdid", array($cmdid));
+    return xmlCall("xmppmaster.getCommand_qa_by_cmdid", array($cmdid, $uuid, $jid));
 }
 
 function xmlrpc_setCommand_action($target, $command_id, $sessionid, $command_result = "", $typemessage = "log", $jid = "")
