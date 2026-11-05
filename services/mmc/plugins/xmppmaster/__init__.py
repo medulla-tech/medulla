@@ -73,6 +73,30 @@ APIVERSION = "4:1:3"
 logger = logging.getLogger()
 
 
+def _has_machine_access(ctx, uuidmachine="", jid=""):
+    if ctx is None:
+        return False
+    try:
+        target_uuid = str(uuidmachine or "").strip()
+        target_jid = str(jid or "").strip()
+        if target_uuid and "@" in target_uuid and not target_jid:
+            target_jid = target_uuid
+            target_uuid = ""
+        if not target_uuid and target_jid:
+            machine = XmppMasterDatabase().getMachinefromjid(target_jid)
+            target_uuid = str(machine.get("uuid_inventorymachine") or "").strip()
+        if not target_uuid:
+            return False
+        if target_uuid[:4].upper() == "UUID":
+            target_uuid = "UUID" + target_uuid[4:]
+        else:
+            target_uuid = "UUID" + target_uuid
+        return ComputerLocationManager().doesUserHaveAccessToMachine(ctx, target_uuid)
+    except Exception as e:
+        logger.error("Unable to verify machine access: %s", e)
+        return False
+
+
 # #############################################################
 # PLUGIN GENERAL FUNCTIONS
 # #############################################################
@@ -572,6 +596,8 @@ class RpcProxy(RpcProxyI):
 
     @with_optional_xmpp_context
     def callInventoryinterface(self, uuid, ctx=None):
+        if not _has_machine_access(ctx, uuidmachine=uuid):
+            return "access denied"
         jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
         if jid != "":
             callInventory(jid)
@@ -1342,23 +1368,7 @@ class RpcProxy(RpcProxyI):
 
 
     def _has_quick_action_target_access(self, ctx, uuidmachine='', jid=''):
-        if ctx is None:
-            return False
-        target_uuid = str(uuidmachine or '').strip()
-        if not target_uuid and jid:
-            machine = XmppMasterDatabase().getMachinefromjid(jid)
-            target_uuid = str(machine.get('uuid_inventorymachine') or '').strip()
-        if not target_uuid:
-            return False
-        if target_uuid[:4].upper() == 'UUID':
-            target_uuid = 'UUID' + target_uuid[4:]
-        else:
-            target_uuid = 'UUID' + target_uuid
-        try:
-            return ComputerLocationManager().doesUserHaveAccessToMachine(ctx, target_uuid)
-        except Exception as e:
-            logging.getLogger().error('Unable to verify quick-action target access: %s', e)
-            return False
+        return _has_machine_access(ctx, uuidmachine, jid)
 
     @with_optional_xmpp_context
     def getCommand_qa_by_cmdid(self, cmdid, uuidmachine='', jid='', ctx=None):
@@ -1449,7 +1459,26 @@ class RpcProxy(RpcProxyI):
 
 
 ####################
-    def CallXmppPlugin(self, *args, **kwargs):
+    @with_optional_xmpp_context
+    def CallXmppPlugin(self, *args, ctx=None, **kwargs):
+        if args and args[0] in ("wakeonlan", "wakeonlangroup"):
+            data = args[1] if len(args) > 1 else kwargs.get("data", {})
+            macs = data.get("macadress") if isinstance(data, dict) else None
+            if isinstance(macs, str):
+                macs = [macs]
+            if not isinstance(macs, list) or not macs:
+                return False
+            for mac in macs:
+                if not isinstance(mac, str) or not re.fullmatch(
+                    r"(?:[0-9A-Fa-f]{12}|(?:[0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2})",
+                    mac.strip(),
+                ):
+                    return False
+                machine = XmppMasterDatabase().getMachinefrommacadress(mac.strip())
+                if not _has_machine_access(
+                    ctx, uuidmachine=machine.get("uuid_inventorymachine")
+                ):
+                    return False
         return callXmppPlugin(*args, **kwargs)
 
 
@@ -1500,6 +1529,96 @@ class RpcProxy(RpcProxyI):
             self.callrestartbothostname(hostname)
             return XmppMasterDatabase().delMachineXmppPresenceHostname(hostname)
 
+    @with_optional_xmpp_context
+    def callInstallKeyAM(self, jidAM, jidARS, ctx=None):
+        if not _has_machine_access(ctx, jid=jidAM):
+            return "access denied"
+        if jidARS != "" and jidAM != "":
+            callInstallKey(jidAM, jidARS)
+            return jidAM
+        logging.getLogger().error(
+            "for machine %s : install key ARS %s" % (jidAM, jidARS)
+        )
+        return "jid (AM or ARS) missing"
+
+    @with_optional_xmpp_context
+    def callrestart(self, uuid, jid_type=False, ctx=None):
+        if jid_type is False:
+            if not _has_machine_access(ctx, uuidmachine=uuid):
+                return "access denied"
+            jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
+        else:
+            if not _has_machine_access(ctx, jid=uuid):
+                return "access denied"
+            jid = uuid
+        if jid != "":
+            callrestartbymaster(jid)
+            return jid
+        logging.getLogger().error(
+            "callrestartbymaster for machine %s : jid xmpp missing" % uuid
+        )
+        return "jid missing"
+
+    @with_optional_xmpp_context
+    def callshutdown(self, uuid, time, msg, ctx=None):
+        if not _has_machine_access(ctx, uuidmachine=uuid):
+            return "access denied"
+        jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
+        if jid != "":
+            callshutdownbymaster(jid, time, msg)
+            return jid
+        logging.getLogger().error(
+            "callshutdownbymaster for machine %s : jid xmpp missing" % uuid
+        )
+        return "jid missing"
+
+    @with_optional_xmpp_context
+    def callvncchangeperms(self, uuid, askpermission, ctx=None):
+        if not _has_machine_access(ctx, uuidmachine=uuid):
+            return "access denied"
+        jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
+        if jid != "":
+            callvncchangepermsbymaster(jid, askpermission)
+            return jid
+        logging.getLogger().error(
+            "callvncchangepermsbymaster for machine %s : jid xmpp missing" % uuid
+        )
+        return "jid missing"
+
+    @with_optional_xmpp_context
+    def runXmppWolforuuidsarray(self, uuids, ctx=None):
+        if isinstance(uuids, dict) and "jid" in uuids:
+            if not _has_machine_access(ctx, jid=uuids["jid"]):
+                return False
+            mach_infos = XmppMasterDatabase().getMacsMachinefromjid(
+                str(uuids["jid"])
+            )
+        elif isinstance(uuids, list):
+            if not uuids or any(
+                not _has_machine_access(ctx, uuidmachine=uuid) for uuid in uuids
+            ):
+                return False
+            mach_infos = XmppMasterDatabase().getMacsMachinefromjid(uuids)
+        else:
+            return False
+        if mach_infos is None:
+            return False
+        macaddresslist = []
+        broadcastlist = []
+        groupdeploylist = []
+        for element in mach_infos:
+            macaddresslist.append(element["macaddress"])
+            broadcastlist.append(element["broadcast"])
+            groupdeploylist.append(element["groupdeploy"].split("/")[0])
+        callXmppPlugin(
+            "wakeonlangroup",
+            {
+                "macadress": macaddresslist,
+                "broadcast": broadcastlist,
+                "groupdeploy": groupdeploylist,
+            },
+        )
+        return True
 
 
 #############
@@ -1509,56 +1628,6 @@ def createdirectoryuser(directory):
         os.chmod(directory, 0o777)
         return True
     return False
-
-
-def callInstallKeyAM(jidAM, jidARS):
-    if jidARS != "" and jidAM != "":
-        callInstallKey(jidAM, jidARS)
-        return jidAM
-    else:
-        logging.getLogger().error(
-            "for machine %s : install key ARS %s" % (jidAM, jidARS)
-        )
-        return "jid (AM or ARS) missing"
-
-
-def callrestart(uuid, jid_type=False):
-    if jid_type is False:
-        jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
-    else:
-        jid = uuid
-    if jid != "":
-        callrestartbymaster(jid)
-        return jid
-    else:
-        logging.getLogger().error(
-            "callrestartbymaster for machine %s : jid xmpp missing" % uuid
-        )
-        return "jid missing"
-
-
-def callshutdown(uuid, time, msg):
-    jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
-    if jid != "":
-        callshutdownbymaster(jid, time, msg)
-        return jid
-    else:
-        logging.getLogger().error(
-            "callshutdownbymaster for machine %s : jid xmpp missing" % uuid
-        )
-        return "jid missing"
-
-
-def callvncchangeperms(uuid, askpermission):
-    jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
-    if jid != "":
-        callvncchangepermsbymaster(jid, askpermission)
-        return jid
-    else:
-        logging.getLogger().error(
-            "callvncchangepermsbymaster for machine %s : jid xmpp missing" % uuid
-        )
-        return "jid missing"
 
 
 def localfile(currentdir):
@@ -1724,37 +1793,6 @@ def get_pkg_path(login, pkgName):
 
 def xmpp_getPackageDetail(pid_package):
     return apimanagepackagemsc.getPackageDetail(pid_package)
-
-
-def runXmppWolforuuidsarray(uuids):
-    """
-    renvoi les informations wol network
-    """
-    if isinstance(uuids, dict) and "jid" in uuids:
-        mach_infos = XmppMasterDatabase(
-        ).getMacsMachinefromjid(str(uuids["jid"]))
-    elif isinstance(uuids, list):
-        mach_infos = XmppMasterDatabase().getMacsMachinefromjid(uuids)
-    else:
-        return False
-    if mach_infos is None:
-        return False
-    macaddresslist = []
-    broadcastlist = []
-    groupdeploylist = []
-    for element in mach_infos:
-        macaddresslist.append(element["macaddress"])
-        broadcastlist.append(element["broadcast"])
-        groupdeploylist.append(element["groupdeploy"].split("/")[0])
-    callXmppPlugin(
-        "wakeonlangroup",
-        {
-            "macadress": macaddresslist,
-            "broadcast": broadcastlist,
-            "groupdeploy": groupdeploylist,
-        },
-    )
-    return True
 
 
 ############### synchro syncthing package #####################
