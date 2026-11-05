@@ -1398,6 +1398,46 @@ class RpcProxy(RpcProxyI):
             resultdata[0][4] = base64.b64encode(resultdata[0][4])
         return resultdata
 
+    @with_optional_xmpp_context
+    def runXmppAsyncCommand(self, cmd, infomachine, ctx=None):
+        if ctx is None or not isinstance(infomachine, dict):
+            return False
+        if not isinstance(cmd, str) or not cmd.strip():
+            return False
+
+        requested_uuid = str(
+            infomachine.get("uuid_inventorymachine") or ""
+        ).strip()
+        requested_jid = str(infomachine.get("jid") or "").strip()
+        if requested_uuid[:4].upper() == "UUID":
+            requested_uuid = "UUID" + requested_uuid[4:]
+
+        database = XmppMasterDatabase()
+        if requested_uuid:
+            machine = database.getMachinefromuuid(requested_uuid)
+        elif requested_jid:
+            machine = database.getMachinefromjid(requested_jid)
+        else:
+            return False
+
+        if not isinstance(machine, dict):
+            return False
+        target_uuid = str(machine.get("uuid_inventorymachine") or "").strip()
+        target_jid = str(machine.get("jid") or "").strip()
+        if (
+            not target_uuid
+            or not target_jid
+            or (requested_uuid and target_uuid != requested_uuid)
+            or (requested_jid and target_jid != requested_jid)
+            or not self._has_quick_action_target_access(ctx, target_uuid)
+        ):
+            return False
+
+        trusted_machine_info = dict(infomachine)
+        trusted_machine_info["uuid_inventorymachine"] = target_uuid
+        trusted_machine_info["jid"] = target_jid
+        return _runXmppAsyncCommand(cmd, trusted_machine_info)
+
 
     def runXmppApplicationDeployment(self, *args, **kwargs):
         for count, thing in enumerate(args):
@@ -1582,7 +1622,7 @@ def remoteXmppMonitoring(subject, jidmachine, timeout):
         result["result"] = {}
     return result
 
-def runXmppAsyncCommand(cmd, infomachine):
+def _runXmppAsyncCommand(cmd, infomachine):
     sessionid = name_random(8, "quick_")
     cmd = cmd.strip()
     if cmd.startswith("plugin_"):
