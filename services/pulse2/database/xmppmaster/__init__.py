@@ -6205,6 +6205,7 @@ class XmppMasterDatabase(DatabaseHelper):
         who,
         why,
         headercolumn,
+        entity_ids=None,
     ):
         # labelheader = [x.strip() for x in headercolumn.split("|") if x.strip() != "" and x is not "None"]
         logs = session.query(Logs)
@@ -6241,6 +6242,43 @@ class XmppMasterDatabase(DatabaseHelper):
             logs = logs.filter(Logs.who == who)
         if not (why == "None" or why == ""):
             logs = logs.filter(Logs.why == why)
+        if entity_ids is not None:
+            allowed_entities = []
+            for entity_id in entity_ids:
+                try:
+                    allowed_entities.append(int(entity_id))
+                except (TypeError, ValueError):
+                    continue
+            if not allowed_entities:
+                return {"data": []}
+
+            allowed_machines = (
+                session.query(Machines.hostname, Machines.jid, Machines.uuid_inventorymachine)
+                .join(Glpi_entity, Machines.glpi_entity_id == Glpi_entity.id)
+                .filter(Glpi_entity.glpi_id.in_(allowed_entities))
+            )
+            logs = logs.filter(
+                or_(
+                    Logs.who.in_(
+                        allowed_machines.with_entities(Machines.hostname).filter(
+                            Machines.hostname.isnot(None), Machines.hostname != ""
+                        )
+                    ),
+                    Logs.who.in_(
+                        allowed_machines.with_entities(Machines.jid).filter(
+                            Machines.jid.isnot(None), Machines.jid != ""
+                        )
+                    ),
+                    Logs.who.in_(
+                        allowed_machines.with_entities(
+                            Machines.uuid_inventorymachine
+                        ).filter(
+                            Machines.uuid_inventorymachine.isnot(None),
+                            Machines.uuid_inventorymachine != "",
+                        )
+                    ),
+                )
+            )
         logs = logs.order_by(desc(Logs.id)).limit(1000)
         result = logs.all()
         session.commit()

@@ -571,8 +571,20 @@ class RpcProxy(RpcProxyI):
         return XmppMasterDatabase().syncthingmachineless(grp, cmd)
 
 
-    def getLogxmpp(self,
-        start_date, end_date, typelog, action, module, user, how, who, why, headercolumn
+    @with_optional_xmpp_context
+    def getLogxmpp(
+        self,
+        start_date,
+        end_date,
+        typelog,
+        action,
+        module,
+        user,
+        how,
+        who,
+        why,
+        headercolumn,
+        ctx=None,
     ):
         if typelog == "None" and action == "None" and module == "None" and start_date == "":
             return []
@@ -582,8 +594,27 @@ class RpcProxy(RpcProxyI):
             module == ""
         if action == "None":
             action == ""
+        if ctx is None:
+            return {"data": []}
+        if getattr(ctx, "userid", None) == "root":
+            entity_ids = None
+        else:
+            session_info = ctx.get_session_info()
+            entity_ids = session_info.get("mondict", {}).get("liste_entities_user", [])
+            if not entity_ids:
+                return {"data": []}
         return XmppMasterDatabase().getLogxmpp(
-            start_date, end_date, typelog, action, module, user, how, who, why, headercolumn
+            start_date,
+            end_date,
+            typelog,
+            action,
+            module,
+            user,
+            how,
+            who,
+            why,
+            headercolumn,
+            entity_ids,
         )
 
     @with_optional_xmpp_context
