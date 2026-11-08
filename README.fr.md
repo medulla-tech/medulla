@@ -31,9 +31,15 @@ https://medulla-tech.io/testez-medulla/
 
 Notre équipe est à votre disposition pour toute question ou demande de démonstration.
 
-## Supported clients
+## Clients pris en charge
 
-Gérez vos postes Windows (à partir de la version 10 jusqu'aux dernières CBB et LTSB) et Linux
+- Windows 10 et versions ultérieures (y compris les versions LTSC)
+- Debian 12 (Bookworm)
+- Ubuntu
+- Zorin OS
+- macOS 26.2 ou version ultérieure
+
+**Prise en charge à venir :** Debian 13 et agents Android.
 
 ## Documentation
 
