@@ -105,6 +105,7 @@ done
 for f in xmpp_baseplugin/plugin_updatemedullainfo.py xmpp_baseplugin/plugin_update_linux_command.py \
          xmpp_basepluginscheduler/scheduling_win11compatcheck.py \
          xmpp_baseremoteagent/lib/medulla_windows11_compatibility.py xmpp_baseremoteagent/lib/update_linux.py \
+         xmpp_baseremoteagent/lib/linux_major_upgrade.py \
          xmpp_baseremoteagent/script/history_update.ps1 xmpp_baseremoteagent/bin/medulla_info_update.py \
          xmpp_baseremoteagent/bin/uninstall_medulla_info_update_notification.py; do
     [ -e "/var/lib/pulse2/$f" ] && act "remove /var/lib/pulse2/$f" rm -f "/var/lib/pulse2/$f"
