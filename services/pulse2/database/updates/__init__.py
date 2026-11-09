@@ -292,11 +292,15 @@ NOT_UPGRADE_STEP_RUNNING_SQL = DEPLOY_TITLED_RUNNING_SQL.format(
 # Deployment d succeeded since the last report of the machine mr: not confirmed yet
 DEPLOY_AWAITING_REPORT_SQL = """(d.state IN ('DEPLOYMENT SUCCESS', 'UNINSTALL SUCCESS')
                 AND d.start >= mr.received_at)"""
-# Other than an upgrade step, a deployment of the machine mr runs or awaits its report
-MACHINE_UPDATING_SQL = f"""({NOT_UPGRADE_STEP_RUNNING_SQL}
+# Titles of the update deployments of this module (Windows and Linux): « label -@upd@- date »
+UPDATE_DEPLOY_TITLE_SQL = "{column} LIKE '%%-@upd@-%%'"
+# An update deployment of the machine mr runs or awaits its report; any other package is ignored
+MACHINE_UPDATING_SQL = f"""({DEPLOY_TITLED_RUNNING_SQL.format(
+                deploy_title=UPDATE_DEPLOY_TITLE_SQL.format(column="d.title"),
+                command_title=UPDATE_DEPLOY_TITLE_SQL.format(column="c.title"))}
             OR EXISTS (SELECT 1 FROM xmppmaster.deploy d
                  WHERE d.inventoryuuid = mr.glpi_uuid
-                   AND NOT {UPGRADE_STEP_TITLE_SQL.format(column='d.title')}
+                   AND {UPDATE_DEPLOY_TITLE_SQL.format(column='d.title')}
                    AND {DEPLOY_AWAITING_REPORT_SQL}))"""
 
 # One row per Windows machine of :entity_ids (expanding); also binds :stale_days
