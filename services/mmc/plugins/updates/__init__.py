@@ -670,7 +670,7 @@ class RpcProxy(RpcProxyI):
 
     @with_optional_xmpp_context
     def get_windows_approvals(self, entity_id, status="pending", start=0, limit=-1,
-                              filter="", system="windows", ctx=None):
+                              filter="", system="windows", distribution="", ctx=None):
         empty = {"total": 0, "rows": [],
                  "counts": {"pending": 0, "approved": 0, "declined": 0},
                  "parent": None}
@@ -681,7 +681,8 @@ class RpcProxy(RpcProxyI):
                 return empty
             approvals = UpdatesDatabase().get_windows_approvals(entity_ids[0], status, start,
                                                                 limit, filter,
-                                                                self._system(system))
+                                                                self._system(system),
+                                                                str(distribution or ""))
             _sizes_for_xmlrpc(approvals["rows"])
             return approvals
         except Exception as e:

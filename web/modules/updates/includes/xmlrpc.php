@@ -161,11 +161,11 @@ function xmlrpc_reset_linux_releases($entity_id)
  *                package_state, package_error, deployed}]}
  *               linux: rows [{package, classification, severity, machines, approved}], rules_from {id, name}|null
  */
-function xmlrpc_get_windows_approvals($entity_id, $status, $start, $limit, $filter = "", $system = 'windows')
+function xmlrpc_get_windows_approvals($entity_id, $status, $start, $limit, $filter = "", $system = 'windows', $distribution = '')
 {
     return xmlCall("updates.get_windows_approvals",
                    array(intval($entity_id), (string) $status, intval($start), intval($limit), (string) $filter,
-                         (string) $system));
+                         (string) $system, (string) $distribution));
 }
 
 /**

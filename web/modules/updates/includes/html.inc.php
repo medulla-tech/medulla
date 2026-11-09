@@ -875,6 +875,21 @@ function updatesDistributionSelect($distributions, $selected)
 }
 
 /**
+ * Distributions of an entity and the one requested in the URL, kept only when
+ * the entity reports it.
+ *
+ * @param array|null $entity Entry of getUserLocations()
+ * @return array array(distributions or null when unreadable, selected distribution or "")
+ */
+function updatesLinuxDistributionFilter($entity)
+{
+    $distributions = updatesLinuxDistributions($entity);
+    $requested = updatesStatusDistribution($_GET['distribution'] ?? '');
+    $distribution = ($distributions === null || isset($distributions[$requested])) ? $requested : '';
+    return array($distributions, $distribution);
+}
+
+/**
  * Body of a tab of the Update status page: counters, filters and machines list.
  *
  * @param string $system "windows" or "linux"
@@ -889,9 +904,7 @@ function updatesStatusTab($system)
     $distributions = array();
     $distribution = '';
     if ($linux) {
-        $distributions = updatesLinuxDistributions($entity);
-        $requested = updatesStatusDistribution($_GET['distribution'] ?? '');
-        $distribution = ($distributions === null || isset($distributions[$requested])) ? $requested : '';
+        list($distributions, $distribution) = updatesLinuxDistributionFilter($entity);
     }
 
     $summary = xmlrpc_get_windows_summary($scope, $system, $distribution);
@@ -2369,15 +2382,19 @@ function updatesApprovalId($value)
  *
  * @param array|null $entity Entry of getUserLocations()
  * @param string     $status
- * @param string     $system "windows" or "linux"
+ * @param string     $system       "windows" or "linux"
+ * @param string     $distribution Linux distribution, "" for all
  * @return string
  */
-function updatesApprovalUrl($entity, $status, $system = 'windows')
+function updatesApprovalUrl($entity, $status, $system = 'windows', $distribution = '')
 {
     $params = array('tab' => ($system === 'linux') ? 'tablinux' : 'tabwin',
                     'status' => updatesApprovalStatus($status, $system));
     if ($entity) {
         $params['location'] = $entity['uuid'];
+    }
+    if ($system === 'linux' && $distribution !== '') {
+        $params['distribution'] = $distribution;
     }
     return urlStrRedirect("updates/updates/updatesListWin", $params);
 }
@@ -2422,15 +2439,16 @@ function updatesApprovalTitleCell($title, $kb, $status, $byRule, $decidedBy, $de
  * fetched once per request and per system.
  *
  * @param mixed  $entityId
- * @param string $system "windows" or "linux"
+ * @param string $system       "windows" or "linux"
+ * @param string $distribution Linux distribution, "" for all
  * @return array|null Answer of get_windows_approvals, first row only
  */
-function updatesApprovalsSummary($entityId, $system)
+function updatesApprovalsSummary($entityId, $system, $distribution = '')
 {
     static $cache = array();
-    $key = $system . ':' . $entityId;
+    $key = $system . ':' . $entityId . ':' . $distribution;
     if (!array_key_exists($key, $cache)) {
-        $result = xmlrpc_get_windows_approvals($entityId, 'pending', 0, 1, "", $system);
+        $result = xmlrpc_get_windows_approvals($entityId, 'pending', 0, 1, "", $system, $distribution);
         $cache[$key] = updatesReadFailed($result) ? null : $result;
     }
     return $cache[$key];
@@ -2440,12 +2458,13 @@ function updatesApprovalsSummary($entityId, $system)
  * Status links of the Approval page, each state with its count; the current
  * one is shown without a link.
  *
- * @param array|null $entity   Entry of getUserLocations()
- * @param array|null $summary  Answer of updatesApprovalsSummary()
- * @param string     $system   "windows" or "linux"
+ * @param array|null $entity       Entry of getUserLocations()
+ * @param array|null $summary      Answer of updatesApprovalsSummary()
+ * @param string     $system       "windows" or "linux"
  * @param string     $selected
+ * @param string     $distribution Linux distribution, "" for all
  */
-function updatesStatusLinks($entity, $summary, $system, $selected)
+function updatesStatusLinks($entity, $summary, $system, $selected, $distribution = '')
 {
     $counts = is_array($summary['counts'] ?? null) ? $summary['counts'] : null;
     $links = array();
@@ -2454,7 +2473,7 @@ function updatesStatusLinks($entity, $summary, $system, $selected)
         $text = htmlspecialchars(($count !== null) ? $label . ' (' . $count . ')' : $label, ENT_QUOTES, 'UTF-8');
         $links[] = ($status === $selected)
             ? '<strong class="updates-status-current">' . $text . '</strong>'
-            : '<a href="' . htmlspecialchars(updatesApprovalUrl($entity, $status, $system), ENT_QUOTES, 'UTF-8') . '">' . $text . '</a>';
+            : '<a href="' . htmlspecialchars(updatesApprovalUrl($entity, $status, $system, $distribution), ENT_QUOTES, 'UTF-8') . '">' . $text . '</a>';
     }
     echo '<div class="updates-status-links">'
         . implode('<span class="updates-status-sep">&middot;</span>', $links) . '</div>';

@@ -523,6 +523,7 @@ LINUX_APPROVAL_PACKAGES_SQL = f"""
     JOIN machine_updates mu ON mu.jid = mr.jid
     WHERE lgm.entities_id IN {ENTITY_SUBTREE_SQL}
       AND mu.package IS NOT NULL
+      AND (:distribution = '' OR mr.distribution = :distribution)
     GROUP BY mu.package, mu.classification, mu.severity
 """
 
@@ -1645,13 +1646,14 @@ class UpdatesDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_windows_approvals(self, session, entity_id, status="pending", start=0,
-                              limit=-1, filter="", system="windows"):
+                              limit=-1, filter="", system="windows", distribution=""):
         """Effective status per update: the entity's decision, else its nearest
         ancestor's, else its effective rules. Per row "inherited_from" when the
         decision comes from an ancestor.
 
         Linux: the packages approved ("approved") or not ("pending") by the
-        effective rules, no decision per package; "rules_from" is the entity
+        effective rules, no decision per package, of the machines of one
+        distribution when distribution is not empty; "rules_from" is the entity
         whose rules apply."""
         result = {"total": 0, "rows": [],
                   "counts": {status: 0 for status in WINDOWS_APPROVAL_STATUSES},
@@ -1662,7 +1664,7 @@ class UpdatesDatabase(DatabaseHelper):
         result["parent"] = self._inheritance(session, entity_id, entity_id)["parent"]
         if system == "linux":
             return self._linux_approvals(session, entity_id, status, start, limit, filter,
-                                         result)
+                                         distribution, result)
         rules_source = self._effective_source(session, "effective_rules", entity_id)
         for row in session.execute(text(f"""
                 SELECT s.status, COUNT(*) AS updates
@@ -1725,11 +1727,13 @@ class UpdatesDatabase(DatabaseHelper):
                 entity_id, status, 0, -1, filter)["total"]
         return result
 
-    def _linux_approvals(self, session, entity_id, status, start, limit, filter, result):
+    def _linux_approvals(self, session, entity_id, status, start, limit, filter,
+                         distribution, result):
         rules_source = self._effective_source(session, "effective_rules", entity_id, "linux")
         result["rules_from"] = (self._entity_refs(session, [rules_source]).get(rules_source)
                                 if rules_source is not None else None)
-        params = {"entity_id": entity_id, "linux_rules_source": rules_source}
+        params = {"entity_id": entity_id, "linux_rules_source": rules_source,
+                  "distribution": str(distribution or "")}
         for row in session.execute(text(f"""
                 SELECT s.approved, COUNT(*) AS packages
                 FROM ({LINUX_APPROVAL_PACKAGES_SQL}) AS s

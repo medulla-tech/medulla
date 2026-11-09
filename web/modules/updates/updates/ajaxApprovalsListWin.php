@@ -19,7 +19,8 @@ if ($linux) {
     $total = 0;
     $rows = array();
     if ($entity) {
-        $result = xmlrpc_get_windows_approvals(updatesEntityId($entity), $status, $start, $maxperpage, $filter, 'linux');
+        $result = xmlrpc_get_windows_approvals(updatesEntityId($entity), $status, $start, $maxperpage, $filter, 'linux',
+                                                updatesStatusDistribution($_GET['distribution'] ?? ''));
         if (updatesReadFailed($result)) {
             updatesReadFailedBox();
             return;
