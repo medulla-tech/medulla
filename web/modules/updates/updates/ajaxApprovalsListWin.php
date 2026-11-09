@@ -31,19 +31,15 @@ if ($linux) {
     }
     $packages = array();
     $classifications = array();
-    $machines = array();
     foreach ($rows as $row) {
         $classification = trim((string) ($row['classification'] ?? ''));
         $packages[] = updatesLinuxTextCell($row['package'] ?? '');
         $classifications[] = ($classification !== '') ? updatesCatalogLabel($classification) : '<span class="cell-empty">-</span>';
-        $machines[] = updatesWinCount($row['machines'] ?? null);
     }
     $n = new OptimizedListInfos($packages, _T("Package", "updates"));
     $n->disableFirstColumnActionLink();
     $n->setTableCssClass("updates-approval");
     $n->addExtraInfoRaw($classifications, _T("Classification", "updates"));
-    $n->addExtraInfoCenteredRaw($machines, _T("Machines", "updates"), "",
-        _T("Machines of the entity and its sub-entities missing this update.", "updates"));
     $n->start = 0;
     $n->end = $total;
     $n->setItemCount($total);
@@ -91,7 +87,6 @@ $kbs = array();
 $titles = array();
 $sizes = array();
 $risks = array();
-$machines = array();
 $actions = array(array(), array());
 $params = array();
 $hasByRule = false;
@@ -117,7 +112,6 @@ foreach ($rows as $row) {
     $titles[] = $titleCell;
     $sizes[] = updatesSizeCell($row['size'] ?? null);
     $risks[] = updatesWinRiskCell($row['severity'] ?? '', $row['exploited'] ?? null);
-    $machines[] = updatesWinCount($row['machines'] ?? null);
     // A deployment only reaches the machines of the entity itself.
     $ownMachines = updatesWinNumber($row['own_machines'] ?? null);
 
@@ -161,8 +155,6 @@ $n->disableFirstColumnActionLink();
 $n->addExtraInfoRaw($titles, _T("Title", "updates"));
 $n->addExtraInfoRaw($sizes, _T("Size", "updates"));
 $n->addExtraInfoRaw($risks, _T("Update Severity", "updates"));
-$n->addExtraInfoCenteredRaw($machines, _T("Machines", "updates"), "",
-    _T("Machines of the entity and its sub-entities missing this update.", "updates"));
 foreach ($actions as $column) {
     $n->addActionItemArray($column);
 }

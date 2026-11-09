@@ -1431,11 +1431,6 @@ msgstr ""
 msgid "Machines"
 msgstr ""
 
-#: modules/updates/updates/ajaxApprovalsListWin.php:46
-#: modules/updates/updates/ajaxApprovalsListWin.php:165
-msgid "Machines of the entity and its sub-entities missing this update."
-msgstr ""
-
 #: modules/updates/updates/ajaxApprovalsListWin.php:52
 #: modules/updates/updates/ajaxDeployWinGroup.php:47
 #: modules/updates/updates/ajaxMachineUpdatesListWin.php:168
