@@ -21,6 +21,7 @@
  * file: downloadAgent.php
  */
 require_once "modules/admin/includes/xmlrpc.php";
+require_once "modules/admin/includes/agent_download.inc.php";
 
 // POST: validate and redirect to download
 if (isset($_POST["bconfirm"])) {
@@ -28,29 +29,9 @@ if (isset($_POST["bconfirm"])) {
     $os       = $_POST['os'] ?? 'windows';
     $entityId = $_POST['entityId'] ?? '';
 
-    // Select filename and root directory based on OS. macOS is Apple
-    // Silicon only for now (Intel .pkg exists but is not yet tested).
-    if ($os === 'linux') {
-        $filename = 'Medulla-Agent-linux-MINIMAL-latest.sh';
-        $osDir = 'lin';
-    } elseif ($os === 'mac') {
-        $filename = 'Medulla-Agent-mac-arm64-latest.pkg';
-        $osDir = 'mac';
-    } else {
-        $filename = 'Medulla-Agent-windows-FULL-latest.exe';
-        $osDir = 'win';
-    }
-
-    // Root entity (id == 0) is served the global agent; any other entity
-    // only gets its own dedicated agent (no fallback).
-    $isRoot = ($entityId !== '' && (int)$entityId === 0);
-
-    if ($isRoot) {
-        $fs_path = "/var/lib/pulse2/clients/$osDir/$filename";
-    } else {
-        $dl_tag  = xmlrpc_get_dl_tag($tag);
-        $fs_path = !empty($dl_tag) ? "/var/lib/pulse2/medulla_agent/$dl_tag/$filename" : '';
-    }
+    $agent = admin_agent_download($os, $tag, $entityId);
+    $filename = $agent['filename'];
+    $fs_path = $agent['path'];
 
     if ($fs_path === '' || !is_file($fs_path)) {
         new NotifyWidgetFailure(_("Agent file not found."));
@@ -95,6 +76,17 @@ $osRadio->setSelected("windows");
 $tr = new TrFormElement(_("Select the operating system:"), $osRadio);
 $tr->setFirstColWidth('50%');
 $f->add($tr);
+
+// The Windows base agent only installs with its server and download tag
+$windowsAgent = admin_agent_download('windows', $tag, $entityId);
+if ($windowsAgent['command'] !== null) {
+    $command = new TrFormElement(
+        _("Windows installation command:"),
+        new textTpl('<code>' . htmlspecialchars($windowsAgent['command']) . '</code>')
+    );
+    $command->setFirstColWidth('50%');
+    $f->add($command);
+}
 
 // Hidden field for tag
 $hidden = new HiddenTpl("tag");

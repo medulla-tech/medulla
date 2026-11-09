@@ -21,37 +21,16 @@
  * file: downloadAgentFile.php
  */
 require_once "modules/admin/includes/xmlrpc.php";
+require_once "modules/admin/includes/agent_download.inc.php";
 
 $tag      = $_GET['tag'] ?? '';
 $os       = $_GET['os'] ?? 'windows';
 $entityId = $_GET['entityId'] ?? '';
 
-// Select filename, Content-Type and root directory based on OS. macOS is
-// Apple Silicon only for now (Intel .pkg exists but is not yet tested).
-if ($os === 'linux') {
-    $filename = 'Medulla-Agent-linux-MINIMAL-latest.sh';
-    $contentType = 'application/octet-stream';
-    $osDir = 'lin';
-} elseif ($os === 'mac') {
-    $filename = 'Medulla-Agent-mac-arm64-latest.pkg';
-    $contentType = 'application/octet-stream';
-    $osDir = 'mac';
-} else {
-    $filename = 'Medulla-Agent-windows-FULL-latest.exe';
-    $contentType = 'application/x-msdownload';
-    $osDir = 'win';
-}
-
-// Root entity (id == 0) is served the global agent; any other entity
-// only gets its own dedicated agent (no fallback).
-$isRoot = ($entityId !== '' && (int)$entityId === 0);
-
-if ($isRoot) {
-    $fs_path = "/var/lib/pulse2/clients/$osDir/$filename";
-} else {
-    $dl_tag  = xmlrpc_get_dl_tag($tag);
-    $fs_path = !empty($dl_tag) ? "/var/lib/pulse2/medulla_agent/$dl_tag/$filename" : '';
-}
+$agent = admin_agent_download($os, $tag, $entityId);
+$filename = $agent['filename'];
+$contentType = $agent['content_type'];
+$fs_path = $agent['path'];
 
 if ($fs_path === '' || !is_file($fs_path)) {
     http_response_code(404);
