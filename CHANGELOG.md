@@ -7,6 +7,7 @@
 - [FEATURE] Add support for Windows 11 26H2 version
 - [FEATURE] Add a warning when no product is selected in updates module
 - [FEATURE] New probe-based monitoring module
+- [FEATURE] New MDM module
 - [BUGFIX]  Fix update counters in cases where the ITSM is external
 - [BUGFIX]  Fix Kiosk when a profile name already exists
 - [BUGFIX]  Remove date information from convergence deployments view
