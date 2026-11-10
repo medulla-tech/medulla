@@ -67,11 +67,12 @@ if ($type === 'machine' && !empty($name)) {
 $currentUser = $_SESSION['login'] ?? 'unknown';
 
 if (isset($_POST['bconfirm'])) {
+    verifyCSRFToken($_POST);
     $value = isset($config['isInt']) ? intval($name) : $name;
     $success = ExclusionHelper::removeExclusion($config['key'], $value, $currentUser);
 
     if ($success) {
-        new NotifyWidgetSuccess(sprintf(_T("'%s' removed from exclusions", "security"), $displayName));
+        new NotifyWidgetSuccess(sprintf(_T("'%s' removed from exclusions", "security"), htmlspecialchars($displayName)));
     } else {
         new NotifyWidgetFailure(_T("Failed to remove exclusion", "security"));
     }
@@ -83,7 +84,7 @@ if (isset($_POST['bconfirm'])) {
 // Show confirmation popup
 $f = new PopupForm($config['title']);
 $f->addText("<br/>" . sprintf(_T("Remove '%s' from exclusions?", "security"), htmlspecialchars($displayName)) . "<br/><br/>");
-$f->addValidateButton("bconfirm", _T("Remove", "security"));
+$f->addValidateButtonWithValue("bconfirm", _T("Remove", "security"));
 $f->addCancelButton("bback");
 $f->display();
 ?>

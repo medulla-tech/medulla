@@ -107,7 +107,10 @@ function chart(selector, datas) {
 
     .on("click", function (event, d) {
       if (typeof d.data.href !== "undefined" && d.data.href !== "") {
-        window.location.replace(d.data.href);
+        if (d.data.method === "POST")
+          postAction(d.data.href);
+        else
+          window.location.replace(d.data.href);
       }
     });
 
@@ -130,7 +133,13 @@ function chart(selector, datas) {
     .append('a')
     .style("color", "black")
     .style("font-weight", "normal")
-    .attr("href", d => (typeof d.data.onclick === "undefined") ? d.data.href : null)
+    .attr("href", d => (typeof d.data.onclick === "undefined") ? (d.data.method === "POST" ? "#" : d.data.href) : null)
     .attr("onclick", d => (typeof d.data.onclick !== "undefined") ? (d.data.onclick + "('" + d.data.label + "')") : null)
+    .on("click", function (event, d) {
+      if (d.data.method === "POST" && typeof d.data.onclick === "undefined") {
+        event.preventDefault();
+        postAction(d.data.href);
+      }
+    })
     .text(d => d.data.label + " : " + d.data.value + " (" + ((d.data.value / total) * 100).toFixed(0) + "%)");
 }

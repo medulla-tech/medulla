@@ -13,11 +13,197 @@ $submod->setDescription(_T("Mastering", "mastering"));
 $submod->setVisibility(True);
 $submod->setImg("modules/mastering/img/mastering");
 
+// Default page
 $submod->setDefaultPage("mastering/mastering/index");
 $submod->setPriority(500);
 
-$page = new Page("index", _T('Page de tests', 'mastering'));
+// List the machines
+$page = new Page("index", _T('Create Action', 'mastering'));
 $page->setFile("modules/mastering/mastering/index.php");
+$submod->addPage($page);
+
+
+$page = new Page("addAction", _T('Add Action', 'mastering'));
+$page->setFile("modules/mastering/mastering/addAction.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxActionMachine", _T("Create Action on machine", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxActionMachine.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+
+// List of configured actions for entity
+$page = new Page("actionList", _T("List of Actions", "mastering"));
+$page->setFile("modules/mastering/mastering/actionList.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxActionList", _T("List of Actions", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxActionList.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+
+// List of configured actions for machines
+$page = new Page("actionListMachine", _T("List of Actions", "mastering"));
+$page->setFile("modules/mastering/mastering/actionListMachine.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxActionListMachine", _T("List of Actions", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxActionListMachine.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+
+// List of configured action for groups
+$page = new Page("actionListGroup", _T("List of Actions", "mastering"));
+$page->setFile("modules/mastering/mastering/actionListGroup.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxActionListGroup", _T("List of Actions", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxActionListGroup.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+
+// Result for a secific action
+$page = new Page("results", _T("Results for action", "mastering"));
+$page->setFile("modules/mastering/mastering/results.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxResults", _T("Results for action", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxResults.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+
+// On groups list the machines with results on specified action
+$page = new Page("resultsGroup", _T("Results for action", "mastering"));
+$page->setFile("modules/mastering/mastering/resultsGroup.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxResultsGroup", _T("Results for action", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxResultsGroup.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+// List masters
+$page = new Page("masters", _T('Masters List', 'mastering'));
+$page->setFile("modules/mastering/mastering/masters.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxMasters", _T("Masters List", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxMasters.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+// Edit master
+$page = new Page("editMaster", _T("Edit Master", "mastering"));
+$page->setFile("modules/mastering/mastering/editMaster.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+// Delete master
+$page = new Page("deleteMaster", _T("Delete Master", "mastering"));
+$page->setFile("modules/mastering/mastering/deleteMaster.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+
+// Get the size on the server
+// On distinct page to reduce the synchrone time needed to get the result
+$page = new Page("ajaxServerSize", _T("Server Size", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxServerSize.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+
+// Create master action
+$page = new Page("createMaster", _T('Create Master', 'mastering'));
+$page->setFile("modules/mastering/mastering/createMaster.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+// Register action
+$page = new Page("register", _T('Register', 'mastering'));
+$page->setFile("modules/mastering/mastering/register.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+// Deploy master action
+$page = new Page("deployMaster", _T('Deploy Master', 'mastering'));
+$page->setFile("modules/mastering/mastering/deployMaster.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+// Delete action
+$page = new Page("deleteAction", _T('Delete Action', 'mastering'));
+$page->setFile("modules/mastering/mastering/deleteAction.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+
+// List of configured scripts for entity
+$page = new Page("scripts", _T("List of Scripts", "mastering"));
+$page->setFile("modules/mastering/mastering/scripts.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxScripts", _T("List of Scripts", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxScripts.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("deleteScript", _T("Delete Script", "mastering"));
+$page->setFile("modules/mastering/mastering/deleteScript.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+
+// List of configured actions for entity
+$page = new Page("newScript", _T("New Script", "mastering"));
+$page->setFile("modules/mastering/mastering/newScript.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxNewScript", _T("New Script", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxNewScript.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxFormBash", _T("New Bash Script", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxFormBash.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxFormWin10-oem", _T("New Bash Script", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxFormWin10-oem.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxFormWin10-uefi", _T("New Bash Script", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxFormWin10-uefi.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxFormWin11-oem", _T("New Bash Script", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxFormWin11-oem.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxFormWin11-uefi", _T("New Bash Script", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxFormWin11-uefi.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+
+// List of configured actions for entity
+$page = new Page("editScript", _T("Edit Script", "mastering"));
+$page->setFile("modules/mastering/mastering/editScript.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxEditScript", _T("Edit Script", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxEditScript.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
 $mod->addSubmod($submod);

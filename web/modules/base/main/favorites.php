@@ -91,10 +91,14 @@ foreach(getSorted($MMCApp->getModules()) as $mkey => $mod) {
             $uri = $mod->getName().'/'.$key.'/'.$akey;
 
             $getrecop = $_GET;
-            $getrecop['fav_action']='del';
-
-            $getrecop['uri']=$uri;
-            ?> <span class="redbutton"><a href="#" onClick="jQuery('#__popup_container').load('<?php echo  urlStr('base/main/favorites',$getrecop); ?>'); return false">X</a></span> <?php
+            unset($getrecop['fav_action'], $getrecop['uri']);
+            $deleteUrl = htmlspecialchars(json_encode(urlStrRedirect('base/main/favorites', $getrecop)), ENT_QUOTES, 'UTF-8');
+            $deleteData = htmlspecialchars(json_encode(array(
+                'fav_action' => 'del',
+                'uri' => $uri,
+                'auth_token' => $_SESSION['auth_token'] ?? ''
+            )), ENT_QUOTES, 'UTF-8');
+            ?> <span class="redbutton"><a href="#" onClick="jQuery('#__popup_container').load(<?php echo $deleteUrl; ?>, <?php echo $deleteData; ?>); return false">X</a></span> <?php
 
 
 
@@ -116,12 +120,18 @@ foreach(getSorted($MMCApp->getModules()) as $mkey => $mod) {
 }
 
 
-if  ($_GET['fav_action']=='add') {
-    addFavorite($_GET['uri']);
+if (isset($_GET['fav_action'])) {
+    http_response_code(405);
+    exit;
 }
 
-if  ($_GET['fav_action']=='del') {
-    delFavorite($_GET['uri']);
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['fav_action'])) {
+    verifyCSRFToken($_POST);
+    if ($_POST['fav_action'] === 'add') {
+        addFavorite($_POST['uri'] ?? '');
+    } elseif ($_POST['fav_action'] === 'del') {
+        delFavorite($_POST['uri'] ?? '');
+    }
 }
 
 
@@ -139,14 +149,15 @@ showFav($sort_a);
 $local_page = getPage($local_uri);
 
 if ($local_page->isVisible()) {
-
-    $_GET['fav_action']='add';
-
-    $_GET['uri']=$local_uri;
-
+    $addUrl = htmlspecialchars(json_encode(urlStrRedirect('base/main/favorites', $_GET)), ENT_QUOTES, 'UTF-8');
+    $addData = htmlspecialchars(json_encode(array(
+        'fav_action' => 'add',
+        'uri' => $local_uri,
+        'auth_token' => $_SESSION['auth_token'] ?? ''
+    )), ENT_QUOTES, 'UTF-8');
     ?>
 
-    <p><a href="#" onClick="jQuery('__popup_container').load('<?php echo  urlStr('base/main/favorites',$_GET); ?>'); return false"><?php echo  _("Add this page to your favorites") ?></a></p>
+    <p><a href="#" onClick="jQuery('#__popup_container').load(<?php echo $addUrl; ?>, <?php echo $addData; ?>); return false"><?php echo  _( "Add this page to your favorites") ?></a></p>
     <?php
 }
 

@@ -20,12 +20,19 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/urbackup/includes/xmlrpc.php");
 
-$clientname = htmlspecialchars($_GET["cn"]);
-$jidMachine = htmlspecialchars($_GET["jid"]);
+verifyCSRFToken($_POST);
+
+$clientname = htmlspecialchars($_POST["cn"]);
+$jidMachine = htmlspecialchars($_POST["jid"]);
 
 $p = new PageGenerator(_T("Assign profile to computer ".$clientname, 'urbackup'));
 $p->setSideMenu($sidemenu);
@@ -96,6 +103,7 @@ if ($groupname == "")
 
     ?>
     <form name="form" action="main.php?module=urbackup&amp;submod=urbackup&amp;action=add_member_togroup_aftercheck&amp;clientid=<?php echo $id; ?>&amp;clientname=<?php echo $clientname; ?>&amp;auth=<?php echo $auth; ?>&amp;groupid=<?php echo $group['id']; ?>&amp;groupname=<?php echo $group['name']; ?>&amp;jidmachine=<?php echo $jidMachine; ?>" method="post">
+        <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
         <div>
             <h3><?php echo _T("Computer name", "urbackup"); ?></h3>
             <br>

@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 # SPDX-FileCopyrightText: 2022-2023 Siveo <support@siveo.net>uuuuuuu
 # SPDX-License-Identifier: GPL-3.0-or-later
+# file : services/bin/medulla-generate-update-package.py
 
 # This script is used to generate update packages in /var/lib/pulse2/packages
 
@@ -142,6 +143,25 @@ class download_packages:
                 namefile
             )
         cmd64 = base64.b64encode(bytes(cmd, "utf-8"))
+        windows10_esu_notification = self.generate_windows10_esu_notification(
+            name, description, urlpath
+        )
+        if windows10_esu_notification:
+            install_step = 2
+            wait_step = 3
+            reboot_comment_step = 4
+            reboot_notification_step = 5
+            success_step = 6
+            error_step = 7
+            label_windows10_esu = '                    "notif_windows10_esu": 1,\n'
+        else:
+            install_step = 1
+            wait_step = 2
+            reboot_comment_step = 3
+            reboot_notification_step = 4
+            success_step = 5
+            error_step = 6
+            label_windows10_esu = ""
         return """{
         "info": {
             "urlpath" : "%s",
@@ -177,36 +197,36 @@ class download_packages:
                     "action": "action_section_update", 
                     "step": 0, 
                     "actionlabel": "upd_70a70cc9"
-                }, 
+                }%s, 
                 {
                     "typescript": "Batch",
                     "script": "%s",
                     "30@lastlines": "30@lastlines",
                     "actionlabel": "02d57e96",
                     "codereturn": "",
-                    "step": 1,
-                    "error": 6,
+                    "step": %s,
+                    "error": %s,
                     "action": "actionprocessscriptfile",
                     "timeout": "3600",
                     "gotoreturncode@3010": "REBOOTREQUIRED"
                 },
                 {
                     "action": "actionwaitandgoto",
-                    "step": 2,
+                    "step": %s,
                     "codereturn": "",
                     "actionlabel": "wait_cc66c870",
                     "waiting": "1",
                     "goto": "END_SUCCESS"
                 },
                 {
-                    "step": 3,
+                    "step": %s,
                     "action": "action_comment",
                     "actionlabel": "REBOOTREQUIRED",
                     "comment": "The update has been installed but a reboot is required to apply it."
                 },
                 {
                     "action": "action_notification",
-                    "step": 4,
+                    "step": %s,
                     "codereturn": "",
                     "actionlabel": "notif_ee9943f2",
                     "titlemessage": "V2luZG93cyBVcGRhdGUgLSBSZWJvb3Q=",
@@ -218,14 +238,14 @@ class download_packages:
                 },
                 {
                     "action": "actionsuccescompletedend",
-                    "step": 5,
+                    "step": %s,
                     "actionlabel": "END_SUCCESS",
                     "clear": "False",
                     "inventory": "noforced"
                 },
                 {
                     "action": "actionerrorcompletedend",
-                    "step": 6,
+                    "step": %s,
                     "actionlabel": "END_ERROR"
                 }
             ]
@@ -234,12 +254,12 @@ class download_packages:
             "win": {
                 "label": {
                     "upd_70a70cc9": 0,
-                    "02d57e96": 1,
-                    "wait_cc66c870": 2,
-                    "REBOOTREQUIRED": 3,
-                    "notif_ee9943f2": 4,    
-                    "END_SUCCESS": 5,
-                    "END_ERROR": 6
+%s                    "02d57e96": %s,
+                    "wait_cc66c870": %s,
+                    "REBOOTREQUIRED": %s,
+                    "notif_ee9943f2": %s,    
+                    "END_SUCCESS": %s,
+                    "END_ERROR": %s
                 }
             },
             "os": [
@@ -253,8 +273,62 @@ class download_packages:
             description,
             name,
             dt_string,
+            windows10_esu_notification,
             cmd64.decode("utf-8"),
+            install_step,
+            error_step,
+            wait_step,
+            reboot_comment_step,
+            reboot_notification_step,
+            success_step,
+            error_step,
+            label_windows10_esu,
+            install_step,
+            wait_step,
+            reboot_comment_step,
+            reboot_notification_step,
+            success_step,
+            error_step,
         )
+
+    def is_windows10_package(self, name, description, urlpath):
+        """
+        Detect Windows 10 update packages from the product table and WSUS metadata.
+
+        Windows 10 updates need ESU coverage after end of support; the generated
+        deployment warns the user before running the package.
+        """
+        metadata = " ".join(
+            str(value or "")
+            for value in (self.name_table_produit, name, description, urlpath)
+        ).lower()
+        return "windows 10" in metadata or "win10" in metadata
+
+    def generate_windows10_esu_notification(self, name, description, urlpath):
+        """
+        Return the optional deployment notification for Windows 10 ESU packages.
+        """
+        if not self.is_windows10_package(name, description, urlpath):
+            return ""
+        title = base64.b64encode(
+            b"Windows 10 - Support ESU requis"
+        ).decode("utf-8")
+        message = base64.b64encode(
+            b"Ce package Windows 10 necessite le support ESU Microsoft Windows. Sans ESU actif sur la machine, l'installation de la mise a jour peut echouer ou ne pas s'appliquer."
+        ).decode("utf-8")
+        return f""",
+                {{
+                    "action": "action_notification",
+                    "step": 1,
+                    "codereturn": "",
+                    "actionlabel": "notif_windows10_esu",
+                    "titlemessage": "{title}",
+                    "sizeheader": "15",
+                    "message": "{message}",
+                    "sizemessage": "10",
+                    "textbuttonyes": "OK",
+                    "timeout": "800"
+                }}"""
 
     def generate_conf_json(self, name, id, description, urlpath):
         now = datetime.now()

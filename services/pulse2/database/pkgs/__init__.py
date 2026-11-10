@@ -14,6 +14,7 @@ import traceback
 # SqlAlchemy
 from sqlalchemy import (
     and_,
+    or_,
     create_engine,
     MetaData,
     Table,
@@ -63,6 +64,10 @@ logger = logging.getLogger()
 
 
 NB_DB_CONN_TRY = 2
+# Business rule: any package containing this marker in its TITLE/LABEL must be
+# hidden from package listings and deployment selection queries.
+# We keep a conf_json fallback check for backward compatibility.
+HIDE_FROM_VIEW_MARKER = "@@generique ne pas afficher@@"
 
 # TODO need to check for useless function (there should be many unused one...)
 
@@ -345,6 +350,12 @@ class PkgsDatabase(DatabaseHelper):
         5️⃣  **Special rule**
             - If `liste_entities_user` is empty → returns no results (empty dict).
 
+                6️⃣  **Hidden marker rule**
+                        - If `packages.label` contains `@@generique ne pas afficher@@`,
+                            the package is excluded from this deployable list.
+                        - Backward compatibility: the same marker is also checked in
+                            `packages.conf_json`.
+
         Returns:
             dict: {
                 "count": int,   # total number of rows (ignoring LIMIT)
@@ -464,6 +475,13 @@ class PkgsDatabase(DatabaseHelper):
                 {_filter}
                 {_filter1}
                 {where_clause}
+                -- Hide generic helper packages from all deployable views.
+                -- Primary source: packages.label.
+                -- Compatibility source: packages.conf_json.
+                AND (
+                    (packages.label IS NULL OR packages.label NOT LIKE '%%{HIDE_FROM_VIEW_MARKER}%%')
+                    AND (packages.conf_json IS NULL OR packages.conf_json NOT LIKE '%%{HIDE_FROM_VIEW_MARKER}%%')
+                )
                 AND pkgs_shares.enabled = 1
             ORDER BY
                 packages.pkgs_share_id ASC,
@@ -496,6 +514,12 @@ class PkgsDatabase(DatabaseHelper):
             end: int of the limit
         Returns:
             It returns the list of the packages.
+
+        Rule reminder:
+            Packages whose `label` contains
+            `@@generique ne pas afficher@@` are always excluded from the result,
+            regardless of sharing mode.
+            Backward compatibility: the marker is also checked in `conf_json`.
         """
 
         result = {
@@ -618,10 +642,19 @@ class PkgsDatabase(DatabaseHelper):
                                     syncthingsync.uuidpackage
                                 FROM
                                     pkgs.syncthingsync)
+                            -- Enforce hidden marker rule in shared listing mode.
+                            -- Primary source: packages.label.
+                            -- Compatibility source: packages.conf_json.
+                            AND (
+                                (packages.label IS NULL OR packages.label NOT LIKE '%%%s%%')
+                                AND (packages.conf_json IS NULL OR packages.conf_json NOT LIKE '%%%s%%')
+                            )
                             %s
                         AND pkgs_shares.enabled = 1 ORDER BY packages.pkgs_share_id ASC, packages.label ASC, packages.version ASC
                         %s %s;""" % (
                 idsharestr,
+                HIDE_FROM_VIEW_MARKER,
+                HIDE_FROM_VIEW_MARKER,
                 _filter,
                 limit,
                 offset,
@@ -634,6 +667,21 @@ class PkgsDatabase(DatabaseHelper):
 
         else:
             query = session.query(Packages).order_by(Packages.label)
+            # Enforce hidden marker rule in non-shared listing mode.
+            # Primary source: Packages.label.
+            # Compatibility source: Packages.conf_json.
+            query = query.filter(
+                or_(
+                    Packages.label.is_(None),
+                    ~Packages.label.contains(HIDE_FROM_VIEW_MARKER),
+                )
+            )
+            query = query.filter(
+                or_(
+                    Packages.conf_json.is_(None),
+                    ~Packages.conf_json.contains(HIDE_FROM_VIEW_MARKER),
+                )
+            )
             if filter != "":
                 query = query.filter(Packages.conf_json.contains(filter))
             count = query.count()

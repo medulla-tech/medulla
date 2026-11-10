@@ -2,8 +2,11 @@
 require_once("../../../includes/session.inc.php");
 require_once("../../../includes/xmlrpc.inc.php");
 require_once("../../../includes/i18n.inc.php");
+require_once("../../../includes/utils.inc.php");
 
 require_once("../includes/xmlrpc.php");
+
+verifyCSRFToken($_POST);
 
 $server = (isset($_POST["server"])) ? htmlentities($_POST["server"]) : "";
 

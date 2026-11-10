@@ -77,7 +77,7 @@ class DatabaseHelper(Singleton):
                 return False
         else:
             logger.error(
-                f"Can't connect to database (s={self.config.dbhost}, p={self.config.dbport}, b={self.config.dbbase}, l={self.config.dbuser}, p=******). Please check {self.configfile}."
+                f"Can't connect to database (s={self.config.dbhost}, p={self.config.dbport}, b={self.config.dbname}, l={self.config.dbuser}, p=******). Please check {self.configfile}."
             )
             return False
         return True

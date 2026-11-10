@@ -21,6 +21,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+if (isset($_POST['bStop'])) {
+    verifyCSRFToken($_POST);
+}
+
 require("modules/base/computers/localSidebar.php");
 require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
 require("graph/navbar.inc.php");

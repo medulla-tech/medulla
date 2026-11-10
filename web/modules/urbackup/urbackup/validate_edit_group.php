@@ -44,6 +44,7 @@ $interval_frequence_full_save = $_POST['update_freq_full'];
 $exclude_files = $_POST['exclude_files'];
 $include_files = $_POST['include_files'];
 $default_dirs = $_POST['default_dirs'];
+verifyCSRFToken($_POST);
 
 if ($interval_frequence_incremental_save == "")
 {

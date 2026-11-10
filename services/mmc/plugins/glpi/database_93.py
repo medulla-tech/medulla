@@ -5978,6 +5978,29 @@ class Glpi93(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    @DatabaseHelper._sessionm
+    def get_phone_inventories_for_dashboard(self, session, entities: list = []) -> dict:
+        orange = self.config.orange
+        red = self.config.red
+
+        now = datetime.datetime.now()
+        orange_date = now - datetime.timedelta(days=orange)
+        red_date = now - datetime.timedelta(days=red)
+
+        phones = self.phones
+        date_mod = phones.c.date_mod
+
+        base_query = session.query(phones).filter(phones.c.entities_id.in_(entities))
+
+        green_count  = base_query.filter(date_mod > orange_date).count()
+        orange_count = base_query.filter(and_(date_mod <= orange_date, date_mod > red_date)).count()
+        red_count    = base_query.filter(date_mod <= red_date).count()
+
+        return {
+            "days": {"red": red, "orange": orange},
+            "count": {"red": int(red_count), "orange": int(orange_count), "green": int(green_count)}
+        }
+
     def getMachineNumberByState(self, ctx):
         """
         return number of machines sorted by state

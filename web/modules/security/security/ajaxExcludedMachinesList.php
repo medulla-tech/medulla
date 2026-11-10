@@ -51,7 +51,7 @@ $excludedMachines = $policies['exclusions']['machines_ids'] ?? array();
 if (empty($excludedMachines)) {
     EmptyStateBox::show(
         _T("No excluded machines", "security"),
-        _T("Machines can be excluded directly from the 'Results by Machine' view using the exclude action.", "security")
+        _T("Machines can be excluded from the Machines page using the exclude action.", "security")
     );
 } else {
     // Build filter to get machines by their UUIDs

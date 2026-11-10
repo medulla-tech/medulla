@@ -29,14 +29,21 @@ require_once("modules/dyngroup/includes/xmlrpc.php");
 require_once("modules/medulla_server/includes/locations_xmlrpc.inc.php");
 require_once("modules/base/includes/computers.inc.php");
 
-$requestedOS = $_GET['os'];
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+  http_response_code(405);
+  exit;
+}
+
+verifyCSRFToken($_POST);
+
+$requestedOS = $_POST['os'];
 
 // Get user locations
 $groupmembers = array();
 if($requestedOS == "Other")
   $requestedOS = "no operating";
 
-$requestedVersion = $_GET['version'];
+$requestedVersion = $_POST['version'];
 $groupname = sprintf (_T("Machine with %s %s installed at %s", "glpi"), $requestedOS, $requestedVersion, date("Y-m-d H:i:s"));;
 $result = xmlrpc_get_machines_with_os_and_version($requestedOS, $requestedVersion);
 

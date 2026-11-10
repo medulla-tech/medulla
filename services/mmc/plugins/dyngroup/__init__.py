@@ -359,7 +359,7 @@ class RpcProxy(RpcProxyI):
 
         unregistered_machines = {}
 
-        for uuid in uuids:
+        for uuid in unregistered_uuids:
             unregistered_machines[uuid] = uuids[uuid]
 
         DyngroupDatabase().addMissingMachines(unregistered_machines)
@@ -667,6 +667,10 @@ class RpcProxy(RpcProxyI):
     def get_active_convergence_commands(self, package_id):
         ret = DyngroupDatabase().get_active_convergence_commands(package_id)
         return xmlrpcCleanup(ret)
+
+    def get_active_convergence_counts(self, gids):
+        ret = DyngroupDatabase().get_active_convergence_counts(gids)
+        return xmlrpcCleanup({str(k): v for k, v in ret.items()})
 
     def get_convergence_groups_to_update(self, package_id):
         ret = DyngroupDatabase().get_convergence_groups_to_update(package_id)

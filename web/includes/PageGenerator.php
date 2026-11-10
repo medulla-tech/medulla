@@ -605,6 +605,7 @@ class ActionAjaxPopup extends ActionItem
     private $_confirmMessage = '';
     private $_width = 400;
     private $_replaceContent = true;
+    private $_method = 'GET';
 
     public function __construct(
         $desc,
@@ -617,12 +618,14 @@ class ActionAjaxPopup extends ActionItem
         $tab = null,
         $width = 400,
         $mod = false,
-        $replace_content = true
+        $replace_content = true,
+        $method = 'GET'
     ) {
         parent::__construct($desc, $action, $classCss, $paramString, $module, $submod, $tab, $mod);
         $this->_confirmMessage = $confirmMessage;
         $this->_width = $width;
         $this->_replaceContent = $replace_content;
+        $this->_method = strtoupper($method);
     }
 
     public function render($text, $extraParams = array(), $title = '', $hoverClass = '')
@@ -643,17 +646,24 @@ class ActionAjaxPopup extends ActionItem
             $targetUrl .= "&tab=" . $this->tab;
         }
         $targetUrl .= $decodedUrlChunk;
-        $targetUrlJs = htmlspecialchars($targetUrl, ENT_QUOTES, 'UTF-8');
-        $confirmMessageJs = htmlspecialchars($this->_confirmMessage, ENT_QUOTES, 'UTF-8');
-
         if (empty($title)) {
             $title = $text;
         }
         $titleAttr = ' title="' . htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '"';
         $allClasses = trim($this->classCss . ' ' . $hoverClass);
 
+        // json_encode obligatoire : une apostrophe dans le message casserait
+        // la chaine JS (le HTML decode les entites avant interpretation du JS).
+        $onclickArgs = implode(', ', [
+            json_encode($this->_confirmMessage, JSON_UNESCAPED_UNICODE),
+            json_encode($targetUrl, JSON_UNESCAPED_SLASHES),
+            (int) $this->_width,
+            $this->_replaceContent ? 'true' : 'false',
+            json_encode($this->_method),
+        ]);
+
         $html = '<a href="#" class="' . $allClasses . '"' . $titleAttr . '
-                    onclick="return ActionAjaxPopup_showPopup(\'' . $confirmMessageJs . '\', \'' . $targetUrlJs . '\', ' . $this->_width . ', ' . ($this->_replaceContent ? 'true' : 'false') . ');">'
+                    onclick="return ActionAjaxPopup_showPopup(' . htmlspecialchars($onclickArgs, ENT_QUOTES, 'UTF-8') . ');">'
                     . htmlspecialchars($text, ENT_QUOTES, 'UTF-8') .
                 '</a>';
 
@@ -672,14 +682,39 @@ class ActionAjaxPopup extends ActionItem
     {
         ?>
         <script type="text/javascript">
-        function ActionAjaxPopup_showPopup(message, targetUrl, width, replaceContent) {
+        var ActionAjaxPopup_i18n = {
+            yes:     <?php echo json_encode(_T("Yes", "base")); ?>,
+            no:      <?php echo json_encode(_T("No", "base")); ?>,
+            close:   <?php echo json_encode(_T("Close", "base")); ?>,
+            loading: <?php echo json_encode(_T("Loading...", "base")); ?>
+        };
+
+        /** Affiche le voile (.overlay) derriere la popup ; clic = fermeture. */
+        function ActionAjaxPopup_showOverlay($popup) {
+            var $overlay = jQuery('#actionConfirmOverlay');
+            if (!$overlay.length) {
+                $overlay = jQuery('<div id="actionConfirmOverlay" class="overlay"></div>').appendTo('body');
+            }
+            $overlay.off('click').on('click', function() {
+                ActionAjaxPopup_hide($popup);
+            });
+            $overlay.show();
+        }
+
+        /** Ferme la popup et son voile. */
+        function ActionAjaxPopup_hide($popup) {
+            jQuery('#actionConfirmOverlay').hide();
+            $popup.fadeOut(200);
+        }
+
+        function ActionAjaxPopup_showPopup(message, targetUrl, width, replaceContent, method) {
             // Si pas de message de confirmation, on fait un autoload dans la popup
             if (message === '') {
                 if (!jQuery('#actionConfirmPopup').length) {
                     jQuery('body').append('<div id="actionConfirmPopup" class="modal-popup"></div>');
                 }
                 var $popup = jQuery('#actionConfirmPopup');
-                $popup.html('<em>Chargement...</em>').css({
+                $popup.html('<em>' + ActionAjaxPopup_i18n.loading + '</em>').css({
                     width: width + 'px',
                     top: '20%',
                     left: '50%',
@@ -697,9 +732,9 @@ class ActionAjaxPopup extends ActionItem
                             // Affiche le résultat dans la popup (comportement par défaut)
                             $popup.html(data);
                         }
-                        $popup.append('<div class="modal-popup-buttons mt-10"><button id="popupClose">Fermer</button></div>');
+                        $popup.append('<div class="modal-popup-buttons mt-10"><button id="popupClose" class="btn btn-secondary">' + ActionAjaxPopup_i18n.close + '</button></div>');
                         jQuery('#popupClose').on('click', function() {
-                            $popup.fadeOut(200);
+                            ActionAjaxPopup_hide($popup);
                         });
                     },
                     error: function(xhr) {
@@ -716,11 +751,12 @@ class ActionAjaxPopup extends ActionItem
             var $popup = jQuery('#actionConfirmPopup');
             var html = '<div class="modal-popup-message">' + message + '</div>' +
                        '<div class="modal-popup-buttons">' +
-                       '<button id="popupYes">Oui</button>' +
-                       '<button id="popupNo">Non</button>' +
+                       '<button id="popupYes" class="btn btn-primary">' + ActionAjaxPopup_i18n.yes + '</button>' +
+                       '<button id="popupNo" class="btn btn-secondary">' + ActionAjaxPopup_i18n.no + '</button>' +
                        '</div>' +
                        '<div id="popupResult" class="mt-10 d-none"></div>';
             $popup.html(html);
+            ActionAjaxPopup_showOverlay($popup);
             $popup.css({
                 width: width + 'px',
                 top: '20%',
@@ -729,14 +765,29 @@ class ActionAjaxPopup extends ActionItem
             }).fadeIn(200);
 
             jQuery('#popupNo').on('click', function() {
-                $popup.fadeOut(200);
+                ActionAjaxPopup_hide($popup);
             });
 
             jQuery('#popupYes').on('click', function() {
-                jQuery('#popupResult').html('<em>Chargement...</em>').show();
-                jQuery.ajax({
-                    url: targetUrl,
-                    type: 'GET',
+                jQuery('#popupResult').html('<em>' + ActionAjaxPopup_i18n.loading + '</em>').show();
+                var request = {url: targetUrl, type: method || 'GET'};
+                if (method === 'POST') {
+                    var requestUrl = new URL(targetUrl, window.location.href);
+                    var routing = new URLSearchParams();
+                    var postData = {};
+                    var routingKeys = ['module', 'submod', 'action', 'tab'];
+                    requestUrl.searchParams.forEach(function(value, key) {
+                        if (routingKeys.indexOf(key) !== -1) {
+                            routing.append(key, value);
+                        } else {
+                            postData[key] = value;
+                        }
+                    });
+                    postData.auth_token = postActionAuthToken;
+                    request.url = requestUrl.pathname + '?' + routing.toString();
+                    request.data = postData;
+                }
+                jQuery.ajax(Object.assign(request, {
                     success: function(data) {
                         if (replaceContent) {
                             // Remplace le contenu du div de la popup
@@ -746,16 +797,16 @@ class ActionAjaxPopup extends ActionItem
                             jQuery('#popupResult').html(data).show();
                         }
                         if (!jQuery('#popupClose').length) {
-                            $popup.append('<div class="modal-popup-buttons mt-10"><button id="popupClose">Fermer</button></div>');
+                            $popup.append('<div class="modal-popup-buttons mt-10"><button id="popupClose" class="btn btn-secondary">' + ActionAjaxPopup_i18n.close + '</button></div>');
                             jQuery('#popupClose').on('click', function() {
-                                $popup.fadeOut(200);
+                                ActionAjaxPopup_hide($popup);
                             });
                         }
                     },
                     error: function(xhr) {
                         jQuery('#popupResult').html('<span class="text-error">Erreur AJAX : ' + xhr.status + '</span>').show();
                     }
-                });
+                }));
             });
 
             return false;
@@ -840,12 +891,14 @@ class ActionConfirmItem extends ActionItem
 {
     public $_displayType = 0;
     public $_confirmMessage = '';
+    public $confirmationMethod = null;
 
-    public function __construct($desc, $action, $classCss, $paramString, $module = null, $submod = null, $confirmMessage, $tab = null, $width = 300, $mod = false)
+    public function __construct($desc, $action, $classCss, $paramString, $module = null, $submod = null, $confirmMessage, $tab = null, $width = 300, $mod = false, $confirmationMethod = null)
     {
         parent::__construct($desc, $action, $classCss, $paramString, $module, $submod, $tab, $mod);
         //$this->setWidth($width);
         $this->_confirmMessage = $confirmMessage;
+        $this->confirmationMethod = $confirmationMethod;
     }
 
     public function displayWithRight($param, $extraParams = array())
@@ -872,10 +925,11 @@ class ActionConfirmItem extends ActionItem
             ENT_QUOTES,
             'UTF-8'
         );
+        $methodArgument = $this->confirmationMethod === 'POST' ? ", null, null, 'POST'" : "";
 
         echo "<li class=\"" . $this->classCss . "\">";
         echo "<a title=\"" . $this->desc . "\" href=\"#\" ";
-        echo " onclick=\"displayConfirmationPopup(" . $confirmMessageJs . ", " . $targetUrlJs . "); return false;\" ";
+        echo " onclick=\"displayConfirmationPopup(" . $confirmMessageJs . ", " . $targetUrlJs . $methodArgument . "); return false;\" ";
         echo ">&nbsp;</a>";
         echo "</li>";
     }
@@ -1113,6 +1167,7 @@ class ListInfos extends HtmlElement
     public $description; /*     * < list of description (not an obligation) */
     public $col_width; /*     * < Contains the columns width */
     public $tooltip; /*     * < Contains the tooltip for column label */
+    protected $hasHeaderTooltip = false; /*     * < Au moins une infobulle d'en-tête rendue */
     public $captionText = ""; // Texte de la légende
     public $captionBorder = 0; // Bordure de la légende (0 par défaut)
     public $captionBold = 1; // Texte en gras (1 par défaut)
@@ -1568,6 +1623,53 @@ class ListInfos extends HtmlElement
 
 
 
+    /**
+     * Rend un libellé d'en-tête accompagné de son infobulle (pattern .infomach
+     * de tooltip.css). Le contenu n'est pas échappé : certains appelants y
+     * passent du HTML (cf. imaging/bootmenu.php).
+     */
+    protected function renderHeaderTooltip($label, $tooltip)
+    {
+        if (empty($tooltip)) {
+            return $label;
+        }
+
+        $this->hasHeaderTooltip = true;
+
+        $content = '<div class="column-tooltip__text">' . $tooltip . '</div>';
+
+        return '<span class="infomach column-tooltip" mydata="'
+            . htmlentities($content, ENT_QUOTES, 'UTF-8') . '">'
+            . $label
+            . '</span>';
+    }
+
+    /** Active les infobulles d'en-tête. Émis une seule fois par requête. */
+    protected function drawHeaderTooltipScript()
+    {
+        static $scriptEmitted = false;
+
+        if (!$this->hasHeaderTooltip || $scriptEmitted) {
+            return;
+        }
+        $scriptEmitted = true;
+
+        echo '<script>
+jQuery(function() {
+    if (!(jQuery.ui && jQuery.ui.tooltip)) { return; }
+    jQuery("table.listinfos thead .column-tooltip").tooltip({
+        position: {
+            my: "center top+8",
+            at: "center bottom",
+            collision: "flipfit flipfit"
+        },
+        items: "[mydata]",
+        content: function() { return jQuery(this).attr("mydata"); }
+    });
+});
+</script>' . "\n";
+    }
+
     public function drawTable($navbar = 1)
 {
     // Build table class — no more fixed/auto distinction
@@ -1586,26 +1688,19 @@ class ListInfos extends HtmlElement
 
     // --- En-têtes du tableau ---
     echo "<thead><tr>";
-    $first = false;
 
     // Colonnes principales (description)
     foreach ($this->description as $key => $desc) {
-        if (!$first) {
-            echo "<th scope=\"col\"><span>$desc</span></th>";
-            $first = true;
-        } else {
-            $tooltipbegin = !empty($this->tooltip[$key]) ? "<a href=\"#\" class=\"tooltip\">" : "";
-            $tooltipend = !empty($this->tooltip[$key]) ? "<span>" . $this->tooltip[$key] . "</span></a>" : "";
-            echo "<th scope=\"col\"><span>$tooltipbegin$desc$tooltipend</span></th>";
-        }
+        // La premiere colonne rend aussi son infobulle (5e param du constructeur).
+        $header = $this->renderHeaderTooltip($desc, $this->tooltip[$key] ?? "");
+        echo "<th scope=\"col\"><span>$header</span></th>";
     }
 
     // Colonnes extra
     foreach ($this->extraColumns as $extraCol) {
         $centeredClass = !empty($extraCol["centered"]) ? ' class="text-center"' : '';
-        $tooltipbegin = !empty($extraCol["tooltip"]) ? "<a href=\"#\" class=\"tooltip\">" : "";
-        $tooltipend = !empty($extraCol["tooltip"]) ? "<span>" . $extraCol["tooltip"] . "</span></a>" : "";
-        echo "<th scope=\"col\"$centeredClass><span>$tooltipbegin" . $extraCol["description"] . "$tooltipend</span></th>";
+        $header = $this->renderHeaderTooltip($extraCol["description"], $extraCol["tooltip"] ?? "");
+        echo "<th scope=\"col\"$centeredClass><span>$header</span></th>";
     }
 
     // Colonne "Actions"
@@ -1708,6 +1803,7 @@ class ListInfos extends HtmlElement
     }
 
     echo "</tbody></table>\n";
+    $this->drawHeaderTooltipScript();
     if (!empty($this->resizable)) {
         // Fix action column width, switch to fixed layout, add drag handles
         echo '<script>(function(){var t=document.querySelector("table.table-resizable:last-of-type");if(!t)return;';
@@ -3784,7 +3880,7 @@ function getFilteredGetParams(?array $array = null, ?array $keysToRemove = null)
     $array = $array ?? $_GET;
 
     // Définir les clés à supprimer (par défaut)
-    $keysToRemove = $keysToRemove ?? ['module', 'submod', 'action' ];
+    $keysToRemove = $keysToRemove ?? ['module', 'submod', 'action', 'auth_token'];
 
     // Retourner un nouveau tableau sans les clés indésirables
     return array_diff_key($array, array_flip($keysToRemove));
@@ -4020,7 +4116,10 @@ class Form extends HtmlContainer
 
     public function end()
     {
-        $str = '<input type="hidden" name="auth_token" value="' . $_SESSION['auth_token'] . '">'."\n";
+        $method = strtoupper(trim((string)($this->options['method'] ?? 'POST')));
+        $str = $method === 'POST'
+            ? '<input type="hidden" name="auth_token" value="' . htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8') . '">' . "\n"
+            : '';
         foreach ($this->buttons as $button) {
             $str .= "\n$button\n";
         }
@@ -4244,6 +4343,9 @@ class PopupForm extends Form
  */
 class PopupWindowForm extends PopupForm
 {
+    public $target_method = 'GET';
+    public $target_post_keys = array();
+
     public function __construct($title)
     {
         $options = array("action" => $_SERVER["REQUEST_URI"]);
@@ -4256,7 +4358,15 @@ class PopupWindowForm extends PopupForm
 
     public function addValidateButtonWithFade($name)
     {
-        $this->buttons[] = $this->getButtonString($name, _("Confirm"), "btnPrimary", "onclick=\"jQuery('popup').fadeOut(); window.open('" . $this->target_uri . "', '', 'toolbar=no, location=no, menubar=no, status=no, status=no, scrollbars=yes, width=330, height=200'); return false;\"");
+        if ($this->target_method === 'POST') {
+            $targetUri = htmlspecialchars(json_encode($this->target_uri, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8');
+            $postKeys = htmlspecialchars(json_encode($this->target_post_keys, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8');
+            $authToken = htmlspecialchars(json_encode($_SESSION['auth_token'] ?? '', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8');
+            $extra = "onclick=\"jQuery('popup').fadeOut(); var targetName = 'mmcPopup' + Date.now(); window.open('', targetName, 'toolbar=no, location=no, menubar=no, status=no, scrollbars=yes, width=330, height=200'); postAction(" . $targetUri . ", targetName, {auth_token: " . $authToken . "}, " . $postKeys . "); return false;\"";
+        } else {
+            $extra = "onclick=\"jQuery('popup').fadeOut(); window.open('" . $this->target_uri . "', '', 'toolbar=no, location=no, menubar=no, status=no, status=no, scrollbars=yes, width=330, height=200'); return false;\"";
+        }
+        $this->buttons[] = $this->getButtonString($name, _("Confirm"), "btnPrimary", $extra);
     }
 
 }

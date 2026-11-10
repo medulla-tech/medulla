@@ -92,10 +92,12 @@ if (isset($_POST['gid']) && is_array($_POST['gid'])) {
 
 // --- Single deletion mode (popup form) ---
 if (isset($_POST["bconfirm"])) {
-    $p_api = $_GET["p_api"];
-    $pid = $_GET["pid"];
-    $from = $_GET["from"];
-    $uuid =  isset($_GET["packageUuid"]) ? $_GET["packageUuid"] : base64_decode($pid);
+    verifyCSRFToken($_POST);
+
+    $p_api = $_POST["p_api"];
+    $pid = $_POST["pid"];
+    $from = $_POST["from"];
+    $uuid = isset($_POST["packageUuid"]) ? $_POST["packageUuid"] : base64_decode($pid);
     $ret = remove_xmpp_package($uuid);
     xmlrpc_pkgs_delete_synchro_package($uuid);
     $expire_result = expire_all_package_commands($uuid);
@@ -106,7 +108,7 @@ if (isset($_POST["bconfirm"])) {
                                     "PKG",
                                     '',
                                     0,
-                                    $_GET["from"],
+                                    $_POST["from"],
                                     'Manuel',
                                     '',
                                     '',
@@ -130,18 +132,27 @@ if (isset($_POST["bconfirm"])) {
     $packageName = isset($_GET["packageName"]) ? htmlspecialchars($_GET["packageName"]) : '';
     $packageVersion = isset($_GET["packageVersion"]) ? htmlspecialchars($_GET["packageVersion"]) : '';
     $packageOs = isset($_GET["packageOs"]) ? htmlspecialchars($_GET["packageOs"]) : '';
-    $packageSize = isset($_GET["packageSize"]) ? strip_tags($_GET["packageSize"]) : '';
+    $packageSize = isset($_GET["packageSize"]) ? htmlspecialchars(trim(strip_tags($_GET["packageSize"]))) : '';
     $f = new PopupForm(_T("Delete this package", "pkgs"));
+    $f->options["action"] = urlStrRedirect("pkgs/pkgs/delete");
     if ($packageName) {
-        $info = _T("Name", "pkgs") . " : <strong>" . $packageName . "</strong>";
-        $details = [];
-        if ($packageVersion) $details[] = _T("Version", "pkgs") . " : " . $packageVersion;
-        if ($packageOs) $details[] = _T("Os", "pkgs") . " : " . $packageOs;
-        if ($packageSize) $details[] = _T("Size", "pkgs") . " : " . $packageSize;
+        $details = array_filter([$packageOs, $packageSize], 'strlen');
+        $suffix = $packageVersion ? " " . $packageVersion : "";
         if (!empty($details)) {
-            $info .= "<br>" . implode("<br>", $details);
+            $suffix .= " (" . implode(", ", $details) . ")";
         }
-        $f->addText($info);
+        $f->addText(sprintf(_T("Delete the package <b>%s</b>%s?", "pkgs"), $packageName, $suffix));
+    }
+    if (in_array("dyngroup", $_SESSION["modulesList"])) {
+        require_once("modules/dyngroup/includes/dyngroup.php");
+        $convergences = xmlrpc_get_active_convergence_commands($uuid);
+        if (!empty($convergences)) {
+            if (count($convergences) == 1) {
+                $f->addText(_T("Its active convergence will also be deleted.", "pkgs"));
+            } else {
+                $f->addText(sprintf(_T("Its %d active convergences will also be deleted.", "pkgs"), count($convergences)));
+            }
+        }
     }
     $f->setLevel('danger');
     $hidden = new HiddenTpl("packageUuid");
@@ -151,7 +162,7 @@ if (isset($_POST["bconfirm"])) {
     $hidden = new HiddenTpl("pid");
     $f->add($hidden, array("value" => $pid, "hide" => True));
     $f->add(new HiddenTpl("from"), array("value" => $from, "hide" => True));
-    $f->addDangerButton("bconfirm");
+    $f->addDangerButton("bconfirm", _T("Delete", "pkgs"));
     $f->addCancelButton("bback");
     $f->display();
 }

@@ -1596,3 +1596,44 @@ msgstr "Masquer les MAJ Windows"
 #: modules/pkgs/pkgs/addXMPP.php
 msgid "%s only"
 msgstr "%s uniquement"
+
+#: modules/pkgs/pkgs/remove.php
+msgid "Delete the package <b>%s</b>%s?"
+msgstr "Supprimer le package <b>%s</b>%s&nbsp;?"
+
+#: modules/pkgs/pkgs/remove.php
+msgid "Its active convergence will also be deleted."
+msgstr "Sa convergence active sera aussi supprimée."
+
+#: modules/pkgs/pkgs/remove.php
+msgid "Its %d active convergences will also be deleted."
+msgstr "Ses %d convergences actives seront aussi supprimées."
+
+#: modules/pkgs/pkgs/ajaxPackageList.php
+msgid "Delete selected"
+msgstr "Supprimer la sélection"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php
+msgid "Selection mode"
+msgstr "Mode sélection"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php
+msgid "Delete this package?"
+msgstr "Supprimer ce package ?"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php
+#, php-format
+msgid "Delete %d packages?"
+msgstr "Supprimer %d packages ?"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php
+msgid "Some packages could not be deleted:"
+msgstr "Certains packages n'ont pas pu être supprimés :"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php
+msgid "An error occurred while deleting."
+msgstr "Une erreur est survenue lors de la suppression."
+
+#: modules/pkgs/pkgs/ajaxPackageList.php
+msgid "Close"
+msgstr "Fermer"

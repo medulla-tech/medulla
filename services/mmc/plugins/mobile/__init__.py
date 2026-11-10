@@ -29,8 +29,8 @@ def activate():
         return False
     return True
 
-def addHmdmDevice(name, configuration_id, description="", groups=None, imei="", phone="", device_id=None):
-    return MobileDatabase().addHmdmDevice(name, configuration_id, description, groups, imei, phone, device_id)
+def addHmdmDevice(name, configuration_id, description="", groups=None, imei="", phone="", device_id=None, custom1=""):
+    return MobileDatabase().addHmdmDevice(name, configuration_id, description, groups, imei, phone, device_id, custom1)
 
 def updateHmdmDevice(device_data):
     return MobileDatabase().updateHmdmDevice(device_data)
@@ -38,11 +38,20 @@ def updateHmdmDevice(device_data):
 def getHmdmDevices():
     return MobileDatabase().getHmdmDevices()
 
+def getHmdmDeviceById(device_id):
+    return MobileDatabase().getHmdmDeviceById(device_id)
+
 def getHmdmDevicesOsCount():
     return MobileDatabase().getHmdmDevicesOsCount()
 
+def getHmdmOnlineCount():
+    return MobileDatabase().getHmdmOnlineCount()
+
 def getHmdmConfigurationById(id):
     return MobileDatabase().getHmdmConfigurationById(id)
+
+def getHmdmConfigQrUrl():
+    return MobileDatabase().getHmdmConfigQrUrl()
 
 def updateHmdmConfiguration(config_data):
     return MobileDatabase().updateHmdmConfiguration(config_data)
@@ -110,6 +119,28 @@ def assignFileToConfigurations(file_id, configuration_ids):
 def deleteConfigurationById(id):
     return MobileDatabase().deleteConfigurationById(id)
 
+def getHmdmAllUsers():
+    return MobileDatabase().getHmdmAllUsers()
+
+def getHmdmAllRoles():
+    return MobileDatabase().getHmdmAllRoles()
+def getCurrentHmdmUser(medulla_user=None):
+    return MobileDatabase().getCurrentHmdmUser(medulla_user)
+def getHmdmAllPermissions():
+    return MobileDatabase().getHmdmAllPermissions()
+
+def createOrUpdateHmdmRole(name, description=None, permission_ids=None, role_id=None):
+    return MobileDatabase().createOrUpdateHmdmRole(name, description, permission_ids, role_id)
+
+def deleteHmdmRole(role_id):
+    return MobileDatabase().deleteHmdmRole(role_id)
+
+def createOrUpdateHmdmUser(login, role_id, all_devices=True, all_configs=True, user_id=None, device_groups=None, config_ids=None):
+    return MobileDatabase().createOrUpdateHmdmUser(login, role_id, all_devices, all_configs, user_id, device_groups, config_ids)
+
+def deleteHmdmUser(user_id):
+    return MobileDatabase().deleteHmdmUser(user_id)
+
 def getHmdmAuditLogs(page_size=50, page_num=1, message_filter="", user_filter=""):
     return MobileDatabase().getHmdmAuditLogs(page_size, page_num, message_filter, user_filter)
 
@@ -155,3 +186,81 @@ def searchHmdmAppPackages(filter_text=""):
 
 def uploadWebUiFiles(uploaded_file_path=None, uploaded_file_name=None, mime_type=None):
     return MobileDatabase().uploadWebUiFiles(uploaded_file_path, uploaded_file_name, mime_type)
+
+def getHmdmContactsConfig(configuration_id):
+    return MobileDatabase().getHmdmContactsConfig(int(configuration_id))
+
+def saveHmdmContactsConfig(config_data):
+    return MobileDatabase().saveHmdmContactsConfig(config_data)
+
+def exportHmdmDevices(group_id=None, configuration_id=None, filter_text=None, columns=None):
+    return MobileDatabase().exportHmdmDevices(group_id, configuration_id, filter_text, columns)
+
+def importHmdmDevices(csv_content):
+    return MobileDatabase().importHmdmDevices(csv_content)
+
+def getPhotosSettings():
+    return MobileDatabase().getPhotosSettings()
+
+def savePhotosSettings(settings_data):
+    return MobileDatabase().savePhotosSettings(settings_data)
+
+def listPhotos(device_number=None, date_from=None, date_to=None, page_num=0, page_size=50):
+    return MobileDatabase().listPhotos(device_number, date_from, date_to, page_num, page_size)
+
+def deletePhoto(photo_id):
+    return MobileDatabase().deletePhoto(int(photo_id))
+
+def getPhotoFile(photo_id, is_thumb=False):
+    return MobileDatabase().getPhotoFile(int(photo_id), is_thumb)
+
+def startRemoteControlSession(device_number):
+    return MobileDatabase().startRemoteControlSession(device_number)
+
+def stopRemoteControlSession(session_id):
+    return MobileDatabase().stopRemoteControlSession(int(session_id))
+
+def getNetfilterSettings():
+    return MobileDatabase().getNetfilterSettings()
+
+def saveNetfilterSettings(enabled, filter_mode):
+    return MobileDatabase().saveNetfilterSettings(enabled, filter_mode)
+
+def getNetfilterRules():
+    return MobileDatabase().getNetfilterRules()
+
+def addNetfilterRule(domain, rule_type):
+    return MobileDatabase().addNetfilterRule(domain, rule_type)
+
+def updateNetfilterRule(rule_id, domain, rule_type, enabled):
+    return MobileDatabase().updateNetfilterRule(int(rule_id), domain, rule_type, enabled)
+
+def deleteNetfilterRule(rule_id):
+    return MobileDatabase().deleteNetfilterRule(int(rule_id))
+
+def getNetfilterProfiles():
+    return MobileDatabase().getNetfilterProfiles()
+
+def createNetfilterProfile(name, filter_mode):
+    return MobileDatabase().createNetfilterProfile(name, filter_mode)
+
+def updateNetfilterProfile(profile_id, name, filter_mode, enabled):
+    return MobileDatabase().updateNetfilterProfile(int(profile_id), name, filter_mode, enabled)
+
+def deleteNetfilterProfile(profile_id):
+    return MobileDatabase().deleteNetfilterProfile(int(profile_id))
+
+def getNetfilterProfileRules(profile_id):
+    return MobileDatabase().getNetfilterProfileRules(int(profile_id))
+
+def addNetfilterProfileRule(profile_id, domain, rule_type):
+    return MobileDatabase().addNetfilterProfileRule(int(profile_id), domain, rule_type)
+
+def deleteNetfilterProfileRule(profile_id, rule_id):
+    return MobileDatabase().deleteNetfilterProfileRule(int(profile_id), int(rule_id))
+
+def getNetfilterProfileConfigs(profile_id):
+    return MobileDatabase().getNetfilterProfileConfigs(int(profile_id))
+
+def setNetfilterProfileConfigs(profile_id, config_ids):
+    return MobileDatabase().setNetfilterProfileConfigs(int(profile_id), config_ids)

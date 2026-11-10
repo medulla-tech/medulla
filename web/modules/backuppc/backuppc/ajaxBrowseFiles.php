@@ -179,6 +179,7 @@ if (isset($_GET['host'], $_GET['sharename'], $_GET['backupnum'])) {
     $n->addActionItemArray($viewVersionsActions);
 
     print '<br/><br/><form id="restorefiles" method="post" action="">';
+    printf('<input type="hidden" name="auth_token" value="%s" />', htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'));
     printf('<input type="hidden" name="host" value="%s" />', $_GET['host']);
     printf('<input type="hidden" name="backupnum" value="%s" />', $_GET['backupnum']);
     printf('<input type="hidden" name="sharename" value="%s" />', $_GET['sharename']);

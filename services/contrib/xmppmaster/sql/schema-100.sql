@@ -144,7 +144,7 @@ DELIMITER ;
 -- PROCEDURE : up_init_packages_Windows_Security_platform
 -- Description :
 --   Cette procedure cree une table temporaire up_packages_Windows_Security_platform
---   filtrée pour Windows Security platform uniquement (titre et produit)
+--   filtree pour Windows Security platform uniquement (titre et produit)
 
 DELIMITER $$
 USE `xmppmaster`$$
@@ -199,7 +199,7 @@ END$$
 DELIMITER ;
 
 
--- Enregistrement de la procédure dans up_list_produit
+-- Enregistrement de la procedure dans up_list_produit
 INSERT IGNORE INTO `xmppmaster`.`up_list_produit` (`name_procedure`) VALUES ('up_init_packages_Windows_Security_platform');
 
 -- Enregistrement du produit dans applicationconfig (active par defaut)

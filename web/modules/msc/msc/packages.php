@@ -47,6 +47,14 @@ $n->drawTable(0);
 
 
 ?>
+<script type="text/javascript">
+jQuery(function() {
+    jQuery('a[href*="action=start_command"]').on('click', function(e) {
+        e.preventDefault();
+        postAction(jQuery(this).attr('href'));
+    });
+});
+</script>
 <style>
 li.detail a {
         padding: 3px 0px 5px 20px;

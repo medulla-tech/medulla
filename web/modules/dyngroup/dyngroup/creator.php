@@ -26,6 +26,15 @@ require_once("modules/dyngroup/includes/includes.php");
 global $conf;
 $glpidisplayname = (!empty($conf['global']['glpidisplayname'])) ? $conf['global']['glpidisplayname'] : 'glpi';
 
+$deleteActions = array('computersgroupsubdel', 'computersgroupcreatesubdel');
+if (in_array($_GET['action'] ?? '', $deleteActions, true)) {
+    if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+        http_response_code(405);
+        exit;
+    }
+    verifyCSRFToken($_POST);
+}
+
 if (
     safeCount($_POST) == 0 &&
     !isset($_GET['request']) &&
@@ -91,8 +100,8 @@ if ($_GET['action'] == 'computersgroupsubedit' || $_GET['action'] == 'computersg
 }
 
 // remove criterion
-if ($_GET['action'] == 'computersgroupsubdel' || $_GET['action'] == 'computersgroupcreatesubdel') {
-    $request->removeSub(quickGet('sub_id'));
+if (in_array($_GET['action'] ?? '', $deleteActions, true)) {
+    $request->removeSub($_POST['sub_id']);
 }
 
 // a new part has to be added to the request

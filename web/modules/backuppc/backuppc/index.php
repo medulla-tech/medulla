@@ -29,20 +29,18 @@ require_once("modules/backuppc/includes/xmlrpc.php");
 require_once("modules/pulse2/includes/utilities.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-$cn = "";
-if (isset( $_GET['objectUUID'])) {
-    $filter = array('hostname' => $_POST["uuid"]);
-    $cl = getRestrictedComputersList(0, -1, $filter, False);
-    foreach ($cl as $k => $v) {
-        $cn = $v[1]['cn'][0];
-    }
-    // xmlrpc_getPresenceuuid
-    // xmlrpc_getjidMachinefromuuid
+if (isset($_GET['objectUUID'])) {
+    http_response_code(405);
+    exit;
 }
 
-// Unset backup for selected host
-if (isset($_GET['objectUUID'])){
-    unset_backup_for_host($_GET['objectUUID']);
+if (isset($_POST['objectUUID'])) {
+    verifyCSRFToken($_POST);
+    $uuid = $_POST['objectUUID'];
+    $uuidNumber = preg_replace('/^UUID/i', '', $uuid);
+    $hostnames = getComputersName(array('uuid' => $uuidNumber));
+    $cn = $hostnames[0] ?? ($_POST['cn'] ?? $uuid);
+    unset_backup_for_host($uuid);
     if (!isXMLRPCError()) {
     xmlrpc_setfromxmppmasterlogxmpp("Notify : The computer $cn has been removed from the backup system.",
                                     "BPC",
@@ -57,6 +55,8 @@ if (isset($_GET['objectUUID'])){
                                     'Backup | Full Removed Starting | Manual');
         new NotifyWidgetSuccess(_("The computer has been removed from the backup system."));
     }
+    header("Location: " . urlStrRedirect("backuppc/backuppc/index"));
+    exit;
 }
 
 $p = new PageGenerator(_T("Backup status", 'backuppc'));

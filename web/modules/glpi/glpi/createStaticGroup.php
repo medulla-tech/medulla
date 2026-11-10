@@ -27,14 +27,21 @@ require_once("modules/dyngroup/includes/dyngroup.php"); # for Group Class
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
 
-if ($_GET['group'] == 'green') {
-    $groupname = sprintf (_T("Latest inventory is less than %s days at %s", "inventory"), $_GET['days'], date("Y-m-d H:i:s"));
-}
-else {
-    $groupname = sprintf (_T("Latest inventory is more than %s days at %s", "inventory"), $_GET['days'], date("Y-m-d H:i:s"));
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
 }
 
-$groupmembers = getMachineListByState($_GET['group']);
+verifyCSRFToken($_POST);
+
+if ($_POST['group'] == 'green') {
+    $groupname = sprintf (_T("Latest inventory is less than %s days at %s", "inventory"), $_POST['days'], date("Y-m-d H:i:s"));
+}
+else {
+    $groupname = sprintf (_T("Latest inventory is more than %s days at %s", "inventory"), $_POST['days'], date("Y-m-d H:i:s"));
+}
+
+$groupmembers = getMachineListByState($_POST['group']);
 
 $group = new Group();
 $group->create($groupname, False);

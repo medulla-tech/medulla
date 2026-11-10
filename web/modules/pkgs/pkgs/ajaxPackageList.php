@@ -48,7 +48,7 @@ $editAction = new ActionItem(_T("Edit a package", "pkgs"), "edit", "edit", "pkgs
 $editExpertAction = new EmptyActionItem(_T("Please switch to Expert mode to edit this package", "pkgs"));
 $editNoRightsAction = new EmptyActionItem(_T("You must have write rights to edit this package", "pkgs"));
 $emptyAction = new EmptyActionItem();
-$delAction = new ActionPopupItem(_T("Delete a package", "pkgs"), "delete", "delete", "pkgs", "pkgs", "pkgs");
+$delAction = new ActionPopupItem(_T("Delete a package", "pkgs"), "delete", "delete", "pkgs", "pkgs", "pkgs", null, 400);
 $delNoRightsAction = new EmptyActionItem(_T("You must have write rights to delete this package", "pkgs"));
 
 if(isset($_SESSION['sharings'])) {
@@ -80,16 +80,15 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
     // Bulk select bar
     $deleteUrl = urlStrRedirect("pkgs/pkgs/delete");
     $bulkBar = new BulkSelectBar($deleteUrl, '0', 'pkg-select', [
-        'deleteSelected' => _T("Delete selected", "pkgs"),
-        'cancel'         => _T("Cancel", "pkgs"),
-        'selectionMode'  => _T("Selection mode", "pkgs"),
-        'confirmDelete'  => _T("Are you sure you want to delete these packages?", "pkgs"),
-        'partialErrors'  => _T("Some packages could not be deleted:", "pkgs"),
-        'deleteError'    => _T("An error occurred while deleting.", "pkgs"),
-        'yes'            => _T("Yes", "pkgs"),
-        'no'             => _T("No", "pkgs"),
-        'close'          => _T("Close", "pkgs"),
-        'andMore'        => _T("and %d more", "pkgs"),
+        'deleteSelected'    => _T("Delete selected", "pkgs"),
+        'cancel'            => _T("Cancel", "pkgs"),
+        'selectionMode'     => _T("Selection mode", "pkgs"),
+        'confirmDeleteOne'  => _T("Delete this package?", "pkgs"),
+        'confirmDeleteMany' => _T("Delete %d packages?", "pkgs"),
+        'confirm'           => _T("Delete", "pkgs"),
+        'partialErrors'     => _T("Some packages could not be deleted:", "pkgs"),
+        'deleteError'       => _T("An error occurred while deleting.", "pkgs"),
+        'close'             => _T("Close", "pkgs"),
     ]);
 
     $_params = array();
@@ -333,16 +332,15 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
     // Bulk select bar
     $deleteUrl = urlStrRedirect("pkgs/pkgs/delete");
     $bulkBar = new BulkSelectBar($deleteUrl, '0', 'pkg-select', [
-        'deleteSelected' => _T("Delete selected", "pkgs"),
-        'cancel'         => _T("Cancel", "pkgs"),
-        'selectionMode'  => _T("Selection mode", "pkgs"),
-        'confirmDelete'  => _T("Are you sure you want to delete these packages?", "pkgs"),
-        'partialErrors'  => _T("Some packages could not be deleted:", "pkgs"),
-        'deleteError'    => _T("An error occurred while deleting.", "pkgs"),
-        'yes'            => _T("Yes", "pkgs"),
-        'no'             => _T("No", "pkgs"),
-        'close'          => _T("Close", "pkgs"),
-        'andMore'        => _T("and %d more", "pkgs"),
+        'deleteSelected'    => _T("Delete selected", "pkgs"),
+        'cancel'            => _T("Cancel", "pkgs"),
+        'selectionMode'     => _T("Selection mode", "pkgs"),
+        'confirmDeleteOne'  => _T("Delete this package?", "pkgs"),
+        'confirmDeleteMany' => _T("Delete %d packages?", "pkgs"),
+        'confirm'           => _T("Delete", "pkgs"),
+        'partialErrors'     => _T("Some packages could not be deleted:", "pkgs"),
+        'deleteError'       => _T("An error occurred while deleting.", "pkgs"),
+        'close'             => _T("Close", "pkgs"),
     ]);
 
     $params = array();

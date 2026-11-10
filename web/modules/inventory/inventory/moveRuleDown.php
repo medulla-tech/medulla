@@ -22,11 +22,16 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 require_once("modules/inventory/includes/xmlrpc.php");
-if (isset($_GET['numRule'])) {
-    verifyCSRFToken($_GET);
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
 
-    echo  "Move ". $_GET['entitie']." rule " . $_GET['numRule']." down";
-    moveEntityRuleDown($_GET['numRule']);
+if (isset($_POST['numRule'])) {
+    verifyCSRFToken($_POST);
+
+    echo  "Move ". $_POST['entitie']." rule " . $_POST['numRule']." down";
+    moveEntityRuleDown($_POST['numRule']);
 }
 ?>
 

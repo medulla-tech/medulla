@@ -22,22 +22,17 @@
 
 require("graph/navbar.inc.php");
 require("localSidebar.php");
-require_once("modules/security/includes/xmlrpc.php");
-require_once("modules/medulla_server/includes/utilities.php");
 
-$p = new PageGenerator(_T("Results by Entity", 'security'));
+$p = new PageGenerator(_T("Entities", 'security'));
 $p->setSideMenu($sidemenu);
 $p->display();
-
-// Get user's accessible entities for filtering
-list($listEntities, $valuesEntities) = getEntitiesSelectableElements();
-$userEntities = implode(',', $valuesEntities);
+require_once("modules/security/includes/html.inc.php");
+SecurityFilter::script();
 ?>
-
 
 <div class="search-wrapper" style="margin-bottom: 15px;">
 <?php
-$ajax = new AjaxFilter(urlStrRedirect("security/security/ajaxEntitiesList") . "&user_entities=" . urlencode($userEntities));
+$ajax = new AjaxFilter(urlStrRedirect("security/security/ajaxEntitiesList"));
 $ajax->display();
 ?>
 </div>

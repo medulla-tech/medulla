@@ -151,8 +151,12 @@ function donut(selector, datas, title, subtitle){
       d3.select(this).attr("d", s(i));
     })
     .on("click", function(i, d){
-      if(typeof(d.data.href) != "undefined" && d.data.href != "")
-        window.location.replace(d.data.href)
+      if(typeof(d.data.href) != "undefined" && d.data.href != "") {
+        if (d.data.method === "POST")
+          postAction(d.data.href);
+        else
+          window.location.replace(d.data.href);
+      }
     });
 
   //Add label text below (stacked vertically)

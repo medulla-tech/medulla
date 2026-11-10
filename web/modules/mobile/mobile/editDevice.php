@@ -6,14 +6,17 @@ require_once("modules/imaging/includes/class_form.php");
 require_once("modules/mobile/includes/xmlrpc.php");
 
 $deviceId = isset($_GET['id']) ? $_GET['id'] : '';
-$devices = xmlrpc_get_hmdm_devices();
-if (!is_array($devices)) { $devices = []; }
 
-$device = null;
-foreach ($devices as $d) {
-    if ((string)($d['id'] ?? '') === (string)$deviceId) { 
-        $device = $d; 
-        break; 
+$device = xmlrpc_get_hmdm_device_by_id($deviceId);
+if (!$device || !is_array($device)) {
+    $devices = xmlrpc_get_hmdm_devices();
+    if (!is_array($devices)) { $devices = []; }
+    $device = null;
+    foreach ($devices as $d) {
+        if ((string)($d['id'] ?? '') === (string)$deviceId) {
+            $device = $d;
+            break;
+        }
     }
 }
 
@@ -90,10 +93,14 @@ if (isset($_POST['baddgroup_x'])) {
         }
     }
 } elseif (isset($_POST['bconfirm'])) {
+    verifyCSRFToken($_POST);
+
     $updateData = array(
         'id' => $deviceId,
         'number' => $_POST['device_name'] ?? $device['number'],
         'description' => $_POST['description'] ?? '',
+        'imei' => $_POST['imei'] ?? '',
+        'custom1' => $_POST['custom1'] ?? '',
         'configurationId' => $_POST['configuration_id'] ?? $device['configurationId'],
         'groups' => array_keys($selected_groups)
     );
@@ -116,6 +123,7 @@ $deviceName = $device['number'] ?? '';
 $description = $device['description'] ?? '';
 $configurationId = $device['configurationId'] ?? '';
 $imei = $device['imei'] ?? '';
+$custom1 = $device['custom1'] ?? '';
 $phone = $device['phone'] ?? '';
 
 ?>
@@ -128,6 +136,10 @@ $f->push(new Table());
 $f->add(new TrFormElement(_T("Device's name", "mobile"), new InputTpl("device_name")), array("value" => $deviceName));
 
 $f->add(new TrFormElement(_T("Description", "mobile"), new TextareaTpl("description")), array("value" => $description));
+
+$f->add(new TrFormElement(_T("IMEI", "mobile"), new InputTpl("imei", "/.*/", "")), array("value" => $imei));
+
+$f->add(new TrFormElement(_T("Email", "mobile"), new InputTpl("custom1", "/.*/", "")), array("value" => $custom1));
 
 $config_names = [];
 $config_ids = [];
@@ -144,6 +156,7 @@ $sc->setSelected($configurationId);
 $f->add(new TrFormElement(_T('Configuration', 'mobile'), $sc));
 
 $f->pop();
+$f->add(new HiddenTpl("auth_token"), array("value" => $_SESSION['auth_token'] ?? '', "hide" => true));
 foreach ($f->elements as $element) {
     $element->display();
 }

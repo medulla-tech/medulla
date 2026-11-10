@@ -35,21 +35,26 @@ require_once('../includes/xmlrpc.php');
 
 require_once("../../medulla_server/includes/locations_xmlrpc.inc.php");
 
-verifyCSRFToken($_GET);
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
 
-switch($_GET['action']){
+verifyCSRFToken($_POST);
+
+switch($_POST['action']){
     case "detailactions":
         // work for one machine
-        $jid = $_GET['jid'];
-        $hostname = $_GET['hostname'];
-        $type = $_GET['agenttype'];
+        $jid = $_POST['jid'];
+        $hostname = $_POST['hostname'];
+        $type = $_POST['agenttype'];
 
         xmlrpc_callrestart($jid, true);
-        xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] ask a Reboot to [ ".$type." : \"".$_GET['hostname']."\"][jid : \"".$jid."\"]",
+        xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] ask a Reboot to [ ".$type." : \"".$_POST['hostname']."\"][jid : \"".$jid."\"]",
                                         "QA",
                                         '' ,
                                         0,
-                                        $_GET['hostname'],
+                                        $_POST['hostname'],
                                         'Manuel',
                                         '',
                                         '',
@@ -59,12 +64,12 @@ switch($_GET['action']){
     break;
     case "deployquick":
         // work for one machine
-        $jid =  xmlrpc_callrestart($_GET['objectUUID']);
-        xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] ask a Reboot to presente [ Machine : \"".$_GET['cn']."\"][jid : \"".$jid."\"]",
+        $jid =  xmlrpc_callrestart($_POST['objectUUID']);
+        xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] ask a Reboot to presente [ Machine : \"".$_POST['cn']."\"][jid : \"".$jid."\"]",
                                         "QA",
                                         '' ,
                                         0,
-                                        $_GET['cn'],
+                                        $_POST['cn'],
                                         'Manuel',
                                         '',
                                         '',
@@ -81,13 +86,13 @@ switch($_GET['action']){
         $machine_already_present = array();
         $machine_not_present     = array();
         $result = array();
-        $list = getRestrictedComputersList(0, -1, array('gid' => $_GET['gid']), False);
+        $list = getRestrictedComputersList(0, -1, array('gid' => $_POST['gid']), False);
 
-        xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] ask a restart to machines on Group : [\"".$_GET['groupname']."\"]",
+        xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] ask a restart to machines on Group : [\"".$_POST['groupname']."\"]",
                                         "QA",
                                         '' ,
                                         0,
-                                        'Grp : '.$_GET['groupname'],
+                                        'Grp : '.$_POST['groupname'],
                                         'Manuel',
                                         '',
                                         '',
@@ -107,7 +112,7 @@ switch($_GET['action']){
                 $machine_already_present[] =  $value[1]['cn'][0];
                 $jid = xmlrpc_callrestart($key);
                 xmlrpc_setfromxmppmasterlogxmpp("QA : [user : \"".$_SESSION["login"]."\"] ".
-                                                    "[Group :\"".$_GET['groupname'].
+                                                    "[Group :\"".$_POST['groupname'].
                                                     "\"] Restart to presente machine\"".$value[1]['cn'][0]."\" [jid : \"".$jid."\"]",
                                                 "QA",
                                                 '' ,

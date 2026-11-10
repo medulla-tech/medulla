@@ -26,5 +26,5 @@
      $colorDisplay = array( "#ff0000","#ff3535","#ff5050","#ff8080","#ffA0A0","#c8ffc8","#97ff97","#64ff64","#2eff2e","#00ff00", "#00ff00");
      return $colorDisplay[intval(($conf - ($conf % 10)) / 10)];
  }
- 
+
 ?>

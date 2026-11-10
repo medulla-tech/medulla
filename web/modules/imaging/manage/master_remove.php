@@ -90,6 +90,7 @@ foreach ($masters as $master) {
 ?>
 <h2><?php echo _T("Remove master", "imaging") ?></h2>
 <form action="<?php echo urlStr("imaging/manage/master_remove") ?>" method="post">
+    <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
     <p><?php printf(_T("Are you sure you want to remove <b>%s</b> master ?", "imaging"), $label); ?></p>
     <input name='menu_item_id' type='hidden' value="<?php echo $menu_item_id ?>" />
     <input name='valid' type="submit" class="btnPrimary" value="<?php echo _T("Remove", "imaging"); ?>" />

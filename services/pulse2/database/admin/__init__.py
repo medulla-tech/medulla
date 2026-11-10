@@ -180,7 +180,8 @@ class AdminDatabase(DatabaseHelper):
 
             # Construct the configuration dictionary
             for param_connect in api_admin:
-                config_api[param_connect.setting_name] = param_connect.setting_value.strip()
+                if isinstance(param_connect.setting_value, str):
+                    config_api[param_connect.setting_name] = param_connect.setting_value.strip()
             return config_api
         except Exception as e:
             logger.error(f"An error occurred: {str(e)}")

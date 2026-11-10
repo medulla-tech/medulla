@@ -101,9 +101,9 @@ $action_delete = array();
 $array_action_owner = array(); // on veut display le group avec le droit du posseseur de group
 
 if ($is_gp != 1) { // Simple Group
-    $delete = new ActionPopupItem(_T("Delete this group", 'dyngroup'), "delete_group", "delete", "id", "base", "computers");
+    $delete = new ActionPopupItem(_T("Delete this group", 'dyngroup'), "delete_group", "delete", "id", "base", "computers", null, 400);
 } else { // Imaging group
-    $delete = new ActionPopupItem(_T("Delete this imaging group", 'dyngroup'), "delete_group", "delete", "id", "imaging", "manage");
+    $delete = new ActionPopupItem(_T("Delete this imaging group", 'dyngroup'), "delete_group", "delete", "id", "imaging", "manage", null, 400);
 }
 
 if (in_array("xmppmaster", $_SESSION["supportModList"])) {
@@ -156,8 +156,27 @@ $bulkBar = new BulkSelectBar(
     urlStrRedirect("base/computers/delete_group"),
     $is_gp,
     'group-select',
-    ['confirmDelete' => _T("Are you sure you want to delete these groups?", "dyngroup")]
+    [
+        'confirmDeleteOne'  => _T("Delete this group?", "dyngroup"),
+        'confirmDeleteMany' => _T("Delete %d groups?", "dyngroup"),
+        'partialErrors'     => _T("Some groups could not be deleted:", "dyngroup"),
+    ]
 );
+
+$convergenceCounts = [];
+if (in_array("dyngroup", $_SESSION["supportModList"] ?? [])
+    && function_exists('xmlrpc_get_active_convergence_counts')) {
+    $pageGids = [];
+    foreach ($list as $group) {
+        $pageGids[] = (string)$group->id;
+    }
+    if (!empty($pageGids)) {
+        $result = xmlrpc_get_active_convergence_counts($pageGids);
+        if (is_array($result)) {
+            $convergenceCounts = $result;
+        }
+    }
+}
 
 foreach ($list as $group) {
     // Nettoyage des infos propriétaire
@@ -215,7 +234,15 @@ foreach ($list as $group) {
     // Suppression possible ?
     if ($groupData['is_owner'] == "1" || $_SESSION['login'] == "root") {
         $action_delete[] = $delete;
-        $bulkBar->addItem(clean_xss($group->id), clean_xss($group->name));
+        $nbConvergences = (int)($convergenceCounts[(string)$group->id] ?? 0);
+        if ($nbConvergences == 1) {
+            $convergenceNote = _T("with 1 convergence", "dyngroup");
+        } elseif ($nbConvergences > 1) {
+            $convergenceNote = sprintf(_T("with %d convergences", "dyngroup"), $nbConvergences);
+        } else {
+            $convergenceNote = '';
+        }
+        $bulkBar->addItem(clean_xss($group->id), clean_xss($group->name), $convergenceNote);
     } else {
         $action_delete[] = $empty;
         $bulkBar->addEmpty();

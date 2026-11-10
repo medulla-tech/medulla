@@ -87,6 +87,8 @@ Requires:       mmc-web-security
 Requires:       python3-mmc-security
 Requires:       mmc-web-store
 Requires:       python3-mmc-store
+Requires:       mmc-web-reflex
+Requires:       python3-mmc-reflex
 Requires:       pulse2-common
 Requires:       pulse2-package-server
 Requires:       python3-pulse2-common-database-dyngroup
@@ -485,6 +487,11 @@ This package contains the updates plugin for the MMC agent.
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/updates.ini
 %python3_sitelib/mmc/plugins/updates
 %python3_sitelib/pulse2/database/updates
+%{_sharedstatedir}/pulse2/packages/sharing/global/34181a66-updateslinuxkernel_i8ppnmrs
+%{_sharedstatedir}/pulse2/packages/sharing/global/aa365fe6-linuxupdateother_cew74x5bi0
+%{_sharedstatedir}/pulse2/packages/sharing/global/dfd3b8dc-linuxupdategenericcommand_p
+%{_sharedstatedir}/pulse2/packages/sharing/global/e05e689e-linuxupdatesecutity_ivvfn4b
+
 
 
 #--------------------------------------------------------------------
@@ -935,6 +942,23 @@ This package contains Pulse 2 common store database files
 
 #--------------------------------------------------------------------
 
+%package -n     python3-pulse2-common-database-reflex
+Summary:        Pulse 2 common reflex database files
+Group:          System/Servers
+Requires:       pulse2-common = %version-%release
+Requires:       python3-pulse2-common-database = %version-%release
+
+Obsoletes:  python-pulse2-common-database-reflex < 4.7.0
+Provides:   python-pulse2-common-database-reflex = %version-%release
+
+%description -n python3-pulse2-common-database-reflex
+This package contains Pulse 2 common reflex database files
+
+%files -n python3-pulse2-common-database-reflex
+%python3_sitelib/pulse2/database/reflex
+
+#--------------------------------------------------------------------
+
 %package -n     python3-pulse2-common-database
 Summary:        Pulse 2 common database files
 Group:          System/Servers
@@ -1027,7 +1051,6 @@ Requires(pre): python3-mmc-base
 Requires:   python3-mmc-base
 Requires:   ajax-php-file-manager
 Requires:   python3-memory-profiler
-Requires:   python3-posix-ipc
 Requires:   python3.11-pyyaml
 Requires:   python3.11-incremental
 Requires:   python3.11-typing-extensions
@@ -1528,6 +1551,38 @@ Store module for the MMC web interface
 
 %files -n mmc-web-store
 %{_datadir}/mmc/modules/store
+
+#--------------------------------------------------------------------
+
+%package -n python3-mmc-reflex
+Summary:    Reflex plugin for the MMC agent
+Group:      System/Servers
+Requires:   pulse2-common = %version-%release
+Requires:   python3-pulse2-common-database-mobile = %version-%release
+
+Obsoletes:  python-mmc-reflex < 4.7.0
+Provides:   python-mmc-reflex = %version-%release
+
+%description -n python3-mmc-reflex
+This package contains the reflex plugin for the MMC agent.
+
+%files -n python3-mmc-reflex
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/reflex.ini
+%python3_sitelib/mmc/plugins/reflex
+%{_docdir}/pulse2/contrib/reflex
+
+#--------------------------------------------------------------------
+
+%package -n     mmc-web-reflex
+Summary:        Reflex module for the MMC web interface
+Group:          System/Servers
+Requires:       mmc-web-base >= %{version}
+
+%description -n mmc-web-reflex
+Reflex module for the MMC web interface
+
+%files -n mmc-web-reflex
+%{_datadir}/mmc/modules/reflex
 
 #--------------------------------------------------------------------
 

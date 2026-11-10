@@ -22,6 +22,13 @@
 
 include("modules/services/includes/services-xmlrpc.inc.php");
 
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+	http_response_code(405);
+	exit;
+}
+
+verifyCSRFToken($_POST);
+
 serverPoweroff();
 
 header("Location: main.php");

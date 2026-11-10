@@ -189,7 +189,7 @@ foreach ($files as $file)
                 }
                 ?>
                 <a class='btn btn-small btn-primary' title=<?php echo _T("DOWNLOAD", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=download_file&amp;timestamp=<?php echo $nowtime; ?>&amp;clientname=<?php echo $client_name; ?>&amp;clientid=<?php echo $client_id; ?>&amp;backupid=<?php echo $backup_id; ?>&amp;volumename=<?php echo $final_path; ?>&amp;filename=<?php echo $file['name'] ?>&amp;path=<?php echo $path ?>">Download</a>
-                <a class='btn btn-small btn-primary' title=<?php echo _T("RESTORE", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=restore_file&amp;clientid=<?php echo $client_id; ?>&amp;backupid=<?php echo $backup_id; ?>&amp;volumename=<?php echo $final_path; ?>&amp;shahash=<?php echo $shahash; ?>&amp;beforepath=<?php echo $path; ?>&amp;filename=<?php echo $file['name'] ?>">Restore</a>
+                <a class='btn btn-small btn-primary' title=<?php echo _T("RESTORE", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=restore_file&amp;clientid=<?php echo $client_id; ?>&amp;backupid=<?php echo $backup_id; ?>&amp;volumename=<?php echo $final_path; ?>&amp;shahash=<?php echo $shahash; ?>&amp;beforepath=<?php echo $path; ?>&amp;filename=<?php echo $file['name'] ?>&amp;auth_token=<?php echo urlencode($_SESSION['auth_token'] ?? ''); ?>">Restore</a>
             </ul>
             </td>
         </tr>

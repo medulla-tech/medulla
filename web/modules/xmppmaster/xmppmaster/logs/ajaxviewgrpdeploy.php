@@ -49,6 +49,7 @@ function urlredirect_group_for_deploy($typegroup, $g_id, $login_deploy, $cmddepl
         "login"=>$login_deploy,
         "cmd_id"=>$cmddeploy_id,
         "type"=>$typegroup,
+        "auth_token"=>$_SESSION['auth_token'] ?? '',
 
     ];
     $urlRedirect1 = urlStrRedirect("base/computers/createMachinesStaticGroupdeploy", $p);
@@ -1014,6 +1015,8 @@ function fillSearch(content){
         $aborted = 0;
         $errors = 0;
     }
+    echo 'datas.forEach(function(item) { item.method = "POST"; });';
+    echo 'if(typeof(datas2) != "undefined"){ datas2.forEach(function(item) { item.method = "POST"; }); }';
     echo 'chart("holder", datas);';
     echo 'if(typeof(datas2) != "undefined"){';
     echo 'chart("holder2", datas2);';

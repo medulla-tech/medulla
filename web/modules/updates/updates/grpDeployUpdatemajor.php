@@ -193,17 +193,31 @@ $message_update = "";
 $platform=(isset($_GET['platform']) ? htmlentities($_GET['platform']) : "");
 $cn = isset($sanitized_get['name']) ? $sanitized_get['name'] : "";
 
-$w10to10 = intval($_GET['W10to10'] ?? 0);
 $w10to11 = intval($_GET['W10to11'] ?? 0);
 $w11to11 = intval($_GET['W11to11'] ?? 0);
-$nb_machine = $w10to10 + $w10to11 + $w11to11;
+$nb_machine = $w10to11 + $w11to11;
 $complete_name = isset($sanitized_get['completename']) ? $sanitized_get['completename'] : "";
+$entity_source = ($_GET['completename'] ?? "") !== "" ? $_GET['completename'] : ($_GET['name'] ?? "");
+$segments = explode(">", $entity_source);
+$entity_name = htmlentities(trim(end($segments)), ENT_QUOTES, 'UTF-8');
 
 
-$formtitle = sprintf("%s [%s] ", _T('Deploy Major Updates On entity', 'updates'), $complete_name);
-$message_update = ($nb_machine > 1)
-    ? sprintf(_T('%s machines to update for entity %s', 'updates'), $nb_machine, $complete_name)
-    : sprintf(_T('%s machine to update for entity %s', 'updates'), $nb_machine, $complete_name);
+$formtitle = sprintf("%s [%s] ", _T('Deploy Major Updates On entity', 'updates'), $entity_name);
+$update_message = function ($count) use ($entity_name) {
+    return ($count > 1)
+        ? sprintf(_T('%s machines to update for entity %s', 'updates'), $count, $entity_name)
+        : sprintf(_T('%s machine to update for entity %s', 'updates'), $count, $entity_name);
+};
+$message_update = $update_message($nb_machine);
+
+$update_type_counts = array_filter(array(
+    "W10to11" => $w10to11,
+    "W11to11" => $w11to11,
+));
+$update_type_labels = array(
+    "W10to11" => _T('Windows 10 → Windows 11', 'updates'),
+    "W11to11" => _T('Windows 11 → latest version', 'updates'),
+);
 
 $current = time();
 $start_date = date("Y-m-d H:i:s", $current);
@@ -218,20 +232,24 @@ if(isset($_POST['bconfirm'],
           verifyCSRFToken($_POST);
 
             $typeaction = !empty($_GET['typeaction']) ? htmlentities($_GET['typeaction']) : "windows";
-            $res = xmlrpc_get_os_update_major_details($_POST['entity_id'], $typeaction);
+            $update_type = $_POST['update_type'] ?? "";
+            if (!in_array($update_type, array("", "W10to11", "W11to11"), true)) {
+                $update_type = "";
+            }
+            $res = xmlrpc_get_os_update_major_details($_POST['entity_id'], $typeaction, "", 0, -1, $update_type);
             $start_date = $_POST['start_date'] ?? null;
             $end_date = $_POST['end_date'] ?? null;
             $deployment_intervals = $_POST['deployment_intervals'];
 
             if (empty($start_date)) {
                 header("location:". urlStrRedirect("updates/updates/index"));
-                new NotifyWidgetFailure(_T('Slot start date missing', 'msc'));
+                new NotifyWidgetFailure(_T('Slot start date missing', 'updates'));
                 exit;
             }
 
             if (empty($end_date)) {
                 header("location:". urlStrRedirect("updates/updates/index"));
-                new NotifyWidgetFailure(_T('Slot end date missing', 'msc'));
+                new NotifyWidgetFailure(_T('Slot end date missing', 'updates'));
                 exit;
             }
 
@@ -292,7 +310,7 @@ if(isset($_POST['bconfirm'],
     $f = new PopupForm($formtitle, 'Formupdate', '480px');
     // $mach = sprintf("%s [%s %s]",$message_update, $cn, $platform);
 
-    $f->add(new TitleElement($message_update,1));
+    $f->add(new TitleElement($message_update, 1, array("id" => "update_type_message")));
     $f->push(new Table());
 
     $hiddenentity_id = new HiddenTpl("entity_id");
@@ -306,6 +324,24 @@ if(isset($_POST['bconfirm'],
 
     $hiddenaction = new HiddenTpl("action");
     $f->add($hiddenaction, array("value" => $sanitized_get['action'], "hide" => true));
+
+    if (count($update_type_counts) > 1) {
+        $type_labels = array(sprintf("%s (%d)", _T('All', 'updates'), $nb_machine));
+        $type_values = array("");
+        $type_messages = array("" => $message_update);
+        foreach ($update_type_counts as $type => $count) {
+            $type_labels[] = htmlspecialchars(sprintf("%s (%d)", $update_type_labels[$type], $count), ENT_QUOTES, 'UTF-8');
+            $type_values[] = $type;
+            $type_messages[$type] = $update_message($count);
+        }
+        $type_select = new SelectItem("update_type");
+        $type_select->setElements($type_labels);
+        $type_select->setElementsVal($type_values);
+        $f->add(
+            new TrFormElement(_T('Update type', 'updates'), $type_select),
+            array("value" => "")
+        );
+    }
 
     $ss =  new TrFormElement(
         _T('The command must start after', 'msc'),
@@ -330,7 +366,7 @@ if(isset($_POST['bconfirm'],
 
     $deployment_fields = array(
         new InputTpl('deployment_intervals'),
-        new TextTpl(sprintf('<i style="color: #999999">%s</i><div id="interval_mesg"></div>', _T('Example for lunch and night (24h format): 12-14,20-24,0-8', 'msc')))
+        new TextTpl(sprintf('<div class="deploy-interval-help">%s</div><div id="interval_mesg"></div>', _T('Example for lunch and night (24h format): 12-14,20-24,0-8', 'msc')))
     );
     $deployment_values = array(
         "value" => array(
@@ -349,6 +385,16 @@ if(isset($_POST['bconfirm'],
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
+    if (count($update_type_counts) > 1) {
+?>
+<script>
+jQuery("#update_type").on("change", function() {
+    var messages = <?php echo json_encode($type_messages, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+    jQuery("#update_type_message").html(messages[jQuery(this).val()] || "");
+});
+</script>
+<?php
+    }
     exit;
 }
 ?>

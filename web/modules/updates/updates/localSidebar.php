@@ -36,24 +36,27 @@ if ($hasData) {
                                                 "updates",
                                                 "MajorEntitiesList"));
 
+    // Configuration, dans l'ordre du flux : declarer les produits suivis,
+    // arbitrer ce qui remonte, puis automatiser.
+    $sidemenu->addSideMenuItem(
+         new SideMenuItem(_T("Products",
+                             "updates"),
+                          "updates",
+                          "updates",
+                          "products"));
+
     $sidemenu->addSideMenuItem(new SideMenuItem(_T("Manage Updates Lists",
                                                    'updates'),
                                                 "updates",
                                                 "updates",
                                                 "updatesListWin"));
 
-    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Automatic Approval Rules",
-                                                   'updates'),
-                                                "updates",
-                                                "updates",
-                                                "approve_rules"));
-
     $sidemenu->addSideMenuItem(
-         new SideMenuItem(_T("Microsoft Products Approval",
+         new SideMenuItem(_T("Automatic Deployment",
                              "updates"),
                           "updates",
                           "updates",
-                          "approve_products"));
+                          "automation"));
 }
 
 // $sidemenu->addSideMenuItem(

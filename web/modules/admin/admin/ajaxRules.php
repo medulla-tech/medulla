@@ -27,14 +27,15 @@ require_once("modules/xmppmaster/includes/html.inc.php");
 
 global $maxperpage;
 
-if(isset($_GET['mod'], $_GET['id']))
+if (isset($_POST['mod'], $_POST['id']))
 {
-  if($_GET['mod'] == "raise" || $_GET['mod'] == "down"){
-    $_GET['id'] = htmlentities($_GET['id']);
-    $mod = htmlentities($_GET['mod']);
-    $name = htmlentities($_GET['name']);
+  verifyCSRFToken($_POST);
+  if($_POST['mod'] == "raise" || $_POST['mod'] == "down"){
+    $id = htmlentities($_POST['id']);
+    $mod = htmlentities($_POST['mod']);
+    $name = htmlentities($_POST['name']);
 
-    $result = xmlrpc_order_relay_rule($mod, $_GET['id']);
+    $result = xmlrpc_order_relay_rule($mod, $id);
     if($result['status'] == "success"){
       new NotifyWidgetSuccess(_T('The rule '.$name.' has been '.$mod.'ed', "admin"));
     }
@@ -45,6 +46,10 @@ if(isset($_GET['mod'], $_GET['id']))
   else{
     new NotifyWidgetFailure(_T("Unknown action", "admin"));
   }
+}
+elseif (isset($_GET['mod'], $_GET['id'])) {
+  http_response_code(405);
+  exit;
 }
 
 $start = (isset($_GET['start'])) ? $_GET['start'] : 0;

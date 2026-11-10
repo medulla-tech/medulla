@@ -31,6 +31,7 @@ $p->display();
 $users_group_array = xmlrpc_get_clients();
 
 $groupname = $_POST['groupname'];
+if ($groupname !== '') verifyCSRFToken($_POST);
 
 $group_array = $users_group_array['navitems']['groups'];
 

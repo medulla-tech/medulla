@@ -23,6 +23,19 @@
 //Import the functions and classes needed
 require_once("modules/pkgs/includes/xmlrpc.php");
 
+if (isset($_POST['bconfirm']) && $_POST['bconfirm'])
+{
+  verifyCSRFToken($_POST);
+
+  $id = (int)$_POST['id'];
+  $rule = get_extension([$id]);
+  if (isset($rule['rule_name'])) {
+    delete_extension($id);
+    header('location: '.urlStrRedirect("pkgs/pkgs/rulesList", ["success"=>1, "name"=>$rule['rule_name']]));
+    exit;
+  }
+}
+
 if(isset($_GET['id']))
 {
   $id = (int)$_GET['id'];
@@ -30,20 +43,13 @@ if(isset($_GET['id']))
   if(isset($rule['rule_name']))
   {
     $params['name'] = $rule['rule_name'];
-    if(isset($_POST['bconfirm']) && $_POST['bconfirm'])
-    {
-      verifyCSRFToken($_POST);
-
-      delete_extension($id);
-      header('location: '.urlStrRedirect("pkgs/pkgs/rulesList", ["success"=>1, "name"=>$rule['rule_name']]));
-    }
-    else{
-      $title = _T(sprintf("Are you sure to delete the rule %s ?", $rule["rule_name"]));
-      $f = new PopupForm($title, 'startPopupForm');
-      $f->addValidateButton("bconfirm");
-      $f->addCancelButton("bback");
-      $f->display();
-    }
+    $title = _T(sprintf("Are you sure to delete the rule %s ?", $rule["rule_name"]));
+    $f = new PopupForm($title, 'startPopupForm');
+    $f->options['action'] = urlStrRedirect('pkgs/pkgs/deleteRule');
+    $f->add(new HiddenTpl('id'), array('value' => $id, 'hide' => True));
+    $f->addValidateButton("bconfirm");
+    $f->addCancelButton("bback");
+    $f->display();
   }
 }
 

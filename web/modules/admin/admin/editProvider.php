@@ -51,6 +51,10 @@ $prefill = [
     // 'acls_json'      => '',
 ];
 
+if (isset($_POST['bcreate']) || isset($_POST['bupdate'])) {
+    verifyCSRFToken($_POST);
+}
+
 // CREATE
 if (isset($_POST['bcreate'])) {
     $data = [

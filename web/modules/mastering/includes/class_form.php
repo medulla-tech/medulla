@@ -1,0 +1,548 @@
+<?php
+/**
+ * (c) 2026 Medulla, http://medulla-tech.io
+ *
+ * $Id$
+ *
+ * This file is part of Management Console (MMC).
+ *
+ * MMC is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * MMC is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MMC.  If not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+    class  TrFormElementcollapse extends TrFormElement{
+        public $id;
+        public $options = [];
+        public $extraInfo = [];
+        public $name;
+        public $value;
+        public $title;
+
+        function __construct( $tpl, $extraInfo = array()){
+            $desc = "";
+            parent::__construct($desc, $tpl, $extraInfo);
+        }
+
+        function display($arrParam = array()) {
+            if (empty($arrParam))
+                $arrParam = $this->options;
+            if (!isset($this->cssErrorName))
+                $this->cssErrorName = isset($this->template->name) ? $this->template->name : "";
+            printf('<tr');
+            if ($this->class !== null)
+                printf(' class="%s"', $this->class);
+            printf('><td colspan="2"');
+            if ($this->style !== null){
+                printf(' style="%s" ', $this->style);
+            }
+            printf('>');
+            $this->template->display($arrParam);
+            print "</td></tr>";
+        }
+    }
+
+    function attribut($val,$val1=null){
+        if(isset($val1)){
+            $valeur[0]=$val;
+            $valeur[1]=$val1;
+        }
+        else{
+            $valeur=explode ( "=", $val );
+        }
+        if(isset($valeur[1])){
+            $valeur[0] = trim ( $valeur[0], "\"' " );
+            $valeur[1] = trim ( $valeur[1], "\"' " );
+            if($valeur[1]!="")
+                return $valeur[0]."="."'$valeur[1]'";
+            else
+                return "";
+        }
+        return "";
+    }
+
+    function add_attribut($attribut){
+        $valattribut="";
+        $id="";
+        if (isset($attribut)) {
+            if (is_array($attribut)){
+                foreach ($attribut as $k => $v) {
+                    if (! is_int ( $k )){
+                        $valattribut.=' '.$k.'="'. $v . '"';
+                    }
+                    elseif ($v != "" ){
+                        $valattribut.= ' '. $v;
+                    }
+                }
+            }
+        }elseif ($attribut != "") {
+            $valattribut.=' id="'. $id . '"';
+        }
+        return $valattribut;
+    }
+
+    function add_element($element, $name="",$id="",$attribut="",$value="",$stylebalise="xhtml"){
+        $elementhtml = "<".$element;
+        if (isset($name) && $name!="") {
+            $elementhtml.=' name="'. $name . '"';
+        }
+        if (isset($id) && $id != "") {
+            $valid="";
+            if (is_array($id)){
+                $id=implode ( " " , $id );
+            }
+            $elementhtml.=' id="'. $id . '"';
+        }
+        if ($attribut != "") {
+            $elementhtml.= ' '. add_attribut($attribut);
+        }
+        if(!isset($value)){
+            $value="";
+        }
+        if(isset($stylebalise) && $stylebalise=="xhtml"){
+            $elementhtml.=">".$value."</".$element.">";
+        }
+        else{
+            $elementhtml.=">";
+        }
+        return $elementhtml;
+    }
+/**
+ * simple input template
+ */
+class InputTplTitle extends InputTpl {
+    public $title;
+    public $fieldType;
+    public $size;
+    public $regexp;
+
+    function __construct($name, $title=null, $regexp = '/.+/'){
+        $this->title=$title;
+
+        parent::__construct($name,$regexp);
+    }
+
+    /**
+     *  display input Element
+     *  $arrParam accept ["value"] to corresponding value
+     */
+    function display($arrParam = array()) {
+        if ($arrParam == '') {
+            $arrParam = $_POST[$this->name];
+        }
+        if (!isset($arrParam['disabled'])) {
+            $arrParam['disabled'] = '';
+        }
+        if (!isset($arrParam['placeholder'])) {
+            $arrParam['placeholder'] = '';
+        }
+        $arrParam['maxlength'] = isset($arrParam['maxlength']) ? $arrParam['maxlength'] : "";
+
+        $attrs = array(
+            attribut('type',$this->fieldType),
+            attribut('size',$this->size),
+            attribut('value',$arrParam["value"]),
+            attribut('placeholder="' . $arrParam["placeholder"].'"'),
+            attribut($arrParam["disabled"]),
+            attribut("title",$this->title),
+            attribut( isset($arrParam["required"]) ? ' rel="required" ' : ''),
+            attribut( isset($arrParam["required"]) ? ' required="required" ' : ''),
+            attribut("data-regexp",$this->regexp),
+            attribut("maxlength",$arrParam["maxlength"]),
+            attribut("title",$this->title),
+            attribut('autocomplete="off"')
+        );
+
+        echo add_element('span',
+                "" ,
+                "container_input_$this->name",
+                "" ,
+                add_element('input', $this->name, $this->name,$attrs, "", "html" ),
+                "xhtml" );
+        if (isset($arrParam["onchange"])) {
+            print '<script type="text/javascript">';
+            print 'jQuery(\'#' . $this->name . '\').change( function() {' . $arrParam["onchange"] . '});';
+            print '</script>';
+        }
+    }
+}
+
+class NumberTplTitle extends InputTpl {
+    public $title;
+    public $fieldType;
+    public $size;
+    public $regexp;
+    public $min;
+    public $max;
+    public $value;
+
+    function __construct($name, $title=null){
+        parent::__construct($name, "");
+        $this->title=$title;
+        $this->fieldType = "number";
+        $this->min = -1;
+        $this->max = -1;
+    }
+
+    /**
+     *  display input Element
+     *  $arrParam accept ["value"] to corresponding value
+     */
+    function display($arrParam = array()) {
+        if ($arrParam == '') {
+            $arrParam = $_POST[$this->name];
+        }
+        if (!isset($arrParam['disabled'])) {
+            $arrParam['disabled'] = '';
+        }
+        if (!isset($arrParam['placeholder'])) {
+            $arrParam['placeholder'] = '';
+        }
+
+        $attrs = array(
+            attribut('type',$this->fieldType),
+            attribut('size',$this->size),
+            attribut('value',$arrParam["value"]),
+            attribut('placeholder="' . $arrParam["placeholder"].'"'),
+            attribut($arrParam["disabled"]),
+            attribut("title",$this->title),
+            attribut( isset($arrParam["required"]) ? ' rel="required" ' : ''),
+            attribut( isset($arrParam["required"]) ? ' required="required" ' : ''),
+            attribut("title",$this->title),
+            attribut('autocomplete="off"'),
+        );
+        if($this->min != -1){
+            $attrs[] = attribut("min", $this->min);
+        }
+
+        echo add_element('span',
+                "" ,
+                "container_input_$this->name",
+                "" ,
+                add_element('input', $this->name, $this->name,$attrs, "", "html" ),
+                "xhtml" );
+        if (isset($arrParam["onchange"])) {
+            print '<script type="text/javascript">';
+            print 'jQuery(\'#' . $this->name . '\').change( function() {' . $arrParam["onchange"] . '});';
+            print '</script>';
+        }
+    }
+
+    public function setMin($value){
+        $this->min = $value;
+    }
+}
+
+class SelectItemtitle extends SelectItem {
+    var $title;
+    /**
+     * constructor
+     */
+    function __construct($idElt, $title=null, $jsFunc = null, $style = null) {
+        $this->title=$title;
+        parent::__construct($idElt, $jsFunc, $style);
+    }
+    function to_string($paramArray = null) {
+        $ret = "<select";
+        if ($this->title){
+            $ret .= " title=\"" . $this->title . "\"";
+        }
+        if ($this->style) {
+            $ret .= " class=\"" . $this->style . "\"";
+        }
+        if ($this->jsFunc) {
+            $ret .= " onchange=\"" . $this->jsFunc . "(";
+            if ($this->jsFuncParams) {
+                $ret .= implode(", ", $this->jsFuncParams);
+            }
+            $ret .= "); return false;\"";
+        }
+        $ret .= isset($paramArray["required"]) ? ' rel="required"' : '';
+        $ret .= " name=\"" . $this->name . "\" id=\"" . $this->id . "\">\n";
+        $ret .= $this->content_to_string($paramArray);
+        $ret .= "</select>";
+        return $ret;
+    }
+}
+
+ /**
+ * class add icone clikable as a HtmlElement
+ * click launch function fn_"id_element"
+ */
+class IconeElement extends HtmlElement {
+    public $id;
+    public $src;
+    public $alt;
+    public $style;
+    public $params;
+    public $title;
+
+    function __construct($id, $src, $alt="", $title="", $params = array()) {
+        $this->id = $id;
+        $this->src = $src;
+        $this->alt = $alt;
+        $this->params = $params;
+        $this->title = $title;
+        $this->style= "";
+    }
+    function setstyle($sty){
+        $this->style=$sty;
+    }
+    function display($arrParam = array()) {
+        echo '<img src="'.$this->src.'" id="'.$this->id.'" ';
+        echo ($this->alt != "") ? "alt='$this->alt'" : "alt='image' ";
+        echo ($this->title != "") ? "title='$this->title' " : " ";
+        if( $this->style != "")
+            echo " style='position:relative; top: 3px;cursor: s-resize;' width='25' height='25' />";
+        else
+            echo " style='".$this->style."' width='25' height='25' />";
+                      echo "<script type='text/javascript'>
+                        jQuery('#".$this->id."').click(function(){fn_".$this->id."()});
+                        </script>\n";
+    }
+}
+class Iconereply extends IconeElement {
+    function __construct($id,$title){
+        parent::__construct($id,'img/other/expand.svg',"",$title);
+    }
+}
+
+class buttonTpl extends HtmlElement {
+    public $cssClass;
+    public $id;
+    public $value;
+    public $class;
+    public $infobulle;
+    public $params;
+    public $style;
+
+    /**
+     * constructor
+     * @param string $id id of the button
+     * @param string $value value of the button
+     * @param string $class class of the button
+     * @param string $infobulle infobulle of the button
+     * @param array $params params of the button
+     */
+    function __construct($id, $value, $class='', $infobulle='', $params = array()) {
+
+        parent::__construct();
+        $this->cssClass = 'btn btn-small';
+        $this->id = $id;
+        $this->value = $value;
+        $this->class = $class;
+        $this->infobulle = $infobulle;
+        $this->params = $params;
+        $this->style='';
+    }
+
+    function setstyle($sty){
+        $this->style=$sty;
+    }
+
+    function setClass($class) {
+        $this->cssClass = $class;
+    }
+
+    function display($arrParam = array()) {
+        if (isset($this->id, $this->value))
+            printf('<span style="color : red;" id="msg_%s">title missing</span><br><input id="%s" title="%s" type="button" value="%s" class="%s %s" />',
+                    $this->id,$this->id,
+                    $this->infobulle,
+                    $this->value,
+                    $this->cssClass,
+                    $this->class);
+    }
+}
+
+class SpanElementtitle extends HtmlElement {
+    public $name;
+    public $content;
+    public $class;
+    public $title;
+    public $id;
+    public $params;
+    public $style;
+
+    /**
+     * constructor
+     * @param string $content content of the span
+     * @param string $class class of the span
+     * @param string $title title of the span
+     * @param string $id id of the span
+     */
+    function __construct($content, $class = Null,$title=Null,$id=null) {
+        parent::__construct();
+        $this->name = $class;
+        $this->content = $content;
+        $this->class = $class;
+        $this->title = $title;
+        $this->id=$id;
+    }
+
+    function display($arrParam = array()) {
+        if ($this->class) {
+            $class = ' class="' . $this->class . '"';
+        } else {
+            $class = '';
+        }
+        printf('<span%s id="%s" title="%s" >%s</span>', $class, $this->id, $this->title, $this->content);
+    }
+}
+
+class OptTextareaTpl extends AbstractTpl{
+	var $options = [];
+
+	function __construct($array = [])
+	{
+		if(!isset($array['rows']))
+		{
+			$array['rows'] = 3;
+		}
+		if(!isset($array['cols']))
+		{
+			$array['cols'] = 21;
+		}
+		if(!isset($array['value']))
+		{
+			$array['value']='';
+		}
+		if(!isset($array['id']))
+		{
+			$array['id'] = $array['name'];
+		}
+		$this->options = $array;
+	}
+
+	function display($arrParam = array())
+	{
+	$str ="";
+		foreach($this->options as $attr=>$value)
+		{
+			if($attr != 'value')
+			{
+				$str .= $attr.'="'.$value.'"';
+			}
+		}
+		echo '<textarea '.$str.'>'.$this->options['value'].'</textarea>';
+	}
+}
+
+class SepTpl extends AbstractTpl{
+
+	function display($arrParam = array())
+	{
+		echo '<hr style="border-top: 1px solid #CCCCCC;"/>';
+	}
+}
+
+class DivTpl extends AbstractTpl{
+	var $options = [];
+
+	function __construct($array = [])
+	{
+		if(!isset($array['value']))
+		{
+			$array['value']='';
+		}
+		if(!isset($array['id']))
+		{
+			$array['id'] = 'answer';
+		}
+		$this->options = $array;
+	}
+
+	function display($arrParam = array())
+	{
+	$str ="";
+		foreach($this->options as $attr=>$value)
+		{
+			if($attr != 'value')
+			{
+				$str .= $attr.'="'.$value.'"';
+			}
+		}
+		echo '<div '.$str.'>'.$this->options['value'].'</div>';
+	}
+}
+
+
+
+class AjaxSelectItem extends Form{
+    protected $idElt;
+    protected $idselect;
+    protected $idform;
+    protected $idchoixform;
+    protected $select;
+
+    public function __construct($idElt, $style = null)
+    {
+        $options = array();
+        $this->idElt=$idElt;
+        $this->idselect="select_$idElt";
+        $this->idform="form_$idElt";
+        $this->idchoixform="afficheform_$idElt";
+        $options["id"]=$this->idform;
+        $options["method"] = "";
+        parent::__construct($options);
+        $this->select = new SelectItem($this->idselect, "change".$idElt, $style);
+    }
+
+    public function setElements($List)
+    {
+        $this->select->setElements($List);
+    }
+
+    public function setElementsVal($list_val)
+    {
+        $this->select->setElementsVal($list_val);
+    }
+
+    public function setJsFuncParams($arrayparam)
+    {
+        $this->select->setJsFuncParams($arrayparam);
+    }
+
+    public function display()
+    {
+        $this->push($this->select);
+        parent::display();
+    }
+
+    public function end()
+    {
+        $parameters = (!empty($_SESSION['parameters'])) ? $_SESSION['parameters'] : [];
+        $parametersStr = json_encode($parameters);
+        $str = parent::end();
+        $str .= "
+        <div id=\"$this->idchoixform\"> </div>
+        <script type=\"text/javascript\">
+            loadpage".$this->idselect."=function(){
+                var selectval = jQuery( '#".$this->idselect."').val()
+                jQuery( '#".$this->idchoixform."' ).load( selectval,  ".$parametersStr." ,
+                    function( response, status, xhr ) {
+                        if ( status == 'error' ) {
+                            var msg = '"._T("form not found", 'imaging').": ';
+                            alert( msg + xhr.status + ' ' + xhr.statusText );
+                        }
+                    });
+            }
+            loadpage".$this->idselect."()
+            change".$this->idElt."=function(val){
+                loadpage".$this->idselect."()
+            }
+        </script>\n";
+        return $str;
+    }
+}
+?>

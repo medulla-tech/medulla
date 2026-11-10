@@ -26,72 +26,43 @@ require_once("modules/security/includes/html.inc.php");
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
-// Get filter parameters
-$filter = isset($_GET["filter"]) ? $_GET["filter"] : "";
+$filter = $_GET["filter"] ?? "";
 $start = isset($_GET["start"]) ? intval($_GET["start"]) : 0;
-$userLogin = isset($_GET["user_login"]) ? $_GET["user_login"] : "";
 
-// Get policies to determine which columns to show
-$policies = xmlrpc_get_policies();
-$minSeverity = $policies['display']['min_severity'] ?? 'None';
-$showSeverity = SeverityHelper::getVisibility($minSeverity);
+$result = xmlrpc_get_groups_summary($start, $maxperpage, $filter, $_SESSION['login'] ?? '');
+$data = $result['data'] ?? array();
+$count = $result['total'] ?? 0;
 
-// Get data from backend (filtered by ShareGroup for this user)
-$result = xmlrpc_get_groups_summary($start, $maxperpage, $filter, $userLogin);
-$data = $result['data'];
-$count = $result['total'];
-
-// Prepare arrays for display
-$groupNames = array();
-$groupTypes = array();
-$machinesCounts = array();
-$maxScores = array();
-$criticalCounts = array();
-$highCounts = array();
-$mediumCounts = array();
-$lowCounts = array();
-$totalCounts = array();
+$names = array();
+$types = array();
+$machines = array();
 $params = array();
-
 foreach ($data as $row) {
-    $groupNames[] = $row['group_name'];
-    $groupTypes[] = _T($row['group_type'], 'security');
-    $machinesCounts[] = $row['machines_count'];
-    $maxScores[] = SecurityBadge::score($row['max_cvss']);
-    $criticalCounts[] = SecurityBadge::count($row['critical'], 'critical');
-    $highCounts[] = SecurityBadge::count($row['high'], 'high');
-    $mediumCounts[] = SecurityBadge::count($row['medium'], 'medium');
-    $lowCounts[] = SecurityBadge::count($row['low'], 'low');
-    $totalCounts[] = $row['total_cves'];
+    $names[] = htmlspecialchars($row['group_name']);
+    $types[] = htmlspecialchars(_T($row['group_type'], 'security'));
+    $machines[] = intval($row['machines_count']);
     $params[] = array(
         'group_id' => $row['group_id'],
-        'group_name' => $row['group_name']
+        'group_name' => $row['group_name'],
+        'back' => SecurityFilter::back()
     );
 }
 
-// Actions - view details for this group
-$detailAction = new ActionItem(_T("View Details", "security"), "groupDetail", "display", "", "security", "security");
 $excludeAction = new ActionPopupItem(_T("Exclude from reports", "security"), "ajaxAddExclusion", "delete", "", "security", "security");
 $excludeAction->setWidth(450);
 
-// Display the list
 if ($count > 0) {
-    $n = new OptimizedListInfos($groupNames, _T("Group", "security"));
+    $n = new OptimizedListInfos($names, _T("Group", "security"));
     $n->setResizable();
     $n->setTableCssClass("security-table");
     $n->disableFirstColumnActionLink();
-    $n->addExtraInfo($groupTypes, _T("Type", "security"));
-    $n->addExtraInfoCentered($machinesCounts, _T("Machines", "security"));
-    $n->addExtraInfoCentered($maxScores, _T("Max CVSS", "security"));
-    if ($showSeverity['critical']) $n->addExtraInfoCentered($criticalCounts, _T("Critical", "security"));
-    if ($showSeverity['high']) $n->addExtraInfoCentered($highCounts, _T("High", "security"));
-    if ($showSeverity['medium']) $n->addExtraInfoCentered($mediumCounts, _T("Medium", "security"));
-    if ($showSeverity['low']) $n->addExtraInfoCentered($lowCounts, _T("Low", "security"));
-    $n->addExtraInfoCentered($totalCounts, _T("Total CVEs", "security"));
+    $n->addExtraInfo($types, _T("Type", "security"));
+    SecurityColumns::add($n, $data, 'max_cvss');
+    $n->addExtraInfoCentered($machines, _T("Machines", "security"));
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $filter));
     $n->setParamInfo($params);
-    $n->addActionItem($detailAction);
+    $n->addActionItem(new ActionItem(_T("View Details", "security"), "groupDetail", "display", "", "security", "security"));
     $n->addActionItem($excludeAction);
     $n->start = 0;
     $n->end = $count;

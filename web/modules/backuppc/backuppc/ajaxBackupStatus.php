@@ -68,10 +68,10 @@ for ($i = 0 ; $i<count($data['hosts']) ; $i++){
 			$cn = $cn_[0];
     	    $cnames_ = sprintf('<a href="main.php?module=backuppc&submod=backuppc&action=hostStatus&cn=%s&objectUUID=UUID%s">%s</a>',$cn_[0],$matches[1],$cn_[0]);
 		}
-        $param_ = array('cn' => $cn, 'objectUUID' => 'UUID'.$matches[1]);
+        $param_ = array('cn' => $cn, 'objectUUID' => 'UUID'.$matches[1], 'backupHost' => $data['hosts'][$i]);
     }
     else{
-        $param_ = array('cn' => $data['hosts'][$i]);
+        $param_ = array('cn' => $data['hosts'][$i], 'backupHost' => $data['hosts'][$i]);
 		$cnames_ = $cn;
 	}
 
@@ -98,9 +98,9 @@ $n->addExtraInfo($data['state'], _T("Current state", "backuppc"));
 $n->addExtraInfo($data['last_attempt'], _T("Last message", "backuppc"));
 
 $n->addActionItem(new ActionPopupItem(_T("Start backup"), "startBackup", "start", "host", "backuppc", "backuppc"));
-$n->addActionItem(new ActionPopupItem(_T("Stop backup"), "stopBackup", "stop", "host", "backuppc", "backuppc"));
+$n->addActionItem(new ActionConfirmItem(_T("Stop backup"), "stopBackup", "stop", "backupHost", "backuppc", "backuppc", _T('Are you sure you want to stop this backup?', 'backuppc'), null, 300, false, 'POST'));
 $n->addActionItem(new ActionPopupItem(_T("View errors"), "viewHostLog", "file", "host", "backuppc", "backuppc"));
-$n->addActionItem(new ActionConfirmItem(_T("Unset backup", 'backuppc'), "index", "delete", "uuid", "backuppc", "backuppc", _T('Are you sure you want to unset backup for this computer?', 'backuppc')));
+$n->addActionItem(new ActionConfirmItem(_T("Unset backup", 'backuppc'), "index", "delete", "objectUUID", "backuppc", "backuppc", _T('Are you sure you want to unset backup for this computer?', 'backuppc'), null, 300, false, 'POST'));
 $n->setParamInfo($params);
 
 // Get the presence for each machine

@@ -23,6 +23,13 @@
  */
 require_once("modules/admin/includes/xmlrpc.php");
 
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
+verifyCSRFToken($_POST);
+
 $newName = trim((string)($_POST['profile_name'] ?? ''));
 // Allow Unicode letters/digits (French/Spanish names like "Gestionnaire").
 if ($newName === '' || !preg_match('/^[\p{L}\p{N}_\- ]+$/u', $newName)) {

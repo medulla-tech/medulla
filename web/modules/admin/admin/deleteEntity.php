@@ -22,6 +22,13 @@
  */
 require_once("modules/admin/includes/xmlrpc.php");
 
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
+verifyCSRFToken($_POST);
+
 // --- Bulk deletion mode (AJAX POST with gid[] array) ---
 if (isset($_POST['gid']) && is_array($_POST['gid'])) {
     header('Content-Type: application/json');
@@ -76,9 +83,9 @@ if (isset($_POST['gid']) && is_array($_POST['gid'])) {
 }
 
 // --- Single deletion mode ---
-if (isset($_GET['entityId'])) {
-    $entityId   = (int)$_GET['entityId'];
-    $entityName = htmlspecialchars($_GET['entityName'] ?? _T("Unknown", "admin"), ENT_QUOTES, 'UTF-8');
+if (isset($_POST['entityId'])) {
+    $entityId   = (int)$_POST['entityId'];
+    $entityName = htmlspecialchars($_POST['entityName'] ?? _T("Unknown", "admin"), ENT_QUOTES, 'UTF-8');
 
     $result = xmlrpc_delete_entity($entityId);
 

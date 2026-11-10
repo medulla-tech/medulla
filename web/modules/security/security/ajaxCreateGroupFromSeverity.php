@@ -21,20 +21,20 @@
  */
 
 require_once("modules/security/includes/xmlrpc.php");
+require_once("modules/security/includes/html.inc.php");
 require_once("modules/dyngroup/includes/dyngroup.php");
 
-$severity = isset($_GET['severity']) ? $_GET['severity'] : '';
-$location = isset($_GET['location']) ? $_GET['location'] : '';
+$severity = SecurityFilter::severity();
+$location = SecurityFilter::location();
 
-// Validate severity
-$validSeverities = array('Critical', 'High', 'Medium', 'Low');
-if (!in_array($severity, $validSeverities)) {
+if ($severity === null) {
     new NotifyWidgetFailure(_T("Invalid severity level", "security"));
     exit;
 }
 
 // Handle confirmation
 if (isset($_POST['bconfirm'])) {
+    verifyCSRFToken($_POST);
     // Get machines affected by this severity
     $machinesData = xmlrpc_get_machines_by_severity($severity, $location);
 
@@ -97,7 +97,7 @@ if ($machineCount > 0) {
         $severityLabel
     ) . "</p>");
 
-    $f->addValidateButton("bconfirm", _T("Create Group", "security"));
+    $f->addValidateButtonWithValue("bconfirm", _T("Create Group", "security"));
 } else {
     $f->addText("<p>" . _T("No machines found with this severity level.", "security") . "</p>");
 }

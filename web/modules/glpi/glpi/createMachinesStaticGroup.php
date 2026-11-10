@@ -25,6 +25,13 @@ require_once("modules/xmppmaster/includes/xmlrpc.php"); // For machines_online
 require_once("modules/dyngroup/includes/xmlrpc.php");
 require_once("modules/glpi/includes/xmlrpc.php"); // For xmlrpc_getListPresenceMachine
 
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
+verifyCSRFToken($_POST);
+
 $machines_online = xmlrpc_getListPresenceMachine();
 $uuids_online = [];
 $all_machines = xmlrpc_get_all_uuids_and_hostnames();
@@ -57,7 +64,7 @@ foreach($all_machines as $machine)
         $machines_online[] = $machine;
 }
 
-if($_GET['machines'] == 'online'){
+if($_POST['machines'] == 'online'){
     $groupname = sprintf (_T("Machines online at %s", "glpi"), date("Y-m-d H:i:s"));
     $groupmembers = $machines_online;
 }

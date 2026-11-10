@@ -1,6 +1,6 @@
 <?
 /**
- * (c) 2020 Siveo, http://siveo.net
+ * (c) 2026 Medulla, http://medulla-tech.io
  *
  * This file is part of Management Console (MMC).
  *
@@ -21,7 +21,11 @@
 
 $sidemenu= new SideMenu();
 $sidemenu->setClass("mastering");
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Tests List", 'mastering'), "mastering", "mastering", "index"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Action on Machine", 'mastering'), "mastering", "mastering", "index"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("List of Actions", 'mastering'), "mastering", "mastering", "actionList"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Masters List", 'mastering'), "mastering", "mastering", "masters"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Scripts", 'mastering'), "mastering", "mastering", "scripts"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("New Script", 'mastering'), "mastering", "mastering", "newScript"));
 
 ?>
 

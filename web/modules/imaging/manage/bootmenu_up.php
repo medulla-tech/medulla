@@ -23,16 +23,21 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-verifyCSRFToken($_GET);
+verifyCSRFToken($_POST);
 
 $params = getParams();
 $location = getCurrentLocation();
-$item_uuid = $_GET['itemid'];
-$label = urldecode($_GET['itemlabel']);
+$item_uuid = $_POST['itemid'];
+$label = urldecode($_POST['itemlabel']);
 
 $ret = xmlrpc_moveItemUpInMenu4Location($location, $item_uuid);
 

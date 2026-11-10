@@ -333,7 +333,6 @@ $typecritere  =        array(
                                         _T('Remote desktop service','base'),
                                         _T('Remote desktop control request','base'),
                                         _T('Reverse SSH','base'),
-                                        _T("No criteria selected", "base"),
                                         _T("No criteria selected", "base"));
 
 $typecritereval  =        array(

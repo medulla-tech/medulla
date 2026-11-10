@@ -2,8 +2,6 @@
 /*
  * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
- * $Id$
- *
  * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
@@ -18,7 +16,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
- *
  */
 // modules/admin/admin/manage_entity.php
 require("localSidebar.php");
@@ -26,7 +23,7 @@ require("graph/navbar.inc.php");
 require_once("modules/admin/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-$p = new PageGenerator(_T("Automatic approval rules", 'updates'));
+$p = new PageGenerator(_T("Automatic Approval Rules", 'updates'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -91,11 +88,13 @@ if (
     $choix = $parametresCGI[0];
 }
 
+$ajaxParams = $_POST;
+unset($ajaxParams['auth_token']);
 $ajax = new AjaxLocation(
      urlStrRedirect("updates/updates/ajaxApproveRules"),
       "mondivlocation",           // div qui affiche la liste des produits
       "selected_location",      // paramètre : $_GET['selected_location']
-          $_POST
+          $ajaxParams
   );
 
 $ajax->setElements($completename);
@@ -105,5 +104,7 @@ $ajax->display();
 $ajax->displayDivToUpdate();
 
 
+// Page fusionnee dans "automation", onglet Windows.
+header("Location: " . urlStrRedirect("updates/updates/automation&tab=tabwin"));
+exit;
 ?>
-

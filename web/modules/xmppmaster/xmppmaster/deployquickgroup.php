@@ -184,7 +184,7 @@ jQuery('#buttoncmd').click(function() {
     groupinfo["actionqa"] = jQuery('#action').val();
     groupinfo["groupname"] = jQuery('#groupname').val();
     groupinfo["type"] = jQuery('#type').val();
-    jQuery.get("modules/xmppmaster/xmppmaster/actioncustomquickactiongrp.php", groupinfo)
+    jQuery.post("modules/xmppmaster/xmppmaster/actioncustomquickactiongrp.php", groupinfo)
         .done(function(data) {
             jQuery('#cmdid').val(data);
             jQuery('#formcmdcustom').submit();
@@ -296,28 +296,28 @@ function installkey(data) {
 
 jQuery('#wol,#wol0').unbind().on('click', function() {
     groupinfo['wol'] = jQuery('#checkboxwol').is(':checked');
-    jQuery.get("modules/xmppmaster/xmppmaster/actionwakeonlan.php", groupinfo)
+    jQuery.post("modules/xmppmaster/xmppmaster/actionwakeonlan.php", groupinfo)
         .done(function(data) {
             wol(data);
         });
 });
 
 jQuery('#inventory,#inventory0').on('click', function() {
-    jQuery.get("modules/xmppmaster/xmppmaster/actioninventory.php", groupinfo)
+    jQuery.post("modules/xmppmaster/xmppmaster/actioninventory.php", groupinfo)
         .done(function(data) {
             inventory(data);
         });
 });
 
 jQuery('#reboot,#reboot0').on('click', function() {
-    jQuery.get("modules/xmppmaster/xmppmaster/actionrestart.php", groupinfo)
+    jQuery.post("modules/xmppmaster/xmppmaster/actionrestart.php", groupinfo)
         .done(function(data) {
             reboot(data);
         });
 });
 
 jQuery('#installkey,#installkey0').on('click', function() {
-    jQuery.get("modules/xmppmaster/xmppmaster/actionkeyinstall.php", groupinfo)
+    jQuery.post("modules/xmppmaster/xmppmaster/actionkeyinstall.php", groupinfo)
         .done(function(data) {
             installkey(data);
         });
@@ -326,7 +326,7 @@ jQuery('#installkey,#installkey0').on('click', function() {
 jQuery('#shutdown,#shutdown0').on('click', function() {
     groupinfo['time'] = jQuery('#mytimeshutdown').val();
     groupinfo['msg'] = jQuery('#msgshutdown').val();
-    jQuery.get("modules/xmppmaster/xmppmaster/actionshutdown.php", groupinfo)
+    jQuery.post("modules/xmppmaster/xmppmaster/actionshutdown.php", groupinfo)
         .done(function(data) {
             shutdownfunction(data);
         });
@@ -338,7 +338,7 @@ jQuery('#vncchangeperms,#vncchangeperms0').on('click', function() {
     } else {
         groupinfo['askpermission'] = 0;
     }
-    jQuery.get("modules/xmppmaster/xmppmaster/actionvncchangeperms.php", groupinfo)
+    jQuery.post("modules/xmppmaster/xmppmaster/actionvncchangeperms.php", groupinfo)
         .done(function(data) {
             vncchangepermsfunction(data);
         });

@@ -31,13 +31,18 @@ require_once("modules/base/includes/computers.inc.php");
 require_once("modules/pkgs/includes/xmlrpc.php");
 
 
-verifyCSRFToken($_GET);
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
 
-$vendor=$_GET['vendor'];
-$software=$_GET['software'];
-$version=$_GET['version'];
-$count=$_GET['count'];
-$licencemax=$_GET['licencemax'];
+verifyCSRFToken($_POST);
+
+$vendor=$_POST['vendor'];
+$software=$_POST['software'];
+$version=$_POST['version'];
+$count=$_POST['count'];
+$licencemax=$_POST['licencemax'];
 
 
 $licensescount = getLicensesComputer($vendor,$software,$version);

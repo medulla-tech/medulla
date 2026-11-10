@@ -324,6 +324,14 @@ if ($group != null) {
 
 $n->display();
 ?>
+<script type="text/javascript">
+jQuery(function() {
+    jQuery('a[href*="action=start_command"]').on('click', function(e) {
+        e.preventDefault();
+        postAction(jQuery(this).attr('href'));
+    });
+});
+</script>
 <style>
     .primary_list { }
     .secondary_list {

@@ -373,7 +373,7 @@ function xmlCall($method, $params = null) {
                 if (isset($temp[$key]))
                     $_SESSION[$key] = $temp[$key];
 
-            if (auth_user($temp['login'], $temp['pass']) ){
+            if (isset($temp['login']) && isset($temp['pass']) && auth_user($temp['login'], $temp['pass']) ){
                 // If login succeed, retry call after relogin
                 return xmlCall($method, $params);
             } else {

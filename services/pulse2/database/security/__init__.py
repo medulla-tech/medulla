@@ -2,29 +2,41 @@
 # SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from sqlalchemy import create_engine, MetaData, func, desc, and_, or_, text
-from sqlalchemy.orm import sessionmaker
+from collections import Counter
+from sqlalchemy import create_engine, MetaData, desc, text, bindparam
 from sqlalchemy.exc import DBAPIError, IntegrityError
-from sqlalchemy.ext.automap import automap_base
-from datetime import datetime, timedelta
+from datetime import datetime
 from mmc.database.database_helper import DatabaseHelper
-from pulse2.database.security.schema import (
-    Tests, Cve, SoftwareCve, Scan, CveExclusion
-)
+from pulse2.database.security.schema import Cve, SoftwareCve, Scan
 import logging
+import re
 
 logger = logging.getLogger()
 
 
+SEVERITIES = ['None', 'Low', 'Medium', 'High', 'Critical']
+
+# GLPI OS of computers `c`, shared with the scanner so that inventory and display match.
+OS_JOINS = """
+    LEFT JOIN glpi_items_operatingsystems ios
+        ON ios.items_id = c.id AND ios.itemtype = 'Computer' AND ios.is_deleted = 0
+    LEFT JOIN glpi_operatingsystems os ON os.id = ios.operatingsystems_id
+    LEFT JOIN glpi_operatingsystemversions osv ON osv.id = ios.operatingsystemversions_id
+    LEFT JOIN glpi_operatingsystemkernelversions osk ON osk.id = ios.operatingsystemkernelversions_id
+    LEFT JOIN glpi_operatingsystemservicepacks ossp ON ossp.id = ios.operatingsystemservicepacks_id"""
+OS_LABEL = "CONCAT_WS(' ', os.name, osv.name)"
+# Full Windows 10/11 build ('10.0.19045' + '19045.6466' -> '10.0.19045.6466'), NULL otherwise.
+OS_BUILD = ("CASE WHEN LEFT(osk.name, 5) = '10.0.' AND ossp.name REGEXP '^[0-9]+[.][0-9]+$' "
+            "THEN CONCAT('10.0.', ossp.name) END")
+PLATFORMS = {
+    'windows': "os.name LIKE '%windows%'",
+    'linux': ("os.name <> '' AND os.name NOT LIKE '%windows%' "
+              "AND os.name NOT LIKE '%mac%' AND os.name NOT LIKE '%darwin%'"),
+}
+
+
 def _get_glpi_database():
-    """Get the GLPI database instance for direct queries.
-
-    This allows querying GLPI tables using the glpi user credentials
-    instead of the mmc user which doesn't have access to GLPI.
-
-    Returns:
-        Glpi database instance or None if not available
-    """
+    """GLPI database instance (glpi credentials), or None if not available."""
     try:
         from mmc.plugins.glpi.database import Glpi
         glpi = Glpi()
@@ -34,6 +46,111 @@ def _get_glpi_database():
     except Exception as e:
         logger.warning(f"Could not get GLPI database connection: {e}")
         return None
+
+
+def _run(conn, sql, **params):
+    """Execute sql; list/set/tuple params are expanded (`IN :param`)."""
+    params = {k: list(v) if isinstance(v, (set, tuple)) else v for k, v in params.items()}
+    lists = [bindparam(k, expanding=True) for k, v in params.items() if isinstance(v, list)]
+    return conn.execute(text(sql).bindparams(*lists), params)
+
+
+def _glpi(sql, **params):
+    glpi_db = _get_glpi_database()
+    if not glpi_db:
+        raise Exception("GLPI database not available")
+    with glpi_db.db.connect() as conn:
+        return _run(conn, sql, **params).fetchall()
+
+
+def _glpi_names(sql, names, **params):
+    return {r[0] for r in _glpi(sql, names=names, **params)} if names else set()
+
+
+def _computers_where(entity_ids=None, machine_ids=None, excluded=None, hostname='', platform=''):
+    """WHERE clause on active GLPI computers `c`; entity_ids/machine_ids: None = all, [] = none."""
+    sql = "c.is_deleted = 0 AND c.is_template = 0"
+    params = {}
+    if machine_ids is not None:
+        sql += " AND c.id IN :machine_ids"
+        params['machine_ids'] = machine_ids
+    if entity_ids is not None:
+        sql += " AND c.entities_id IN :entity_ids"
+        params['entity_ids'] = entity_ids
+    if excluded:
+        sql += " AND c.id NOT IN :excluded_machines"
+        params['excluded_machines'] = [int(m) for m in excluded]
+    if hostname:
+        sql += " AND c.name LIKE :hostname"
+        params['hostname'] = f"%{hostname}%"
+    if platform in PLATFORMS:
+        sql += f" AND c.id IN (SELECT c.id FROM glpi_computers c {OS_JOINS} WHERE {PLATFORMS[platform]})"
+    return sql, params
+
+
+def _scope(policy, entity_ids=None, platform='', **computers):
+    """_computers_where arguments for the machines in scope of a read."""
+    return {'entity_ids': entity_ids, 'excluded': (policy or {}).get('excluded_machines_ids'),
+            'platform': platform, **computers}
+
+
+def _groups_where(login):
+    """Machine groups `g` visible to login (owned or shared), all when login is None.
+    type 0 only: 1 = imaging profiles, 2 = deployment convergence (deploy-/done-)."""
+    sql = "g.type = 0 AND g.name NOT LIKE 'PULSE_INTERNAL%'"
+    if login is None:
+        return sql, {}
+    return sql + """ AND (g.FK_users IN (SELECT id FROM dyngroup.Users WHERE login = :login)
+        OR g.id IN (SELECT sg.FK_groups FROM dyngroup.ShareGroup sg
+                    JOIN dyngroup.Users u ON u.id = sg.FK_users WHERE u.login = :login))""", {'login': login}
+
+
+def _uuid_to_id(uuid):
+    try:
+        return int(uuid[4:]) if uuid and uuid.startswith('UUID') else None
+    except ValueError:
+        return None
+
+
+def _min_severities(min_severity):
+    """Severities >= min_severity, None when there is no filter."""
+    if min_severity in SEVERITIES[1:]:
+        return SEVERITIES[SEVERITIES.index(min_severity):]
+    return None
+
+
+def _cvss(value):
+    return str(round(float(value or 0), 1))
+
+
+def _date(value):
+    return value.isoformat() if value else None
+
+
+def _fix(values):
+    """Fix status of a CVE over its links: False (one has no fix) > None (unknown) > True."""
+    if 0 in values:
+        return False
+    return None if None in values else True
+
+
+def _priority(row, cvss='max_cvss'):
+    """Sort key of counter rows: exploited, then CVSS, critical, high, total (all DESC)."""
+    return (row['exploited'], float(row[cvss]), row['critical'], row['high'], row['total_cves'])
+
+
+def _stats(cve_pks, info):
+    """Counters of a set of cves.id; info: cves.id -> (severity, cvss, exploited)."""
+    severities = Counter(info[pk][0] for pk in cve_pks)
+    return {
+        'total_cves': len(cve_pks),
+        'critical': severities['Critical'],
+        'high': severities['High'],
+        'medium': severities['Medium'],
+        'low': severities['Low'],
+        'exploited': sum(1 for pk in cve_pks if info[pk][2]),
+        'max_cvss': _cvss(max((info[pk][1] for pk in cve_pks), default=0.0))
+    }
 
 
 class SecurityDatabase(DatabaseHelper):
@@ -126,561 +243,267 @@ class SecurityDatabase(DatabaseHelper):
             raise Exception("Database security connection error")
         return ret
 
+
     # =========================================================================
-    # Entity filtering helper
+    # CVE <-> GLPI matching on (GLPI name, version)
     # =========================================================================
-    def _parse_entity_ids(self, session, location):
+    def _cve_rows(self, session, policy=None, severity=None, exploited_only=False, where='', **params):
+        """software_cves joined to cves, filtered by the display policies.
+
+        severity: exact severity, replaces policy min_severity.
         """
-        Parse location parameter and return list of entity IDs for filtering.
-        Location can be:
-        - Empty string: no filter (all entities)
-        - Single UUID: one entity
-        - Comma-separated UUIDs: multiple entities
-
-        Returns list of entity_id integers, or None if no filter.
-        """
-        if not location or location.strip() == '':
-            return None
-
-        try:
-            # Split by comma if multiple UUIDs
-            uuids = [u.strip() for u in location.split(',') if u.strip()]
-            if not uuids:
-                return None
-
-            # Convert UUIDs to entity IDs
-            # UUID format is typically "UUID<number>" - extract the number
-            entity_ids = []
-            for uuid in uuids:
-                if uuid.startswith('UUID'):
-                    try:
-                        entity_id = int(uuid[4:])
-                        entity_ids.append(entity_id)
-                    except ValueError:
-                        logger.warning(f"Invalid entity UUID format: {uuid}")
-                else:
-                    # Try direct integer
-                    try:
-                        entity_ids.append(int(uuid))
-                    except ValueError:
-                        logger.warning(f"Invalid entity ID format: {uuid}")
-
-            return entity_ids if entity_ids else None
-        except Exception as e:
-            logger.error(f"Error parsing entity location: {e}")
-            return None
-
-    # =========================================================================
-    # Exclusion filtering helper
-    # =========================================================================
-    def _build_exclusion_filters(self, excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
-                                   excluded_machines_ids=None, excluded_groups_ids=None,
-                                   include_group_machines=False):
-        """
-        Build SQL WHERE clauses for exclusions.
-
-        Args:
-            excluded_vendors: List of vendor names to exclude
-            excluded_names: List of software names to exclude
-            excluded_cve_ids: List of CVE IDs to exclude
-            excluded_machines_ids: List of machine IDs (GLPI id) to exclude
-            excluded_groups_ids: List of group IDs to exclude
-            include_group_machines: If True, also exclude machines belonging to excluded groups
-                                   (used only in Results by Group view)
-
-        Returns:
-            tuple: (name_exclusion, cve_exclusion, vendor_exclusion, machine_exclusion) SQL strings
-        """
-        def sql_escape(val):
-            return val.replace("'", "''") if val else val
-
-        name_exclusion = ""
-        if excluded_names:
-            names_escaped = ','.join(f"'{sql_escape(n)}'" for n in excluded_names)
-            name_exclusion = f"AND sc.software_name NOT IN ({names_escaped})"
-
-        cve_exclusion = ""
-        if excluded_cve_ids:
-            cve_ids_escaped = ','.join(f"'{sql_escape(c)}'" for c in excluded_cve_ids)
-            cve_exclusion = f"AND c.cve_id NOT IN ({cve_ids_escaped})"
-
-        # Vendor exclusion requires join with GLPI tables
-        vendor_exclusion = ""
-        if excluded_vendors:
-            vendors_escaped = ','.join(f"'{sql_escape(v)}'" for v in excluded_vendors)
-            vendor_exclusion = f"""AND sc.glpi_software_name COLLATE utf8mb4_general_ci NOT IN (
-                SELECT gs.name COLLATE utf8mb4_general_ci FROM xmppmaster.local_glpi_softwares gs
-                LEFT JOIN glpi.glpi_manufacturers gm ON gm.id = gs.manufacturers_id
-                WHERE gm.name IN ({vendors_escaped})
-            )"""
-
-        # Machine exclusion - exclude specific machines by GLPI id (individual exclusions only)
-        machine_exclusion = ""
-        if excluded_machines_ids:
-            machine_ids_str = ','.join(str(int(mid)) for mid in excluded_machines_ids)
-            machine_exclusion = f"AND m.id NOT IN ({machine_ids_str})"
-
-        # Group exclusion - exclude machines that belong to excluded groups
-        # Only applied when include_group_machines=True (for Results by Group view)
-        # Results table links groups (FK_groups) to machines (FK_machines)
-        # Machines table has uuid like 'UUID123' which corresponds to GLPI machine id
-        if include_group_machines and excluded_groups_ids:
-            group_ids_str = ','.join(str(int(gid)) for gid in excluded_groups_ids)
-            group_exclusion = f"""AND m.id NOT IN (
-                SELECT CAST(REPLACE(dm.uuid, 'UUID', '') AS UNSIGNED)
-                FROM dyngroup.Results r
-                JOIN dyngroup.Machines dm ON dm.id = r.FK_machines
-                WHERE r.FK_groups IN ({group_ids_str})
-            )"""
-            machine_exclusion = machine_exclusion + " " + group_exclusion if machine_exclusion else group_exclusion
-
-        return name_exclusion, cve_exclusion, vendor_exclusion, machine_exclusion
-
-    # =========================================================================
-    # Restriction du parc GLPI aux logiciels à CVE
-    # =========================================================================
-    def _cve_affected_glpi_names(self, session):
-        """Liste des glpi_software_name ayant au moins une CVE en base.
-
-        Sert à RESTREINDRE les requêtes sur le parc GLPI distant
-        (WHERE s.name IN (...)). Un logiciel absent de cette liste n'a aucune CVE
-        et ne peut donc jamais matcher : l'exclure évite de balayer ~1,4 M
-        d'installs distantes à chaque affichage. La liste est petite (bornée aux
-        logiciels réellement vulnérables), et c'est un SUR-ensemble sûr : les
-        filtres fins (cvss, sévérité, exclusions) restent appliqués ensuite côté
-        security + matching Python.
-        """
-        rows = session.execute(text(
-            "SELECT DISTINCT glpi_software_name FROM software_cves "
-            "WHERE glpi_software_name IS NOT NULL"
-        ))
-        return [r[0] for r in rows if r[0]]
+        policy = policy or {}
+        sql = """
+            SELECT c.id, c.cve_id, c.severity, c.cvss_score, c.exploited_since, sc.fix_available,
+                   sc.software_name, sc.software_version, sc.glpi_software_name, sc.source_package
+            FROM software_cves sc
+            JOIN cves c ON c.id = sc.cve_id
+            WHERE 1=1"""
+        severities = [severity] if severity in SEVERITIES else _min_severities(policy.get('min_severity'))
+        if severities:
+            sql += " AND c.severity IN :severities"
+            params['severities'] = severities
+        if policy.get('excluded_names'):
+            sql += " AND sc.software_name NOT IN :excluded_names"
+            params['excluded_names'] = policy['excluded_names']
+        if policy.get('excluded_cve_ids'):
+            sql += " AND c.cve_id NOT IN :excluded_cve_ids"
+            params['excluded_cve_ids'] = policy['excluded_cve_ids']
+        if not policy.get('show_unfixed'):
+            sql += " AND (sc.fix_available IS NULL OR sc.fix_available = 1)"
+        if int(policy.get('max_age_days') or 0) > 0:
+            sql += " AND c.published_at >= CURDATE() - INTERVAL :max_age_days DAY"
+            params['max_age_days'] = int(policy['max_age_days'])
+        if int(policy.get('min_published_year') or 0) > 0:
+            sql += " AND c.published_at >= :min_published"
+            params['min_published'] = f"{int(policy['min_published_year'])}-01-01"
+        if exploited_only:
+            sql += " AND c.exploited_since IS NOT NULL"
+        return _run(session, f"{sql} {where}", **params).fetchall()
 
     @staticmethod
-    def _sql_in_list(values):
-        """Construit une clause IN SQL échappée : ('a','b',...) -> \"'a','b',...\".
-        Renvoie None si la liste est vide (aucune valeur)."""
-        if not values:
-            return None
-        return ','.join("'" + str(v).replace("'", "''") + "'" for v in values)
+    def _index(rows):
+        """(GLPI name, version) -> set(cves.id), and cves.id -> (severity, cvss, exploited)."""
+        by_key, info = {}, {}
+        for r in rows:
+            by_key.setdefault((r.glpi_software_name, r.software_version), set()).add(r.id)
+            info[r.id] = (r.severity, float(r.cvss_score or 0), r.exploited_since is not None)
+        return by_key, info
 
-    # =========================================================================
-    # Tests (legacy)
-    # =========================================================================
-    @DatabaseHelper._sessionm
-    def tests(self, session):
-        ret = session.query(Tests).all()
-        return [row.toDict() for row in ret]
+    @staticmethod
+    def _names(by_key):
+        return sorted({name for name, _ in by_key})
+
+    @staticmethod
+    def _installs(names=None, **computers):
+        """(GLPI name, version) -> set(machine id) of software and Windows builds on active computers.
+
+        names restricts the remote GLPI query to software having CVEs (None = all).
+        """
+        if any(v is not None and not v for v in (names, computers.get('machine_ids'), computers.get('entity_ids'))):
+            return {}
+        where, params = _computers_where(**computers)
+        if names is not None:
+            params['names'] = names
+        only = " AND {} IN :names" if names is not None else ""
+        sql = f"""
+            SELECT s.name, sv.name, c.id
+            FROM glpi_items_softwareversions isv
+            JOIN glpi_softwareversions sv ON sv.id = isv.softwareversions_id
+            JOIN glpi_softwares s ON s.id = sv.softwares_id
+            JOIN glpi_computers c ON c.id = isv.items_id
+            WHERE isv.itemtype = 'Computer' AND isv.is_deleted = 0 AND {where}{only.format('s.name')}
+            UNION
+            SELECT os.name, {OS_BUILD}, c.id
+            FROM glpi_computers c {OS_JOINS}
+            WHERE {OS_BUILD} IS NOT NULL AND {where}{only.format('os.name')}"""
+        installs = {}
+        for name, version, machine_id in _glpi(sql, **params):
+            installs.setdefault((name, version or ''), set()).add(machine_id)
+        return installs
+
+    @staticmethod
+    def _keys_by_machine(installs):
+        keys = {}
+        for key, machine_ids in installs.items():
+            for machine_id in machine_ids:
+                keys.setdefault(machine_id, set()).add(key)
+        return keys
+
+    @staticmethod
+    def _cves_of(keys, by_key):
+        return set().union(*(by_key.get(key, ()) for key in keys))
+
+    @staticmethod
+    def _categorize(data, category_filter=''):
+        """Flag software rows as browser extension / Windows OS, then keep the requested category."""
+        names = sorted({r['software_name'] for r in data})
+        extensions = _glpi_names("SELECT name FROM glpi_softwares WHERE comment LIKE :ext AND name IN :names",
+                                 names, ext='%Extension Navigateur%')
+        systems = _glpi_names("SELECT name FROM glpi_operatingsystems WHERE name LIKE :win AND name IN :names",
+                              names, win='%windows%')
+        for r in data:
+            r['is_extension'] = r['software_name'] in extensions
+            r['is_os'] = r['software_name'] in systems
+        if category_filter == 'extension':
+            return [r for r in data if r['is_extension']]
+        if category_filter == 'software':
+            return [r for r in data if not r['is_extension']]
+        return data
+
+    def _cve_details(self, session, pks):
+        if not pks:
+            return {}
+        rows = _run(session, """
+            SELECT id, cve_id, description, published_at, last_modified, exploited_since, euvd_id
+            FROM cves WHERE id IN :pks""", pks=pks)
+        return {r.id: r for r in rows}
+
+    def _cve_list(self, session, rows, start, limit):
+        """One entry per CVE of rows, highest CVSS first."""
+        cves = {}
+        for r in rows:
+            cve = cves.setdefault(r.id, {'severity': r.severity, 'cvss': float(r.cvss_score or 0),
+                                         'exploited': r.exploited_since is not None,
+                                         'names': set(), 'versions': set(), 'fixes': set()})
+            cve['names'].add(r.software_name)
+            cve['versions'].add(r.software_version)
+            cve['fixes'].add(r.fix_available)
+        ordered = sorted(cves, key=lambda pk: (cves[pk]['exploited'], cves[pk]['cvss'], pk), reverse=True)
+        page = ordered[start:start + limit]
+        details = self._cve_details(session, page)
+        data = [{
+            'id': pk,
+            'cve_id': details[pk].cve_id,
+            'cvss_score': _cvss(cves[pk]['cvss']),
+            'severity': cves[pk]['severity'],
+            'description': details[pk].description,
+            'published_at': _date(details[pk].published_at),
+            'last_modified': _date(details[pk].last_modified),
+            'exploited_since': _date(details[pk].exploited_since),
+            'euvd_id': details[pk].euvd_id,
+            'fix_available': _fix(cves[pk]['fixes']),
+            'software_name': ', '.join(sorted(cves[pk]['names'])),
+            'software_version': ', '.join(sorted(cves[pk]['versions']))
+        } for pk in page]
+        return {'total': len(ordered), 'data': data}
+
+    @staticmethod
+    def machine_name(id_glpi, entity_ids=None):
+        """Hostname of an active computer within entity_ids, None otherwise."""
+        if entity_ids is not None and not entity_ids:
+            return None
+        where, params = _computers_where(entity_ids=entity_ids, machine_ids=[id_glpi])
+        rows = _glpi(f"SELECT c.name FROM glpi_computers c WHERE {where}", **params)
+        return (rows[0][0] or f"ID:{id_glpi}") if rows else None
 
     # =========================================================================
     # Dashboard / Summary
     # =========================================================================
     @DatabaseHelper._sessionm
-    def get_dashboard_summary(self, session, location='', min_cvss=0.0, min_severity='None',
-                              excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
-                              excluded_machines_ids=None, excluded_groups_ids=None):
-        """Get summary for dashboard: counts by severity, machines affected
-        Filtered by entity if location is provided.
-        Filtered by min_cvss if > 0.
-        Filtered by min_severity if not 'None'.
-        Filtered by exclusions.
-
-        Uses separate database connections:
-        - GLPI connection (glpi user) for GLPI tables
-        - Security connection (mmc user) for security tables
-        Then merges results in Python.
-        """
-        entity_ids = self._parse_entity_ids(session, location)
-
-        # Severity order for filtering
-        severity_order = ['None', 'Low', 'Medium', 'High', 'Critical']
-        min_sev_index = severity_order.index(min_severity) if min_severity in severity_order else 0
-
-        counts = {'Critical': 0, 'High': 0, 'Medium': 0, 'Low': 0, 'None': 0}
-        machines_affected = 0
-
-        def sql_escape(val):
-            return val.replace("'", "''") if val else val
-
+    def get_dashboard_summary(self, session, entity_ids=None, policy=None, platform='', exploited_only=False):
+        """Dashboard counters filtered by entity and display policies."""
+        stats = _stats(set(), {})
+        machines = set()
         try:
-            # Stratégie : piloter par le côté CVE, qui est petit et local, plutôt
-            # que de balayer tout le parc. Les tables GLPI (glpi_*) sont sur un
-            # serveur distant (proxys FEDERATED en local) : y faire une jointure
-            # massive coûte des minutes. On procède donc en 3 temps :
-            #   1. security (local, rapide) : la petite liste des logiciels à CVE ;
-            #   2. GLPI distant (natif, via _get_glpi_database()) RESTREINT à ces
-            #      noms -> transfert minuscule ;
-            #   3. matching en Python sur ces petits ensembles.
-
-            # --- Étape 1 : CVE par (nom GLPI, version) filtrées, côté security ---
-            name_exclusion = ""
-            if excluded_names:
-                names_escaped = ','.join(f"'{sql_escape(n)}'" for n in excluded_names)
-                name_exclusion = f"AND sc.software_name NOT IN ({names_escaped})"
-
-            cve_exclusion = ""
-            if excluded_cve_ids:
-                cve_ids_escaped = ','.join(f"'{sql_escape(c)}'" for c in excluded_cve_ids)
-                cve_exclusion = f"AND c.cve_id NOT IN ({cve_ids_escaped})"
-
-            cvss_filter = ""
-            if min_cvss and float(min_cvss) > 0:
-                cvss_filter = f"AND c.cvss_score >= {float(min_cvss)}"
-
-            severity_filter = ""
-            if min_sev_index > 0:
-                allowed_severities = severity_order[min_sev_index:]
-                severity_list = ','.join(f"'{s}'" for s in allowed_severities)
-                severity_filter = f"AND c.severity IN ({severity_list})"
-
-            security_sql = text(f"""
-                SELECT c.id, c.severity, sc.glpi_software_name, sc.software_version
-                FROM cves c
-                JOIN software_cves sc ON sc.cve_id = c.id
-                WHERE sc.glpi_software_name IS NOT NULL
-                {cvss_filter} {severity_filter} {name_exclusion} {cve_exclusion}
-            """)
-            sec_rows = [(r[0], r[1], r[2], r[3] or '') for r in session.execute(security_sql)]
-
-            # Noms GLPI distincts concernés par au moins une CVE (petite liste)
-            cve_names = sorted({gname for (_cid, _sev, gname, _sver) in sec_rows if gname})
-
-            if cve_names:
-                # --- Étape 2 : parc GLPI distant, RESTREINT à ces noms ---
-                glpi_db = _get_glpi_database()
-                if not glpi_db:
-                    logger.error("GLPI database not available for dashboard summary")
-                    raise Exception("GLPI database not available")
-
-                names_in = ','.join(f"'{sql_escape(n)}'" for n in cve_names)
-
-                entity_filter_glpi = ""
-                if entity_ids:
-                    entity_ids_str = ','.join(str(int(e)) for e in entity_ids)
-                    entity_filter_glpi = f"AND c.entities_id IN ({entity_ids_str})"
-
-                machine_exclusion_glpi = ""
-                if excluded_machines_ids:
-                    machine_ids_str = ','.join(str(int(mid)) for mid in excluded_machines_ids)
-                    machine_exclusion_glpi = f"AND c.id NOT IN ({machine_ids_str})"
-
-                glpi_sql = text(f"""
-                    SELECT DISTINCT s.name AS software_name, sv.name AS software_version, c.id AS machine_id
-                    FROM glpi_softwares s
-                    JOIN glpi_softwareversions sv ON sv.softwares_id = s.id
-                    JOIN glpi_items_softwareversions isv
-                         ON isv.softwareversions_id = sv.id AND isv.itemtype = 'Computer'
-                    JOIN glpi_computers c ON c.id = isv.items_id
-                    WHERE c.is_deleted = 0 AND c.is_template = 0
-                      AND s.name IN ({names_in})
-                      {entity_filter_glpi} {machine_exclusion_glpi}
-                """)
-
-                # (nom, version) -> ensemble des machines qui l'ont installé
-                software_machine_map = {}
-                with glpi_db.db.connect() as glpi_conn:
-                    for row in glpi_conn.execute(glpi_sql):
-                        key = (row[0], row[1] or '')
-                        software_machine_map.setdefault(key, set()).add(row[2])
-
-                # --- Étape 3 : matching (petits ensembles) ---
-                affected_machines = set()
-                cve_ids_by_severity = {sev: set() for sev in counts}
-                for (cve_id, severity, gname, sver) in sec_rows:
-                    key = (gname, sver)
-                    if key in software_machine_map:
-                        if severity in cve_ids_by_severity:
-                            cve_ids_by_severity[severity].add(cve_id)
-                        affected_machines.update(software_machine_map[key])
-
-                for severity in counts:
-                    counts[severity] = len(cve_ids_by_severity[severity])
-                machines_affected = len(affected_machines)
-
+            by_key, info = self._index(self._cve_rows(session, policy, exploited_only=exploited_only))
+            installs = self._installs(self._names(by_key), **_scope(policy, entity_ids, platform))
+            cves = set()
+            for key, machine_ids in installs.items():
+                if key in by_key:
+                    cves |= by_key[key]
+                    machines |= machine_ids
+            stats = _stats(cves, info)
         except Exception as e:
             logger.error(f"Error in get_dashboard_summary: {e}")
 
-        # Last scan info
         last_scan = session.query(Scan).order_by(desc(Scan.started_at)).first()
         last_scan_info = None
         if last_scan:
             last_scan_info = {
                 'id': last_scan.id,
-                'started_at': last_scan.started_at.isoformat() if last_scan.started_at else None,
-                'finished_at': last_scan.finished_at.isoformat() if last_scan.finished_at else None,
+                'started_at': _date(last_scan.started_at),
+                'finished_at': _date(last_scan.finished_at),
                 'status': last_scan.status,
                 'softwares_sent': last_scan.softwares_sent,
-                'cves_received': last_scan.cves_received,
-                'machines_affected': last_scan.machines_affected
+                'cves_received': last_scan.cves_received
             }
 
-        return {
-            'total_cves': sum(counts.values()),
-            'critical': counts['Critical'],
-            'high': counts['High'],
-            'medium': counts['Medium'],
-            'low': counts['Low'],
-            'machines_affected': machines_affected,
-            'last_scan': last_scan_info
-        }
+        stats.pop('max_cvss')
+        return {**stats, 'machines_affected': len(machines), 'last_scan': last_scan_info}
 
     # =========================================================================
     # CVE List (toutes les CVEs connues pour les logiciels du parc)
     # =========================================================================
     @DatabaseHelper._sessionm
-    def get_cves(self, session, start=0, limit=50, filter_str='',
-                 severity=None, exact_severity=None, location='', sort_by='cvss_score', sort_order='desc',
-                 min_cvss=0.0, excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
-                 excluded_machines_ids=None, excluded_groups_ids=None):
-        """Get paginated list of CVEs with affected machine count
-        Filtered by entity if location is provided.
-        Filtered by min_cvss if > 0.
-        Filtered by exclusions.
-
-        Uses separate database connections:
-        - GLPI connection (glpi user) for GLPI tables
-        - Security connection (mmc user) for security tables
-        """
-        entity_ids = self._parse_entity_ids(session, location)
-        severity_order = ['None', 'Low', 'Medium', 'High', 'Critical']
-
+    def get_cves(self, session, start=0, limit=50, filter_str='', severity=None, entity_ids=None,
+                 policy=None, platform='', exploited_only=False):
+        """Paginated CVEs present in the park, with their affected machine count."""
         try:
-            # Get GLPI database connection
-            glpi_db = _get_glpi_database()
-            if not glpi_db:
-                logger.error("GLPI database not available for get_cves")
-                return {'total': 0, 'data': []}
-
-            # Restreint le scan du parc GLPI distant aux seuls logiciels à CVE.
-            cve_names_in = self._sql_in_list(self._cve_affected_glpi_names(session))
-            if not cve_names_in:
-                return {'total': 0, 'data': []}
-
-            # Step 1: Get software names installed on machines from GLPI
-            entity_filter_glpi = ""
-            if entity_ids:
-                entity_ids_str = ','.join(str(e) for e in entity_ids)
-                entity_filter_glpi = f"AND c.entities_id IN ({entity_ids_str})"
-
-            machine_exclusion_glpi = ""
-            if excluded_machines_ids:
-                machine_ids_str = ','.join(str(int(mid)) for mid in excluded_machines_ids)
-                machine_exclusion_glpi = f"AND c.id NOT IN ({machine_ids_str})"
-
-            glpi_sql = text(f"""
-                SELECT DISTINCT s.name as software_name, sv.name as software_version, c.id as machine_id
-                FROM glpi_softwares s
-                JOIN glpi_softwareversions sv ON sv.softwares_id = s.id
-                JOIN glpi_items_softwareversions isv ON isv.softwareversions_id = sv.id AND isv.itemtype = 'Computer'
-                JOIN glpi_computers c ON c.id = isv.items_id
-                WHERE c.is_deleted = 0 AND c.is_template = 0
-                AND s.name IN ({cve_names_in})
-                {entity_filter_glpi} {machine_exclusion_glpi}
-            """)
-
-            with glpi_db.db.connect() as glpi_conn:
-                glpi_result = glpi_conn.execute(glpi_sql)
-                software_names = set()
-                software_machine_map = {}  # (software_name, version) -> set of machine_ids
-
-                for row in glpi_result:
-                    sw_name = row[0]
-                    sw_version = row[1] or ''
-                    m_id = row[2]
-                    software_names.add(sw_name)
-                    key = (sw_name, sw_version)
-                    if key not in software_machine_map:
-                        software_machine_map[key] = set()
-                    software_machine_map[key].add(m_id)
-
-            if not software_names:
-                return {'total': 0, 'data': []}
-
-            # Step 2: Build security query filters
-            def sql_escape(val):
-                return val.replace("'", "''") if val else val
-
-            cve_filters = []
-            if min_cvss > 0:
-                cve_filters.append(f"c.cvss_score >= {min_cvss}")
-            if exact_severity and exact_severity in severity_order:
-                cve_filters.append(f"c.severity = '{sql_escape(exact_severity)}'")
-            elif severity and severity in severity_order:
-                min_sev_index = severity_order.index(severity)
-                if min_sev_index > 0:
-                    allowed_severities = severity_order[min_sev_index:]
-                    severity_list = ','.join(f"'{s}'" for s in allowed_severities)
-                    cve_filters.append(f"c.severity IN ({severity_list})")
+            where, params = '', {}
             if filter_str:
-                escaped_filter = filter_str.replace("'", "''")
-                cve_filters.append(f"(c.cve_id LIKE '%{escaped_filter}%' OR c.description LIKE '%{escaped_filter}%')")
+                where = "AND (c.cve_id LIKE :search OR c.description LIKE :search)"
+                params['search'] = f"%{filter_str}%"
+            rows = self._cve_rows(session, policy, severity, exploited_only, where, **params)
+            by_key, info = self._index(rows)
+            installs = self._installs(self._names(by_key), **_scope(policy, entity_ids, platform))
 
-            name_exclusion = ""
-            if excluded_names:
-                names_escaped = ','.join(f"'{sql_escape(n)}'" for n in excluded_names)
-                name_exclusion = f"AND sc.software_name NOT IN ({names_escaped})"
+            machines, softwares = {}, {}
+            for r in rows:
+                machine_ids = installs.get((r.glpi_software_name, r.software_version))
+                if machine_ids:
+                    machines.setdefault(r.id, set()).update(machine_ids)
+                    softwares.setdefault(r.id, set()).add((r.software_name, r.software_version))
 
-            cve_exclusion = ""
-            if excluded_cve_ids:
-                cve_ids_escaped = ','.join(f"'{sql_escape(c)}'" for c in excluded_cve_ids)
-                cve_exclusion = f"AND c.cve_id NOT IN ({cve_ids_escaped})"
-
-            cve_where_clause = ""
-            if cve_filters:
-                cve_where_clause = "AND " + " AND ".join(cve_filters)
-
-            # Step 3: Get CVEs from security database (include software_version for matching)
-            security_sql = text(f"""
-                SELECT c.id, c.cve_id, c.cvss_score, c.severity, c.description, c.published_at,
-                       sc.glpi_software_name, sc.software_version
-                FROM cves c
-                JOIN software_cves sc ON sc.cve_id = c.id
-                WHERE sc.glpi_software_name IS NOT NULL
-                {cve_where_clause} {name_exclusion} {cve_exclusion}
-                ORDER BY c.cvss_score {'DESC' if sort_order == 'desc' else 'ASC'}
-            """)
-
-            result = session.execute(security_sql)
-
-            # Step 4: Filter CVEs that match installed software (name + version) and count machines
-            cve_data = {}  # cve_id -> {data, machines}
-            for row in result:
-                glpi_sw_name = row[6]
-                sw_version = row[7] or ''
-                key = (glpi_sw_name, sw_version)
-                if key in software_machine_map:
-                    cve_id = row[1]
-                    if cve_id not in cve_data:
-                        cve_data[cve_id] = {
-                            'id': row[0],
-                            'cve_id': row[1],
-                            'cvss_score': row[2],
-                            'severity': row[3],
-                            'description': row[4],
-                            'published_at': row[5],
-                            'machines': set()
-                        }
-                    cve_data[cve_id]['machines'].update(software_machine_map[key])
-
-            # Step 5: Apply pagination and format results
-            total = len(cve_data)
-            sorted_cves = sorted(cve_data.values(),
-                               key=lambda x: float(x['cvss_score']) if x['cvss_score'] else 0,
-                               reverse=(sort_order == 'desc'))
-            paginated_cves = sorted_cves[start:start + limit]
-
-            results = []
-            for cve in paginated_cves:
-                sw_cves = session.query(SoftwareCve).filter(
-                    SoftwareCve.cve_id == cve['id']
-                ).all()
-                softwares = [{'name': sc.software_name, 'version': sc.software_version}
-                            for sc in sw_cves]
-
-                results.append({
-                    'id': cve['id'],
-                    'cve_id': cve['cve_id'],
-                    'cvss_score': str(round(float(cve['cvss_score']), 1)) if cve['cvss_score'] else '0.0',
-                    'severity': cve['severity'],
-                    'description': cve['description'],
-                    'published_at': cve['published_at'].isoformat() if cve['published_at'] else None,
-                    'softwares': softwares,
-                    'machines_affected': len(cve['machines'])
-                })
-
-            return {'total': total, 'data': results}
+            ordered = sorted(machines, key=lambda pk: (info[pk][2], info[pk][1], pk), reverse=True)
+            page = ordered[start:start + limit]
+            details = self._cve_details(session, page)
+            data = [{
+                'id': pk,
+                'cve_id': details[pk].cve_id,
+                'cvss_score': _cvss(info[pk][1]),
+                'severity': info[pk][0],
+                'description': details[pk].description,
+                'published_at': _date(details[pk].published_at),
+                'exploited_since': _date(details[pk].exploited_since),
+                'euvd_id': details[pk].euvd_id,
+                'softwares': [{'name': n, 'version': v} for n, v in sorted(softwares[pk])],
+                'machines_affected': len(machines[pk])
+            } for pk in page]
+            return {'total': len(ordered), 'data': data}
         except Exception as e:
             logger.error(f"Error getting CVEs: {e}")
             return {'total': 0, 'data': []}
 
     @DatabaseHelper._sessionm
-    def get_cve_details(self, session, cve_id_str, location=''):
-        """Get details of a CVE including affected machines
-        Filtered by entity if location is provided.
-
-        Uses separate database connections:
-        - GLPI connection (glpi user) for GLPI tables
-        - Security connection (mmc user) for security tables
-        """
+    def get_cve_details(self, session, cve_id_str, entity_ids=None, policy=None):
+        """A CVE with its software links and the affected machines within entity_ids."""
         cve = session.query(Cve).filter(Cve.cve_id == cve_id_str).first()
         if not cve:
             return None
 
-        # Parse entity filter
-        entity_ids = self._parse_entity_ids(session, location)
+        links = session.query(SoftwareCve).filter(SoftwareCve.cve_id == cve.id).all()
+        if not (policy or {}).get('show_unfixed'):
+            links = [sc for sc in links if sc.fix_available is not False]
+        softwares = [{'name': sc.software_name, 'version': sc.software_version,
+                      'fix_available': sc.fix_available} for sc in links]
 
-        # Get software linked to this CVE
-        sw_cves = session.query(SoftwareCve).filter(
-            SoftwareCve.cve_id == cve.id
-        ).all()
-
-        softwares = [{'name': sc.software_name, 'version': sc.software_version}
-                    for sc in sw_cves]
-
-        # Get affected machines using GLPI connection
         machines = []
-        if sw_cves:
-            try:
-                glpi_db = _get_glpi_database()
-                if not glpi_db:
-                    logger.error("GLPI database not available for get_cve_details")
-                else:
-                    # Build conditions using (glpi_software_name, software_version)
-                    # This ensures we only match machines with the exact vulnerable version
-                    conditions = []
-                    for sc in sw_cves:
-                        if sc.glpi_software_name:
-                            escaped_name = sc.glpi_software_name.replace("'", "''")
-                            escaped_version = sc.software_version.replace("'", "''")
-                            conditions.append(f"(s.name = '{escaped_name}' AND sv.name = '{escaped_version}')")
+        by_key = {(sc.glpi_software_name, sc.software_version): sc.software_name or sc.glpi_software_name
+                  for sc in links if sc.glpi_software_name}
+        try:
+            installs = self._installs(self._names(by_key), **_scope(policy, entity_ids))
+            found = [(machine_id, key) for key, ids in installs.items() if key in by_key for machine_id in ids]
+            if found:
+                hosts = dict(_glpi("SELECT c.id, c.name FROM glpi_computers c WHERE c.id IN :ids",
+                                   ids={machine_id for machine_id, _ in found}))
+                machines = sorted(({'id_glpi': machine_id, 'hostname': hosts.get(machine_id),
+                                    'software_name': by_key[key], 'software_version': key[1]}
+                                   for machine_id, key in found),
+                                  key=lambda m: (m['hostname'] or '', m['software_name'], m['software_version']))
+        except Exception as e:
+            logger.error(f"Error getting machines for CVE {cve_id_str}: {e}")
 
-                    if conditions:
-                        where_clause = " OR ".join(conditions)
-
-                        entity_filter_glpi = ""
-                        if entity_ids:
-                            entity_ids_str = ','.join(str(e) for e in entity_ids)
-                            entity_filter_glpi = f"AND c.entities_id IN ({entity_ids_str})"
-
-                        glpi_sql = text(f"""
-                            SELECT DISTINCT c.id as machine_id, c.name as hostname,
-                                   s.name as software_name, sv.name as software_version
-                            FROM glpi_items_softwareversions isv
-                            JOIN glpi_softwareversions sv ON sv.id = isv.softwareversions_id
-                            JOIN glpi_softwares s ON s.id = sv.softwares_id
-                            JOIN glpi_computers c ON c.id = isv.items_id
-                            WHERE isv.itemtype = 'Computer' AND ({where_clause})
-                            AND c.is_deleted = 0 AND c.is_template = 0
-                            {entity_filter_glpi}
-                            ORDER BY c.name, s.name, sv.name
-                        """)
-
-                        with glpi_db.db.connect() as glpi_conn:
-                            result = glpi_conn.execute(glpi_sql)
-
-                            # Build a map of (glpi_software_name, version) -> software_cve info
-                            sw_cve_map = {
-                                (sc.glpi_software_name, sc.software_version): sc
-                                for sc in sw_cves if sc.glpi_software_name
-                            }
-
-                            for row in result:
-                                glpi_sw_name = row[2]
-                                glpi_sw_version = row[3]
-                                sc = sw_cve_map.get((glpi_sw_name, glpi_sw_version))
-                                machines.append({
-                                    'id_glpi': row[0],
-                                    'hostname': row[1],
-                                    'software_name': sc.software_name if sc else glpi_sw_name,
-                                    'software_version': glpi_sw_version
-                                })
-            except Exception as e:
-                logger.error(f"Error getting machines for CVE {cve_id_str}: {e}")
-
-        # Parse sources string to list
-        sources = cve.sources.split(',') if cve.sources else []
-
-        # Parse source_urls JSON to dict
         import json
         source_urls = {}
         if cve.source_urls:
@@ -692,13 +515,15 @@ class SecurityDatabase(DatabaseHelper):
         return {
             'id': cve.id,
             'cve_id': cve.cve_id,
-            'cvss_score': str(round(float(cve.cvss_score), 1)) if cve.cvss_score else '0.0',
+            'cvss_score': _cvss(cve.cvss_score),
             'severity': cve.severity,
             'description': cve.description,
-            'published_at': cve.published_at.isoformat() if cve.published_at else None,
-            'last_modified': cve.last_modified.isoformat() if cve.last_modified else None,
-            'fetched_at': cve.fetched_at.isoformat() if cve.fetched_at else None,
-            'sources': sources,
+            'published_at': _date(cve.published_at),
+            'last_modified': _date(cve.last_modified),
+            'exploited_since': _date(cve.exploited_since),
+            'euvd_id': cve.euvd_id,
+            'fetched_at': _date(cve.fetched_at),
+            'sources': cve.sources.split(',') if cve.sources else [],
             'source_urls': source_urls,
             'softwares': softwares,
             'machines': machines
@@ -707,442 +532,328 @@ class SecurityDatabase(DatabaseHelper):
     # =========================================================================
     # Machine-centric view
     # =========================================================================
+    def _machine_rows(self, session, machines, policy, exploited_only=False, **computers):
+        """CVE counters of machines [(id, hostname)], installs taken on computers."""
+        by_key, info = self._index(self._cve_rows(session, policy, exploited_only=exploited_only))
+        keys = self._keys_by_machine(self._installs(self._names(by_key), **computers))
+        data = []
+        for machine_id, hostname in machines:
+            stats = _stats(self._cves_of(keys.get(machine_id, ()), by_key), info)
+            stats['risk_score'] = stats.pop('max_cvss')
+            data.append({'id_glpi': machine_id, 'hostname': hostname, **stats})
+        return data
+
     @DatabaseHelper._sessionm
-    def get_machines_summary(self, session, start=0, limit=50, filter_str='', location='',
-                             min_cvss=0.0, min_severity='None',
-                             excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
-                             excluded_machines_ids=None, excluded_groups_ids=None):
-        """Get list of ALL machines from GLPI with vulnerability counts (only latest software versions)
-        Filtered by entity if location is provided.
-        Filtered by min_cvss if > 0.
-        Filtered by min_severity if not 'None'.
-        Filtered by exclusions.
-
-        Uses separate database connections:
-        - GLPI connection (glpi user) for GLPI tables
-        - Security connection (mmc user) for security tables
-        """
-        entity_ids = self._parse_entity_ids(session, location)
-        severity_order = ['None', 'Low', 'Medium', 'High', 'Critical']
-        min_sev_index = severity_order.index(min_severity) if min_severity in severity_order else 0
-
+    def get_machines_summary(self, session, start=0, limit=50, filter_str='', entity_ids=None,
+                             policy=None, platform='', exploited_only=False, group_id=None, login=None):
+        """GLPI machines (of group_id if set) with their CVE counters, filtered by entity and display policies."""
         try:
-            glpi_db = _get_glpi_database()
-            if not glpi_db:
-                logger.error("GLPI database not available for get_machines_summary")
+            machine_ids = None if group_id is None else self._group_members(session, group_id, login)
+            if (entity_ids is not None and not entity_ids) or machine_ids == set():
                 return {'total': 0, 'data': []}
-
-            # Step 1: Get machines and their software from GLPI
-            where_clauses = ["c.is_deleted = 0", "c.is_template = 0"]
-
-            if entity_ids:
-                entity_ids_str = ','.join(str(e) for e in entity_ids)
-                where_clauses.append(f"c.entities_id IN ({entity_ids_str})")
-
-            if filter_str:
-                escaped_filter = filter_str.replace("'", "''")
-                where_clauses.append(f"c.name LIKE '%{escaped_filter}%'")
-
-            if excluded_machines_ids:
-                machine_ids_str = ','.join(str(int(mid)) for mid in excluded_machines_ids)
-                where_clauses.append(f"c.id NOT IN ({machine_ids_str})")
-
-            filter_clause = "WHERE " + " AND ".join(where_clauses)
-
-            # Parc en 2 temps pour rester rapide sur du GLPI distant. Un LEFT JOIN
-            # unique déploierait toutes les installs de chaque machine (~1,4 M lignes)
-            # avant tout filtrage -> lent. À la place :
-            #  1. la LISTE des machines (légère, ~1 ligne/machine) ;
-            #  2. uniquement les installs de logiciels À CVE, en INNER JOIN démarrant
-            #     du petit côté (s.name IN (...)) -> transfert minuscule.
-            cve_names_in = self._sql_in_list(self._cve_affected_glpi_names(session))
-
-            machines = {}  # machine_id -> {hostname, software_names}
-            with glpi_db.db.connect() as glpi_conn:
-                # 1. Toutes les machines (même sans vulnérabilité)
-                machines_sql = text(f"""
-                    SELECT c.id as machine_id, c.name as hostname
-                    FROM glpi_computers c
-                    {filter_clause}
-                """)
-                for row in glpi_conn.execute(machines_sql):
-                    machines[row[0]] = {'hostname': row[1], 'software_names': set()}
-
-                if not machines:
-                    return {'total': 0, 'data': []}
-
-                # 2. Installs de logiciels à CVE seulement (restreint -> rapide)
-                if cve_names_in:
-                    sw_sql = text(f"""
-                        SELECT DISTINCT c.id as machine_id, s.name as software_name
-                        FROM glpi_softwares s
-                        JOIN glpi_softwareversions sv ON sv.softwares_id = s.id
-                        JOIN glpi_items_softwareversions isv
-                             ON isv.softwareversions_id = sv.id AND isv.itemtype = 'Computer'
-                        JOIN glpi_computers c ON c.id = isv.items_id
-                        {filter_clause}
-                        AND s.name IN ({cve_names_in})
-                    """)
-                    for row in glpi_conn.execute(sw_sql):
-                        m = machines.get(row[0])
-                        if m is not None:
-                            m['software_names'].add(row[1])
-
+            computers = _scope(policy, entity_ids, platform, hostname=filter_str, machine_ids=machine_ids)
+            where, params = _computers_where(**computers)
+            machines = _glpi(f"SELECT c.id, c.name FROM glpi_computers c WHERE {where}", **params)
             if not machines:
                 return {'total': 0, 'data': []}
-
-            # Step 2: Get CVEs from security database
-            def sql_escape(val):
-                return val.replace("'", "''") if val else val
-
-            cve_filters = []
-            if min_cvss > 0:
-                cve_filters.append(f"c.cvss_score >= {min_cvss}")
-            if min_sev_index > 0:
-                allowed_severities = severity_order[min_sev_index:]
-                severity_list = ','.join(f"'{s}'" for s in allowed_severities)
-                cve_filters.append(f"c.severity IN ({severity_list})")
-
-            name_exclusion = ""
-            if excluded_names:
-                names_escaped = ','.join(f"'{sql_escape(n)}'" for n in excluded_names)
-                name_exclusion = f"AND sc.software_name NOT IN ({names_escaped})"
-
-            cve_exclusion = ""
-            if excluded_cve_ids:
-                cve_ids_escaped = ','.join(f"'{sql_escape(c)}'" for c in excluded_cve_ids)
-                cve_exclusion = f"AND c.cve_id NOT IN ({cve_ids_escaped})"
-
-            cve_where = ""
-            if cve_filters:
-                cve_where = "AND " + " AND ".join(cve_filters)
-
-            security_sql = text(f"""
-                SELECT c.id, c.severity, c.cvss_score, sc.glpi_software_name
-                FROM cves c
-                JOIN software_cves sc ON sc.cve_id = c.id
-                WHERE sc.glpi_software_name IS NOT NULL
-                {cve_where} {name_exclusion} {cve_exclusion}
-            """)
-
-            result = session.execute(security_sql)
-
-            # Build CVE map: glpi_software_name -> list of CVEs
-            cve_by_software = {}
-            for row in result:
-                sw_name = row[3]
-                if sw_name not in cve_by_software:
-                    cve_by_software[sw_name] = []
-                cve_by_software[sw_name].append({
-                    'id': row[0],
-                    'severity': row[1],
-                    'cvss_score': float(row[2]) if row[2] else 0.0
-                })
-
-            # Step 3: Calculate CVE counts per machine
-            machine_stats = []
-            for m_id, m_data in machines.items():
-                cve_ids = set()
-                severity_counts = {'Critical': 0, 'High': 0, 'Medium': 0, 'Low': 0, 'None': 0}
-                max_cvss = 0.0
-
-                for sw_name in m_data['software_names']:
-                    if sw_name in cve_by_software:
-                        for cve in cve_by_software[sw_name]:
-                            if cve['id'] not in cve_ids:
-                                cve_ids.add(cve['id'])
-                                if cve['severity'] in severity_counts:
-                                    severity_counts[cve['severity']] += 1
-                                if cve['cvss_score'] > max_cvss:
-                                    max_cvss = cve['cvss_score']
-
-                machine_stats.append({
-                    'id_glpi': m_id,
-                    'hostname': m_data['hostname'],
-                    'total_cves': len(cve_ids),
-                    'critical': severity_counts['Critical'],
-                    'high': severity_counts['High'],
-                    'medium': severity_counts['Medium'],
-                    'low': severity_counts['Low'],
-                    'risk_score': str(round(max_cvss, 1))
-                })
-
-            # Step 4: Sort and paginate
-            machine_stats.sort(key=lambda x: (float(x['risk_score']), x['hostname']), reverse=True)
-            total = len(machine_stats)
-            paginated = machine_stats[start:start + limit]
-
-            return {'total': total, 'data': paginated}
+            data = self._machine_rows(session, machines, policy, exploited_only, **computers)
+            data.sort(key=lambda x: _priority(x, 'risk_score'), reverse=True)
+            return {'total': len(data), 'data': data[start:start + limit]}
         except Exception as e:
             logger.error(f"Error getting machines summary: {e}")
             return {'total': 0, 'data': []}
 
     @DatabaseHelper._sessionm
     def get_machine_cves(self, session, id_glpi, start=0, limit=50, filter_str='', severity=None,
-                         min_cvss=0.0, excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
-                         excluded_machines_ids=None, excluded_groups_ids=None):
-        """Get all CVEs affecting a specific machine (only latest software versions)
-
-        Uses separate database connections:
-        - GLPI connection (glpi user) for GLPI tables
-        - Security connection (mmc user) for security tables
-        """
+                         entity_ids=None, policy=None):
+        """CVEs of the software (name and version) installed on a machine."""
         try:
-            glpi_db = _get_glpi_database()
-            if not glpi_db:
-                logger.error("GLPI database not available for get_machine_cves")
+            keys = set(self._installs(machine_ids=[id_glpi], entity_ids=entity_ids))
+            if not keys:
                 return {'total': 0, 'data': []}
-
-            # Step 1: Get software names for this machine from GLPI
-            # itemtype='Computer' EN PREMIER : l'index (itemtype, items_id) de
-            # glpi_items_softwareversions n'est utilisable qu'avec itemtype fourni ;
-            # sans lui, GLPI scanne toute la table (~1,5 M lignes) -> plusieurs sec.
-            glpi_sql = text("""
-                SELECT DISTINCT s.name as software_name
-                FROM glpi_softwares s
-                JOIN glpi_softwareversions sv ON sv.softwares_id = s.id
-                JOIN glpi_items_softwareversions isv ON isv.softwareversions_id = sv.id
-                WHERE isv.itemtype = 'Computer' AND isv.items_id = :id_glpi
-            """)
-
-            with glpi_db.db.connect() as glpi_conn:
-                glpi_result = glpi_conn.execute(glpi_sql, {'id_glpi': id_glpi})
-                software_names = set(row[0] for row in glpi_result)
-
-            if not software_names:
-                return {'total': 0, 'data': []}
-
-            # Step 2: Get CVEs from security database
-            def sql_escape(val):
-                return val.replace("'", "''") if val else val
-
-            cve_filters = []
-            if min_cvss > 0:
-                cve_filters.append(f"c.cvss_score >= {min_cvss}")
-            if severity:
-                cve_filters.append(f"c.severity = '{sql_escape(severity)}'")
+            where, params = '', {}
             if filter_str:
-                escaped_filter = filter_str.replace("'", "''")
-                cve_filters.append(f"(c.cve_id LIKE '%{escaped_filter}%' OR c.description LIKE '%{escaped_filter}%')")
-
-            name_exclusion = ""
-            if excluded_names:
-                names_escaped = ','.join(f"'{sql_escape(n)}'" for n in excluded_names)
-                name_exclusion = f"AND sc.software_name NOT IN ({names_escaped})"
-
-            cve_exclusion = ""
-            if excluded_cve_ids:
-                cve_ids_escaped = ','.join(f"'{sql_escape(c)}'" for c in excluded_cve_ids)
-                cve_exclusion = f"AND c.cve_id NOT IN ({cve_ids_escaped})"
-
-            cve_where = ""
-            if cve_filters:
-                cve_where = "AND " + " AND ".join(cve_filters)
-
-            security_sql = text(f"""
-                SELECT c.id, c.cve_id, c.cvss_score, c.severity, c.description,
-                       c.published_at, c.last_modified,
-                       sc.software_name, sc.software_version, sc.glpi_software_name
-                FROM cves c
-                JOIN software_cves sc ON sc.cve_id = c.id
-                WHERE sc.glpi_software_name IS NOT NULL
-                {cve_where} {name_exclusion} {cve_exclusion}
-                ORDER BY c.cvss_score DESC
-            """)
-
-            result = session.execute(security_sql)
-
-            # Step 3: Filter CVEs by installed software and aggregate
-            cve_data = {}  # cve_id -> {data, software_names, software_versions}
-            for row in result:
-                glpi_sw_name = row[9]
-                if glpi_sw_name not in software_names:
-                    continue
-
-                cve_id = row[1]
-                if cve_id not in cve_data:
-                    cve_data[cve_id] = {
-                        'cve_id': row[1],
-                        'cvss_score': float(row[2]) if row[2] else 0.0,
-                        'severity': row[3],
-                        'description': row[4],
-                        'published_at': row[5],
-                        'last_modified': row[6],
-                        'software_names': set(),
-                        'software_versions': set()
-                    }
-                cve_data[cve_id]['software_names'].add(row[7])
-                cve_data[cve_id]['software_versions'].add(row[8])
-
-            # Step 4: Format and paginate results
-            cves_list = sorted(cve_data.values(), key=lambda x: x['cvss_score'], reverse=True)
-            total = len(cves_list)
-            paginated = cves_list[start:start + limit]
-
-            cves = []
-            for cve in paginated:
-                cves.append({
-                    'cve_id': cve['cve_id'],
-                    'cvss_score': str(round(cve['cvss_score'], 1)),
-                    'severity': cve['severity'],
-                    'description': cve['description'],
-                    'published_at': str(cve['published_at']) if cve['published_at'] else None,
-                    'last_modified': str(cve['last_modified']) if cve['last_modified'] else None,
-                    'software_name': ', '.join(sorted(cve['software_names'])),
-                    'software_version': ', '.join(sorted(cve['software_versions']))
-                })
-
-            return {'total': total, 'data': cves}
+                where = "AND (c.cve_id LIKE :search OR c.description LIKE :search)"
+                params['search'] = f"%{filter_str}%"
+            rows = [r for r in self._cve_rows(session, policy, severity, False, where, **params)
+                    if (r.glpi_software_name, r.software_version) in keys]
+            return self._cve_list(session, rows, start, limit)
         except Exception as e:
             logger.error(f"Error getting CVEs for machine {id_glpi}: {e}")
             return {'total': 0, 'data': []}
 
     @DatabaseHelper._sessionm
     def get_machine_softwares_summary(self, session, id_glpi, start=0, limit=50, filter_str='',
-                                      min_cvss=0.0, excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
-                                      excluded_machines_ids=None, excluded_groups_ids=None,
-                                      category_filter=''):
-        """Get vulnerable software summary for a specific machine, grouped by software.
-
-        Uses separate database connections:
-        - GLPI connection (glpi user) for GLPI tables
-        - Security connection (mmc user) for security tables
-        """
+                                      category_filter='', entity_ids=None, policy=None):
+        """Vulnerable software of a machine, Linux binaries grouped by source package."""
         try:
-            glpi_db = _get_glpi_database()
-            if not glpi_db:
-                logger.error("GLPI database not available for get_machine_softwares_summary")
+            keys = set(self._installs(machine_ids=[id_glpi], entity_ids=entity_ids))
+            if not keys:
                 return {'total': 0, 'data': []}
-
-            # Step 1: Get software names for this machine from GLPI
-            # itemtype='Computer' EN PREMIER : sans lui, l'index (itemtype, items_id)
-            # de glpi_items_softwareversions n'est pas utilisable -> scan de ~1,5 M
-            # lignes sur le GLPI distant (plusieurs secondes).
-            glpi_sql = text("""
-                SELECT DISTINCT s.name as software_name, s.comment as comment
-                FROM glpi_softwares s
-                JOIN glpi_softwareversions sv ON sv.softwares_id = s.id
-                JOIN glpi_items_softwareversions isv ON isv.softwareversions_id = sv.id
-                WHERE isv.itemtype = 'Computer' AND isv.items_id = :id_glpi
-            """)
-
-            with glpi_db.db.connect() as glpi_conn:
-                glpi_result = glpi_conn.execute(glpi_sql, {'id_glpi': id_glpi})
-                software_names = set()
-                extension_names = set()  # logiciels typés "extension" via le commentaire
-                for row in glpi_result:
-                    software_names.add(row[0])
-                    if row[1] and 'Extension Navigateur' in row[1]:
-                        extension_names.add(row[0])
-
-            if not software_names:
-                return {'total': 0, 'data': []}
-
-            # Step 2: Get CVEs from security database
-            def sql_escape(val):
-                return val.replace("'", "''") if val else val
-
-            cve_filters = []
-            if min_cvss > 0:
-                cve_filters.append(f"c.cvss_score >= {min_cvss}")
+            where, params = '', {}
             if filter_str:
-                escaped_filter = filter_str.replace("'", "''")
-                cve_filters.append(f"sc.software_name LIKE '%{escaped_filter}%'")
+                where = "AND sc.software_name LIKE :search"
+                params['search'] = f"%{filter_str}%"
+            rows = self._cve_rows(session, policy, None, False, where, **params)
+            _, info = self._index(rows)
 
-            name_exclusion = ""
-            if excluded_names:
-                names_escaped = ','.join(f"'{sql_escape(n)}'" for n in excluded_names)
-                name_exclusion = f"AND sc.software_name NOT IN ({names_escaped})"
-
-            cve_exclusion = ""
-            if excluded_cve_ids:
-                cve_ids_escaped = ','.join(f"'{sql_escape(c)}'" for c in excluded_cve_ids)
-                cve_exclusion = f"AND c.cve_id NOT IN ({cve_ids_escaped})"
-
-            cve_where = ""
-            if cve_filters:
-                cve_where = "AND " + " AND ".join(cve_filters)
-
-            security_sql = text(f"""
-                SELECT sc.software_name, sc.software_version, sc.glpi_software_name,
-                       c.id as cve_id, c.severity, c.cvss_score, sc.source_package
-                FROM software_cves sc
-                JOIN cves c ON c.id = sc.cve_id
-                WHERE sc.glpi_software_name IS NOT NULL
-                {cve_where} {name_exclusion} {cve_exclusion}
-            """)
-
-            result = session.execute(security_sql)
-
-            # Step 3: Aggregate by software. Sur Linux, on regroupe par package
-            # source (freerdp2) plutôt que par binaire (libfreerdp2-2, libwinpr2-2,
-            # ...) → une ligne au lieu de plusieurs portant les mêmes CVE.
-            software_stats = {}  # (display_name, version) -> stats
-            for row in result:
-                glpi_sw_name = row[2]
-                if glpi_sw_name not in software_names:
-                    continue
-
-                source_pkg = row[6]
-                sw_version = row[1]
-                display_name = source_pkg or glpi_sw_name
-                key = (display_name, sw_version)
-                if key not in software_stats:
-                    software_stats[key] = {
-                        'software_name': display_name,
-                        'software_version': sw_version,
-                        'glpi_software_name': display_name,
-                        'cve_ids': set(),
-                        'severity_counts': {'Critical': 0, 'High': 0, 'Medium': 0, 'Low': 0, 'None': 0},
-                        'max_cvss': 0.0
-                    }
-
-                cve_id = row[3]
-                if cve_id not in software_stats[key]['cve_ids']:
-                    software_stats[key]['cve_ids'].add(cve_id)
-                    sev = row[4]
-                    cvss = float(row[5]) if row[5] else 0.0
-                    if sev in software_stats[key]['severity_counts']:
-                        software_stats[key]['severity_counts'][sev] += 1
-                    if cvss > software_stats[key]['max_cvss']:
-                        software_stats[key]['max_cvss'] = cvss
-
-            # Step 4: Format and paginate
-            data_list = []
-            for key, stats in software_stats.items():
-                data_list.append({
-                    # Affichage : package source (Linux) ou nom réel GLPI (Windows).
-                    'software_name': stats['glpi_software_name'],
-                    'software_version': stats['software_version'],
-                    'total_cves': len(stats['cve_ids']),
-                    'critical': stats['severity_counts']['Critical'],
-                    'high': stats['severity_counts']['High'],
-                    'medium': stats['severity_counts']['Medium'],
-                    'low': stats['severity_counts']['Low'],
-                    'max_cvss': str(round(stats['max_cvss'], 1)),
-                    'is_extension': stats['glpi_software_name'] in extension_names
-                })
-
-            # Filtre par type : extension de navigateur ou logiciel classique
-            if category_filter == 'extension':
-                data_list = [r for r in data_list if r['is_extension']]
-            elif category_filter == 'software':
-                data_list = [r for r in data_list if not r['is_extension']]
-
-            data_list.sort(key=lambda x: (float(x['max_cvss']), x['total_cves']), reverse=True)
-            total = len(data_list)
-            paginated = data_list[start:start + limit]
-
-            return {'total': total, 'data': paginated}
+            groups, linux = {}, set()
+            for r in rows:
+                if (r.glpi_software_name, r.software_version) in keys:
+                    key = (r.source_package or r.glpi_software_name, r.software_version)
+                    groups.setdefault(key, set()).add(r.id)
+                    if r.source_package:
+                        linux.add(key)
+            data = self._categorize([{'software_name': name, 'software_version': version,
+                                      'linux': (name, version) in linux, **_stats(cves, info)}
+                                     for (name, version), cves in groups.items()], category_filter)
+            data.sort(key=_priority, reverse=True)
+            page = data[start:start + limit]
+            self._enrich_with_store_info(session, page)
+            return {'total': len(data), 'data': page}
         except Exception as e:
             logger.error(f"Error getting software summary for machine {id_glpi}: {e}")
             return {'total': 0, 'data': []}
 
     # =========================================================================
+    # Software-centric view
+    # =========================================================================
+    @DatabaseHelper._sessionm
+    def get_softwares_summary(self, session, start=0, limit=50, filter_str='', entity_ids=None,
+                              category_filter='', policy=None, platform='', exploited_only=False):
+        """Vulnerable software of the park, Linux binaries grouped by source package."""
+        try:
+            where, params = '', {}
+            if filter_str:
+                where = "AND (sc.software_name LIKE :search OR sc.software_version LIKE :search)"
+                params['search'] = f"%{filter_str}%"
+            rows = self._cve_rows(session, policy, None, exploited_only, where, **params)
+            by_key, info = self._index(rows)
+            installs = self._installs(self._names(by_key), **_scope(policy, entity_ids, platform))
+
+            groups, linux = {}, set()  # (display name, version) -> (cves, machines) ; paquets Linux
+            for r in rows:
+                machine_ids = installs.get((r.glpi_software_name, r.software_version))
+                if machine_ids:
+                    key = (r.source_package or r.glpi_software_name, r.software_version)
+                    cves, machines = groups.setdefault(key, (set(), set()))
+                    cves.add(r.id)
+                    machines |= machine_ids
+                    if r.source_package:
+                        linux.add(key)
+
+            data = self._categorize([{
+                'software_name': name,
+                'software_version': version,
+                **_stats(cves, info),
+                'machines_affected': len(machines),
+                'linux': (name, version) in linux,
+                'store_version': None,
+                'store_has_update': False,
+                'store_package_uuid': None
+            } for (name, version), (cves, machines) in groups.items()], category_filter)
+            data.sort(key=_priority, reverse=True)
+
+            page = data[start:start + limit]
+            self._enrich_with_store_info(session, page)
+            return {'total': len(data), 'data': page}
+        except Exception as e:
+            logger.error(f"Error getting softwares summary: {e}")
+            return {'total': 0, 'data': []}
+
+    @DatabaseHelper._sessionm
+    def get_software_cves(self, session, software_name, software_version, start=0, limit=50,
+                          filter_str='', severity=None, policy=None):
+        """CVEs of a software version; software_name is COALESCE(source_package, GLPI name)."""
+        try:
+            where = ("AND COALESCE(sc.source_package, sc.glpi_software_name) = :sw_name "
+                     "AND sc.software_version = :sw_version")
+            params = {'sw_name': software_name, 'sw_version': software_version}
+            if filter_str:
+                where += " AND (c.cve_id LIKE :search OR c.description LIKE :search)"
+                params['search'] = f"%{filter_str}%"
+            rows = self._cve_rows(session, policy, severity, False, where, **params)
+            return self._cve_list(session, rows, start, limit)
+        except Exception as e:
+            logger.error(f"Error getting CVEs for software {software_name} {software_version}: {e}")
+            return {'total': 0, 'data': []}
+
+    # =========================================================================
+    # Entity / group views
+    # =========================================================================
+    @DatabaseHelper._sessionm
+    def get_entities_summary(self, session, start=0, limit=50, filter_str='', entity_ids=None,
+                             policy=None, platform='', exploited_only=False):
+        """Entities (restricted to entity_ids) with their CVE counters."""
+        try:
+            if entity_ids is not None and not entity_ids:
+                return {'total': 0, 'data': []}
+            where, params = "1=1", {'start': start, 'limit': limit}
+            if filter_str:
+                where += " AND e.name LIKE :search"
+                params['search'] = f"%{filter_str}%"
+            if entity_ids is not None:
+                where += " AND e.id IN :entity_ids"
+                params['entity_ids'] = entity_ids
+
+            total = _glpi(f"SELECT COUNT(*) FROM glpi_entities e WHERE {where}", **params)[0][0]
+            rows = _glpi(f"""
+                SELECT e.id, e.name, e.completename FROM glpi_entities e
+                WHERE {where} ORDER BY e.name LIMIT :limit OFFSET :start""", **params)
+            if not rows:
+                return {'total': total, 'data': []}
+
+            computers = _scope(policy, [r.id for r in rows], platform)
+            cwhere, cparams = _computers_where(**computers)
+            entity_of = dict(_glpi(f"SELECT c.id, c.entities_id FROM glpi_computers c WHERE {cwhere}", **cparams))
+
+            by_key, info = self._index(self._cve_rows(session, policy, exploited_only=exploited_only))
+            entity_keys = {}
+            for machine_id, keys in self._keys_by_machine(self._installs(self._names(by_key), **computers)).items():
+                entity_keys.setdefault(entity_of.get(machine_id), set()).update(keys)
+
+            machines_count = Counter(entity_of.values())
+            data = [{
+                'entity_id': r.id,
+                'entity_name': r.name,
+                'entity_fullname': r.completename or r.name,
+                'machines_count': machines_count[r.id],
+                **_stats(self._cves_of(entity_keys.get(r.id, ()), by_key), info)
+            } for r in rows]
+            data.sort(key=lambda x: (float(x['max_cvss']), x['total_cves']), reverse=True)
+            return {'total': total, 'data': data}
+        except Exception as e:
+            logger.error(f"Error getting entities summary: {e}")
+            return {'total': 0, 'data': []}
+
+    def _visible(self, machine_ids, entity_ids=None, policy=None, platform=''):
+        """Subset of machine_ids that are active computers in scope."""
+        if not machine_ids or (entity_ids is not None and not entity_ids):
+            return set()
+        where, params = _computers_where(**_scope(policy, entity_ids, platform, machine_ids=machine_ids))
+        return {r[0] for r in _glpi(f"SELECT c.id FROM glpi_computers c WHERE {where}", **params)}
+
+    @DatabaseHelper._sessionm
+    def get_groups_summary(self, session, start=0, limit=50, filter_str='', login=None, entity_ids=None,
+                           policy=None, platform='', exploited_only=False):
+        """Groups visible to login (None = all) with their CVE counters on the machines in scope."""
+        try:
+            where, params = _groups_where(login)
+            params.update(start=start, limit=limit)
+            if filter_str:
+                where += " AND g.name LIKE :search"
+                params['search'] = f"%{filter_str}%"
+            excluded_groups = (policy or {}).get('excluded_groups_ids')
+            if excluded_groups:
+                where += " AND g.id NOT IN :excluded_groups"
+                params['excluded_groups'] = [int(g) for g in excluded_groups]
+
+            total = _run(session, f"SELECT COUNT(*) FROM dyngroup.Groups g WHERE {where}", **params).scalar() or 0
+            rows = _run(session, f"""
+                SELECT g.id, g.name, COALESCE(LENGTH(g.query), 0) > 0 AS is_dynamic
+                FROM dyngroup.Groups g
+                WHERE {where} ORDER BY g.name LIMIT :limit OFFSET :start""", **params).fetchall()
+            if not rows:
+                return {'total': total, 'data': []}
+
+            group_machines = {r.id: set() for r in rows}
+            for group_id, uuid in _run(session, """
+                    SELECT r.FK_groups, dm.uuid FROM dyngroup.Results r
+                    JOIN dyngroup.Machines dm ON dm.id = r.FK_machines
+                    WHERE r.FK_groups IN :group_ids""", group_ids=list(group_machines)):
+                group_machines[group_id].add(_uuid_to_id(uuid))
+            visible = self._visible(set().union(*group_machines.values()) - {None}, entity_ids, policy, platform)
+
+            by_key, info = self._index(self._cve_rows(session, policy, exploited_only=exploited_only))
+            keys = self._keys_by_machine(self._installs(self._names(by_key), machine_ids=visible))
+
+            data = []
+            for r in rows:
+                machines = group_machines[r.id] & visible
+                data.append({
+                    'group_id': r.id,
+                    'group_name': r.name,
+                    'group_type': 'Dynamic' if r.is_dynamic else 'Static',
+                    'machines_count': len(machines),
+                    **_stats(self._cves_of(set().union(*(keys.get(m, ()) for m in machines)), by_key), info)
+                })
+            data.sort(key=lambda x: (float(x['max_cvss']), x['total_cves']), reverse=True)
+            return {'total': total, 'data': data}
+        except Exception as e:
+            logger.error(f"Error getting groups summary: {e}")
+            return {'total': 0, 'data': []}
+
+    def _group_members(self, session, group_id, login=None):
+        """Machine ids of a group, empty when the group is not visible to login."""
+        where, params = _groups_where(login)
+        uuids = _run(session, f"""
+            SELECT DISTINCT dm.uuid FROM dyngroup.Results r
+            JOIN dyngroup.Machines dm ON dm.id = r.FK_machines
+            JOIN dyngroup.Groups g ON g.id = r.FK_groups
+            WHERE r.FK_groups = :group_id AND {where}""", group_id=group_id, **params)
+        return {_uuid_to_id(uuid) for (uuid,) in uuids} - {None}
+
+    @DatabaseHelper._sessionm
+    def get_groups_list(self, session, login=None, policy=None):
+        """[{id, name}] of the groups visible to login, by name."""
+        where, params = _groups_where(login)
+        excluded = (policy or {}).get('excluded_groups_ids')
+        if excluded:
+            where += " AND g.id NOT IN :excluded_groups"
+            params['excluded_groups'] = [int(g) for g in excluded]
+        rows = _run(session, f"SELECT g.id, g.name FROM dyngroup.Groups g WHERE {where} ORDER BY g.name", **params)
+        return [{'id': r.id, 'name': r.name} for r in rows]
+
+    @DatabaseHelper._sessionm
+    def get_group_machines(self, session, group_id, start=0, limit=50, filter_str='', login=None,
+                           entity_ids=None, policy=None):
+        """Machines in scope of a group visible to login, with their CVE counters."""
+        try:
+            machine_ids = self._group_members(session, group_id, login)
+            if not machine_ids or (entity_ids is not None and not entity_ids):
+                return {'total': 0, 'data': []}
+
+            where, params = _computers_where(**_scope(policy, entity_ids, machine_ids=machine_ids,
+                                                      hostname=filter_str))
+            total = _glpi(f"SELECT COUNT(*) FROM glpi_computers c WHERE {where}", **params)[0][0]
+            machines = _glpi(f"""
+                SELECT c.id, c.name FROM glpi_computers c
+                WHERE {where} ORDER BY c.name LIMIT :limit OFFSET :start""",
+                             start=start, limit=limit, **params)
+            if not machines:
+                return {'total': total, 'data': []}
+            data = self._machine_rows(session, machines, policy, machine_ids=[m.id for m in machines])
+            data.sort(key=lambda x: (-float(x['risk_score']), x['hostname'] or ''))
+            return {'total': total, 'data': data}
+        except Exception as e:
+            logger.error(f"Error getting group machines: {e}")
+            return {'total': 0, 'data': []}
+
+    # =========================================================================
+    # Group creation helpers
+    # =========================================================================
+    @DatabaseHelper._sessionm
+    def get_machines_by_severity(self, session, severity, entity_ids=None, policy=None):
+        """Machines having a software version with a CVE of the given severity."""
+        try:
+            by_key, _ = self._index(self._cve_rows(session, policy, severity))
+            installs = self._installs(self._names(by_key), **_scope(policy, entity_ids))
+            machine_ids = set().union(*(ids for key, ids in installs.items() if key in by_key))
+            if not machine_ids:
+                return []
+            rows = _glpi("SELECT c.id, c.name FROM glpi_computers c WHERE c.id IN :ids ORDER BY c.name",
+                         ids=machine_ids)
+            return [{'uuid': f"UUID{machine_id}", 'hostname': hostname} for machine_id, hostname in rows]
+        except Exception as e:
+            logger.error(f"Error getting machines by severity {severity}: {e}")
+            return []
+
+    # =========================================================================
     # CVE Management (add/update from scanner)
     # =========================================================================
     @DatabaseHelper._sessionm
-    def add_cve(self, session, cve_id, cvss_score, severity, description, published_at=None, last_modified=None, sources=None, source_urls=None):
+    def add_cve(self, session, cve_id, cvss_score, severity, description, published_at=None, last_modified=None,
+                sources=None, source_urls=None, exploited_since=None, euvd_id=None):
         """Add or update a CVE in local cache
 
         Args:
@@ -1168,6 +879,10 @@ class SecurityDatabase(DatabaseHelper):
                 cve.published_at = published_at
             if last_modified:
                 cve.last_modified = last_modified
+            if exploited_since:
+                cve.exploited_since = exploited_since
+            if euvd_id:
+                cve.euvd_id = euvd_id
             if sources_str:
                 cve.sources = sources_str
             if source_urls_str:
@@ -1182,6 +897,8 @@ class SecurityDatabase(DatabaseHelper):
                 description=description,
                 published_at=published_at,
                 last_modified=last_modified,
+                exploited_since=exploited_since,
+                euvd_id=euvd_id,
                 sources=sources_str,
                 source_urls=source_urls_str
             )
@@ -1201,118 +918,63 @@ class SecurityDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def link_software_cve(self, session, software_name, software_version, cve_db_id,
-                          glpi_software_name=None, target_platform=None,
-                          source_package=None):
-        """Link a software to a CVE.
-
-        Args:
-            software_name: Normalized name (e.g., "Python")
-            software_version: Normalized version (e.g., "3.11.9")
-            cve_db_id: CVE database ID
-            glpi_software_name: Original GLPI software name for joining with GLPI tables
-            target_platform: Target platform from CPE (android, macos, ios, windows, etc.)
-            source_package: Source package for Linux distros (libfreerdp2-2 -> freerdp2), None for Windows
-        """
-        existing = session.query(SoftwareCve).filter(
-            and_(
-                SoftwareCve.software_name == software_name,
-                SoftwareCve.software_version == software_version,
-                SoftwareCve.cve_id == cve_db_id
-            )
-        ).first()
-
-        if not existing:
-            link = SoftwareCve(
-                software_name=software_name,
-                software_version=software_version,
-                glpi_software_name=glpi_software_name,
-                source_package=source_package,
-                target_platform=target_platform,
-                cve_id=cve_db_id
-            )
-            session.add(link)
-            session.commit()
-            return link.id
-        else:
-            # Update existing record with new fields if not set
-            updated = False
-            if glpi_software_name and not existing.glpi_software_name:
-                existing.glpi_software_name = glpi_software_name
-                updated = True
-            if source_package and not existing.source_package:
-                existing.source_package = source_package
-                updated = True
-            if target_platform and not existing.target_platform:
-                existing.target_platform = target_platform
-                updated = True
-            if updated:
-                session.commit()
-        return existing.id
+                          glpi_software_name, target_platform=None, source_package=None, fix_available=None):
+        """Upsert the link (glpi_software_name, software_version) -> CVE."""
+        session.execute(text("""
+            INSERT INTO software_cves (software_name, software_version, glpi_software_name,
+                                       source_package, target_platform, fix_available, cve_id, created_at)
+            VALUES (:name, :version, :glpi_name, :source_package, :target_platform, :fix_available, :cve_pk, NOW())
+            ON DUPLICATE KEY UPDATE
+                software_name = VALUES(software_name),
+                source_package = COALESCE(VALUES(source_package), source_package),
+                target_platform = COALESCE(VALUES(target_platform), target_platform),
+                fix_available = VALUES(fix_available)
+        """), {
+            'name': software_name,
+            'version': software_version,
+            'glpi_name': glpi_software_name,
+            'source_package': source_package,
+            'target_platform': target_platform,
+            'fix_available': fix_available,
+            'cve_pk': cve_db_id
+        })
+        session.commit()
 
     @DatabaseHelper._sessionm
-    def prune_stale_cves(self, session, glpi_names, confirmed_by_sw):
-        """Mise à jour différentielle : supprime UNIQUEMENT les CVE périmées des
-        logiciels (re)scannés, sans rien vider d'abord.
+    def prune_stale_cves(self, session, scanned, confirmed):
+        """Remove the links no longer confirmed by a successful scan, then the orphan CVEs.
 
-        Pour chaque logiciel scanné, on garde les CVE confirmées par CVE Central
-        durant CE scan et on supprime les anciennes qui ne le sont plus. Un logiciel
-        scanné sans aucune CVE voit ses anciennes supprimées (→ 0). Appelé à la FIN
-        du scan, en cas de succès seulement : si le scan est interrompu, rien n'est
-        supprimé (aucune perte). Scopé aux noms envoyés → un scan ciblé ne touche
-        pas les logiciels des autres machines.
-
-        confirmed_by_sw : {glpi_software_name: set(cve_id_str confirmés ce scan)}.
+        scanned: set of (glpi_software_name, software_version) sent in this scan.
+        confirmed: {(glpi_software_name, software_version): set(cve_id)} received in this scan.
+        Links of other versions are never touched.
         """
-        if not glpi_names:
+        if not scanned:
             return 0
-        total = 0
-        for gname in glpi_names:
-            q = session.query(SoftwareCve).filter(SoftwareCve.glpi_software_name == gname)
-            confirmed = confirmed_by_sw.get(gname)
-            if confirmed:
-                # IDs internes des CVE à conserver (confirmées ce scan)
-                keep_ids = [r[0] for r in session.query(Cve.id).filter(
-                    Cve.cve_id.in_(list(confirmed))).all()]
-                if keep_ids:
-                    q = q.filter(~SoftwareCve.cve_id.in_(keep_ids))
-            total += q.delete(synchronize_session=False)
+        rows = _run(session, """
+            SELECT sc.id, sc.glpi_software_name, sc.software_version, sc.cve_id AS cve_pk, c.cve_id
+            FROM software_cves sc
+            JOIN cves c ON c.id = sc.cve_id
+            WHERE sc.glpi_software_name IN :names""", names={name for name, _ in scanned})
+        stale, cve_pks = [], set()
+        for r in rows:
+            key = (r.glpi_software_name, r.software_version)
+            if key in scanned and r.cve_id not in confirmed.get(key, ()):
+                stale.append(r.id)
+                cve_pks.add(r.cve_pk)
+        for i in range(0, len(stale), 1000):
+            _run(session, "DELETE FROM software_cves WHERE id IN :ids", ids=stale[i:i + 1000])
+        if cve_pks:
+            _run(session, """
+                DELETE FROM cves WHERE id IN :pks
+                AND NOT EXISTS (SELECT 1 FROM software_cves sc WHERE sc.cve_id = cves.id)""",
+                 pks=cve_pks)
         session.commit()
-        return total
+        return len(stale)
+
 
     # =========================================================================
     # Scans history
     # =========================================================================
-    @DatabaseHelper._sessionm
-    def get_scans(self, session, start=0, limit=20):
-        """Get scan history"""
-        # Count total
-        count_result = session.execute(text("SELECT COUNT(*) FROM scans"))
-        total = count_result.scalar() or 0
-
-        # Get paginated data
-        result = session.execute(
-            text("""SELECT id, started_at, finished_at, status,
-                    softwares_sent, cves_received, machines_affected, error_message
-                    FROM scans ORDER BY started_at DESC
-                    LIMIT :limit OFFSET :start"""),
-            {'limit': limit, 'start': start}
-        )
-
-        data = []
-        for row in result:
-            data.append({
-                'id': row[0],
-                'started_at': str(row[1]) if row[1] else None,
-                'finished_at': str(row[2]) if row[2] else None,
-                'status': row[3],
-                'softwares_sent': row[4] or 0,
-                'cves_received': row[5] or 0,
-                'machines_affected': row[6] or 0,
-                'error_message': row[7]
-            })
-
-        return {'total': total, 'data': data}
-
     @DatabaseHelper._sessionm
     def create_scan(self, session):
         """Create a new scan entry"""
@@ -1329,24 +991,20 @@ class SecurityDatabase(DatabaseHelper):
         return scan_id
 
     @DatabaseHelper._sessionm
-    def complete_scan(self, session, scan_id, softwares_sent, cves_received,
-                     machines_affected=0, error_message=None):
-        """Complete a scan"""
-        status = 'failed' if error_message else 'completed'
+    def complete_scan(self, session, scan_id, softwares_sent, cves_received, error_message=None):
+        """Close a scan: 'failed' when error_message is set, 'completed' otherwise."""
         session.execute(
             text("""UPDATE scans SET
                     finished_at = NOW(),
                     status = :status,
                     softwares_sent = :softwares_sent,
                     cves_received = :cves_received,
-                    machines_affected = :machines_affected,
                     error_message = :error_message
                     WHERE id = :scan_id"""),
             {
-                'status': status,
+                'status': 'failed' if error_message else 'completed',
                 'softwares_sent': softwares_sent,
                 'cves_received': cves_received,
-                'machines_affected': machines_affected,
                 'error_message': error_message,
                 'scan_id': scan_id
             }
@@ -1354,990 +1012,6 @@ class SecurityDatabase(DatabaseHelper):
         session.commit()
         return True
 
-    # =========================================================================
-    # Configuration
-    # =========================================================================
-    # NOTE: Configuration is now read from /etc/mmc/plugins/security.ini and security.ini.local
-    # Use mmc.plugins.security.get_config() instead of database methods
-
-    # =========================================================================
-    # Exclusions
-    # =========================================================================
-    @DatabaseHelper._sessionm
-    def get_exclusions(self, session):
-        """Get list of excluded CVEs"""
-        exclusions = session.query(CveExclusion).all()
-        return [e.toDict() for e in exclusions]
-
-    @DatabaseHelper._sessionm
-    def add_exclusion(self, session, cve_id, reason, user, expires_at=None):
-        """Add a CVE to exclusion list"""
-        exclusion = CveExclusion(
-            cve_id=cve_id,
-            reason=reason,
-            excluded_by=user,
-            expires_at=expires_at
-        )
-        session.add(exclusion)
-        session.commit()
-        return exclusion.id
-
-    @DatabaseHelper._sessionm
-    def remove_exclusion(self, session, cve_id):
-        """Remove a CVE from exclusion list"""
-        session.query(CveExclusion).filter(CveExclusion.cve_id == cve_id).delete()
-        session.commit()
-        return True
-
-    @DatabaseHelper._sessionm
-    def is_excluded(self, session, cve_id):
-        """Check if a CVE is excluded"""
-        exclusion = session.query(CveExclusion).filter(
-            and_(
-                CveExclusion.cve_id == cve_id,
-                or_(
-                    CveExclusion.expires_at.is_(None),
-                    CveExclusion.expires_at > datetime.utcnow()
-                )
-            )
-        ).first()
-        return exclusion is not None
-
-    # =========================================================================
-    # Software-centric view
-    # =========================================================================
-    @DatabaseHelper._sessionm
-    def get_softwares_summary(self, session, start=0, limit=50, filter_str='', location='',
-                              min_cvss=0.0, min_severity='None',
-                              excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
-                              excluded_machines_ids=None, excluded_groups_ids=None,
-                              category_filter=''):
-        """Get list of softwares with CVE counts, grouped by software name+version.
-        Filtered by entity if location is provided.
-        Filtered by min_cvss if > 0.
-        Filtered by min_severity if not 'None'.
-        Excludes vendors, names and CVE IDs based on exclusion policies.
-
-        Uses separate database connections:
-        - GLPI connection (glpi user) for GLPI tables
-        - Security connection (mmc user) for security tables
-        """
-        entity_ids = self._parse_entity_ids(session, location)
-        severity_order = ['None', 'Low', 'Medium', 'High', 'Critical']
-        min_sev_index = severity_order.index(min_severity) if min_severity in severity_order else 0
-
-        try:
-            # Même stratégie que le dashboard : piloter par le côté CVE (petit,
-            # local) et ne requêter le parc GLPI distant que RESTREINT aux logiciels
-            # réellement concernés par une CVE, au lieu d'agréger tout le parc
-            # (ce GROUP BY sur ~1,4 M installs coûtait ~20 s).
-
-            def sql_escape(val):
-                return val.replace("'", "''") if val else val
-
-            # --- Étape 1 : CVE filtrées, côté security (local, rapide) ---
-            cve_filters = []
-            if min_cvss and float(min_cvss) > 0:
-                cve_filters.append(f"c.cvss_score >= {float(min_cvss)}")
-            if min_sev_index > 0:
-                allowed_severities = severity_order[min_sev_index:]
-                severity_list = ','.join(f"'{s}'" for s in allowed_severities)
-                cve_filters.append(f"c.severity IN ({severity_list})")
-
-            name_exclusion = ""
-            if excluded_names:
-                names_escaped = ','.join(f"'{sql_escape(n)}'" for n in excluded_names)
-                name_exclusion = f"AND sc.software_name NOT IN ({names_escaped})"
-
-            cve_exclusion = ""
-            if excluded_cve_ids:
-                cve_ids_escaped = ','.join(f"'{sql_escape(c)}'" for c in excluded_cve_ids)
-                cve_exclusion = f"AND c.cve_id NOT IN ({cve_ids_escaped})"
-
-            filter_clause = ""
-            if filter_str:
-                escaped_filter = filter_str.replace("'", "''")
-                filter_clause = f"AND (sc.software_name LIKE '%{escaped_filter}%' OR sc.software_version LIKE '%{escaped_filter}%')"
-
-            cve_where = ""
-            if cve_filters:
-                cve_where = "AND " + " AND ".join(cve_filters)
-
-            security_sql = text(f"""
-                SELECT sc.software_name, sc.software_version, sc.glpi_software_name,
-                       c.id as cve_id, c.severity, c.cvss_score, sc.source_package
-                FROM software_cves sc
-                JOIN cves c ON c.id = sc.cve_id
-                WHERE sc.glpi_software_name IS NOT NULL
-                {cve_where} {name_exclusion} {cve_exclusion} {filter_clause}
-            """)
-            sec_rows = list(session.execute(security_sql))
-            if not sec_rows:
-                return {'total': 0, 'data': []}
-
-            # Noms GLPI distincts concernés (petite liste) -> restreint la requête parc
-            cve_names = sorted({r[2] for r in sec_rows if r[2]})
-
-            # --- Étape 2 : parc GLPI distant, RESTREINT à ces noms ---
-            glpi_db = _get_glpi_database()
-            if not glpi_db:
-                logger.error("GLPI database not available for get_softwares_summary")
-                return {'total': 0, 'data': []}
-
-            names_in = ','.join(f"'{sql_escape(n)}'" for n in cve_names)
-
-            entity_filter_glpi = ""
-            if entity_ids:
-                entity_ids_str = ','.join(str(int(e)) for e in entity_ids)
-                entity_filter_glpi = f"AND c.entities_id IN ({entity_ids_str})"
-
-            machine_exclusion_glpi = ""
-            if excluded_machines_ids:
-                machine_ids_str = ','.join(str(int(mid)) for mid in excluded_machines_ids)
-                machine_exclusion_glpi = f"AND c.id NOT IN ({machine_ids_str})"
-
-            glpi_sql = text(f"""
-                SELECT s.name as software_name, sv.name as software_version, COUNT(DISTINCT c.id) as machine_count
-                FROM glpi_softwares s
-                JOIN glpi_softwareversions sv ON sv.softwares_id = s.id
-                JOIN glpi_items_softwareversions isv
-                     ON isv.softwareversions_id = sv.id AND isv.itemtype = 'Computer'
-                JOIN glpi_computers c ON c.id = isv.items_id
-                WHERE c.is_deleted = 0 AND c.is_template = 0
-                  AND s.name IN ({names_in})
-                  {entity_filter_glpi} {machine_exclusion_glpi}
-                GROUP BY s.name, sv.name
-            """)
-
-            software_machine_counts = {}
-            extension_names = set()
-            with glpi_db.db.connect() as glpi_conn:
-                for row in glpi_conn.execute(glpi_sql):
-                    software_machine_counts[(row[0], row[1] or '')] = row[2]
-
-                # Extensions de navigateur (restreint aux mêmes noms) pour typer
-                # l'affichage (extension vs logiciel) dans l'IHM sécurité.
-                ext_result = glpi_conn.execute(text(f"""
-                    SELECT DISTINCT name FROM glpi_softwares
-                    WHERE comment LIKE '%Extension Navigateur%' AND name IN ({names_in})
-                """))
-                for row in ext_result:
-                    extension_names.add(row[0])
-
-            if not software_machine_counts:
-                return {'total': 0, 'data': []}
-
-            result = sec_rows
-
-            # Step 3: Aggregate CVEs by software, filtering by installed software.
-            # Sur les distros Linux, on regroupe par package SOURCE (freerdp2) au
-            # lieu de chaque binaire (libfreerdp2-2, libwinpr2-2, ...) qui porte le
-            # même lot de CVE → l'admin voit une ligne au lieu de trois. Le nom de
-            # regroupement/affichage devient COALESCE(source_package, glpi_name) ;
-            # la jointure GLPI (machines) reste sur le binaire glpi_software_name.
-            software_stats = {}  # (display_name, version) -> stats
-            for row in result:
-                glpi_sw_name = row[2]
-                sw_version = row[1] or ''
-                source_pkg = row[6]
-                glpi_key = (glpi_sw_name, sw_version)
-                if glpi_key not in software_machine_counts:
-                    continue  # Software+version not installed in GLPI
-
-                display_name = source_pkg or glpi_sw_name
-                key = (display_name, sw_version)
-                if key not in software_stats:
-                    software_stats[key] = {
-                        'software_name': display_name,
-                        'software_version': sw_version,
-                        'glpi_software_name': display_name,
-                        'cve_ids': set(),
-                        'severity_counts': {'Critical': 0, 'High': 0, 'Medium': 0, 'Low': 0, 'None': 0},
-                        'max_cvss': 0.0,
-                        '_machine_counts': {}  # glpi_key (binaire) -> count, pour l'union par source
-                    }
-
-                # Un binaire = un comptage machines ; pour un source, on prend le
-                # max (les binaires d'un même source cohabitent sur les machines).
-                software_stats[key]['_machine_counts'][glpi_key] = software_machine_counts.get(glpi_key, 0)
-
-                cve_id = row[3]
-                if cve_id not in software_stats[key]['cve_ids']:
-                    software_stats[key]['cve_ids'].add(cve_id)
-                    severity = row[4]
-                    cvss = float(row[5]) if row[5] else 0.0
-                    if severity in software_stats[key]['severity_counts']:
-                        software_stats[key]['severity_counts'][severity] += 1
-                    if cvss > software_stats[key]['max_cvss']:
-                        software_stats[key]['max_cvss'] = cvss
-
-            # Step 4: Format results and paginate
-            results_list = []
-            for key, stats in software_stats.items():
-                machines_affected = max(stats['_machine_counts'].values()) if stats['_machine_counts'] else 0
-                results_list.append({
-                    # Affichage : package source (Linux) ou nom réel GLPI (Windows,
-                    # non normalisé, pour distinguer "Microsoft Edge Update" de "Microsoft Edge").
-                    'software_name': stats['software_name'],
-                    'software_version': stats['software_version'],
-                    'total_cves': len(stats['cve_ids']),
-                    'critical': stats['severity_counts']['Critical'],
-                    'high': stats['severity_counts']['High'],
-                    'medium': stats['severity_counts']['Medium'],
-                    'low': stats['severity_counts']['Low'],
-                    'max_cvss': str(round(stats['max_cvss'], 1)),
-                    'machines_affected': machines_affected,
-                    'is_extension': stats['glpi_software_name'] in extension_names,
-                    'store_version': None,
-                    'store_has_update': False,
-                    'store_package_uuid': None
-                })
-
-            # Filtre par type : extension de navigateur ou logiciel classique
-            if category_filter == 'extension':
-                results_list = [r for r in results_list if r['is_extension']]
-            elif category_filter == 'software':
-                results_list = [r for r in results_list if not r['is_extension']]
-
-            # Sort by max_cvss DESC, total_cves DESC
-            results_list.sort(key=lambda x: (float(x['max_cvss']), x['total_cves']), reverse=True)
-
-            total = len(results_list)
-            paginated = results_list[start:start + limit]
-
-            # Enrich with store info for each software
-            if paginated:
-                self._enrich_with_store_info(session, paginated)
-
-            return {'total': total, 'data': paginated}
-        except Exception as e:
-            logger.error(f"Error getting softwares summary: {e}")
-            return {'total': 0, 'data': []}
-
-    @DatabaseHelper._sessionm
-    def get_entities_summary(self, session, start=0, limit=50, filter_str='', user_entities='',
-                             min_cvss=0.0, min_severity='None',
-                             excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
-                             excluded_machines_ids=None, excluded_groups_ids=None):
-        """Get list of entities with CVE counts.
-        Filtered by user's accessible entities if user_entities is provided.
-        Filtered by min_cvss if > 0.
-        Filtered by min_severity if not 'None'.
-        Filtered by exclusions.
-
-        Returns:
-            dict with 'total' count and 'data' list containing:
-            - entity_id, entity_name
-            - total_cves, critical, high, medium, low
-            - max_cvss, machines_count
-        """
-        # Severity order for filtering
-        severity_order = ['None', 'Low', 'Medium', 'High', 'Critical']
-        min_sev_index = severity_order.index(min_severity) if min_severity in severity_order else 0
-
-        try:
-            glpi_db = _get_glpi_database()
-            if not glpi_db:
-                logger.warning("GLPI database not available for get_entities_summary")
-                return {'total': 0, 'data': []}
-
-            # Build filter clause for GLPI
-            filter_clause = ""
-            if filter_str:
-                filter_str_escaped = filter_str.replace("'", "''")
-                filter_clause = f"AND e.name LIKE '%{filter_str_escaped}%'"
-
-            # Filter by user's accessible entities
-            entity_ids = self._parse_entity_ids(session, user_entities)
-            if entity_ids:
-                entity_ids_str = ','.join(str(e) for e in entity_ids)
-                filter_clause += f" AND e.id IN ({entity_ids_str})"
-
-            # Machine exclusion filter
-            machine_filter = ""
-            if excluded_machines_ids:
-                machine_ids_str = ','.join(str(int(mid)) for mid in excluded_machines_ids)
-                machine_filter = f"AND c.id NOT IN ({machine_ids_str})"
-
-            with glpi_db.db.connect() as glpi_conn:
-                # Step 1: Count total entities from GLPI
-                count_sql = text(f"""
-                    SELECT COUNT(DISTINCT e.id) as total
-                    FROM glpi_entities e
-                    WHERE 1=1 {filter_clause}
-                """)
-                count_result = glpi_conn.execute(count_sql)
-                total = count_result.scalar() or 0
-
-                # Step 2: Get entities with pagination from GLPI
-                entities_sql = text(f"""
-                    SELECT e.id as entity_id, e.name as entity_name, e.completename as entity_fullname
-                    FROM glpi_entities e
-                    WHERE 1=1 {filter_clause}
-                    ORDER BY e.name
-                    LIMIT {limit} OFFSET {start}
-                """)
-                entities_result = glpi_conn.execute(entities_sql)
-                entities = {row.entity_id: {
-                    'entity_id': row.entity_id,
-                    'entity_name': row.entity_name,
-                    'entity_fullname': row.entity_fullname or row.entity_name,
-                    'machines_count': 0,
-                    'total_cves': 0, 'critical': 0, 'high': 0, 'medium': 0, 'low': 0,
-                    'max_cvss': 0.0
-                } for row in entities_result}
-
-                if not entities:
-                    return {'total': total, 'data': []}
-
-                entity_ids_str = ','.join(str(eid) for eid in entities.keys())
-
-                # Step 3: Get machine counts per entity
-                machines_count_sql = text(f"""
-                    SELECT c.entities_id, COUNT(DISTINCT c.id) as cnt
-                    FROM glpi_computers c
-                    WHERE c.is_deleted = 0 AND c.is_template = 0
-                    AND c.entities_id IN ({entity_ids_str})
-                    {machine_filter}
-                    GROUP BY c.entities_id
-                """)
-                machines_count_result = glpi_conn.execute(machines_count_sql)
-                for row in machines_count_result:
-                    if row.entities_id in entities:
-                        entities[row.entities_id]['machines_count'] = row.cnt
-
-                # Step 4: Get all (machine_id, entity_id, software_name) for these entities
-                # Restreint aux logiciels à CVE (les autres ne matchent jamais) : le
-                # comptage machines par entité vient d'une requête séparée (Step 3),
-                # donc restreindre ici ne fausse rien et évite de scanner tout le parc.
-                cve_names_in = self._sql_in_list(self._cve_affected_glpi_names(session))
-                sw_filter = f"AND s.name IN ({cve_names_in})" if cve_names_in else "AND 1=0"
-                software_sql = text(f"""
-                    SELECT DISTINCT c.id as machine_id, c.entities_id, s.name as software_name
-                    FROM glpi_computers c
-                    JOIN glpi_items_softwareversions isv ON isv.items_id = c.id AND isv.itemtype = 'Computer'
-                    JOIN glpi_softwareversions sv ON sv.id = isv.softwareversions_id
-                    JOIN glpi_softwares s ON s.id = sv.softwares_id
-                    WHERE c.is_deleted = 0 AND c.is_template = 0
-                    AND c.entities_id IN ({entity_ids_str})
-                    {sw_filter}
-                    {machine_filter}
-                """)
-                software_result = glpi_conn.execute(software_sql)
-
-                # Build mapping: entity_id -> set of software_names
-                entity_software = {eid: set() for eid in entities.keys()}
-                for row in software_result:
-                    if row.entities_id in entity_software:
-                        entity_software[row.entities_id].add(row.software_name)
-
-            # Step 5: Get CVEs from security DB
-            # Build CVE filters
-            cve_where = "WHERE 1=1"
-            if min_cvss > 0:
-                cve_where += f" AND c.cvss_score >= {min_cvss}"
-            if min_sev_index > 0:
-                allowed_severities = severity_order[min_sev_index:]
-                severity_list = ','.join(f"'{s}'" for s in allowed_severities)
-                cve_where += f" AND c.severity IN ({severity_list})"
-            if excluded_names:
-                names_escaped = ','.join(f"'{n.replace(chr(39), chr(39)+chr(39))}'" for n in excluded_names)
-                cve_where += f" AND sc.software_name NOT IN ({names_escaped})"
-            if excluded_cve_ids:
-                cve_ids_escaped = ','.join(f"'{c.replace(chr(39), chr(39)+chr(39))}'" for c in excluded_cve_ids)
-                cve_where += f" AND c.cve_id NOT IN ({cve_ids_escaped})"
-
-            cves_sql = text(f"""
-                SELECT sc.glpi_software_name, c.id as cve_id, c.severity, c.cvss_score
-                FROM security.software_cves sc
-                JOIN security.cves c ON c.id = sc.cve_id
-                {cve_where}
-                AND sc.glpi_software_name IS NOT NULL
-            """)
-            cves_result = session.execute(cves_sql)
-
-            # Build mapping: software_name -> list of (cve_id, severity, cvss_score)
-            software_cves = {}
-            for row in cves_result:
-                if row.glpi_software_name not in software_cves:
-                    software_cves[row.glpi_software_name] = []
-                software_cves[row.glpi_software_name].append({
-                    'cve_id': row.cve_id,
-                    'severity': row.severity,
-                    'cvss_score': float(row.cvss_score) if row.cvss_score else 0.0
-                })
-
-            # Step 6: Calculate CVE stats per entity in Python
-            for entity_id, entity_data in entities.items():
-                cve_ids_seen = set()
-                severity_counts = {'Critical': 0, 'High': 0, 'Medium': 0, 'Low': 0}
-                max_cvss = 0.0
-
-                for sw_name in entity_software.get(entity_id, set()):
-                    for cve in software_cves.get(sw_name, []):
-                        if cve['cve_id'] not in cve_ids_seen:
-                            cve_ids_seen.add(cve['cve_id'])
-                            if cve['severity'] in severity_counts:
-                                severity_counts[cve['severity']] += 1
-                            if cve['cvss_score'] > max_cvss:
-                                max_cvss = cve['cvss_score']
-
-                entity_data['total_cves'] = len(cve_ids_seen)
-                entity_data['critical'] = severity_counts['Critical']
-                entity_data['high'] = severity_counts['High']
-                entity_data['medium'] = severity_counts['Medium']
-                entity_data['low'] = severity_counts['Low']
-                entity_data['max_cvss'] = str(round(max_cvss, 1))
-
-            # Sort by max_cvss DESC, total_cves DESC
-            results = sorted(entities.values(),
-                           key=lambda x: (float(x['max_cvss']), x['total_cves']),
-                           reverse=True)
-
-            return {'total': total, 'data': results}
-        except Exception as e:
-            logger.error(f"Error getting entities summary: {e}")
-            return {'total': 0, 'data': []}
-
-    @DatabaseHelper._sessionm
-    def get_groups_summary(self, session, start=0, limit=50, filter_str='', user_login='',
-                           min_cvss=0.0, min_severity='None',
-                           excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
-                           excluded_machines_ids=None, excluded_groups_ids=None):
-        """Get list of groups with CVE counts.
-        Filtered by ShareGroup - only show groups shared with this user.
-        Filtered by min_cvss if > 0.
-        Filtered by min_severity if not 'None'.
-        Filtered by exclusions.
-
-        Returns:
-            dict with 'total' count and 'data' list containing:
-            - group_id, group_name, group_type
-            - total_cves, critical, high, medium, low
-            - max_cvss, machines_count
-        """
-        # Severity order for filtering
-        severity_order = ['None', 'Low', 'Medium', 'High', 'Critical']
-        min_sev_index = severity_order.index(min_severity) if min_severity in severity_order else 0
-
-        try:
-            glpi_db = _get_glpi_database()
-            if not glpi_db:
-                logger.warning("GLPI database not available for get_groups_summary")
-                return {'total': 0, 'data': []}
-
-            # Build filter clause - exclude internal PULSE groups and excluded groups
-            filter_clause = "AND g.name NOT LIKE 'PULSE_INTERNAL%'"
-            params = {'start': start, 'limit': limit}
-            if filter_str:
-                filter_clause += " AND g.name LIKE :filter"
-                params['filter'] = f"%{filter_str}%"
-
-            # Exclude groups that are in the exclusion list
-            if excluded_groups_ids:
-                group_ids_str = ','.join(str(int(gid)) for gid in excluded_groups_ids)
-                filter_clause += f" AND g.id NOT IN ({group_ids_str})"
-
-            # Filter by ShareGroup - only show groups shared with this user
-            share_filter = ""
-            if user_login:
-                escaped_login = user_login.replace("'", "''")
-                share_filter = f"""AND g.id IN (
-                    SELECT DISTINCT sg.FK_groups
-                    FROM dyngroup.ShareGroup sg
-                    JOIN dyngroup.Users u ON u.id = sg.FK_users
-                    WHERE u.login = '{escaped_login}'
-                )"""
-
-            # Step 1: Count total groups from dyngroup (via session/mmc)
-            count_sql = text(f"""
-                SELECT COUNT(DISTINCT g.id) as total
-                FROM dyngroup.Groups g
-                WHERE 1=1 {filter_clause} {share_filter}
-            """)
-            count_result = session.execute(count_sql, params)
-            total = count_result.scalar() or 0
-
-            # Step 2: Get groups with pagination from dyngroup
-            groups_sql = text(f"""
-                SELECT g.id as group_id, g.name as group_name,
-                       CASE WHEN g.query IS NOT NULL AND LENGTH(g.query) > 0 THEN 1 ELSE 0 END as is_dynamic
-                FROM dyngroup.Groups g
-                WHERE 1=1 {filter_clause} {share_filter}
-                ORDER BY g.name
-                LIMIT :limit OFFSET :start
-            """)
-            groups_result = session.execute(groups_sql, params)
-            groups = {row.group_id: {
-                'group_id': row.group_id,
-                'group_name': row.group_name,
-                'group_type': 'Dynamic' if int(row.is_dynamic) == 1 else 'Static',
-                'machines_count': 0,
-                'total_cves': 0, 'critical': 0, 'high': 0, 'medium': 0, 'low': 0,
-                'max_cvss': 0.0
-            } for row in groups_result}
-
-            if not groups:
-                return {'total': total, 'data': []}
-
-            group_ids_str = ','.join(str(gid) for gid in groups.keys())
-
-            # Machine exclusion filter
-            machine_exclusion_ids = set()
-            if excluded_machines_ids:
-                machine_exclusion_ids.update(int(mid) for mid in excluded_machines_ids)
-
-            # Step 3: Get machines per group from dyngroup (uuid format: UUID<glpi_id>)
-            machines_sql = text(f"""
-                SELECT r.FK_groups as group_id, dm.uuid
-                FROM dyngroup.Results r
-                JOIN dyngroup.Machines dm ON dm.id = r.FK_machines
-                WHERE r.FK_groups IN ({group_ids_str})
-            """)
-            machines_result = session.execute(machines_sql)
-
-            # Build mapping: group_id -> set of machine_ids (GLPI)
-            group_machines = {gid: set() for gid in groups.keys()}
-            all_machine_ids = set()
-            for row in machines_result:
-                if row.uuid and row.uuid.startswith('UUID'):
-                    try:
-                        machine_id = int(row.uuid[4:])
-                        if machine_id not in machine_exclusion_ids:
-                            group_machines[row.group_id].add(machine_id)
-                            all_machine_ids.add(machine_id)
-                    except ValueError:
-                        pass
-
-            # Update machines_count
-            for group_id in groups:
-                groups[group_id]['machines_count'] = len(group_machines[group_id])
-
-            if not all_machine_ids:
-                results = sorted(groups.values(),
-                               key=lambda x: (float(x['max_cvss']), x['total_cves']),
-                               reverse=True)
-                return {'total': total, 'data': results}
-
-            # Step 4: Get software_names per machine from GLPI
-            machine_ids_str = ','.join(str(mid) for mid in all_machine_ids)
-            cve_names_in = self._sql_in_list(self._cve_affected_glpi_names(session))
-            sw_filter = f"AND s.name IN ({cve_names_in})" if cve_names_in else "AND 1=0"
-            with glpi_db.db.connect() as glpi_conn:
-                software_sql = text(f"""
-                    SELECT DISTINCT c.id as machine_id, s.name as software_name
-                    FROM glpi_computers c
-                    JOIN glpi_items_softwareversions isv ON isv.items_id = c.id AND isv.itemtype = 'Computer'
-                    JOIN glpi_softwareversions sv ON sv.id = isv.softwareversions_id
-                    JOIN glpi_softwares s ON s.id = sv.softwares_id
-                    WHERE c.id IN ({machine_ids_str})
-                    AND c.is_deleted = 0 AND c.is_template = 0
-                    {sw_filter}
-                """)
-                software_result = glpi_conn.execute(software_sql)
-
-                # Build mapping: machine_id -> set of software_names
-                machine_software = {}
-                for row in software_result:
-                    if row.machine_id not in machine_software:
-                        machine_software[row.machine_id] = set()
-                    machine_software[row.machine_id].add(row.software_name)
-
-            # Step 5: Get CVEs from security DB
-            cve_where = "WHERE sc.glpi_software_name IS NOT NULL"
-            if min_cvss > 0:
-                cve_where += f" AND c.cvss_score >= {min_cvss}"
-            if min_sev_index > 0:
-                allowed_severities = severity_order[min_sev_index:]
-                severity_list = ','.join(f"'{s}'" for s in allowed_severities)
-                cve_where += f" AND c.severity IN ({severity_list})"
-            if excluded_names:
-                names_escaped = ','.join(f"'{n.replace(chr(39), chr(39)+chr(39))}'" for n in excluded_names)
-                cve_where += f" AND sc.software_name NOT IN ({names_escaped})"
-            if excluded_cve_ids:
-                cve_ids_escaped = ','.join(f"'{c.replace(chr(39), chr(39)+chr(39))}'" for c in excluded_cve_ids)
-                cve_where += f" AND c.cve_id NOT IN ({cve_ids_escaped})"
-
-            cves_sql = text(f"""
-                SELECT sc.glpi_software_name, c.id as cve_id, c.severity, c.cvss_score
-                FROM security.software_cves sc
-                JOIN security.cves c ON c.id = sc.cve_id
-                {cve_where}
-            """)
-            cves_result = session.execute(cves_sql)
-
-            # Build mapping: software_name -> list of (cve_id, severity, cvss_score)
-            software_cves = {}
-            for row in cves_result:
-                if row.glpi_software_name not in software_cves:
-                    software_cves[row.glpi_software_name] = []
-                software_cves[row.glpi_software_name].append({
-                    'cve_id': row.cve_id,
-                    'severity': row.severity,
-                    'cvss_score': float(row.cvss_score) if row.cvss_score else 0.0
-                })
-
-            # Step 6: Calculate CVE stats per group in Python
-            for group_id, group_data in groups.items():
-                cve_ids_seen = set()
-                severity_counts = {'Critical': 0, 'High': 0, 'Medium': 0, 'Low': 0}
-                max_cvss = 0.0
-
-                for machine_id in group_machines.get(group_id, set()):
-                    for sw_name in machine_software.get(machine_id, set()):
-                        for cve in software_cves.get(sw_name, []):
-                            if cve['cve_id'] not in cve_ids_seen:
-                                cve_ids_seen.add(cve['cve_id'])
-                                if cve['severity'] in severity_counts:
-                                    severity_counts[cve['severity']] += 1
-                                if cve['cvss_score'] > max_cvss:
-                                    max_cvss = cve['cvss_score']
-
-                group_data['total_cves'] = len(cve_ids_seen)
-                group_data['critical'] = severity_counts['Critical']
-                group_data['high'] = severity_counts['High']
-                group_data['medium'] = severity_counts['Medium']
-                group_data['low'] = severity_counts['Low']
-                group_data['max_cvss'] = str(round(max_cvss, 1))
-
-            # Sort by max_cvss DESC, total_cves DESC
-            results = sorted(groups.values(),
-                           key=lambda x: (float(x['max_cvss']), x['total_cves']),
-                           reverse=True)
-
-            return {'total': total, 'data': results}
-        except Exception as e:
-            logger.error(f"Error getting groups summary: {e}")
-            return {'total': 0, 'data': []}
-
-    @DatabaseHelper._sessionm
-    def get_group_machines(self, session, group_id, start=0, limit=50, filter_str='',
-                           min_cvss=0.0, min_severity='None',
-                           excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
-                           excluded_machines_ids=None, excluded_groups_ids=None):
-        """Get machines in a group with their CVE counts.
-        Filtered by min_cvss if > 0.
-        Filtered by min_severity if not 'None'.
-        Filtered by exclusions.
-
-        Returns:
-            dict with 'total' count and 'data' list
-        """
-        # Severity order for filtering
-        severity_order = ['None', 'Low', 'Medium', 'High', 'Critical']
-        min_sev_index = severity_order.index(min_severity) if min_severity in severity_order else 0
-
-        try:
-            glpi_db = _get_glpi_database()
-            if not glpi_db:
-                logger.warning("GLPI database not available for get_group_machines")
-                return {'total': 0, 'data': []}
-
-            # Machine exclusion filter
-            machine_exclusion_ids = set()
-            if excluded_machines_ids:
-                machine_exclusion_ids.update(int(mid) for mid in excluded_machines_ids)
-
-            # Step 1: Get machine UUIDs from this group via dyngroup
-            machines_sql = text("""
-                SELECT DISTINCT dm.uuid
-                FROM dyngroup.Results r
-                JOIN dyngroup.Machines dm ON dm.id = r.FK_machines
-                WHERE r.FK_groups = :group_id
-            """)
-            machines_result = session.execute(machines_sql, {'group_id': group_id})
-
-            # Extract GLPI machine IDs from UUIDs
-            all_machine_ids = []
-            for row in machines_result:
-                if row.uuid and row.uuid.startswith('UUID'):
-                    try:
-                        machine_id = int(row.uuid[4:])
-                        if machine_id not in machine_exclusion_ids:
-                            all_machine_ids.append(machine_id)
-                    except ValueError:
-                        pass
-
-            if not all_machine_ids:
-                return {'total': 0, 'data': []}
-
-            machine_ids_str = ','.join(str(mid) for mid in all_machine_ids)
-
-            # Step 2: Get machine info from GLPI with filtering and pagination
-            with glpi_db.db.connect() as glpi_conn:
-                # Build filter clause
-                filter_clause = ""
-                if filter_str:
-                    filter_str_escaped = filter_str.replace("'", "''")
-                    filter_clause = f"AND c.name LIKE '%{filter_str_escaped}%'"
-
-                # Count total
-                count_sql = text(f"""
-                    SELECT COUNT(*) as total
-                    FROM glpi_computers c
-                    WHERE c.id IN ({machine_ids_str})
-                    AND c.is_deleted = 0 AND c.is_template = 0
-                    {filter_clause}
-                """)
-                count_result = glpi_conn.execute(count_sql)
-                total = count_result.scalar() or 0
-
-                # Get machines with pagination
-                machines_info_sql = text(f"""
-                    SELECT c.id, c.name as hostname
-                    FROM glpi_computers c
-                    WHERE c.id IN ({machine_ids_str})
-                    AND c.is_deleted = 0 AND c.is_template = 0
-                    {filter_clause}
-                    ORDER BY c.name
-                    LIMIT {limit} OFFSET {start}
-                """)
-                machines_info_result = glpi_conn.execute(machines_info_sql)
-                machines = {row.id: {
-                    'id_glpi': row.id,
-                    'hostname': row.hostname,
-                    'total_cves': 0, 'critical': 0, 'high': 0, 'medium': 0, 'low': 0,
-                    'risk_score': 0.0
-                } for row in machines_info_result}
-
-                if not machines:
-                    return {'total': total, 'data': []}
-
-                # Step 3: Get software per machine from GLPI
-                machine_ids_page = ','.join(str(mid) for mid in machines.keys())
-                software_sql = text(f"""
-                    SELECT DISTINCT c.id as machine_id, s.name as software_name
-                    FROM glpi_computers c
-                    JOIN glpi_items_softwareversions isv ON isv.items_id = c.id AND isv.itemtype = 'Computer'
-                    JOIN glpi_softwareversions sv ON sv.id = isv.softwareversions_id
-                    JOIN glpi_softwares s ON s.id = sv.softwares_id
-                    WHERE c.id IN ({machine_ids_page})
-                """)
-                software_result = glpi_conn.execute(software_sql)
-
-                # Build mapping: machine_id -> set of software_names
-                machine_software = {mid: set() for mid in machines.keys()}
-                for row in software_result:
-                    if row.machine_id in machine_software:
-                        machine_software[row.machine_id].add(row.software_name)
-
-            # Step 4: Get CVEs from security DB
-            cve_where = "WHERE sc.glpi_software_name IS NOT NULL"
-            if min_cvss > 0:
-                cve_where += f" AND c.cvss_score >= {min_cvss}"
-            if min_sev_index > 0:
-                allowed_severities = severity_order[min_sev_index:]
-                severity_list = ','.join(f"'{s}'" for s in allowed_severities)
-                cve_where += f" AND c.severity IN ({severity_list})"
-            if excluded_names:
-                names_escaped = ','.join(f"'{n.replace(chr(39), chr(39)+chr(39))}'" for n in excluded_names)
-                cve_where += f" AND sc.software_name NOT IN ({names_escaped})"
-            if excluded_cve_ids:
-                cve_ids_escaped = ','.join(f"'{cv.replace(chr(39), chr(39)+chr(39))}'" for cv in excluded_cve_ids)
-                cve_where += f" AND c.cve_id NOT IN ({cve_ids_escaped})"
-
-            cves_sql = text(f"""
-                SELECT sc.glpi_software_name, c.id as cve_id, c.severity, c.cvss_score
-                FROM security.software_cves sc
-                JOIN security.cves c ON c.id = sc.cve_id
-                {cve_where}
-            """)
-            cves_result = session.execute(cves_sql)
-
-            # Build mapping: software_name -> list of CVE info
-            software_cves = {}
-            for row in cves_result:
-                if row.glpi_software_name not in software_cves:
-                    software_cves[row.glpi_software_name] = []
-                software_cves[row.glpi_software_name].append({
-                    'cve_id': row.cve_id,
-                    'severity': row.severity,
-                    'cvss_score': float(row.cvss_score) if row.cvss_score else 0.0
-                })
-
-            # Step 5: Calculate CVE stats per machine in Python
-            for machine_id, machine_data in machines.items():
-                cve_ids_seen = set()
-                severity_counts = {'Critical': 0, 'High': 0, 'Medium': 0, 'Low': 0}
-                max_cvss = 0.0
-
-                for sw_name in machine_software.get(machine_id, set()):
-                    for cve in software_cves.get(sw_name, []):
-                        if cve['cve_id'] not in cve_ids_seen:
-                            cve_ids_seen.add(cve['cve_id'])
-                            if cve['severity'] in severity_counts:
-                                severity_counts[cve['severity']] += 1
-                            if cve['cvss_score'] > max_cvss:
-                                max_cvss = cve['cvss_score']
-
-                machine_data['total_cves'] = len(cve_ids_seen)
-                machine_data['critical'] = severity_counts['Critical']
-                machine_data['high'] = severity_counts['High']
-                machine_data['medium'] = severity_counts['Medium']
-                machine_data['low'] = severity_counts['Low']
-                machine_data['risk_score'] = str(round(max_cvss, 1))
-
-            # Sort by risk_score DESC, hostname ASC
-            results = sorted(machines.values(),
-                           key=lambda x: (-float(x['risk_score']), x['hostname']))
-
-            return {'total': total, 'data': results}
-        except Exception as e:
-            logger.error(f"Error getting group machines: {e}")
-            return {'total': 0, 'data': []}
-
-    @DatabaseHelper._sessionm
-    def get_software_cves(self, session, software_name, software_version, start=0, limit=50,
-                          filter_str='', severity=None, min_cvss=0.0):
-        """Get all CVEs affecting a specific software version.
-
-        Args:
-            software_name: Software name
-            software_version: Software version
-            start: Pagination offset
-            limit: Max results per page
-            filter_str: Search filter for CVE ID or description
-            severity: Filter by severity (Critical, High, Medium, Low)
-            min_cvss: Minimum CVSS score to display
-
-        Returns:
-            dict with 'total' count and 'data' list of CVEs
-        """
-        try:
-            # Build WHERE clause for filters. Le nom reçu de l'IHM est l'identité
-            # d'affichage = COALESCE(source_package, glpi_software_name) : package
-            # source pour Linux (freerdp2 -> ses binaires), nom GLPI réel sinon.
-            where_clauses = ["COALESCE(sc.source_package, sc.glpi_software_name) = :sw_name",
-                             "sc.software_version = :sw_version"]
-            params = {
-                'sw_name': software_name,
-                'sw_version': software_version,
-                'start': start,
-                'limit': limit
-            }
-
-            if min_cvss > 0:
-                where_clauses.append(f"c.cvss_score >= {min_cvss}")
-
-            if filter_str:
-                where_clauses.append("(c.cve_id LIKE :filter OR c.description LIKE :filter)")
-                params['filter'] = f"%{filter_str}%"
-
-            if severity:
-                where_clauses.append("c.severity = :severity")
-                params['severity'] = severity
-
-            where_sql = "WHERE " + " AND ".join(where_clauses)
-
-            # Count query
-            count_sql = text(f"""
-                SELECT COUNT(DISTINCT c.id) as total
-                FROM security.software_cves sc
-                JOIN security.cves c ON c.id = sc.cve_id
-                {where_sql}
-            """)
-            count_result = session.execute(count_sql, params)
-            total = count_result.scalar() or 0
-
-            # Main query. DISTINCT : un package source regroupe plusieurs binaires
-            # liant les mêmes CVE → sans lui chaque CVE apparaîtrait N fois.
-            main_sql = text(f"""
-                SELECT DISTINCT
-                    c.id,
-                    c.cve_id,
-                    c.cvss_score,
-                    c.severity,
-                    c.description,
-                    c.published_at,
-                    c.last_modified
-                FROM security.software_cves sc
-                JOIN security.cves c ON c.id = sc.cve_id
-                {where_sql}
-                ORDER BY c.cvss_score DESC
-                LIMIT :limit OFFSET :start
-            """)
-
-            result = session.execute(main_sql, params)
-            cves = []
-            for row in result:
-                cves.append({
-                    'id': row.id,
-                    'cve_id': row.cve_id,
-                    'cvss_score': str(round(float(row.cvss_score), 1)) if row.cvss_score else '0.0',
-                    'severity': row.severity,
-                    'description': row.description,
-                    'published_at': row.published_at.isoformat() if row.published_at else None,
-                    'last_modified': row.last_modified.isoformat() if row.last_modified else None
-                })
-
-            return {'total': total, 'data': cves}
-        except Exception as e:
-            logger.error(f"Error getting CVEs for software {software_name} {software_version}: {e}")
-            return {'total': 0, 'data': []}
-
-    # =========================================================================
-    # Group creation helpers
-    # =========================================================================
-    @DatabaseHelper._sessionm
-    def get_machines_by_severity(self, session, severity, location=''):
-        """Get list of machines affected by CVEs of a given severity.
-
-        Args:
-            severity: CVE severity level (Critical, High, Medium, Low)
-            location: Entity filter (optional)
-
-        Returns:
-            List of dicts with 'uuid' and 'hostname' for each machine
-        """
-        entity_ids = self._parse_entity_ids(session, location)
-
-        try:
-            # Step 1: Get software names with CVEs of given severity from security DB
-            cve_result = session.execute(text("""
-                SELECT DISTINCT sc.glpi_software_name
-                FROM security.software_cves sc
-                JOIN security.cves c ON c.id = sc.cve_id
-                WHERE c.severity = :severity
-                AND sc.glpi_software_name IS NOT NULL
-            """), {'severity': severity})
-            vulnerable_software_names = [row[0] for row in cve_result]
-
-            if not vulnerable_software_names:
-                return []
-
-            # Step 2: Get machines with these software via GLPI connection
-            glpi_db = _get_glpi_database()
-            if not glpi_db:
-                logger.warning("GLPI database not available for get_machines_by_severity")
-                return []
-
-            # Build entity filter
-            entity_filter = ""
-            if entity_ids:
-                entity_ids_str = ','.join(str(e) for e in entity_ids)
-                entity_filter = f"AND c.entities_id IN ({entity_ids_str})"
-
-            # Build software names filter
-            software_names_escaped = ','.join(f"'{n.replace(chr(39), chr(39)+chr(39))}'" for n in vulnerable_software_names)
-
-            with glpi_db.db.connect() as glpi_conn:
-                glpi_result = glpi_conn.execute(text(f"""
-                    SELECT DISTINCT c.id, c.name
-                    FROM glpi_computers c
-                    JOIN glpi_items_softwareversions isv ON isv.items_id = c.id AND isv.itemtype = 'Computer'
-                    JOIN glpi_softwareversions sv ON sv.id = isv.softwareversions_id
-                    JOIN glpi_softwares s ON s.id = sv.softwares_id
-                    WHERE c.is_deleted = 0 AND c.is_template = 0
-                    AND s.name IN ({software_names_escaped})
-                    {entity_filter}
-                    ORDER BY c.name
-                """))
-                machines = [{'uuid': f"UUID{row[0]}", 'hostname': row[1]} for row in glpi_result]
-
-            return machines
-        except Exception as e:
-            logger.error(f"Error getting machines by severity {severity}: {e}")
-            return []
 
     # =========================================================================
     # Policies Management (stored in DB for UI editing)
@@ -2374,86 +1048,11 @@ class SecurityDatabase(DatabaseHelper):
             return {}
 
     @DatabaseHelper._sessionm
-    def get_policy(self, session, category, key):
-        """Get a single policy value.
-
-        Args:
-            category: display, policy, or exclusions
-            key: the policy key
-
-        Returns:
-            The value (parsed from JSON if applicable) or None
-        """
-        import json
-        try:
-            result = session.execute(text("""
-                SELECT value FROM policies WHERE category = :category AND `key` = :key
-            """), {'category': category, 'key': key})
-            row = result.fetchone()
-            if row and row[0]:
-                try:
-                    return json.loads(row[0])
-                except (json.JSONDecodeError, TypeError):
-                    return row[0]
-            return None
-        except Exception as e:
-            logger.error(f"Error getting policy {category}.{key}: {e}")
-            return None
-
-    @DatabaseHelper._sessionm
-    def set_policy(self, session, category, key, value, user=None):
-        """Set a policy value.
-
-        Args:
-            category: display, policy, or exclusions
-            key: the policy key
-            value: the value (will be JSON encoded if list/dict)
-            user: username making the change
-
-        Returns:
-            bool: True on success
-        """
-        import json
-
-        # Validate category
-        if category not in ('display', 'policy', 'exclusions'):
-            raise ValueError(f"Invalid category: {category}")
-
-        # JSON encode lists and dicts
-        if isinstance(value, (list, dict)):
-            value_str = json.dumps(value)
-        elif isinstance(value, bool):
-            value_str = 'true' if value else 'false'
-        else:
-            value_str = str(value) if value is not None else ''
-
-        try:
-            # Use INSERT ... ON DUPLICATE KEY UPDATE for upsert
-            session.execute(text("""
-                INSERT INTO policies (category, `key`, value, updated_by, updated_at)
-                VALUES (:category, :key, :value, :user, NOW())
-                ON DUPLICATE KEY UPDATE
-                    value = :value,
-                    updated_by = :user,
-                    updated_at = NOW()
-            """), {
-                'category': category,
-                'key': key,
-                'value': value_str,
-                'user': user
-            })
-            session.commit()
-            return True
-        except Exception as e:
-            logger.error(f"Error setting policy {category}.{key}: {e}")
-            return False
-
-    @DatabaseHelper._sessionm
     def set_policies_bulk(self, session, policies, user=None):
         """Set multiple policies at once.
 
         Args:
-            policies: dict like {'display': {'min_cvss': 4.0}, 'exclusions': {'cve_ids': [...]}}
+            policies: dict like {'display': {'min_severity': 'Medium'}, 'exclusions': {'cve_ids': [...]}}
             user: username making the change
 
         Returns:
@@ -2495,27 +1094,6 @@ class SecurityDatabase(DatabaseHelper):
             return False
 
     @DatabaseHelper._sessionm
-    def delete_policy(self, session, category, key):
-        """Delete a policy (reverts to ini file default).
-
-        Args:
-            category: display, policy, or exclusions
-            key: the policy key
-
-        Returns:
-            bool: True on success
-        """
-        try:
-            session.execute(text("""
-                DELETE FROM policies WHERE category = :category AND `key` = :key
-            """), {'category': category, 'key': key})
-            session.commit()
-            return True
-        except Exception as e:
-            logger.error(f"Error deleting policy {category}.{key}: {e}")
-            return False
-
-    @DatabaseHelper._sessionm
     def reset_display_policies(self, session, user=None):
         """Reset only display policies to default values, keeping exclusions intact.
 
@@ -2549,197 +1127,74 @@ class SecurityDatabase(DatabaseHelper):
             logger.error(f"Error resetting display policies: {e}")
             return False
 
-    @DatabaseHelper._sessionm
-    def reset_all_policies(self, session, user=None):
-        """Reset all policies to default values.
-
-        Reads defaults from policies_defaults table.
-
-        Args:
-            user: username making the change (default: 'system')
-
-        Returns:
-            bool: True on success
-        """
-        if user is None:
-            user = 'system'
-
-        try:
-            # Delete all existing policies
-            session.execute(text("DELETE FROM policies"))
-
-            # Reinsert all from policies_defaults table
-            session.execute(text("""
-                INSERT INTO policies (category, `key`, value, updated_by, updated_at)
-                SELECT category, `key`, value, :user, NOW()
-                FROM policies_defaults
-            """), {'user': user})
-
-            session.commit()
-            logger.info(f"All policies reset to defaults by user '{user}'")
-            return True
-        except Exception as e:
-            logger.error(f"Error resetting policies: {e}")
-            return False
-
     # =========================================================================
     # Store integration methods
     # =========================================================================
 
     def _enrich_with_store_info(self, session, results):
-        """Enrich software results with store update information.
+        """Store update of each Windows row: the Windows build of the same track, surely newer.
 
-        For each software in results, checks if a newer version exists in the store.
-        Uses partial matching: GLPI software name often includes version (e.g., "7-Zip 23.01 (x64)")
-        while store name is clean (e.g., "7-Zip"). We match if GLPI name starts with store name.
-
-        Updates results in-place with store_version, store_has_update, store_package_uuid.
-
-        Args:
-            session: SQLAlchemy session
-            results: List of software dicts to enrich
+        The Store has one build per OS / arch / track (win/linux/mac, x64, stable/esr/lts). Linux rows are
+        distro packages, fixed by the distribution (apt), never by the Store.
         """
         if not results:
             return
-
         try:
-            # Get all active store software via store API
-            from mmc.plugins.store import get_all_software as store_get_all_software
-            store_data = store_get_all_software()
-            store_info = {}
-            for soft in store_data.get('data', []):
-                name = soft.get('name', '')
-                version = soft.get('version', '')
-                if name and version:
-                    store_info[name.lower()] = {
-                        'name': name,
-                        'store_version': version,
-                        'store_package_uuid': soft.get('package_uuid')
-                    }
+            from mmc.plugins.store import get_all_software, get_client_subscriptions
+            subscribed = set(get_client_subscriptions() or [])
+            builds = {}
+            for soft in get_all_software().get('data', []):
+                if soft.get('name') and soft.get('version'):
+                    builds.setdefault((soft['name'].lower(), soft.get('os')), []).append(soft)
 
-            # Enrich results - match if GLPI name starts with store name
             for software in results:
+                if software.get('linux'):
+                    continue
                 glpi_name = software['software_name'].lower()
-
-                # Find matching store software
-                # Match if GLPI name starts with or contains store name
-                # e.g., "7-zip 23.01 (x64)" starts with "7-zip"
-                # e.g., "Mozilla Firefox (x64 fr)" contains "firefox"
-                matched_store = None
-                for store_name, store_data in store_info.items():
-                    if glpi_name.startswith(store_name) or store_name in glpi_name:
-                        # Prefer longer matches (more specific)
-                        if matched_store is None or len(store_name) > len(matched_store[0]):
-                            matched_store = (store_name, store_data)
-
-                if matched_store:
-                    store_data = matched_store[1]
-                    software['store_version'] = store_data['store_version']
-                    software['store_package_uuid'] = store_data['store_package_uuid']
-                    software['store_name'] = store_data['name']  # Original store name for display
-                    # Compare versions to determine if update available
-                    software['store_has_update'] = self._is_version_newer(
-                        store_data['store_version'],
-                        software['software_version']
-                    )
-
+                # Longest Store name contained in the GLPI name ("Mozilla Firefox (x64 fr)" -> "firefox")
+                names = [n for n, o in builds if o == 'win' and n in glpi_name]
+                if not names:
+                    continue
+                build = self._store_build(builds[max(names, key=len), 'win'], glpi_name, subscribed)
+                software['store_name'] = build['name']
+                software['store_version'] = build['version']
+                software['store_package_uuid'] = (build.get('package_uuids') or '').split(',')[0] or None
+                # Déployable seulement si abonné et sûrement plus récent : des numérotations différentes
+                # (Teams : installeur 1.0 / application 25290) ressembleraient à un retour en arrière
+                software['store_has_update'] = (build['id'] in subscribed
+                                                and self._is_version_newer(build['version'], software['software_version']) is True)
         except Exception as e:
             logger.warning(f"Could not enrich with store info: {e}")
-            # Don't fail - just leave store fields as None/False
 
-    def _is_version_newer(self, store_version, vulnerable_version):
-        """Compare two version strings to determine if store version is newer.
+    @staticmethod
+    def _store_build(candidates, glpi_name, subscribed):
+        """Build of the same track (esr, lts… in the name, else stable), subscribed and x64 first."""
+        track = next((t for t in ('esr', 'lts', 'beta') if t in glpi_name), 'stable')
+        return max(candidates, key=lambda b: (b.get('track') == track, b['id'] in subscribed, b.get('arch') == 'x64'))
 
-        Args:
-            store_version: Version in the store (e.g., "3.14.2")
-            vulnerable_version: Vulnerable version (e.g., "3.11.9")
-
-        Returns:
-            bool: True if store_version > vulnerable_version
-        """
-        if not store_version or not vulnerable_version:
+    @staticmethod
+    def _is_version_newer(store_version, installed_version):
+        """True if the Store version is newer, False if not, None when the numbering differs
+        (Teams: installer 1.0.2508703 / application 25290.205): no way to tell."""
+        def numbers(version):
+            upstream = re.sub(r'^\d+:', '', version or '').split('-')[0]  # 2:4.17.12-1 -> 4.17.12
+            return [int(n) for n in re.findall(r'\d+', upstream)]
+        store, installed = numbers(store_version), numbers(installed_version)
+        if not store or not installed:
             return False
-
-        try:
-            # Parse version strings into comparable tuples
-            def parse_version(v):
-                # Remove common suffixes like 'esr', 'lts', etc.
-                v = v.lower().replace('esr', '').replace('lts', '').strip('.')
-                # Split and convert to integers where possible
-                parts = []
-                for part in v.split('.'):
-                    try:
-                        parts.append(int(part))
-                    except ValueError:
-                        # Handle non-numeric parts (e.g., "1.0.0a1")
-                        parts.append(part)
-                return tuple(parts)
-
-            store_parts = parse_version(store_version)
-            vuln_parts = parse_version(vulnerable_version)
-
-            return store_parts > vuln_parts
-        except Exception:
-            # If comparison fails, assume no update (safe default)
-            return False
-
-    def get_store_software_info(self, software_name):
-        """Get store information for a specific software via store API.
-
-        Uses partial matching: the software_name might be a GLPI name like "7-Zip 23.01 (x64)"
-        while store has clean name "7-Zip". We find store software where GLPI name starts with store name.
-
-        Args:
-            software_name: Name of the software (GLPI name or clean name)
-
-        Returns:
-            dict with store info or None if not found
-        """
-        try:
-            from mmc.plugins.store import get_all_software as store_get_all_software
-            store_data = store_get_all_software()
-            glpi_name = software_name.lower()
-
-            # Try exact match first, then startswith, then contains
-            matched = None
-            for soft in store_data.get('data', []):
-                store_name = soft.get('name', '').lower()
-                if not store_name:
-                    continue
-                if glpi_name == store_name:
-                    matched = soft
-                    break
-                if glpi_name.startswith(store_name) or store_name in glpi_name:
-                    if matched is None or len(store_name) > len(matched.get('name', '')):
-                        matched = soft
-
-            if not matched:
-                return None
-
-            return {
-                'id': matched.get('id'),
-                'name': matched.get('name'),
-                'version': matched.get('version'),
-                'vendor': matched.get('vendor'),
-                'short_desc': matched.get('short_desc'),
-                'os': matched.get('os'),
-                'arch': matched.get('arch'),
-                'package_uuid': matched.get('package_uuid'),
-                'has_package': matched.get('package_exists', False)
-            }
-        except Exception as e:
-            logger.error(f"Error getting store software info for '{software_name}': {e}")
+        if max(store[0], installed[0]) > 10 * max(min(store[0], installed[0]), 1):
             return None
+        return store > installed
 
     @DatabaseHelper._sessionm
     def get_machines_for_vulnerable_software(self, session, software_name, software_version,
-                                              location='', start=0, limit=100, filter_str=''):
+                                              entity_ids=None, start=0, limit=100, filter_str=''):
         """Get machines that have a specific vulnerable software installed.
 
         Args:
             software_name: Normalized software name (e.g., "Python")
             software_version: Vulnerable version (e.g., "3.11.9")
-            location: Entity filter (comma-separated entity IDs)
+            entity_ids: Entity ids in scope (None = all)
             start: Pagination offset
             limit: Pagination limit
             filter_str: Search filter on hostname
@@ -2752,8 +1207,6 @@ class SecurityDatabase(DatabaseHelper):
             - entity_id, entity_name
             - glpi_software_name (original name in GLPI)
         """
-        entity_ids = self._parse_entity_ids(session, location)
-
         try:
             # Step 1: Résoudre les noms GLPI (binaires) pour l'identité d'affichage
             # reçue. Sur Linux, un package source (freerdp2) regroupe plusieurs
@@ -2770,88 +1223,27 @@ class SecurityDatabase(DatabaseHelper):
             if not glpi_software_names:
                 glpi_software_names = [software_name]
 
-            # Step 2: Query GLPI directly for machines with this software
-            glpi_db = _get_glpi_database()
-            if not glpi_db:
-                logger.warning("GLPI database not available for get_machines_for_vulnerable_software")
+            # Step 2: machines having one of these names at this version (software or OS)
+            installs = self._installs(glpi_software_names, entity_ids=entity_ids, hostname=filter_str)
+            names = {}
+            for (name, version), ids in installs.items():
+                if version == software_version:
+                    for machine_id in ids:
+                        names[machine_id] = min(name, names.get(machine_id, name))
+            if not names:
                 return {'total': 0, 'data': []}
-
-            # Build entity filter for GLPI
-            entity_filter = ""
-            if entity_ids:
-                entity_ids_str = ','.join(str(e) for e in entity_ids)
-                entity_filter = f"AND c.entities_id IN ({entity_ids_str})"
-
-            # Build filter clause
-            filter_clause = ""
-            if filter_str:
-                filter_str_escaped = filter_str.replace("'", "''")
-                filter_clause = f"AND c.name LIKE '%{filter_str_escaped}%'"
-
-            # Escape software names (binaires du groupe) and version for SQL
-            names_in = ','.join(
-                "'" + n.replace("'", "''") + "'" for n in glpi_software_names
-            )
-            software_version_escaped = software_version.replace("'", "''")
-
-            with glpi_db.db.connect() as glpi_conn:
-                # Count total - filter by both software name AND version
-                count_sql = text(f"""
-                    SELECT COUNT(DISTINCT c.id) as total
-                    FROM glpi_computers c
-                    JOIN glpi_items_softwareversions isv ON isv.items_id = c.id AND isv.itemtype = 'Computer'
-                    JOIN glpi_softwareversions sv ON sv.id = isv.softwareversions_id
-                    JOIN glpi_softwares s ON s.id = sv.softwares_id
-                    WHERE c.is_deleted = 0 AND c.is_template = 0
-                    AND s.name IN ({names_in})
-                    AND sv.name = '{software_version_escaped}'
-                    {entity_filter}
-                    {filter_clause}
-                """)
-                count_result = glpi_conn.execute(count_sql)
-                total = count_result.scalar() or 0
-
-                # Get machines with pagination - filter by both software name AND version.
-                # GROUP BY machine : une machine portant plusieurs binaires du même
-                # source (libfreerdp2-2 + libwinpr2-2) ne doit apparaître qu'une fois,
-                # pour rester cohérent avec COUNT(DISTINCT c.id).
-                main_sql = text(f"""
-                    SELECT
-                        c.id,
-                        c.name as hostname,
-                        c.entities_id as entity_id,
-                        e.name as entity_name,
-                        MIN(s.name) as glpi_software_name,
-                        MIN(sv.name) as installed_version
-                    FROM glpi_computers c
-                    JOIN glpi_items_softwareversions isv ON isv.items_id = c.id AND isv.itemtype = 'Computer'
-                    JOIN glpi_softwareversions sv ON sv.id = isv.softwareversions_id
-                    JOIN glpi_softwares s ON s.id = sv.softwares_id
-                    LEFT JOIN glpi_entities e ON e.id = c.entities_id
-                    WHERE c.is_deleted = 0 AND c.is_template = 0
-                    AND s.name IN ({names_in})
-                    AND sv.name = '{software_version_escaped}'
-                    {entity_filter}
-                    {filter_clause}
-                    GROUP BY c.id, c.name, c.entities_id, e.name
-                    ORDER BY c.name
-                    LIMIT {limit} OFFSET {start}
-                """)
-
-                result = glpi_conn.execute(main_sql)
-                machines = []
-                for row in result:
-                    machines.append({
-                        'id': row.id,
-                        'uuid': f"UUID{row.id}",
-                        'hostname': row.hostname,
-                        'entity_id': row.entity_id,
-                        'entity_name': row.entity_name or 'Root',
-                        'glpi_software_name': row.glpi_software_name,
-                        'installed_version': row.installed_version
-                    })
-
-            return {'total': total, 'data': machines}
+            rows = _glpi("""
+                SELECT c.id, c.name, c.entities_id, e.name
+                FROM glpi_computers c
+                LEFT JOIN glpi_entities e ON e.id = c.entities_id
+                WHERE c.id IN :ids
+                ORDER BY c.name
+                LIMIT :limit OFFSET :start""", ids=set(names), limit=int(limit), start=int(start))
+            data = [{'id': machine_id, 'uuid': f"UUID{machine_id}", 'hostname': hostname,
+                     'entity_id': entity_id, 'entity_name': entity_name or 'Root',
+                     'glpi_software_name': names[machine_id], 'installed_version': software_version}
+                    for machine_id, hostname, entity_id, entity_name in rows]
+            return {'total': len(names), 'data': data}
         except Exception as e:
             logger.error(f"Error getting machines for vulnerable software '{software_name}': {e}")
             return {'total': 0, 'data': []}

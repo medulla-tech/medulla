@@ -38,7 +38,7 @@ $options = array(
 
 class os_repartitionPanel extends Panel {
   function display_content() {
-    $urlRedirect = urlStrRedirect("base/computers/createOSStaticGroup");
+    $urlRedirect = urlStrRedirect("base/computers/createOSStaticGroup", array("auth_token" => $_SESSION['auth_token'] ?? ''));
     $pcs = xmlrpc_get_os_for_dashboard();
 
     $uninventorized_text = _T("Uninventoried Machines", "dashboard");
@@ -83,11 +83,13 @@ class os_repartitionPanel extends Panel {
     }
 
     $pcs = array_map(function($pcs) {
-    // android hmdm devices redirect to mobile group creation
-    if ($pcs['os'] === 'Android' && $pcs['version'] === 'HMDM') {
-        $href = urlStrRedirect("mobile/mobile/addGroup").'&autoselect=all&name=widget';
+    // android hmdm devices redirect to mobile devices list
+    $isStaticGroup = !($pcs['os'] === 'Android' && $pcs['version'] === 'HMDM');
+    if (!$isStaticGroup) {
+        $href = urlStrRedirect("mobile/mobile/index");
+        $pcs['version'] = 'Mobile';
     } else {
-        $href = urlStrRedirect("base/computers/createOSStaticGroup").'&os='.$pcs['os'].'&version='.$pcs['version'];
+        $href = urlStrRedirect("base/computers/createOSStaticGroup", array("os" => $pcs['os'], "version" => $pcs['version'], "auth_token" => $_SESSION['auth_token'] ?? ''));
     }
 
     $item = array(
@@ -96,6 +98,9 @@ class os_repartitionPanel extends Panel {
         'version' => $pcs['version'],
         'href' => $href,
     );
+    if ($isStaticGroup) {
+        $item['method'] = 'POST';
+    }
     if (isset($pcs['tooltip'])) {
         $item['tooltip'] = $pcs['tooltip'];
     }

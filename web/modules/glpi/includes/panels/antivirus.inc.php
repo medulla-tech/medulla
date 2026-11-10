@@ -45,7 +45,7 @@ class AntivirusPanel extends Panel
         $disabledLabel    = json_encode(_T("Antivirus disabled", "glpi"));
         $missingLabel     = json_encode(_T("Missing antivirus", "glpi"));
         $staleLabel       = json_encode(_T("Unreliable information", "glpi"));
-        $urlRedirect      = json_encode(urlStrRedirect("base/computers/createAntivirusStaticGroup"));
+        $urlRedirect      = json_encode(urlStrRedirect("base/computers/createAntivirusStaticGroup", array("auth_token" => $_SESSION['auth_token'] ?? '')));
 
         echo <<< ANTIVIRUS
     <div id="antivirus-graphs" style="display:flex;flex-direction:column;align-items:center;flex:1;"></div>
@@ -72,26 +72,31 @@ class AntivirusPanel extends Panel
         'label': okLabel,
         'value': antivirusCount("green"),
         'href': urlRedirect+"&group=green",
+        'method': 'POST',
       },
       {
         'label': notUpToDateLabel,
         'value': antivirusCount("orange"),
         'href': urlRedirect+"&group=orange",
+        'method': 'POST',
       },
       {
         'label': disabledLabel,
         'value': antivirusCount("red"),
         'href': urlRedirect+"&group=red",
+        'method': 'POST',
       },
       {
         'label': missingLabel,
         'value': antivirusCount("missing"),
         'href': urlRedirect+"&group=missing",
+        'method': 'POST',
       },
       {
         'label': staleLabel,
         'value': antivirusCount("stale"),
         'href': urlRedirect+"&group=stale",
+        'method': 'POST',
       }
     ];
     donut("antivirus-graphs", datas, "Total", antivirusCount("total"));

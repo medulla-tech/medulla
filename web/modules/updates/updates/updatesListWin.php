@@ -32,4 +32,20 @@ generateEntityPage(_T("Manage Updates Lists", 'updates'),
                             "ajaxUpdatesListWin",
                             $sidemenu);
 ?>
+<script type="text/javascript">
+document.addEventListener('click', function(event) {
+    var link = event.target.closest('a[href]');
+    if (!link) return;
+
+    var requestUrl = new URL(link.href, window.location.href);
+    if (requestUrl.searchParams.get('module') !== 'updates'
+        || requestUrl.searchParams.get('submod') !== 'updates'
+        || !['blackUnban', 'grayEnable'].includes(requestUrl.searchParams.get('action'))) {
+        return;
+    }
+
+    event.preventDefault();
+    postAction(link.href);
+}, true);
+</script>
 

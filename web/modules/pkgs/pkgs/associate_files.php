@@ -22,20 +22,27 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require("localSidebar.php");
-require("graph/navbar.inc.php");
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
 
 require_once("modules/medulla_server/includes/utilities.php"); # for quickGet method
 require_once("modules/pkgs/includes/xmlrpc.php");
 
+verifyCSRFToken($_POST);
+
+require("localSidebar.php");
+require("graph/navbar.inc.php");
+
 $package = array();
 
-$p_api_id = base64_decode(quickGet('p_api'));
-$pid = base64_decode(quickGet('pid'));
-$plabel = base64_decode(quickGet('plabel'));
-$pversion = base64_decode(quickGet('pversion'));
-$mode = quickGet('mode');
-$random_dir = base64_decode(quickGet('random_dir'));
+$p_api_id = base64_decode($_POST['p_api']);
+$pid = base64_decode($_POST['pid']);
+$plabel = base64_decode($_POST['plabel']);
+$pversion = base64_decode($_POST['pversion']);
+$mode = $_POST['mode'];
+$random_dir = base64_decode($_POST['random_dir']);
 $level = 0;
 if ($mode == "creation") { $level = 1; }
 

@@ -28,7 +28,7 @@ require_once("modules/security/includes/html.inc.php");
 <p style="color:#666; font-size:0.9em; margin-bottom:15px;">
     <?php echo _T("Machines listed here will be excluded from CVE reports and dashboard counts.", "security"); ?>
     <br/>
-    <?php echo _T("To exclude a machine, use the 'Exclude from reports' action in the 'Results by Machine' view.", "security"); ?>
+    <?php echo _T("To exclude a machine, use the 'Exclude from reports' action on the Machines page.", "security"); ?>
 </p>
 
 <!-- Excluded machines list -->

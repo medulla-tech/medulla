@@ -6,14 +6,6 @@
 -- =======================================
 -- Database xmppmaster
 -- =======================================
--- Ajout de la table reset_machine : file d'attente de reinitialisation
--- forcee de la base agent sur les machines problematiques.
---
--- Usage : l'administrateur inscrit un JID dans cette table.
--- Le plugin_resetagent (master substitut) detecte la machine quand elle
--- passe en ligne, envoie l'ordre de reset, puis supprime la ligne.
--- Les machines hors ligne sont conservees avec un compteur de tentatives.
---
 
 
 start transaction;
@@ -22,8 +14,8 @@ use xmppmaster;
 
 -- Add inventory_id column into machines table
 -- This column simplifies the joins based on uuid_inventorymachine
-ALTER TABLE machines ADD COLUMN inventory_id INT GENERATED ALWAYS AS ( CAST(REPLACE(uuid_inventorymachine,'UUID','') AS UNSIGNED) ) STORED;
-CREATE INDEX idx_inventory_id on machines (inventory_id);
+ALTER TABLE machines ADD COLUMN IF NOT EXISTS inventory_id INT GENERATED ALWAYS AS ( CAST(REPLACE(uuid_inventorymachine,'UUID','') AS UNSIGNED) ) STORED;
+CREATE INDEX IF NOT EXISTS idx_inventory_id on machines (inventory_id);
 
 
 

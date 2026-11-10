@@ -2,14 +2,18 @@
 require_once("modules/mobile/includes/xmlrpc.php");
 
 $filter = isset($_GET['filter']) ? $_GET['filter'] : '';
+$field  = isset($_GET['field'])  ? trim($_GET['field'])  : 'all';
 
 $configs = xmlrpc_get_hmdm_configurations();
 if (!is_array($configs)) $configs = [];
 
 if (!empty($filter)) {
-    $configs = array_filter($configs, function($cfg) use ($filter) {
-        $cfgName = $cfg['name'] ?? '';
-        return stripos($cfgName, $filter) !== false;
+    $configs = array_filter($configs, function($cfg) use ($filter, $field) {
+        if ($field === 'description') {
+            return stripos($cfg['description'] ?? '', $filter) !== false;
+        }
+        return stripos($cfg['name'] ?? '', $filter) !== false
+            || ($field === 'all' && stripos($cfg['description'] ?? '', $filter) !== false);
     });
 }
 
@@ -29,14 +33,15 @@ foreach ($configs as $index => $cfg) {
     $name = htmlspecialchars($cfg['name'] ?? 'Unnamed');
     $desc = htmlspecialchars($cfg['description'] ?? '-');
 
+    $detailsUrl = urlStrRedirect('mobile/mobile/configurationDetails') . '&id=' . urlencode($cfgId);
     $col1[] = "<a href='" . htmlspecialchars($detailsUrl, ENT_QUOTES, 'UTF-8') . "' class='cfglink'>{$name}</a>";
     $descriptions[] = $desc;
 
     $actionMessage[] = new ActionItem(_T("Message", "mobile"), "newMessage", "add", "config_id", "mobile", "mobile");
     $actionModify[] = new ActionItem(_T("Modify", "mobile"), "configurationDetails", "edit", "id", "mobile", "mobile");
-    $actionQuick[] = new ActionPopupItem(_T("Quick action", "mobile"), "configQuickAction", "quick", "config_id", "mobile", "mobile");
+    $actionQuick[] = new ActionPopupItem(_T("Quick action", "mobile"), "configQuickAction", "quick", "config_id", "mobile", "mobile", null, 620);
     $actionDuplicate[] = new ActionItem(_T("Duplicate", "mobile"), "duplicateConfiguration", "duplicatescript", "id", "mobile", "mobile");
-    $actionDelete[] = new ActionPopupItem(_T("Delete Configuration", "mobile"), "deleteConfiguration", "delete", "", "mobile", "mobile");
+    $actionDelete[] = new ActionPopupItem(_T("Delete Configuration", "mobile"), "deleteConfiguration", "delete", "", "mobile", "mobile", null, 500);
 
     $params[] = [
             'id' => $cfgId,
@@ -63,5 +68,6 @@ $n->setParamInfo($params);
 
 $n->start = 0;
 $n->display();
+echo '<script>(function(){var $tb=jQuery(".listinfos:last tbody");if(!$tb.children("tr").length){$tb.append("<tr><td colspan=\"20\" style=\"text-align:center;color:#888;padding:20px;font-style:italic;\">" + ' . json_encode(_T("No configurations found", "mobile")) . ' + "</td></tr>");}})();</script>';
 
 ?>

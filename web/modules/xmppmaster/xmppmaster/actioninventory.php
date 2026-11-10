@@ -33,30 +33,38 @@ require_once("../../../includes/i18n.inc.php");
 require_once("../../../includes/acl.inc.php");
 require_once("../../../includes/session.inc.php");
 require_once("../../../includes/PageGenerator.php");
+require_once("../../../includes/utils.inc.php");
 require_once('../includes/xmlrpc.php');
 require_once("../../medulla_server/includes/locations_xmlrpc.inc.php");
 
-switch($_GET['action']){
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
+verifyCSRFToken($_POST);
+
+switch($_POST['action']){
     case "deployquick":
         header('Content-type: application/json');
-        $jid = xmlrpc_callInventoryinterface($_GET['objectUUID']);
-        xmlrpc_setfromxmppmasterlogxmpp("QA : user \"".$_SESSION["login"]."\" ask a inventory to [ machine : \"".$_GET['cn']."\"] [jid : \"".$jid."\"]",
+        $jid = xmlrpc_callInventoryinterface($_POST['objectUUID']);
+        xmlrpc_setfromxmppmasterlogxmpp("QA : user \"".$_SESSION["login"]."\" ask a inventory to [ machine : \"".$_POST['cn']."\"] [jid : \"".$jid."\"]",
                                                 "QA",
                                                 '',
                                                 0,
-                                                $_GET['cn'] ,
+                                                $_POST['cn'] ,
                                                 'Manuel',
                                                 '',
                                                 '',
                                                 '',
                                                 "session user ".$_SESSION["login"],
                                                 'QuickAction | Inventory | Inventory requested');
-        // xmlrpc_setCommand_qa("Run Inventory", "Run Inventory", $_SESSION["login"], "", $_GET['UUID'], $_GET['os'], $_GET['jid']);
+        // xmlrpc_setCommand_qa("Run Inventory", "Run Inventory", $_SESSION["login"], "", $_POST['UUID'], $_POST['os'], $_POST['jid']);
         $notif = new NotifyWidgetSuccess(
-            "Inventory request <strong>sent</strong> for " . htmlspecialchars($_GET['cn']) 
-            . (!empty($_GET['entity']) ? " in entity [" . htmlspecialchars($_GET['entity']) . "]" : "")
+            "Inventory request <strong>sent</strong> for " . htmlspecialchars($_POST['cn'])
+            . (!empty($_POST['entity']) ? " in entity [" . htmlspecialchars($_POST['entity']) . "]" : "")
         );
-        $result = $_GET;
+        $result = $_POST;
         echo json_encode([
             'status' => 'ok',
             'notif' => $notif,
@@ -71,12 +79,12 @@ switch($_GET['action']){
         $machine_already_present = array();
         $machine_not_present     = array();
         $result = array();
-        $list = getRestrictedComputersList(0, -1, array('gid' => $_GET['gid']), False);
-        xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] ask a inventory to presente machine on Group : [\"".$_GET['groupname']."\"]",
+        $list = getRestrictedComputersList(0, -1, array('gid' => $_POST['gid']), False);
+        xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] ask a inventory to presente machine on Group : [\"".$_POST['groupname']."\"]",
                                         "QA",
                                         '' ,
                                         0,
-                                        'Grp : '.$_GET['groupname'],
+                                        'Grp : '.$_POST['groupname'],
                                         'Manuel',
                                         '',
                                         '',
@@ -95,7 +103,7 @@ switch($_GET['action']){
                 $machine_already_present[] =  $value[1]['cn'][0];
                 $jid = xmlrpc_callInventoryinterface( $key );
                 xmlrpc_setfromxmppmasterlogxmpp("QA : [user : \"".$_SESSION["login"]."\"] ".
-                                                    "[Group :\"".$_GET['groupname'].
+                                                    "[Group :\"".$_POST['groupname'].
                                                     "\"] Inventory to presente machine\"".$value[1]['cn'][0]."\" [jid : \"".$jid."\"]",
                                                 "QA",
                                                 '' ,
@@ -110,9 +118,9 @@ switch($_GET['action']){
             };
             $result = array($uuid, $cn, $presence,$machine_already_present, $machine_not_present );
         }
-        // xmlrpc_setCommand_qa("Run Inventory", "Run Inventory", $_SESSION["login"], $_GET['gid'], "", "", $_GET['groupname']);
+        // xmlrpc_setCommand_qa("Run Inventory", "Run Inventory", $_SESSION["login"], $_POST['gid'], "", "", $_POST['groupname']);
         $notif = new NotifyWidgetSuccess(
-            "Inventory request <strong>sent</strong> for group [" . htmlspecialchars($_GET['groupname']) . "] (" . count($list) . " machines)"
+            "Inventory request <strong>sent</strong> for group [" . htmlspecialchars($_POST['groupname']) . "] (" . count($list) . " machines)"
         );
         echo json_encode([
             'status' => 'ok',

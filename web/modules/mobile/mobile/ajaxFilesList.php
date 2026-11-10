@@ -2,14 +2,25 @@
 require_once("modules/mobile/includes/xmlrpc.php");
 
 $filter = isset($_GET['filter']) ? $_GET['filter'] : '';
+$field  = isset($_GET['field'])  ? trim($_GET['field'])  : 'all';
 
 $files = xmlrpc_get_hmdm_files();
 if (!is_array($files)) $files = [];
 
 if (!empty($filter)) {
-    $files = array_filter($files, function($file) use ($filter) {
+    $files = array_filter($files, function($file) use ($filter, $field) {
+        if ($field === 'description') {
+            return stripos($file['description'] ?? '', $filter) !== false;
+        }
+        if ($field === 'path') {
+            return stripos($file['devicePath'] ?? '', $filter) !== false;
+        }
         $fileName = basename($file['filePath'] ?? '');
-        return stripos($fileName, $filter) !== false;
+        return stripos($fileName, $filter) !== false
+            || ($field === 'all' && (
+                stripos($file['description'] ?? '', $filter) !== false
+                || stripos($file['devicePath'] ?? '', $filter) !== false
+            ));
     });
 }
 
@@ -38,7 +49,7 @@ foreach ($files as $index => $file) {
 	$externals[] = $external;
 	$variables[] = $variable;
 
-	$actionDelete[] = new ActionPopupItem(_("Delete File"), "deleteFile", "delete", "", "mobile", "mobile");
+	$actionDelete[] = new ActionPopupItem(_("Delete File"), "deleteFile", "delete", "", "mobile", "mobile", null, 500);
 	$actionEdit[] = new ActionItem(_("Edit"), "modifyFile", "edit", "id", "mobile", "mobile");
 	$actionConfig[] = new ActionItem(_("Assign Configurations"), "fileConfigurations", "config", "id", "mobile", "mobile");
 	$params[] = [
@@ -51,7 +62,6 @@ foreach ($files as $index => $file) {
 }
 
 $n = new OptimizedListInfos($col1, _T("File", "mobile"));
-$n->setResizable();
 $n->setCssIds($ids);
 $n->disableFirstColumnActionLink();
 
@@ -72,6 +82,7 @@ $n->setParamInfo($params);
 
 $n->start = 0;
 $n->display();
+echo '<script>(function(){var $tb=jQuery(".listinfos:last tbody");if(!$tb.children("tr").length){$tb.append("<tr><td colspan=\"20\" style=\"text-align:center;color:#888;padding:20px;font-style:italic;\">" + ' . json_encode(_T("No files found", "mobile")) . ' + "</td></tr>");}})();</script>';
 ?>
 
 <script>

@@ -25,6 +25,8 @@
 require_once("includes/xmlrpc.inc.php");
 require_once('modules/backuppc/includes/xmlrpc.php');
 
+verifyCSRFToken($_POST);
+
 $host = $_POST['host'];
 $backupnum = $_POST['backupnum'];
 $sharename = $_POST['sharename'];
@@ -35,6 +37,7 @@ unset($_POST['backupnum']);
 unset($_POST['sharename']);
 unset($_POST['restoredir']);
 unset($_POST['dir']);
+unset($_POST['auth_token']);
 
 if (isset($_GET['dir']))
     $files=array($_GET['dir']);

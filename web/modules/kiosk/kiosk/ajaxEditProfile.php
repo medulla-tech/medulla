@@ -27,6 +27,13 @@ require_once("../../../includes/session.inc.php");
 require_once("../../../includes/PageGenerator.php");
 require_once("../../../includes/acl.inc.php");
 
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
+verifyCSRFToken($_POST);
+
 
 if(isset($_POST['id'], $_POST['name'], $_POST['active'])) {
     $login = $_SESSION['login'];

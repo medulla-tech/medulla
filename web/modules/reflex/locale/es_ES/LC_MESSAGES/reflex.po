@@ -1,0 +1,3518 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: medulla\n"
+"POT-Creation-Date: 2026-09-15 09:54+0200\n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. ----------------------------------------------------------------------
+#. Chaines qui ne proviennent d aucun fichier PHP : contenu du catalogue
+#. livre en base (libelles, descriptions, gabarits de message) et phrases
+#. composees par pulse-xmpp-master-substitute, plugin reflex. Une
+#. extraction automatique ne les voit pas et les marquerait obsoletes :
+#. ne pas les supprimer.
+#. ----------------------------------------------------------------------
+msgid "CPU load"
+msgstr "Carga de CPU"
+
+msgid "Overall processor usage of the machine, as a percentage."
+msgstr "Uso global del procesador de la máquina, en porcentaje."
+
+msgid "Memory used"
+msgstr "Memoria utilizada"
+
+msgid "Share of physical memory in use, as a percentage."
+msgstr "Proporción de la memoria física en uso, en porcentaje."
+
+msgid "Swap used"
+msgstr "Swap utilizado"
+
+msgid "Share of swap space in use, as a percentage."
+msgstr "Proporción del espacio de swap en uso, en porcentaje."
+
+msgid "Disk space"
+msgstr "Espacio en disco"
+
+msgid "Space used on each partition or volume, as a percentage."
+msgstr "Espacio utilizado en cada partición o volumen, en porcentaje."
+
+msgid "Disk SMART status"
+msgstr "Estado SMART del disco"
+
+msgid "Health status reported by the disk itself."
+msgstr "Estado de salud informado por el propio disco."
+
+msgid "Agent silent"
+msgstr "Agente en silencio"
+
+msgid "The agent has reported nothing for longer than the configured delay. The server states that measures stopped arriving; it cannot tell what the machine is doing: switched off or asleep, off the network or filtered, agent stopped or failing."
+msgstr "El agente no ha reportado nada durante más tiempo que el plazo configurado. El servidor constata que las medidas dejaron de llegar; no puede deducir nada del estado de la máquina: apagada o suspendida, fuera de la red o filtrada, agente detenido o en fallo."
+
+msgid "Failed services"
+msgstr "Servicios en fallo"
+
+msgid "Number of system services in a failed state."
+msgstr "Número de servicios del sistema en estado de fallo."
+
+msgid "Antivirus active"
+msgstr "Antivirus activo"
+
+msgid "Whether an antivirus protection is present and running."
+msgstr "Presencia y funcionamiento de una protección antivirus."
+
+msgid "Antivirus signature age"
+msgstr "Antigüedad de las firmas del antivirus"
+
+msgid "Age of the antivirus signatures, in days."
+msgstr "Antigüedad de las firmas del antivirus, en días."
+
+msgid "Firewall active"
+msgstr "Cortafuegos activo"
+
+msgid "State of the local firewall."
+msgstr "Estado del cortafuegos local."
+
+msgid "Disk encryption"
+msgstr "Cifrado del disco"
+
+msgid "Encryption state of the system volume."
+msgstr "Estado de cifrado del volumen del sistema."
+
+msgid "Failed logons"
+msgstr "Inicios de sesión fallidos"
+
+msgid "Number of failed authentications over the last 15 minutes. The window is part of the measure: a threshold with no period behind it means nothing."
+msgstr "Número de autenticaciones fallidas en los últimos 15 minutos. La ventana forma parte de la medida: un umbral sin un periodo detrás no significa nada."
+
+msgid "Pending updates"
+msgstr "Actualizaciones pendientes"
+
+msgid "Number of system updates available."
+msgstr "Número de actualizaciones del sistema disponibles."
+
+msgid "Reboot required"
+msgstr "Reinicio necesario"
+
+msgid "The machine is waiting for a reboot to finish applying an update."
+msgstr "La máquina espera un reinicio para terminar de aplicar una actualización."
+
+msgid "Load average"
+msgstr "Carga media"
+
+msgid "System load average over the last 5 minutes, relative to the number of cores, as a percentage."
+msgstr "Carga media del sistema durante los últimos 5 minutos, en relación con el número de núcleos, en porcentaje."
+
+msgid "Process count"
+msgstr "Número de procesos"
+
+msgid "Number of processes running on the machine."
+msgstr "Número de procesos en ejecución en la máquina."
+
+msgid "Temperature"
+msgstr "Temperatura"
+
+msgid "Highest temperature reported by the sensors of the machine."
+msgstr "Temperatura más alta notificada por los sensores de la máquina."
+
+msgid "Local administrators"
+msgstr "Administradores locales"
+
+msgid "Number of accounts that are members of the local administration group of the machine."
+msgstr "Número de cuentas miembros del grupo de administración local de la máquina."
+
+msgid "Name resolution"
+msgstr "Resolución de nombres"
+
+msgid "Whether the machine can resolve the name of its Medulla server."
+msgstr "Capacidad de la máquina para resolver el nombre de su servidor Medulla."
+
+msgid "Critical system events"
+msgstr "Eventos críticos del sistema"
+
+msgid "Number of critical events recorded in the system log over the last 15 minutes. The window is part of the measure: a threshold with no period behind it means nothing."
+msgstr "Número de eventos críticos registrados en el registro del sistema en los últimos 15 minutos. La ventana forma parte de la medida: un umbral sin un periodo detrás no significa nada."
+
+msgid "Unexpected service stops"
+msgstr "Paradas inesperadas de servicios"
+
+msgid "Number of services that stopped unexpectedly over the last 15 minutes. Unlike the failed services probe, which reports the current state, this one counts services that went down during the window even when they were restarted right after."
+msgstr "Número de servicios que se detuvieron de forma inesperada en los últimos 15 minutos. A diferencia de la sonda de servicios en fallo, que informa del estado actual, esta cuenta los servicios que cayeron durante la ventana aunque se reiniciaran justo después."
+
+msgid "Unexpected reboots"
+msgstr "Reinicios inesperados"
+
+msgid "Number of reboots over the last 24 hours that were not preceded by a clean shutdown: power loss, kernel panic or forced power off."
+msgstr "Número de reinicios en las últimas 24 horas que no fueron precedidos de un apagado limpio: corte de corriente, kernel panic o apagado forzado."
+
+msgid "Hardware errors"
+msgstr "Errores de hardware"
+
+msgid "Number of hardware errors reported by the system over the last 24 hours: memory, bus, processor or device faults."
+msgstr "Número de errores de hardware notificados por el sistema en las últimas 24 horas: fallos de memoria, de bus, de procesador o de dispositivo."
+
+msgid "Filesystem errors"
+msgstr "Errores del sistema de archivos"
+
+msgid "Number of filesystem errors reported by the system over the last 24 hours: corruption, inconsistency or a volume remounted read only."
+msgstr "Número de errores del sistema de archivos notificados por el sistema en las últimas 24 horas: corrupción, incoherencia o un volumen remontado en solo lectura."
+
+msgid "Modified system files"
+msgstr "Archivos del sistema modificados"
+
+msgid "Number of files owned by a package whose content differs from what the package installed. The reference is the one kept by the package manager, so there is nothing to build and nothing to maintain on the machine."
+msgstr "Número de archivos pertenecientes a un paquete cuyo contenido difiere de lo que el paquete instaló. La referencia es la que conserva el gestor de paquetes, por lo que no hay nada que crear ni que mantener en la máquina."
+
+msgid "CPU load at @@value@@ % on @@machine@@ (threshold @@threshold@@ %)"
+msgstr "Carga de CPU al @@value@@ % en @@machine@@ (umbral @@threshold@@ %)"
+
+msgid "Memory used at @@value@@ % on @@machine@@ (threshold @@threshold@@ %)"
+msgstr "Memoria utilizada al @@value@@ % en @@machine@@ (umbral @@threshold@@ %)"
+
+msgid "Swap used at @@value@@ % on @@machine@@"
+msgstr "Swap utilizado al @@value@@ % en @@machine@@"
+
+msgid "Disk space @@instance@@ at @@value@@ % on @@machine@@"
+msgstr "Espacio en disco @@instance@@ al @@value@@ % en @@machine@@"
+
+msgid "Disk space critical @@instance@@ at @@value@@ % on @@machine@@"
+msgstr "Espacio en disco crítico @@instance@@ al @@value@@ % en @@machine@@"
+
+msgid "SMART status degraded on @@machine@@: @@value@@"
+msgstr "Estado SMART degradado en @@machine@@: @@value@@"
+
+msgid "Agent silent on @@machine@@: nothing reported for @@value@@"
+msgstr "Agente en silencio en @@machine@@: nada reportado desde hace @@value@@"
+
+msgid "@@value@@ failed service(s) on @@machine@@"
+msgstr "@@value@@ servicio(s) en fallo en @@machine@@"
+
+msgid "No antivirus running on @@machine@@"
+msgstr "Ningún antivirus en funcionamiento en @@machine@@"
+
+msgid "Antivirus signatures @@value@@ days old on @@machine@@"
+msgstr "Firmas del antivirus con @@value@@ días de antigüedad en @@machine@@"
+
+msgid "Firewall disabled on @@machine@@"
+msgstr "Cortafuegos desactivado en @@machine@@"
+
+msgid "System volume not encrypted on @@machine@@"
+msgstr "Volumen del sistema sin cifrar en @@machine@@"
+
+msgid "@@value@@ failed logons on @@machine@@"
+msgstr "@@value@@ inicios de sesión fallidos en @@machine@@"
+
+msgid "Reboot required on @@machine@@"
+msgstr "Reinicio necesario en @@machine@@"
+
+msgid "Load average at @@value@@ % on @@machine@@ (threshold @@threshold@@ %)"
+msgstr "Carga media al @@value@@ % en @@machine@@ (umbral @@threshold@@ %)"
+
+msgid "Temperature at @@value@@ °C on @@machine@@ (threshold @@threshold@@ °C)"
+msgstr "Temperatura a @@value@@ °C en @@machine@@ (umbral @@threshold@@ °C)"
+
+msgid "Local administrators changed on @@machine@@ (now @@value@@)"
+msgstr "Los administradores locales han cambiado en @@machine@@ (ahora @@value@@)"
+
+msgid "Name resolution failing on @@machine@@"
+msgstr "Resolución de nombres en fallo en @@machine@@"
+
+msgid "@@value@@ critical system events on @@machine@@"
+msgstr "@@value@@ eventos críticos del sistema en @@machine@@"
+
+msgid "@@value@@ services stopped unexpectedly on @@machine@@"
+msgstr "@@value@@ servicios detenidos de forma inesperada en @@machine@@"
+
+msgid "@@value@@ unexpected reboots on @@machine@@"
+msgstr "@@value@@ reinicios inesperados en @@machine@@"
+
+msgid "@@value@@ hardware errors on @@machine@@"
+msgstr "@@value@@ errores de hardware en @@machine@@"
+
+msgid "@@value@@ filesystem errors on @@machine@@"
+msgstr "@@value@@ errores del sistema de archivos en @@machine@@"
+
+msgid "@@value@@ modified system files on @@machine@@"
+msgstr "@@value@@ archivos del sistema modificados en @@machine@@"
+
+#. Utilisee par pulse-xmpp-master-substitute, plugin reflex : message
+#. par defaut d une alerte dont la condition ne porte pas de gabarit.
+#. %s est le libelle de la condition, @@machine@@ est remplace par le
+#. nom du poste et ne se traduit pas. Aucun PHP ne l emploie.
+#, php-format
+msgid "%s on @@machine@@"
+msgstr "%s en @@machine@@"
+
+#. Utilisee par pulse-xmpp-master-substitute, plugin reflex : intitule de
+#. la rubrique du courriel d alerte qui liste le contenu de la mesure
+#. declenchante. Aucun PHP ne l emploie.
+msgid "Detail"
+msgstr "Detalle"
+
+#: modules/reflex/includes/html.inc.php:54
+#: modules/reflex/includes/html.inc.php:640
+#: modules/reflex/includes/html.inc.php:740
+#: modules/reflex/includes/html.inc.php:763
+#: modules/reflex/includes/html.inc.php:823
+#: modules/reflex/includes/html.inc.php:957
+#: modules/reflex/includes/html.inc.php:1995
+msgid "Unknown"
+msgstr "Desconocido"
+
+#: modules/reflex/includes/html.inc.php:82
+msgid "Built-in"
+msgstr "Incluida"
+
+#: modules/reflex/includes/html.inc.php:125
+#, php-format
+msgid "Alert closed without returning to normal: %s"
+msgstr "Alerta cerrada sin volver a la normalidad: %s"
+
+#: modules/reflex/includes/html.inc.php:150
+msgid "Degraded reading"
+msgstr "Lectura degradada"
+
+#: modules/reflex/includes/html.inc.php:151
+msgid "The agent took this reading in degraded conditions."
+msgstr "El agente tomó esta medida en condiciones degradadas."
+
+#: modules/reflex/includes/html.inc.php:154
+msgid "Reading failed"
+msgstr "Lectura fallida"
+
+#: modules/reflex/includes/html.inc.php:155
+msgid "The agent could not take this reading on the machine."
+msgstr "El agente no ha podido tomar esta medida en la máquina."
+
+#: modules/reflex/includes/html.inc.php:158
+msgid "No reading"
+msgstr "Sin lectura"
+
+#: modules/reflex/includes/html.inc.php:159
+msgid "The agent read nothing for this metric on this machine."
+msgstr "El agente no ha leído nada para esta métrica en esta máquina."
+
+#: modules/reflex/includes/html.inc.php:195
+msgid "1 recipient"
+msgstr "1 destinatario"
+
+#: modules/reflex/includes/html.inc.php:196
+#, php-format
+msgid "%d recipients"
+msgstr "%d destinatarios"
+
+#: modules/reflex/includes/html.inc.php:232
+msgid "In service"
+msgstr "En servicio"
+
+#: modules/reflex/includes/html.inc.php:258
+#: modules/reflex/includes/html.inc.php:2276
+msgid "Enabled"
+msgstr "Activada"
+
+#: modules/reflex/includes/html.inc.php:261
+#: modules/reflex/includes/html.inc.php:2276
+msgid "Disabled"
+msgstr "Desactivada"
+
+#: modules/reflex/includes/html.inc.php:284
+msgid "Adapted"
+msgstr "Adaptada"
+
+#: modules/reflex/includes/html.inc.php:198
+msgid "Not measurable on this system"
+msgstr "No medible en este sistema"
+
+#: modules/reflex/includes/html.inc.php:196
+msgid "No collector of this probe covers the operating system of this machine: it will never report a measure here."
+msgstr "Ningún colector de esta sonda cubre el sistema operativo de esta máquina: nunca enviará una medida aquí."
+
+#: modules/reflex/includes/html.inc.php:359
+#, php-format
+msgid "Excluded by %s"
+msgstr "Excluida por %s"
+
+#: modules/reflex/includes/html.inc.php:373
+msgid "Excluded"
+msgstr "Excluida"
+
+#: modules/reflex/includes/html.inc.php:485
+#: modules/reflex/includes/html.inc.php:598
+msgid "Silent"
+msgstr "Silenciosa"
+
+#: modules/reflex/includes/html.inc.php:492
+msgid "Not watched"
+msgstr "Sin vigilancia"
+
+#: modules/reflex/includes/html.inc.php:493
+msgid "No probe is measured on this machine."
+msgstr "Ninguna sonda se mide en esta máquina."
+
+#: modules/reflex/includes/html.inc.php:525
+#, php-format
+msgid "%d probe"
+msgid_plural "%d probes"
+msgstr[0] "%d sonda"
+msgstr[1] "%d sondas"
+
+#: modules/reflex/includes/html.inc.php:732
+#: modules/reflex/includes/html.inc.php:749
+msgid "Critical"
+msgstr "Crítica"
+
+#: modules/reflex/includes/html.inc.php:734
+#: modules/reflex/includes/html.inc.php:748
+msgid "High"
+msgstr "Alta"
+
+#: modules/reflex/includes/html.inc.php:736
+#: modules/reflex/includes/html.inc.php:747
+msgid "Medium"
+msgstr "Media"
+
+#: modules/reflex/includes/html.inc.php:738
+#: modules/reflex/includes/html.inc.php:746
+msgid "Info"
+msgstr "Información"
+
+#: modules/reflex/includes/html.inc.php:757 modules/reflex/reflex/alerts.php:45
+msgid "Open"
+msgstr "Abierta"
+
+#: modules/reflex/reflex/alerts.php:50
+msgid "Acknowledged already"
+msgstr "Ya confirmadas"
+
+#: modules/reflex/reflex/alerts.php:46
+msgid "Not acknowledged yet"
+msgstr "Aún sin confirmar"
+
+#: modules/reflex/includes/html.inc.php:759
+#: modules/reflex/includes/tips.inc.php:85
+#: modules/reflex/reflex/ajaxAlertDetail.php:155
+msgid "Acknowledged"
+msgstr "Confirmada"
+
+#: modules/reflex/includes/html.inc.php:761
+#: modules/reflex/reflex/ajaxAlertDetail.php:137
+#: modules/reflex/reflex/ajaxAlertsHistory.php:134
+msgid "Resolved"
+msgstr "Resuelta"
+
+#: modules/reflex/includes/html.inc.php:790
+msgid "Probe removed from this machine"
+msgstr "Sonda retirada de esta máquina"
+
+#: modules/reflex/includes/html.inc.php:791
+msgid "Probe excluded on this machine"
+msgstr "Sonda excluida en esta máquina"
+
+#: modules/reflex/includes/html.inc.php:792
+msgid "Probe assignment removed"
+msgstr "Asignación de la sonda eliminada"
+
+#: modules/reflex/includes/html.inc.php:794
+msgid "Probe no longer reaches this machine"
+msgstr "La sonda ya no cubre esta máquina"
+
+#: modules/reflex/includes/html.inc.php:144
+msgid "Resolved automatically"
+msgstr "Resuelta automáticamente"
+
+#: modules/reflex/includes/html.inc.php:795
+msgid "Condition changed"
+msgstr "Condición modificada"
+
+#: modules/reflex/includes/html.inc.php:796
+msgid "Condition switched off"
+msgstr "Condición desactivada"
+
+#: modules/reflex/includes/html.inc.php:797
+msgid "Condition removed"
+msgstr "Condición eliminada"
+
+#: modules/reflex/includes/html.inc.php:848
+msgid "Superseded by a more severe alert"
+msgstr "Sustituida por una alerta más grave"
+
+#: modules/reflex/includes/html.inc.php:815
+msgid "Accepted"
+msgstr "Aceptado"
+
+#: modules/reflex/includes/html.inc.php:817
+msgid "Failed"
+msgstr "Fallido"
+
+#: modules/reflex/includes/html.inc.php:819
+msgid "Waiting"
+msgstr "En espera"
+
+#: modules/reflex/includes/html.inc.php:821
+msgid "Not sent"
+msgstr "No enviado"
+
+#: modules/reflex/includes/html.inc.php:858
+msgid "The rule had just notified: its anti-repetition delay was still running."
+msgstr "La regla acababa de notificar: su plazo de antirrepetición seguía corriendo."
+
+#: modules/reflex/includes/html.inc.php:859
+msgid "This alert is below the minimum severity the rule requires."
+msgstr "Esta alerta está por debajo de la severidad mínima exigida por la regla."
+
+#: modules/reflex/includes/html.inc.php:860
+msgid "The notification rule is switched off."
+msgstr "La regla de notificación está desactivada."
+
+#: modules/reflex/includes/html.inc.php:861
+msgid "The channel is switched off."
+msgstr "El canal de envío está desactivado."
+
+#: modules/reflex/includes/html.inc.php:862
+msgid "This machine is outside the scope of the rule."
+msgstr "Esta máquina está fuera del alcance de la regla."
+
+#: modules/reflex/includes/html.inc.php:863
+msgid "The server cannot send on this type of channel."
+msgstr "El servidor no sabe enviar por este tipo de canal."
+
+#: modules/reflex/includes/html.inc.php:865
+msgid "Resending abandoned: no attempt got through."
+msgstr "Reenvío abandonado: ningún intento tuvo éxito."
+
+#: modules/reflex/includes/html.inc.php:866
+msgid "The alert closed before the resending got through."
+msgstr "La alerta se cerró antes de que el reenvío tuviera éxito."
+
+#: modules/reflex/includes/html.inc.php:867
+msgid "The rule or its channel no longer exists: the resending was abandoned."
+msgstr "La regla o su canal ya no existe: el reenvío se abandonó."
+
+#: modules/reflex/includes/html.inc.php:868
+msgid "This machine left the scope of the rule before the resending."
+msgstr "Esta máquina salió del alcance de la regla antes del reenvío."
+
+#: modules/reflex/includes/html.inc.php:870
+msgid "No SMTP server is set on this channel."
+msgstr "Este canal no tiene servidor SMTP."
+
+#: modules/reflex/includes/html.inc.php:871
+msgid "No sender address is set on this channel."
+msgstr "Este canal no tiene dirección de remitente."
+
+msgid "No recipient: nothing was sent."
+msgstr "Ningún destinatario: no se ha enviado nada."
+
+#: modules/reflex/includes/html.inc.php:873
+msgid "The password of this channel cannot be read."
+msgstr "No se puede leer la contraseña de este canal."
+
+#: modules/reflex/includes/html.inc.php:875
+msgid "The name of the SMTP server does not resolve."
+msgstr "El nombre del servidor SMTP no se resuelve."
+
+#: modules/reflex/includes/html.inc.php:876
+msgid "The SMTP server refused the connection."
+msgstr "El servidor SMTP rechazó la conexión."
+
+#: modules/reflex/includes/html.inc.php:877
+msgid "The SMTP server cannot be reached."
+msgstr "No se puede alcanzar el servidor SMTP."
+
+#: modules/reflex/includes/html.inc.php:878
+msgid "The SMTP server did not answer in time."
+msgstr "El servidor SMTP no respondió a tiempo."
+
+#: modules/reflex/includes/html.inc.php:879
+msgid "The encrypted connection could not be established."
+msgstr "No se pudo establecer la conexión cifrada."
+
+#: modules/reflex/includes/html.inc.php:880
+msgid "The SMTP server refused the account."
+msgstr "El servidor SMTP rechazó la cuenta."
+
+#: modules/reflex/includes/html.inc.php:881
+msgid "The SMTP server refused the sender address."
+msgstr "El servidor SMTP rechazó la dirección del remitente."
+
+#: modules/reflex/includes/html.inc.php:882
+msgid "The SMTP server refused every recipient."
+msgstr "El servidor SMTP rechazó todos los destinatarios."
+
+#: modules/reflex/includes/html.inc.php:883
+msgid "The connection with the SMTP server was lost while sending."
+msgstr "Se perdió la conexión con el servidor SMTP durante el envío."
+
+#: modules/reflex/includes/html.inc.php:884
+msgid "The SMTP server answered with an error of its own."
+msgstr "El servidor SMTP respondió con un error propio."
+
+#: modules/reflex/includes/html.inc.php:885
+msgid "The exchange with the SMTP server failed."
+msgstr "El intercambio con el servidor SMTP falló."
+
+#: modules/reflex/includes/html.inc.php:910
+msgid "1 attempt"
+msgstr "1 intento"
+
+#: modules/reflex/includes/html.inc.php:911
+#, php-format
+msgid "%d attempts"
+msgstr "%d intentos"
+
+#: modules/reflex/includes/html.inc.php:939
+#, php-format
+msgid "%s, from %s to %s"
+msgstr "%s, de %s a %s"
+
+#: modules/reflex/includes/html.inc.php:942
+#: modules/reflex/reflex/machineDetail.php:613
+#, php-format
+msgid "from %s to %s"
+msgstr "de %s a %s"
+
+#: modules/reflex/includes/html.inc.php:950
+#: modules/reflex/includes/html.inc.php:971
+msgid "Private"
+msgstr "Privada"
+
+#: modules/reflex/includes/html.inc.php:952
+#: modules/reflex/includes/html.inc.php:972
+msgid "Shared"
+msgstr "Compartida"
+
+#: modules/reflex/includes/html.inc.php:955
+msgid "Catalog"
+msgstr "Catálogo"
+
+#: modules/reflex/includes/html.inc.php:990
+msgid "Visible to you only."
+msgstr "Visible solo para usted."
+
+#: modules/reflex/includes/html.inc.php:998
+#, php-format
+msgid "Visible to the users of %s."
+msgstr "Visible para los usuarios de %s."
+
+#: modules/reflex/includes/html.inc.php:1000
+msgid "Visible to the users of its entity."
+msgstr "Visible para los usuarios de su entidad."
+
+#: modules/reflex/includes/html.inc.php:1031
+#: modules/reflex/reflex/ajaxAlertDetail.php:364
+#: modules/reflex/reflex/ajaxRulesList.php:84
+#: modules/reflex/reflex/ruleEdit.php:192
+msgid "All probes"
+msgstr "Todas las sondas"
+
+#: modules/reflex/includes/html.inc.php:1032
+msgid "My probes"
+msgstr "Mis sondas"
+
+#: modules/reflex/includes/html.inc.php:1033
+msgid "Shared probes"
+msgstr "Sondas compartidas"
+
+#: modules/reflex/includes/html.inc.php:1034
+msgid "Catalog probes"
+msgstr "Sondas del catálogo"
+
+#: modules/reflex/includes/html.inc.php:1041
+msgid "System"
+msgstr "Sistema"
+
+#: modules/reflex/includes/html.inc.php:1042
+msgid "Security"
+msgstr "Seguridad"
+
+#: modules/reflex/includes/html.inc.php:1043
+msgid "Network"
+msgstr "Red"
+
+#: modules/reflex/includes/html.inc.php:1044
+msgid "Storage"
+msgstr "Almacenamiento"
+
+#: modules/reflex/includes/html.inc.php:1045
+msgid "Service"
+msgstr "Servicio"
+
+#: modules/reflex/includes/html.inc.php:1046
+msgid "Application"
+msgstr "Aplicación"
+
+#: modules/reflex/includes/html.inc.php:1060
+msgid "Numeric"
+msgstr "Numérico"
+
+#: modules/reflex/includes/html.inc.php:1061
+msgid "Text"
+msgstr "Texto"
+
+#: modules/reflex/includes/html.inc.php:1062
+msgid "Boolean"
+msgstr "Booleano"
+
+#: modules/reflex/includes/html.inc.php:1069
+msgid "greater than"
+msgstr "mayor que"
+
+#: modules/reflex/includes/html.inc.php:1070
+msgid "greater than or equal to"
+msgstr "mayor o igual que"
+
+#: modules/reflex/includes/html.inc.php:1071
+msgid "less than"
+msgstr "menor que"
+
+#: modules/reflex/includes/html.inc.php:1072
+msgid "less than or equal to"
+msgstr "menor o igual que"
+
+#: modules/reflex/includes/html.inc.php:1073
+msgid "equal to"
+msgstr "igual a"
+
+#: modules/reflex/includes/html.inc.php:1074
+msgid "different from"
+msgstr "distinto de"
+
+#: modules/reflex/includes/html.inc.php:1075
+msgid "between"
+msgstr "entre"
+
+#: modules/reflex/includes/html.inc.php:1076
+msgid "outside"
+msgstr "fuera de"
+
+#: modules/reflex/includes/html.inc.php:1077
+msgid "changed"
+msgstr "ha cambiado"
+
+#: modules/reflex/includes/html.inc.php:1092
+msgid "All machines"
+msgstr "Todas las máquinas"
+
+#: modules/reflex/includes/html.inc.php:1093
+#: modules/reflex/reflex/ajaxAlertsHistory.php:111
+#: modules/reflex/reflex/ajaxAlertsList.php:171
+#: modules/reflex/reflex/ajaxMachinesList.php:71
+#: modules/reflex/reflex/index.php:202
+#: modules/reflex/reflex/probeDetail.php:535
+msgid "Machine"
+msgstr "Máquina"
+
+#: modules/reflex/includes/html.inc.php:1094
+msgid "Group"
+msgstr "Grupo"
+
+#: modules/reflex/includes/html.inc.php:1095
+#: modules/reflex/includes/html.inc.php:2212
+#: modules/reflex/reflex/ajaxDuplicateProbe.php:114
+#: modules/reflex/reflex/ajaxSetVisibility.php:98
+#: modules/reflex/reflex/probeEdit.php:348
+msgid "Entity"
+msgstr "Entidad"
+
+#: modules/reflex/includes/html.inc.php:1109
+msgid "Email"
+msgstr "Correo electrónico"
+
+#: modules/reflex/includes/html.inc.php:1110
+msgid "Telegram"
+msgstr "Telegram"
+
+#: modules/reflex/includes/html.inc.php:1111
+msgid "Webhook"
+msgstr "Webhook"
+
+#: modules/reflex/includes/html.inc.php:1112
+msgid "Slack"
+msgstr "Slack"
+
+#: modules/reflex/includes/html.inc.php:1113
+msgid "Teams"
+msgstr "Teams"
+
+#: modules/reflex/includes/html.inc.php:1114
+msgid "SMS"
+msgstr "SMS"
+
+#: modules/reflex/includes/html.inc.php:1115
+msgid "WhatsApp"
+msgstr "WhatsApp"
+
+#: modules/reflex/includes/html.inc.php:1134
+msgid "Windows"
+msgstr "Windows"
+
+#: modules/reflex/includes/html.inc.php:1135
+msgid "Linux"
+msgstr "Linux"
+
+#: modules/reflex/includes/html.inc.php:1136
+msgid "macOS"
+msgstr "macOS"
+
+#: modules/reflex/includes/html.inc.php:1261
+#: modules/reflex/includes/html.inc.php:1288
+msgid "No measure received for over a day."
+msgstr "Ninguna medida recibida desde hace más de un día."
+
+#: modules/reflex/includes/html.inc.php:1262
+#, php-format
+msgid "Nothing received for %s."
+msgstr "Nada recibido desde hace %s."
+
+#: modules/reflex/includes/html.inc.php:1289
+#, php-format
+msgid "Received %s ago."
+msgstr "Recibida hace %s."
+
+#: modules/reflex/includes/html.inc.php:1308
+msgid "5 minutes"
+msgstr "5 minutos"
+
+#: modules/reflex/includes/html.inc.php:1309
+msgid "15 minutes"
+msgstr "15 minutos"
+
+#: modules/reflex/includes/html.inc.php:1310
+msgid "30 minutes"
+msgstr "30 minutos"
+
+#: modules/reflex/includes/html.inc.php:1311
+msgid "1 hour"
+msgstr "1 hora"
+
+#: modules/reflex/includes/html.inc.php:1312
+msgid "6 hours"
+msgstr "6 horas"
+
+#: modules/reflex/includes/html.inc.php:1313
+msgid "1 day"
+msgstr "1 día"
+
+#: modules/reflex/includes/html.inc.php:1327
+msgid "Immediate"
+msgstr "Inmediato"
+
+#: modules/reflex/includes/html.inc.php:1330
+#, php-format
+msgid "%d d"
+msgstr "%d d"
+
+#: modules/reflex/includes/html.inc.php:1333
+#, php-format
+msgid "%d h"
+msgstr "%d h"
+
+#: modules/reflex/includes/html.inc.php:1336
+#: modules/reflex/includes/html.inc.php:1370
+#, php-format
+msgid "%d min"
+msgstr "%d min"
+
+#: modules/reflex/includes/html.inc.php:1338
+#: modules/reflex/includes/html.inc.php:1355
+#: modules/reflex/includes/html.inc.php:1359
+#: modules/reflex/includes/html.inc.php:1362
+#, php-format
+msgid "%d s"
+msgstr "%d s"
+
+#: modules/reflex/includes/html.inc.php:1373
+#, php-format
+msgid "%d h %02d"
+msgstr "%d h %02d"
+
+#: modules/reflex/includes/html.inc.php:1377
+#, php-format
+msgid "%d d %02d h"
+msgstr "%d d %02d h"
+
+#: modules/reflex/includes/html.inc.php:1526
+#, php-format
+msgid "Test message sent to %s."
+msgstr "Mensaje de prueba enviado a %s."
+
+#: modules/reflex/includes/html.inc.php:1495
+msgid "The mail server did not accept the message, without giving a reason."
+msgstr "El servidor de correo no aceptó el mensaje, sin indicar el motivo."
+
+#: modules/reflex/includes/html.inc.php:1671
+msgid "This alert predates the recording of the condition that fires: what follows is the setting in force today."
+msgstr "Esta alerta es anterior al registro de la condición que se activa: lo siguiente es el ajuste vigente hoy."
+
+#: modules/reflex/includes/html.inc.php:1673
+msgid "The condition changed since this alert was raised: what follows is the setting in force today."
+msgstr "La condición cambió desde que se levantó esta alerta: lo siguiente es el ajuste vigente hoy."
+
+#: modules/reflex/includes/html.inc.php:1675
+msgid "The value that raised this alert does not satisfy the condition below: it changed since, and the one that fired was not kept."
+msgstr "El valor que levantó esta alerta no satisface la condición siguiente: esta cambió desde entonces y la que se activó no se conservó."
+
+#: modules/reflex/includes/html.inc.php:1697
+msgid "The value this alert was raised on does not satisfy the condition set today."
+msgstr "El valor que levantó esta alerta no satisface la condición ajustada hoy."
+
+#: modules/reflex/includes/html.inc.php:1699
+msgid "The severity of the condition changed since."
+msgstr "La severidad de la condición ha cambiado desde entonces."
+
+#: modules/reflex/includes/html.inc.php:1701
+msgid "The condition is switched off today."
+msgstr "La condición está desactivada hoy."
+
+#: modules/reflex/includes/html.inc.php:1703
+msgid "This condition was adapted after the alert was raised."
+msgstr "Esta condición se adaptó después de levantarse la alerta."
+
+#: modules/reflex/includes/html.inc.php:1705
+msgid "The probe was edited after the alert was raised."
+msgstr "La sonda se modificó después de levantarse la alerta."
+
+#: modules/reflex/includes/html.inc.php:1712
+msgid "The settings of this condition changed since."
+msgstr "Los ajustes de esta condición han cambiado desde entonces."
+
+#: modules/reflex/includes/html.inc.php:1713
+#, php-format
+msgid "Changed since the alert was raised: %s"
+msgstr "Modificado desde que se levantó la alerta: %s"
+
+#: modules/reflex/includes/html.inc.php:1716
+msgid "This condition has been deleted since."
+msgstr "Esta condición se ha eliminado desde entonces."
+
+#: modules/reflex/includes/html.inc.php:2228
+#: modules/reflex/includes/html.inc.php:3823
+msgid "Comparison"
+msgstr "Comparación"
+
+#: modules/reflex/includes/html.inc.php:2161
+#: modules/reflex/includes/html.inc.php:3686
+#: modules/reflex/reflex/ajaxEditCondition.php:459
+#: modules/reflex/reflex/ajaxEditCondition.php:463
+#: modules/reflex/reflex/machineDetail.php:604
+msgid "Threshold"
+msgstr "Umbral"
+
+#: modules/reflex/includes/html.inc.php:2163
+#: modules/reflex/includes/html.inc.php:3695
+#: modules/reflex/reflex/ajaxEditCondition.php:476
+msgid "Upper bound"
+msgstr "Límite superior"
+
+#: modules/reflex/includes/html.inc.php:2165
+#: modules/reflex/includes/html.inc.php:3720
+#: modules/reflex/reflex/ajaxEditCondition.php:434
+msgid "Text value"
+msgstr "Valor de texto"
+
+#: modules/reflex/includes/html.inc.php:2167
+#: modules/reflex/reflex/ajaxAlertDetail.php:181
+#: modules/reflex/reflex/probeDetail.php:322
+msgid "Duration"
+msgstr "Duración"
+
+#: modules/reflex/includes/html.inc.php:2169
+#: modules/reflex/reflex/ajaxAlertsHistory.php:115
+#: modules/reflex/reflex/ajaxAlertsList.php:176
+#: modules/reflex/reflex/ajaxEditCondition.php:503
+#: modules/reflex/reflex/alerts.php:61
+#: modules/reflex/reflex/alertsHistory.php:55
+#: modules/reflex/reflex/index.php:160
+#: modules/reflex/reflex/machineDetail.php:433
+#: modules/reflex/reflex/probeDetail.php:323
+msgid "Severity"
+msgstr "Severidad"
+
+#: modules/reflex/includes/html.inc.php:2171
+#: modules/reflex/includes/html.inc.php:3746
+#: modules/reflex/reflex/ajaxEditCondition.php:510
+#: modules/reflex/reflex/probeDetail.php:324
+msgid "Alert message"
+msgstr "Mensaje de alerta"
+
+#: modules/reflex/includes/html.inc.php:2173
+msgid "Activation"
+msgstr "Activación"
+
+#: modules/reflex/includes/html.inc.php:2200
+#: modules/reflex/reflex/ajaxProbesList.php:183
+#: modules/reflex/reflex/machineDetail.php:762
+#: modules/reflex/reflex/probeDetail.php:175
+#: modules/reflex/reflex/probeEdit.php:288
+msgid "Category"
+msgstr "Categoría"
+
+#: modules/reflex/includes/html.inc.php:2210
+#: modules/reflex/reflex/ajaxSetVisibility.php:91
+#: modules/reflex/reflex/probeEdit.php:341
+msgid "Visibility"
+msgstr "Visibilidad"
+
+#: modules/reflex/includes/html.inc.php:2215
+#: modules/reflex/reflex/ajaxAssignProbe.php:226
+#: modules/reflex/reflex/probeDetail.php:452
+msgid "Target"
+msgstr "Destino"
+
+#: modules/reflex/includes/html.inc.php:2218
+msgid "Selected targets"
+msgstr "Destinos seleccionados"
+
+#: modules/reflex/includes/html.inc.php:2220
+#: modules/reflex/reflex/ajaxAssignProbe.php:251
+msgid "Cadence"
+msgstr "Cadencia"
+
+#: modules/reflex/includes/html.inc.php:2223
+#: modules/reflex/reflex/channelEdit.php:238
+msgid "Name"
+msgstr "Nombre"
+
+#: modules/reflex/includes/html.inc.php:2225
+#: modules/reflex/reflex/ajaxChannelsList.php:107
+#: modules/reflex/reflex/channelEdit.php:242
+msgid "Type"
+msgstr "Tipo"
+
+#: modules/reflex/includes/html.inc.php:2227
+msgid "Channel parameters"
+msgstr "Parámetros del canal"
+
+#: modules/reflex/includes/html.inc.php:2229
+#: modules/reflex/includes/html.inc.php:3439
+msgid "SMTP password"
+msgstr "Contraseña SMTP"
+
+#: modules/reflex/includes/html.inc.php:2232
+#: modules/reflex/reflex/ajaxChannelsList.php:104
+#: modules/reflex/reflex/ajaxRulesList.php:116
+#: modules/reflex/reflex/channelEdit.php:235
+#: modules/reflex/reflex/ruleEdit.php:231
+msgid "Channel"
+msgstr "Canal"
+
+#: modules/reflex/includes/html.inc.php:2234
+#: modules/reflex/reflex/ajaxAlertDetail.php:105
+#: modules/reflex/reflex/ajaxAlertsHistory.php:116
+#: modules/reflex/reflex/ajaxAlertsList.php:177
+#: modules/reflex/reflex/ajaxProbesList.php:180
+#: modules/reflex/reflex/ajaxRulesList.php:118
+#: modules/reflex/reflex/index.php:158
+#: modules/reflex/reflex/machineDetail.php:422
+#: modules/reflex/reflex/machineDetail.php:535
+#: modules/reflex/reflex/machineDetail.php:759
+#: modules/reflex/reflex/ruleEdit.php:232
+msgid "Probe"
+msgstr "Sonda"
+
+#: modules/reflex/includes/html.inc.php:2236
+#: modules/reflex/reflex/ajaxRulesList.php:119
+#: modules/reflex/reflex/ruleEdit.php:238
+msgid "Minimum severity"
+msgstr "Severidad mínima"
+
+#: modules/reflex/includes/html.inc.php:2238
+#: modules/reflex/includes/html.inc.php:3473
+#: modules/reflex/reflex/ajaxRulesList.php:120
+#: modules/reflex/reflex/ruleEdit.php:246
+#: modules/reflex/reflex/ruleEdit.php:252
+msgid "Recipients"
+msgstr "Destinatarios"
+
+#: modules/reflex/includes/html.inc.php:2240
+#: modules/reflex/reflex/ruleEdit.php:285
+msgid "Target restriction"
+msgstr "Restricción de destino"
+
+#: modules/reflex/includes/html.inc.php:2242
+#: modules/reflex/reflex/ruleEdit.php:297
+msgid "Cooldown (minutes)"
+msgstr "Antirrepetición (minutos)"
+
+#: modules/reflex/includes/html.inc.php:2244
+#: modules/reflex/reflex/ruleEdit.php:308
+msgid "Escalation (minutes)"
+msgstr "Escalado (minutos)"
+
+#: modules/reflex/includes/html.inc.php:2247
+#: modules/reflex/reflex/ajaxAckAlert.php:71
+msgid "Comment"
+msgstr "Comentario"
+
+#: modules/reflex/includes/html.inc.php:2264
+msgid "not set"
+msgstr "sin definir"
+
+#: modules/reflex/includes/html.inc.php:2325
+#, php-format
+msgid "%s: %s shipped"
+msgstr "%s: %s de fábrica"
+
+#: modules/reflex/includes/html.inc.php:2332
+msgid "Adapted from the shipped values."
+msgstr "Adaptada respecto a los valores de fábrica."
+
+#: modules/reflex/includes/html.inc.php:2444
+msgid "The data sent does not have the expected form."
+msgstr "Los datos enviados no tienen la forma esperada."
+
+#: modules/reflex/includes/html.inc.php:2446
+msgid "This value type is not supported."
+msgstr "Este tipo de valor no se reconoce."
+
+#: modules/reflex/includes/html.inc.php:2448
+msgid "This operator is not supported."
+msgstr "Este operador no se reconoce."
+
+#: modules/reflex/includes/html.inc.php:2450
+msgid "This operator does not apply to this kind of probe."
+msgstr "Este operador no se aplica a este tipo de sonda."
+
+#: modules/reflex/includes/html.inc.php:2452
+msgid "This severity is not supported."
+msgstr "Esta severidad no se reconoce."
+
+#: modules/reflex/includes/html.inc.php:2454
+msgid "A number is expected here."
+msgstr "Aquí se espera un número."
+
+#: modules/reflex/includes/html.inc.php:2456
+msgid "A threshold is a whole number."
+msgstr "Un umbral es un número entero."
+
+#: modules/reflex/includes/html.inc.php:2458
+msgid "A duration cannot be negative."
+msgstr "Una duración no puede ser negativa."
+
+#: modules/reflex/includes/html.inc.php:2460
+msgid "This operator needs a threshold."
+msgstr "Este operador necesita un umbral."
+
+#: modules/reflex/includes/html.inc.php:2462
+msgid "The changed operator takes no threshold."
+msgstr "El operador « ha cambiado » no admite ningún umbral."
+
+#: modules/reflex/includes/html.inc.php:2464
+msgid "A text probe is compared to a text value."
+msgstr "Una sonda de tipo texto se compara con un valor de texto."
+
+#: modules/reflex/includes/html.inc.php:2466
+msgid "This operator compares numbers, not text."
+msgstr "Este operador compara números, no texto."
+
+#: modules/reflex/includes/html.inc.php:2468
+msgid "A boolean threshold is 0 or 1."
+msgstr "Un umbral booleano vale 0 o 1."
+
+#: modules/reflex/includes/html.inc.php:2470
+msgid "A second bound belongs to the between and outside operators only."
+msgstr "Un segundo límite solo corresponde a los operadores « entre » y « fuera de »."
+
+#: modules/reflex/includes/html.inc.php:2472
+msgid "This operator needs both bounds."
+msgstr "Este operador necesita los dos límites."
+
+#: modules/reflex/includes/html.inc.php:2477
+msgid "The upper bound must be greater than the threshold."
+msgstr "El límite superior debe ser mayor que el umbral."
+
+#: modules/reflex/includes/html.inc.php:2479
+msgid "This field is required."
+msgstr "Este campo es obligatorio."
+
+#: modules/reflex/includes/html.inc.php:2481
+msgid "This field is longer than allowed."
+msgstr "Este campo supera la longitud permitida."
+
+#: modules/reflex/includes/html.inc.php:2483
+msgid "This field cannot be adapted."
+msgstr "Este campo no se puede adaptar."
+
+#: modules/reflex/includes/html.inc.php:2485
+msgid "This field does not have the expected form."
+msgstr "Este campo no tiene la forma esperada."
+
+#: modules/reflex/includes/html.inc.php:2487
+msgid "A number greater than zero is expected here."
+msgstr "Aquí se espera un número mayor que cero."
+
+#: modules/reflex/includes/html.inc.php:2489
+msgid "This action needs an identified user."
+msgstr "Esta acción necesita un usuario identificado."
+
+#: modules/reflex/includes/html.inc.php:2491
+msgid "This name is already used."
+msgstr "Este nombre ya está en uso."
+
+#: modules/reflex/includes/html.inc.php:2792
+msgid "A probe of this scope already bears this name."
+msgstr "Una sonda de este ámbito ya lleva este nombre."
+
+#: modules/reflex/includes/html.inc.php:2796
+msgid "This name belongs to a probe shipped with the product."
+msgstr "Este nombre es el de una sonda incluida con el producto."
+
+#: modules/reflex/includes/html.inc.php:2493
+msgid "The number allowed here is reached."
+msgstr "Se ha alcanzado el número permitido aquí."
+
+#: modules/reflex/includes/html.inc.php:2495
+msgid "This category is not supported."
+msgstr "Esta categoría no se reconoce."
+
+#: modules/reflex/includes/html.inc.php:2497
+msgid "This channel type is not supported."
+msgstr "Este tipo de canal no se reconoce."
+
+#: modules/reflex/includes/html.inc.php:2499
+msgid "This target type is not supported."
+msgstr "Este tipo de destino no se reconoce."
+
+#: modules/reflex/includes/html.inc.php:2501
+msgid "This visibility is not supported."
+msgstr "Esta visibilidad no se reconoce."
+
+#: modules/reflex/includes/html.inc.php:2503
+msgid "The catalog visibility belongs to the probes shipped with the product."
+msgstr "La visibilidad de catálogo corresponde a las sondas incluidas con el producto."
+
+#: modules/reflex/includes/html.inc.php:2505
+msgid "This entity is outside your scope."
+msgstr "Esta entidad está fuera de su ámbito."
+
+#: modules/reflex/includes/html.inc.php:2578
+msgid "This target is outside your scope."
+msgstr "Este destino está fuera de su ámbito."
+
+#: modules/reflex/includes/html.inc.php:2507
+#: modules/reflex/reflex/channelEdit.php:197
+msgid "This notification channel does not exist any more."
+msgstr "Este canal de notificación ya no existe."
+
+#: modules/reflex/includes/html.inc.php:2509
+msgid "This probe does not exist any more."
+msgstr "Esta sonda ya no existe."
+
+#: modules/reflex/includes/html.inc.php:2756
+msgid "The target of this assignment does not exist any more."
+msgstr "El destino de esta asignación ya no existe."
+
+#: modules/reflex/includes/html.inc.php:2511
+msgid "The channel parameters are not readable."
+msgstr "Los parámetros del canal no se pueden leer."
+
+#: modules/reflex/includes/html.inc.php:2513
+msgid "A password does not belong to the channel parameters: use the password field, it is ciphered."
+msgstr "Una contraseña no tiene cabida en los parámetros del canal: use el campo de contraseña, se cifra."
+
+#: modules/reflex/includes/html.inc.php:2515
+msgid "The server cannot cipher a password: its encryption key is unusable."
+msgstr "El servidor no puede cifrar ninguna contraseña: su clave de cifrado no es utilizable."
+
+#: modules/reflex/includes/html.inc.php:2543
+#, php-format
+msgid "Condition %1$d: %2$s"
+msgstr "Condición %1$d: %2$s"
+
+#: modules/reflex/includes/html.inc.php:2563
+#: modules/reflex/reflex/ajaxEditCondition.php:160
+#: modules/reflex/reflex/probeEdit.php:147
+#, php-format
+msgid "Field concerned: %s"
+msgstr "Campo afectado: %s"
+
+#: modules/reflex/includes/html.inc.php:2929
+#, php-format
+msgid "Entity %d"
+msgstr "Entidad %d"
+
+#: modules/reflex/includes/html.inc.php:2984
+#: modules/reflex/includes/html.inc.php:2991
+msgid "Target not visible from your scope"
+msgstr "Destino fuera de su ámbito"
+
+#: modules/reflex/reflex/machineDetail.php:805
+msgid "The target of this assignment does not exist any more: its cadence cannot be changed"
+msgstr "El destino de esta asignación ya no existe: su cadencia no puede cambiarse"
+
+#: modules/reflex/includes/html.inc.php:3010
+#, php-format
+msgid "Group: %s"
+msgstr "Grupo: %s"
+
+#: modules/reflex/includes/html.inc.php:3012
+#, php-format
+msgid "Entity: %s"
+msgstr "Entidad: %s"
+
+#: modules/reflex/includes/html.inc.php:3352
+msgid "Leave empty to inherit the server configuration."
+msgstr "Déjelo vacío para heredar la configuración del servidor."
+
+#: modules/reflex/includes/html.inc.php:3355
+msgid "Server"
+msgstr "Servidor"
+
+#: modules/reflex/includes/html.inc.php:3359
+msgid "SMTP server"
+msgstr "Servidor SMTP"
+
+#: modules/reflex/includes/html.inc.php:3367
+msgid "Port"
+msgstr "Puerto"
+
+#: modules/reflex/includes/html.inc.php:3387
+msgid "Server configuration"
+msgstr "Configuración del servidor"
+
+#: modules/reflex/includes/html.inc.php:3388
+msgid "STARTTLS enabled"
+msgstr "STARTTLS activado"
+
+#: modules/reflex/includes/html.inc.php:3389
+msgid "No encryption"
+msgstr "Sin cifrado"
+
+#: modules/reflex/includes/html.inc.php:3393
+msgid "Encryption"
+msgstr "Cifrado"
+
+#: modules/reflex/includes/html.inc.php:3398
+msgid "Authentication"
+msgstr "Autenticación"
+
+#: modules/reflex/includes/html.inc.php:3404
+msgid "The server could not create its encryption key, so a password cannot be stored. Check that mmc-agent can write to /etc/mmc/plugins/reflex.ini.local."
+msgstr "El servidor no pudo crear su clave de cifrado, por lo que no se puede guardar ninguna contraseña. Compruebe que mmc-agent puede escribir en /etc/mmc/plugins/reflex.ini.local."
+
+#: modules/reflex/includes/html.inc.php:3412
+msgid "Authentication account"
+msgstr "Cuenta de autenticación"
+
+#: modules/reflex/includes/html.inc.php:3415
+#: modules/reflex/includes/html.inc.php:3429
+msgid "Leave empty for a server that accepts unauthenticated relaying."
+msgstr "Déjelo vacío para un servidor que acepta el reenvío sin autenticación."
+
+#: modules/reflex/includes/html.inc.php:3432
+msgid "A password is stored. Leave empty to keep it."
+msgstr "Hay una contraseña guardada. Déjelo vacío para conservarla."
+
+#: modules/reflex/includes/html.inc.php:3435
+msgid "No password stored."
+msgstr "Ninguna contraseña guardada."
+
+#: modules/reflex/includes/html.inc.php:3449
+msgid "Delete the stored password"
+msgstr "Eliminar la contraseña guardada"
+
+#: modules/reflex/includes/html.inc.php:3457
+msgid "Sender"
+msgstr "Remitente"
+
+#: modules/reflex/includes/html.inc.php:3460
+msgid "Sender address"
+msgstr "Dirección del remitente"
+
+#: modules/reflex/includes/html.inc.php:3467
+msgid "Sender name"
+msgstr "Nombre del remitente"
+
+#: modules/reflex/includes/html.inc.php:3596
+msgid "Add a condition"
+msgstr "Añadir una condición"
+
+#: modules/reflex/includes/html.inc.php:3673
+msgid "No condition"
+msgstr "Ninguna condición"
+
+#: modules/reflex/includes/html.inc.php:3708
+#: modules/reflex/reflex/ajaxEditCondition.php:453
+msgid "Not set"
+msgstr "Sin definir"
+
+#: modules/reflex/includes/html.inc.php:3710
+#: modules/reflex/reflex/ajaxEditCondition.php:454
+#: modules/reflex/reflex/machineDetail.php:610
+msgid "True"
+msgstr "Verdadero"
+
+#: modules/reflex/includes/html.inc.php:3712
+#: modules/reflex/reflex/ajaxEditCondition.php:455
+#: modules/reflex/reflex/machineDetail.php:611
+msgid "False"
+msgstr "Falso"
+
+#: modules/reflex/includes/html.inc.php:3733
+msgid "Duration (s)"
+msgstr "Duración (s)"
+
+#: modules/reflex/includes/html.inc.php:3758
+msgid "Active"
+msgstr "Activa"
+
+#: modules/reflex/includes/html.inc.php:3764
+#: modules/reflex/reflex/ajaxExcludeProbe.php:82
+#: modules/reflex/reflex/ajaxUnassignProbe.php:53
+msgid "Remove"
+msgstr "Quitar"
+
+#: modules/reflex/includes/tips.inc.php:86
+#: modules/reflex/reflex/ajaxAlertDetail.php:153
+#, php-format
+msgid "Acknowledged by %s"
+msgstr "Reconocida por %s"
+
+#: modules/reflex/includes/tips.inc.php:159
+#, php-format
+msgid "Clock of this machine ahead by %s"
+msgstr "Reloj de este equipo adelantado en %s"
+
+#: modules/reflex/includes/tips.inc.php:160
+#, php-format
+msgid "Clock of this machine behind by %s"
+msgstr "Reloj de este equipo atrasado en %s"
+
+#: modules/reflex/infoPackage.inc.php:25 modules/reflex/infoPackage.inc.php:30
+msgid "Reflex"
+msgstr "Reflex"
+
+#: modules/reflex/infoPackage.inc.php:37 modules/reflex/reflex/index.php:30
+#: modules/reflex/reflex/localSidebar.php:27
+msgid "Dashboard"
+msgstr "Panel de control"
+
+#: modules/reflex/infoPackage.inc.php:42
+#: modules/reflex/reflex/ajaxMachinesList.php:79
+#: modules/reflex/reflex/localSidebar.php:30
+#: modules/reflex/reflex/probes.php:28
+msgid "Probes"
+msgstr "Sondas"
+
+#: modules/reflex/infoPackage.inc.php:47
+msgid "Probes List"
+msgstr "Lista de sondas"
+
+#: modules/reflex/infoPackage.inc.php
+msgid "Settings Per Entity"
+msgstr "Ajustes por entidad"
+
+#: modules/reflex/infoPackage.inc.php:53
+#: modules/reflex/reflex/probeDetail.php:46
+msgid "Probe Details"
+msgstr "Detalles de la sonda"
+
+#: modules/reflex/infoPackage.inc.php:59
+msgid "Edit Probe"
+msgstr "Editar la sonda"
+
+#: modules/reflex/infoPackage.inc.php:73
+msgid "Adapt Alert Condition"
+msgstr "Adaptar una condición de alerta"
+
+#: modules/reflex/infoPackage.inc.php:79
+#: modules/reflex/reflex/ajaxDeleteProbe.php:46
+msgid "Delete Probe"
+msgstr "Eliminar la sonda"
+
+#: modules/reflex/infoPackage.inc.php:85
+#: modules/reflex/reflex/ajaxDuplicateProbe.php:88
+msgid "Duplicate Probe"
+msgstr "Duplicar la sonda"
+
+#: modules/reflex/infoPackage.inc.php:91
+#: modules/reflex/reflex/ajaxSetVisibility.php:84
+#: modules/reflex/reflex/probeDetail.php:252
+msgid "Change visibility"
+msgstr "Cambiar la visibilidad"
+
+#: modules/reflex/infoPackage.inc.php:97
+#: modules/reflex/reflex/ajaxAssignProbe.php:208
+msgid "Assign Probe"
+msgstr "Asignar la sonda"
+
+#: modules/reflex/infoPackage.inc.php:103
+msgid "Search Machines"
+msgstr "Buscar máquinas"
+
+#: modules/reflex/infoPackage.inc.php:109
+msgid "Unassign Probe"
+msgstr "Retirar la sonda"
+
+#: modules/reflex/infoPackage.inc.php:117
+msgid "Remove Selected Assignments"
+msgstr "Retirar las asignaciones seleccionadas"
+
+#: modules/reflex/infoPackage.inc.php:123
+#: modules/reflex/reflex/ajaxExcludeProbe.php:68
+msgid "Remove Probe From This Machine"
+msgstr "Retirar la sonda de esta máquina"
+
+#: modules/reflex/infoPackage.inc.php:129
+#: modules/reflex/reflex/ajaxIncludeProbe.php:70
+msgid "Put Probe Back On This Machine"
+msgstr "Volver a poner la sonda en esta máquina"
+
+#: modules/reflex/infoPackage.inc.php:135
+#: modules/reflex/reflex/ajaxMachinesList.php:87
+#: modules/reflex/reflex/alerts.php:28 modules/reflex/reflex/index.php:161
+#: modules/reflex/reflex/localSidebar.php:28
+msgid "Alerts"
+msgstr "Alertas"
+
+#: modules/reflex/infoPackage.inc.php:140
+msgid "Alerts List"
+msgstr "Lista de alertas"
+
+#: modules/reflex/infoPackage.inc.php:150
+#: modules/reflex/reflex/ajaxAlertDetail.php:56
+msgid "Alert detail"
+msgstr "Detalle de la alerta"
+
+#: modules/reflex/infoPackage.inc.php:156
+#: modules/reflex/reflex/alertsHistory.php:28
+#: modules/reflex/reflex/localSidebar.php:29
+msgid "Alerts History"
+msgstr "Historial de alertas"
+
+#: modules/reflex/infoPackage.inc.php:161
+msgid "Alerts History List"
+msgstr "Lista del historial de alertas"
+
+#: modules/reflex/infoPackage.inc.php:167
+#: modules/reflex/reflex/ajaxAckAlert.php:52
+msgid "Acknowledge Alert"
+msgstr "Confirmar la alerta"
+
+#: modules/reflex/infoPackage.inc.php:175
+msgid "Acknowledge Selected Alerts"
+msgstr "Confirmar las alertas seleccionadas"
+
+#: modules/reflex/infoPackage.inc.php:181
+#: modules/reflex/reflex/localSidebar.php:31
+#: modules/reflex/reflex/machines.php:28
+msgid "Machines"
+msgstr "Máquinas"
+
+#: modules/reflex/infoPackage.inc.php:186
+msgid "Machines List"
+msgstr "Lista de máquinas"
+
+#: modules/reflex/infoPackage.inc.php:192
+#: modules/reflex/reflex/machineDetail.php:33
+msgid "Machine Supervision"
+msgstr "Supervisión de la máquina"
+
+#: modules/reflex/infoPackage.inc.php:199
+msgid "Probe Chart"
+msgstr "Gráfico de sonda"
+
+#: modules/reflex/infoPackage.inc.php:205
+msgid "Channels List"
+msgstr "Lista de canales"
+
+#: modules/reflex/infoPackage.inc.php:211
+msgid "Edit Channel"
+msgstr "Editar el canal"
+
+#: modules/reflex/infoPackage.inc.php:217
+#: modules/reflex/reflex/ajaxDeleteChannel.php:45
+msgid "Delete Channel"
+msgstr "Eliminar el canal"
+
+#: modules/reflex/infoPackage.inc.php:223
+#: modules/reflex/reflex/ajaxTestChannel.php:53
+msgid "Test Channel"
+msgstr "Probar el canal"
+
+#: modules/reflex/infoPackage.inc.php:229
+msgid "Notification Rules"
+msgstr "Reglas de notificación"
+
+#: modules/reflex/infoPackage.inc.php:235
+msgid "Edit Notification Rule"
+msgstr "Editar la regla de notificación"
+
+#: modules/reflex/infoPackage.inc.php:241
+#: modules/reflex/reflex/ajaxDeleteRule.php:44
+msgid "Delete Notification Rule"
+msgstr "Eliminar la regla de notificación"
+
+#: modules/reflex/infoPackage.inc.php:247
+#: modules/reflex/reflex/localSidebar.php:32
+#: modules/reflex/reflex/settings.php:26
+msgid "Settings"
+msgstr "Configuración"
+
+#: modules/reflex/reflex/ajaxAckAlert.php:37
+msgid "Alert acknowledged"
+msgstr "Alerta confirmada"
+
+#: modules/reflex/reflex/ajaxAckAlert.php:41
+msgid "Failed to acknowledge the alert"
+msgstr "No se ha podido confirmar la alerta"
+
+#: modules/reflex/reflex/ajaxAckAlert.php:57
+#, php-format
+msgid "Acknowledge this alert on '%s'?"
+msgstr "¿Confirmar esta alerta en «%s»?"
+
+#: modules/reflex/reflex/ajaxAckAlert.php:64
+msgid "Acknowledging stops the notifications for this alert."
+msgstr "Reconocer detiene las notificaciones de esta alerta."
+
+#: modules/reflex/reflex/ajaxAckAlert.php:66
+msgid "The alert closes on its own once the condition is false again."
+msgstr "La alerta se cierra por sí sola en cuanto la condición vuelve a ser falsa."
+
+#: modules/reflex/reflex/ajaxAckAlert.php:73
+msgid "Acknowledge"
+msgstr "Confirmar"
+
+#: modules/reflex/reflex/ajaxAckAlertsBulk.php:54
+msgid "No alert was selected."
+msgstr "No se ha seleccionado ninguna alerta."
+
+#: modules/reflex/reflex/ajaxAckAlertsBulk.php:65
+msgid "The acknowledgement request failed. No alert was changed."
+msgstr "La solicitud de confirmación ha fallado. No se ha modificado ninguna alerta."
+
+#: modules/reflex/reflex/ajaxAckAlertsBulk.php:69
+msgid "No alert was acknowledged: none of them is still open in your scope."
+msgstr "No se ha reconocido ninguna alerta: ninguna sigue abierta en su ámbito."
+
+#: modules/reflex/reflex/ajaxAckAlertsBulk.php:74
+#, php-format
+msgid "%d alert(s) acknowledged out of %d."
+msgstr "%d alerta(s) reconocida(s) de %d."
+
+#: modules/reflex/reflex/ajaxAckAlertsBulk.php:82
+#, php-format
+msgid "%d alert(s) acknowledged"
+msgstr "%d alerta(s) confirmada(s)"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:50
+#: modules/reflex/reflex/ajaxAlertsList.php:91
+#: modules/reflex/reflex/probeDetail.php:410
+msgid "Close"
+msgstr "Cerrar"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:67
+msgid "No alert identifier was supplied."
+msgstr "No se proporcionó ningún identificador de alerta."
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:69
+msgid "This alert does not exist any more or you are not allowed to see it."
+msgstr "Esta alerta ya no existe o no tiene permiso para verla."
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:110
+#: modules/reflex/reflex/ajaxAlertsHistory.php:120
+#: modules/reflex/reflex/ajaxAlertsList.php:181
+#: modules/reflex/reflex/machineDetail.php:428
+#: modules/reflex/reflex/machineDetail.php:541
+msgid "Measured on"
+msgstr "Medido en"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:115
+#: modules/reflex/reflex/ajaxAlertsHistory.php:127
+#: modules/reflex/reflex/ajaxAlertsList.php:188
+#: modules/reflex/reflex/machineDetail.php:434
+#: modules/reflex/reflex/machineDetail.php:548
+msgid "Value"
+msgstr "Valor"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:123
+#: modules/reflex/reflex/ajaxAlertsHistory.php:131
+#: modules/reflex/reflex/ajaxAlertsList.php:192
+#: modules/reflex/reflex/machineDetail.php:435
+msgid "Opened"
+msgstr "Abierta el"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:131
+#: modules/reflex/reflex/ajaxAlertsList.php:195
+msgid "Last confirmed"
+msgstr "Última confirmación"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:151
+#, php-format
+msgid "Acknowledged by %s on %s"
+msgstr "Reconocida por %s el %s"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:163
+msgid "Detail of the triggering measure"
+msgstr "Detalle de la medida que activó la alerta"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:219
+msgid "Condition that fired"
+msgstr "Condición que se activó"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:220
+#: modules/reflex/reflex/ajaxAlertDetail.php:251
+#: modules/reflex/reflex/ajaxAlertDetail.php:267
+#: modules/reflex/reflex/probeDetail.php:320
+msgid "Condition"
+msgstr "Condición"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:230
+msgid "The condition that raised this alert does not exist any more."
+msgstr "La condición que generó esta alerta ya no existe."
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:267
+msgid "Set today"
+msgstr "Ajustada hoy"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:276
+msgid "Severity now"
+msgstr "Severidad actual"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:302
+msgid "Deleted channel"
+msgstr "Canal eliminado"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:318
+msgid "Notifications"
+msgstr "Notificaciones"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:323
+msgid "No notification rule was triggered by this alert."
+msgstr "Ninguna regla de notificación se activó con esta alerta."
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:324
+msgid "Every sending was set aside, see below."
+msgstr "Todos los envíos se descartaron, ver abajo."
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:334
+msgid "Message sent"
+msgstr "Mensaje enviado"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:348
+#, php-format
+msgid "Accepted by the server on %s"
+msgstr "Aceptado por el servidor el %s"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:352
+#, php-format
+msgid "Reference given by the server: %s"
+msgstr "Referencia dada por el servidor: %s"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:366
+#, php-format
+msgid "Rule: %s"
+msgstr "Regla: %s"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:370
+#, php-format
+msgid "From severity %s"
+msgstr "A partir de la severidad %s"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:382
+msgid "Second notice"
+msgstr "Reaviso"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:421
+msgid "Technical detail"
+msgstr "Detalle técnico"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:435
+#, php-format
+msgid "Next retry on %s"
+msgstr "Próximo reintento el %s"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:453
+msgid "Sendings set aside"
+msgstr "Envíos descartados"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:462
+msgid "Set aside once"
+msgstr "Descartado una vez"
+
+#: modules/reflex/reflex/ajaxAlertDetail.php:463
+#, php-format
+msgid "Set aside %d times"
+msgstr "Descartado %d veces"
+
+#: modules/reflex/reflex/ajaxAlertsHistory.php:65
+#: modules/reflex/reflex/ajaxAlertsList.php:109
+#: modules/reflex/reflex/machineDetail.php:386
+msgid "View alert"
+msgstr "Ver la alerta"
+
+#: modules/reflex/reflex/ajaxAlertsHistory.php:68
+#: modules/reflex/reflex/ajaxAlertsList.php:112
+#: modules/reflex/reflex/ajaxProbesList.php:126
+#: modules/reflex/reflex/machineDetail.php:533
+#: modules/reflex/reflex/machineDetail.php:757
+msgid "View probe"
+msgstr "Ver la sonda"
+
+#: modules/reflex/reflex/index.php:100
+msgid "View the alerts of this probe"
+msgstr "Ver las alertas de esta sonda"
+
+#: modules/reflex/reflex/ajaxAlertsHistory.php:122
+#: modules/reflex/reflex/ajaxAlertsList.php:183
+#: modules/reflex/reflex/machineDetail.php:430
+msgid "What the alert was raised on, for a probe reporting several."
+msgstr "Aquello sobre lo que se levantó la alerta, para una sonda que informa de varias medidas."
+
+#: modules/reflex/reflex/ajaxAlertsHistory.php:129
+#: modules/reflex/reflex/ajaxAlertsList.php:190
+msgid "Value measured at the moment the alert opened."
+msgstr "Valor medido en el momento en que se abrió la alerta."
+
+#: modules/reflex/reflex/ajaxAlertsHistory.php:138
+msgid "Acknowledged by"
+msgstr "Confirmada por"
+
+#: modules/reflex/reflex/ajaxAlertsHistory.php:148
+#: modules/reflex/reflex/ajaxAlertsList.php:204
+#: modules/reflex/reflex/ajaxChannelsList.php:126
+#: modules/reflex/reflex/ajaxMachinesList.php:96
+#: modules/reflex/reflex/ajaxProbesList.php:196
+#: modules/reflex/reflex/ajaxRulesList.php:136
+#: modules/reflex/reflex/machineDetail.php:441
+#: modules/reflex/reflex/machineDetail.php:552
+#: modules/reflex/reflex/machineDetail.php:780
+msgid "Elements"
+msgstr "Elementos"
+
+#: modules/reflex/reflex/ajaxAlertsList.php:64
+#: modules/reflex/reflex/machineDetail.php:381
+msgid "Acknowledge alert"
+msgstr "Confirmar la alerta"
+
+#: modules/reflex/reflex/ajaxAlertsList.php:67
+msgid "Alert already acknowledged."
+msgstr "Alerta ya reconocida."
+
+#: modules/reflex/reflex/ajaxAlertsList.php:71
+msgid "Alert resolved: nothing to acknowledge."
+msgstr "Alerta resuelta: nada que reconocer."
+
+#: modules/reflex/reflex/ajaxAlertsList.php:83
+msgid "Acknowledge selection"
+msgstr "Confirmar la selección"
+
+#: modules/reflex/reflex/ajaxAlertsList.php:84
+#: modules/reflex/reflex/channelEdit.php:266
+#: modules/reflex/reflex/probeDetail.php:403
+#: modules/reflex/reflex/probeEdit.php:374
+#: modules/reflex/reflex/ruleEdit.php:323
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: modules/reflex/reflex/ajaxAlertsList.php:85
+#: modules/reflex/reflex/probeDetail.php:404
+msgid "Selection mode"
+msgstr "Modo selección"
+
+#: modules/reflex/reflex/ajaxAlertsList.php:86
+msgid "Acknowledge these alerts? Notifications stop for them."
+msgstr "¿Reconocer estas alertas? Las notificaciones se detienen para ellas."
+
+#: modules/reflex/reflex/ajaxAlertsList.php:87
+msgid "Bulk acknowledgement report:"
+msgstr "Informe de la confirmación masiva:"
+
+#: modules/reflex/reflex/ajaxAlertsList.php:88
+msgid "An error occurred while acknowledging the alerts."
+msgstr "Se ha producido un error al confirmar las alertas."
+
+#: modules/reflex/reflex/ajaxAlertsList.php:89
+#: modules/reflex/reflex/probeDetail.php:408
+msgid "Yes"
+msgstr "Sí"
+
+#: modules/reflex/reflex/ajaxAlertsList.php:90
+#: modules/reflex/reflex/probeDetail.php:409
+msgid "No"
+msgstr "No"
+
+#: modules/reflex/reflex/ajaxAlertsList.php:92
+#: modules/reflex/reflex/probeDetail.php:411
+#, php-format
+msgid "and %d more"
+msgstr "y %d más"
+
+#: modules/reflex/reflex/ajaxAlertsList.php:197
+msgid "Last measure that found the condition still true."
+msgstr "Última medida que encontró la condición todavía cierta."
+
+#: modules/reflex/reflex/ajaxAlertsList.php:201
+#: modules/reflex/reflex/alerts.php:73
+#: modules/reflex/reflex/machineDetail.php:438
+msgid "Status"
+msgstr "Estado"
+
+#: modules/reflex/reflex/ajaxAlertsList.php:228
+msgid "No alert"
+msgstr "Ninguna alerta"
+
+#: modules/reflex/reflex/ajaxAlertsList.php:229
+msgid "No alert matches the current filters."
+msgstr "Ninguna alerta coincide con los filtros actuales."
+
+#: modules/reflex/reflex/ajaxAssignProbe.php:88
+msgid "Unknown target type"
+msgstr "Tipo de destino desconocido"
+
+#: modules/reflex/reflex/ajaxAssignProbe.php:105
+#: modules/reflex/reflex/ajaxAssignProbe.php:272
+msgid "Choose at least one machine"
+msgstr "Elija al menos una máquina"
+
+#: modules/reflex/reflex/ajaxAssignProbe.php:118
+#: modules/reflex/reflex/ajaxAssignProbe.php:130
+#: modules/reflex/reflex/ajaxAssignProbe.php:273
+msgid "Please pick a target in the list"
+msgstr "Elija un destino en la lista"
+
+#: modules/reflex/reflex/ajaxAssignProbe.php:138
+msgid "The measurement interval must be a positive number of seconds"
+msgstr "El intervalo de medición debe ser un número de segundos positivo"
+
+#: modules/reflex/reflex/ajaxAssignProbe.php:141
+#, php-format
+msgid "The measurement interval cannot be shorter than %s."
+msgstr "El intervalo de medición no puede ser inferior a %s."
+
+#: modules/reflex/reflex/ajaxAssignProbe.php:162
+#: modules/reflex/reflex/ajaxAssignProbe.php:186
+msgid "Failed to assign the probe"
+msgstr "No se ha podido asignar la sonda"
+
+#: modules/reflex/reflex/ajaxAssignProbe.php:165
+msgid "Probe assigned on one machine."
+msgstr "Sonda asignada en una máquina."
+
+#: modules/reflex/reflex/ajaxAssignProbe.php:166
+#, php-format
+msgid "Probe assigned on %d machines."
+msgstr "Sonda asignada en %d máquinas."
+
+#: modules/reflex/reflex/ajaxAssignProbe.php:171
+msgid "One machine was refused."
+msgstr "Se rechazó una máquina."
+
+#: modules/reflex/reflex/ajaxAssignProbe.php:172
+#, php-format
+msgid "%d machines were refused."
+msgstr "Se rechazaron %d máquinas."
+
+#: modules/reflex/reflex/ajaxAssignProbe.php:182
+msgid "Probe assigned"
+msgstr "Sonda asignada"
+
+#: modules/reflex/reflex/ajaxAssignProbe.php:216
+msgid "The machine list shows a part of the estate: type in the search field to reach any other machine."
+msgstr "La lista de máquinas solo muestra una parte del parque: escriba un nombre en el campo de búsqueda para acceder a cualquier otra máquina."
+
+#: modules/reflex/reflex/ajaxAssignProbe.php:221
+msgid "Several machines can be picked one after the other: no group is needed."
+msgstr "Se pueden elegir varias máquinas una tras otra: no hace falta ningún grupo."
+
+#: modules/reflex/reflex/ajaxAssignProbe.php:238
+msgid "Choose..."
+msgstr "Elegir..."
+
+#: modules/reflex/reflex/ajaxAssignProbe.php:253
+msgid "Assign"
+msgstr "Asignar"
+
+#: modules/reflex/reflex/ajaxAssignProbe.php:373
+msgid "No machine matches"
+msgstr "Ninguna máquina coincide"
+
+#: modules/reflex/reflex/ajaxAssignProbe.php:374
+msgid "Remove this machine"
+msgstr "Quitar esta máquina"
+
+#: modules/reflex/reflex/ajaxAssignProbe.php:387
+msgid "Choose or search a machine"
+msgstr "Elegir o buscar una máquina"
+
+#: modules/reflex/reflex/ajaxChannelsList.php:97
+#: modules/reflex/reflex/channelEdit.php:190
+msgid "Edit channel"
+msgstr "Editar el canal"
+
+#: modules/reflex/reflex/ajaxChannelsList.php:98
+msgid "Test channel"
+msgstr "Probar el canal"
+
+#: modules/reflex/reflex/ajaxChannelsList.php:100
+msgid "Delete channel"
+msgstr "Eliminar el canal"
+
+#: modules/reflex/reflex/ajaxChannelsList.php:109
+#: modules/reflex/reflex/ajaxRulesList.php:133
+#: modules/reflex/reflex/machineDetail.php:774
+msgid "State"
+msgstr "Estado"
+
+#: modules/reflex/reflex/probeDetail.php:179
+msgid "Author"
+msgstr "Autor"
+
+#: modules/reflex/reflex/ajaxChannelsList.php:123
+msgid "Created by"
+msgstr "Creado por"
+
+#: modules/reflex/reflex/ajaxChannelsList.php:142
+#: modules/reflex/reflex/ruleEdit.php:159
+msgid "No notification channel"
+msgstr "Ningún canal de notificación"
+
+#: modules/reflex/reflex/ajaxChannelsList.php:143
+msgid "Create a channel so that alerts can be sent out."
+msgstr "Cree un canal para que las alertas puedan enviarse."
+
+#: modules/reflex/reflex/ajaxDeleteChannel.php:34
+#, php-format
+msgid "Channel '%s' deleted"
+msgstr "Canal «%s» eliminado"
+
+#: modules/reflex/reflex/ajaxDeleteChannel.php:38
+msgid "Failed to delete the channel"
+msgstr "No se ha podido eliminar el canal"
+
+#: modules/reflex/reflex/ajaxDeleteChannel.php:49
+#, php-format
+msgid "Delete the channel '%s'?"
+msgstr "¿Eliminar el canal «%s»?"
+
+#: modules/reflex/reflex/ajaxDeleteChannel.php:50
+msgid "The notification rules using this channel are deleted as well."
+msgstr "Las reglas de notificación que usan este canal también se eliminan."
+
+#: modules/reflex/reflex/ajaxDeleteChannel.php:51
+#: modules/reflex/reflex/ajaxDeleteProbe.php:52
+#: modules/reflex/reflex/ajaxDeleteRule.php:49
+msgid "Delete"
+msgstr "Eliminar"
+
+#: modules/reflex/reflex/ajaxDeleteProbe.php:35
+#, php-format
+msgid "Probe '%s' deleted"
+msgstr "Sonda «%s» eliminada"
+
+#: modules/reflex/reflex/ajaxDeleteProbe.php:39
+msgid "Failed to delete the probe"
+msgstr "No se ha podido eliminar la sonda"
+
+#: modules/reflex/reflex/ajaxDeleteProbe.php:50
+#, php-format
+msgid "Delete the probe '%s'?"
+msgstr "¿Eliminar la sonda «%s»?"
+
+#: modules/reflex/reflex/ajaxDeleteProbe.php:51
+msgid "Its conditions, assignments and alerts are deleted as well. The measures already collected are kept."
+msgstr "Sus condiciones, asignaciones y alertas también se eliminan. Las medidas ya recogidas se conservan."
+
+#: modules/reflex/reflex/ajaxDeleteRule.php:33
+msgid "Notification rule deleted"
+msgstr "Regla de notificación eliminada"
+
+#: modules/reflex/reflex/ajaxDeleteRule.php:37
+msgid "Failed to delete the notification rule"
+msgstr "No se ha podido eliminar la regla de notificación"
+
+#: modules/reflex/reflex/ajaxDeleteRule.php:47
+msgid "Delete this notification rule?"
+msgstr "¿Eliminar esta regla de notificación?"
+
+#: modules/reflex/reflex/ajaxDeleteRule.php:48
+msgid "Alerts matching this rule will no longer be sent out."
+msgstr "Las alertas que coincidan con esta regla ya no se enviarán."
+
+#: modules/reflex/reflex/ajaxDuplicateProbe.php:39
+#, php-format
+msgid "%s (copy)"
+msgstr "%s (copia)"
+
+#: modules/reflex/reflex/ajaxDuplicateProbe.php:59
+#: modules/reflex/reflex/ajaxSetVisibility.php:63
+#: modules/reflex/reflex/probeEdit.php:134
+msgid "Choose the entity the probe belongs to"
+msgstr "Elija la entidad a la que pertenece la sonda"
+
+#: modules/reflex/reflex/ajaxDuplicateProbe.php:70
+#, php-format
+msgid "Probe '%s' duplicated"
+msgstr "Sonda «%s» duplicada"
+
+#: modules/reflex/reflex/ajaxDuplicateProbe.php:77
+msgid "Failed to duplicate the probe"
+msgstr "No se ha podido duplicar la sonda"
+
+#: modules/reflex/reflex/ajaxDuplicateProbe.php:92
+#, php-format
+msgid "Duplicate the probe '%s'?"
+msgstr "¿Duplicar la sonda «%s»?"
+
+#: modules/reflex/reflex/ajaxDuplicateProbe.php:98
+msgid "The copy is yours and private, with the same conditions. Assignments are not copied."
+msgstr "La copia es suya y privada, con las mismas condiciones. Las asignaciones no se copian."
+
+#: modules/reflex/reflex/ajaxDuplicateProbe.php:99
+msgid "The copy is yours and visible to your entity, with the same conditions. Assignments are not copied."
+msgstr "La copia es suya y visible para su entidad, con las mismas condiciones. Las asignaciones no se copian."
+
+#: modules/reflex/reflex/ajaxDuplicateProbe.php:105
+msgid "Label of the copy"
+msgstr "Etiqueta de la copia"
+
+#: modules/reflex/reflex/ajaxDuplicateProbe.php:117
+msgid "Duplicate"
+msgstr "Duplicar"
+
+#: modules/reflex/reflex/ajaxEditCondition.php:52
+#: modules/reflex/reflex/ajaxEditCondition.php:393
+msgid "Adapt Condition"
+msgstr "Adaptar la condición"
+
+#: modules/reflex/reflex/ajaxEditCondition.php:53
+msgid "This condition does not exist any more, or the probe is not shared with you."
+msgstr "Esta condición ya no existe, o la sonda no está compartida con usted."
+
+#: modules/reflex/reflex/ajaxEditCondition.php:103
+msgid "This condition compares a text: the value cannot be left empty."
+msgstr "Esta condición compara un texto: el valor no puede quedar vacío."
+
+#: modules/reflex/reflex/ajaxEditCondition.php:106
+msgid "This condition compares a state: choose the one it alerts on."
+msgstr "Esta condición compara un estado: elija aquel sobre el que alerta."
+
+#: modules/reflex/reflex/ajaxEditCondition.php:107
+msgid "This condition compares a threshold: the value cannot be left empty."
+msgstr "Esta condición compara un umbral: el valor no puede quedar vacío."
+
+#: modules/reflex/reflex/ajaxEditCondition.php:114
+#, php-format
+msgid "To go back to the shipped value, use the %s button."
+msgstr "Para volver al valor entregado, utilice el botón «%s»."
+
+#: modules/reflex/reflex/ajaxEditCondition.php:115
+#: modules/reflex/reflex/ajaxEditCondition.php:529
+msgid "Restore shipped values"
+msgstr "Volver a los valores de fábrica"
+
+#: modules/reflex/reflex/ajaxEditCondition.php:175
+#: modules/reflex/reflex/ajaxEditCondition.php:295
+msgid "Condition back to the shipped values"
+msgstr "Condición devuelta a los valores de fábrica"
+
+#: modules/reflex/reflex/ajaxEditCondition.php:183
+msgid "Failed to restore the shipped values of this condition."
+msgstr "No se pudieron restaurar los valores de fábrica de esta condición."
+
+#: modules/reflex/reflex/ajaxEditCondition.php:230
+#: modules/reflex/reflex/ruleEdit.php:108
+msgid "Unknown severity"
+msgstr "Severidad desconocida"
+
+#: modules/reflex/reflex/ajaxEditCondition.php:233
+msgid "The duration cannot be negative"
+msgstr "La duración no puede ser negativa"
+
+#: modules/reflex/reflex/ajaxEditCondition.php:238
+msgid "The alert message is limited to 512 characters"
+msgstr "El mensaje de alerta está limitado a 512 caracteres"
+
+#: modules/reflex/reflex/ajaxEditCondition.php:245
+msgid "This condition compares two bounds: the upper one is required"
+msgstr "Esta condición compara dos límites: el límite superior es obligatorio"
+
+#: modules/reflex/reflex/ajaxEditCondition.php:249
+msgid "The upper bound must not be below the threshold"
+msgstr "El límite superior no debe ser inferior al umbral"
+
+#: modules/reflex/reflex/ajaxEditCondition.php:292
+msgid "Condition saved"
+msgstr "Condición guardada"
+
+#: modules/reflex/reflex/ajaxEditCondition.php:296
+msgid "Condition adapted"
+msgstr "Condición adaptada"
+
+#: modules/reflex/reflex/ajaxEditCondition.php:308
+msgid "The server refused this adaptation."
+msgstr "El servidor ha rechazado esta adaptación."
+
+#: modules/reflex/reflex/ajaxEditCondition.php:309
+msgid "The server refused this change."
+msgstr "El servidor ha rechazado esta modificación."
+
+#: modules/reflex/reflex/ajaxEditCondition.php:394
+msgid "Edit Condition"
+msgstr "Modificar la condición"
+
+#: modules/reflex/reflex/ajaxEditCondition.php:462
+#, php-format
+msgid "Threshold (%s)"
+msgstr "Umbral (%s)"
+
+#: modules/reflex/reflex/ajaxAlertsHistory.php:101
+msgid "Duration measured by the probe when the alert opened, not the time the alert lasted."
+msgstr "Duración medida por la sonda al abrirse la alerta, no el tiempo que duró la alerta."
+
+#: modules/reflex/reflex/ajaxEditCondition.php:487
+msgid "Duration before alerting (seconds)"
+msgstr "Duración antes de alertar (segundos)"
+
+#: modules/reflex/reflex/ajaxEditCondition.php:520
+msgid "Condition active"
+msgstr "Condición activa"
+
+#: modules/reflex/reflex/ajaxEditCondition.php:539
+msgid "Switched off, this condition raises no alert any more. The probe goes on measuring."
+msgstr "Desactivada, esta condición ya no genera alertas. La sonda sigue midiendo."
+
+#: modules/reflex/reflex/ajaxEditCondition.php:525
+#: modules/reflex/reflex/channelEdit.php:262
+#: modules/reflex/reflex/probeEdit.php:373
+#: modules/reflex/reflex/ruleEdit.php:320
+msgid "Save"
+msgstr "Guardar"
+
+#: modules/reflex/reflex/ajaxEditCondition.php:555
+msgid "Saving..."
+msgstr "Guardando..."
+
+#: modules/reflex/reflex/ajaxEditCondition.php:557
+msgid "The server did not answer: nothing has been saved."
+msgstr "El servidor no respondió: no se ha guardado nada."
+
+#: modules/reflex/reflex/ajaxExcludeProbe.php:51
+#, php-format
+msgid "Probe no longer measured on '%s'"
+msgstr "La sonda ya no se mide en «%s»"
+
+#: modules/reflex/reflex/ajaxExcludeProbe.php:57
+msgid "Failed to remove the probe from this machine"
+msgstr "No se ha podido retirar la sonda de esta máquina"
+
+#: modules/reflex/reflex/ajaxExcludeProbe.php:70
+#, php-format
+msgid "Stop measuring '%s' on '%s'?"
+msgstr "¿Dejar de medir «%s» en «%s»?"
+
+#: modules/reflex/reflex/ajaxExcludeProbe.php:74
+msgid "The alerts open on this probe and this machine are closed."
+msgstr "Las alertas abiertas en esta sonda y esta máquina se cierran."
+
+#: modules/reflex/reflex/ajaxExcludeProbe.php:75
+msgid "This machine stops being measured by this probe. The other machines of the same assignment keep it."
+msgstr "Esta máquina deja de ser medida por esta sonda. Las demás máquinas de la misma asignación la conservan."
+
+#: modules/reflex/reflex/ajaxIncludeProbe.php:50
+#, php-format
+msgid "Probe measured again on '%s'"
+msgstr "La sonda vuelve a medirse en «%s»"
+
+#: modules/reflex/reflex/ajaxIncludeProbe.php:56
+msgid "Failed to put the probe back on this machine"
+msgstr "No se ha podido volver a poner la sonda en esta máquina"
+
+#: modules/reflex/reflex/ajaxIncludeProbe.php:77
+#, php-format
+msgid "Measure '%s' again on '%s'?"
+msgstr "¿Volver a medir «%s» en «%s»?"
+
+#: modules/reflex/reflex/ajaxIncludeProbe.php:81
+msgid "The exception is lifted: this machine is measured again as its assignments require."
+msgstr "Se levanta la excepción: esta máquina vuelve a medirse según sus asignaciones."
+
+#: modules/reflex/reflex/ajaxIncludeProbe.php:82
+msgid "Put back"
+msgstr "Restablecer"
+
+#: modules/reflex/reflex/ajaxMachinesList.php:60
+msgid "Widest gap seen over the last 24 hours."
+msgstr "Mayor diferencia observada en las últimas 24 horas."
+
+#: modules/reflex/reflex/ajaxMachinesList.php:66
+msgid "Gap seen on the last measure received."
+msgstr "Diferencia observada en la última medida recibida."
+
+#: modules/reflex/reflex/ajaxMachinesList.php:68
+msgid "View supervision"
+msgstr "Ver la supervisión"
+
+#: modules/reflex/reflex/ajaxMachinesList.php:82
+msgid "Probes placed on the machine."
+msgstr "Sondas colocadas en la máquina."
+
+#: modules/reflex/reflex/ajaxMachinesList.php:83
+msgid "Probes measured on the machine."
+msgstr "Sondas medidas en la máquina."
+
+#: modules/reflex/reflex/ajaxMachinesList.php:89
+msgid "Alerts in progress on the machine, acknowledged ones included."
+msgstr "Alertas en curso en la máquina, incluidas las confirmadas."
+
+#: modules/reflex/reflex/ajaxMachinesList.php:93
+#: modules/reflex/reflex/index.php:204
+msgid "Last measure"
+msgstr "Última medida"
+
+#: modules/reflex/reflex/ajaxMachinesList.php:99
+msgid "Last measure received from the machine. In red when the machine stopped reporting."
+msgstr "Última medida recibida de la máquina. En rojo cuando la máquina dejó de reportar."
+
+#: modules/reflex/reflex/ajaxMachinesList.php:108
+msgid "No supervised machine"
+msgstr "Ninguna máquina supervisada"
+
+#: modules/reflex/reflex/ajaxProbeChart.php:192
+msgid "Invalid request."
+msgstr "Petición no válida."
+
+#: modules/reflex/reflex/ajaxProbeChart.php:206
+msgid "The supervision service did not answer."
+msgstr "El servicio de supervisión no ha respondido."
+
+#: modules/reflex/reflex/ajaxProbeChart.php:215
+msgid "This probe does not produce numeric values."
+msgstr "Esta sonda no produce valores numéricos."
+
+#: modules/reflex/reflex/ajaxProbesList.php:101
+#: modules/reflex/reflex/probeDetail.php:245
+#: modules/reflex/reflex/probeEdit.php:234
+msgid "Edit probe"
+msgstr "Editar la sonda"
+
+#: modules/reflex/reflex/ajaxProbesList.php:103
+msgid "Delete probe"
+msgstr "Eliminar la sonda"
+
+#: modules/reflex/reflex/ajaxProbesList.php:110
+msgid "Probe shipped with Medulla: duplicate it to obtain an editable variant."
+msgstr "Sonda incluida con Medulla: duplíquela para obtener una variante editable."
+
+#: modules/reflex/reflex/ajaxProbesList.php:114
+msgid "Shared in read only: only its owner changes it."
+msgstr "Compartida en solo lectura: solo su propietario la modifica."
+
+#: modules/reflex/reflex/ajaxProbesList.php:118
+msgid "Probe shipped with Medulla: remove its assignments instead of deleting it."
+msgstr "Sonda incluida con Medulla: retire sus asignaciones en lugar de eliminarla."
+
+#: modules/reflex/reflex/ajaxProbesList.php:122
+msgid "Only the owner of the probe deletes it."
+msgstr "Solo el propietario de la sonda la elimina."
+
+#: modules/reflex/reflex/ajaxProbesList.php:129
+msgid "Duplicate probe into a variant of your own"
+msgstr "Duplicar la sonda para obtener una variante propia"
+
+#: modules/reflex/reflex/ajaxProbesList.php:190
+msgid "In service: measured on at least one machine of your estate."
+msgstr "En servicio: medida en al menos una máquina de su parque."
+
+#: modules/reflex/reflex/ajaxProbesList.php:191
+msgid "A dash: no machine of your estate measures it."
+msgstr "Un guion: ninguna máquina de su parque la mide."
+
+#: modules/reflex/reflex/ajaxProbesList.php:224
+msgid "No probe found"
+msgstr "Ninguna sonda encontrada"
+
+#: modules/reflex/reflex/ajaxProbesList.php:225
+msgid "No probe matches this filter and this search."
+msgstr "Ninguna sonda coincide con este filtro y esta búsqueda."
+
+#: modules/reflex/reflex/ajaxRulesList.php:93
+msgid "reaches no machine"
+msgstr "no alcanza ninguna máquina"
+
+#: modules/reflex/reflex/ajaxRulesList.php:94
+msgid "The entity of this channel carries none of your machines: this rule will never send anything."
+msgstr "La entidad de este canal no contiene ninguna de sus máquinas: esta regla nunca enviará nada."
+
+#: modules/reflex/reflex/ajaxRulesList.php:90
+msgid "None"
+msgstr "Ninguno"
+
+#: modules/reflex/reflex/ajaxRulesList.php:99
+msgid "Restriction not recognised"
+msgstr "Restricción no reconocida"
+
+#: modules/reflex/reflex/ajaxRulesList.php:102
+msgid "Every machine"
+msgstr "Todas las máquinas"
+
+#: modules/reflex/reflex/ajaxRulesList.php:111
+msgid "Edit rule"
+msgstr "Editar la regla"
+
+#: modules/reflex/reflex/ajaxRulesList.php:112
+msgid "Delete rule"
+msgstr "Eliminar la regla"
+
+#: modules/reflex/reflex/ajaxRulesList.php:124
+msgid "Restriction"
+msgstr "Restricción"
+
+#: modules/reflex/reflex/ajaxRulesList.php:126
+msgid "Group or entity the rule is limited to."
+msgstr "Grupo o entidad al que se limita la regla."
+
+#: modules/reflex/reflex/ajaxRulesList.php:129
+msgid "Cooldown"
+msgstr "Antirrepetición"
+
+#: modules/reflex/reflex/ajaxRulesList.php:131
+msgid "Escalation"
+msgstr "Escalado"
+
+#: modules/reflex/reflex/ajaxRulesList.php:147
+msgid "No notification rule"
+msgstr "Ninguna regla de notificación"
+
+#: modules/reflex/reflex/ajaxRulesList.php:148
+msgid "Without a rule, alerts stay in the console."
+msgstr "Sin una regla, las alertas se quedan en la consola."
+
+#: modules/reflex/reflex/ajaxSetVisibility.php:61
+#: modules/reflex/reflex/probeEdit.php:131
+msgid "Unknown visibility"
+msgstr "Visibilidad desconocida"
+
+#: modules/reflex/reflex/ajaxSetVisibility.php:67
+msgid "Probe visibility updated"
+msgstr "Visibilidad de la sonda actualizada"
+
+#: modules/reflex/reflex/ajaxSetVisibility.php:71
+msgid "Failed to update the probe visibility"
+msgstr "No se ha podido actualizar la visibilidad de la sonda"
+
+#: modules/reflex/reflex/ajaxSetVisibility.php:88
+msgid "Private: only you. Shared: the users of its entity."
+msgstr "Privada: solo usted. Compartida: los usuarios de su entidad."
+
+#: modules/reflex/reflex/ajaxSetVisibility.php:101
+msgid "Apply"
+msgstr "Aplicar"
+
+#: modules/reflex/reflex/ajaxTestChannel.php:44
+#, php-format
+msgid "Test failed: %s"
+msgstr "Prueba fallida: %s"
+
+#: modules/reflex/reflex/ajaxTestChannel.php:52
+#, php-format
+msgid "Send a test message through '%s' to:"
+msgstr "Enviar un mensaje de prueba por «%s» a:"
+
+#: modules/reflex/reflex/ajaxTestChannel.php:58
+msgid "name@example.com"
+msgstr "nombre@ejemplo.es"
+
+#: modules/reflex/reflex/ajaxTestChannel.php:57
+msgid "Send"
+msgstr "Enviar"
+
+#: modules/reflex/reflex/probeDetail.php:63
+msgid "This probe does not exist any more or you are not allowed to see it."
+msgstr "Esta sonda ya no existe o no está autorizado a verla."
+
+#: modules/reflex/reflex/ajaxUnassignProbe.php:37
+msgid "Assignment removed"
+msgstr "Asignación retirada"
+
+#: modules/reflex/reflex/ajaxUnassignProbe.php:41
+msgid "Failed to remove the assignment"
+msgstr "No se ha podido retirar la asignación"
+
+#: modules/reflex/reflex/ajaxUnassignProbe.php:48
+msgid "Remove Assignment"
+msgstr "Retirar la asignación"
+
+#: modules/reflex/reflex/ajaxUnassignProbe.php:51
+msgid "Remove this assignment?"
+msgstr "¿Retirar esta asignación?"
+
+#: modules/reflex/reflex/ajaxUnassignProbe.php:52
+msgid "The agents stop measuring on the matching machines, and the alerts open on the machines that lose this probe are closed."
+msgstr "Los agentes dejan de medir en las máquinas afectadas, y las alertas abiertas en las máquinas que pierden esta sonda se cierran."
+
+#: modules/reflex/reflex/ajaxUnassignProbesBulk.php:54
+msgid "No assignment was selected."
+msgstr "No se seleccionó ninguna asignación."
+
+#: modules/reflex/reflex/ajaxUnassignProbesBulk.php:63
+msgid "The removal request failed. No assignment was removed."
+msgstr "La solicitud de retiro falló. No se retiró ninguna asignación."
+
+#: modules/reflex/reflex/ajaxUnassignProbesBulk.php:67
+msgid "No assignment was removed: none of them is still in your scope."
+msgstr "No se ha retirado ninguna asignación: ninguna sigue en su ámbito."
+
+#: modules/reflex/reflex/ajaxUnassignProbesBulk.php:72
+#, php-format
+msgid "%d assignment(s) removed out of %d."
+msgstr "%d asignación(es) retirada(s) de %d."
+
+#: modules/reflex/reflex/ajaxUnassignProbesBulk.php:80
+#, php-format
+msgid "%d assignment(s) removed"
+msgstr "%d asignación(es) retirada(s)"
+
+#: modules/reflex/reflex/alerts.php:63
+#: modules/reflex/reflex/alertsHistory.php:57
+msgid "All severities"
+msgstr "Todas las severidades"
+
+#: modules/reflex/reflex/alertsHistory.php:69
+msgid "The period bounds the date the alert opened, not its resolution."
+msgstr "El periodo se refiere a la fecha de apertura de la alerta, no a su resolución."
+
+#: modules/reflex/reflex/alertsHistory.php:112
+msgid "Opened between"
+msgstr "Abiertas entre"
+
+#: modules/reflex/reflex/alertsHistory.php:99
+msgid "All dates"
+msgstr "Todas las fechas"
+
+#: modules/reflex/reflex/alertsHistory.php:102
+msgid "Clear the period"
+msgstr "Borrar el periodo"
+
+#: modules/reflex/reflex/alertsHistory.php:216
+msgid "Previous month"
+msgstr "Mes anterior"
+
+#: modules/reflex/reflex/alertsHistory.php:217
+msgid "Next month"
+msgstr "Mes siguiente"
+
+#: modules/reflex/reflex/channelEdit.php:98
+msgid "The channel name is required"
+msgstr "El nombre del canal es obligatorio"
+
+#: modules/reflex/reflex/channelEdit.php:100
+msgid "Unknown channel type"
+msgstr "Tipo de canal desconocido"
+
+#: modules/reflex/reflex/channelEdit.php:106
+msgid "The SMTP port must be between 1 and 65535"
+msgstr "El puerto SMTP debe estar entre 1 y 65535"
+
+#: modules/reflex/reflex/channelEdit.php:108
+msgid "The sender address is not a valid email address"
+msgstr "La dirección del remitente no es una dirección de correo válida"
+
+#: modules/reflex/reflex/channelEdit.php:143
+msgid "Channel created"
+msgstr "Canal creado"
+
+#: modules/reflex/reflex/channelEdit.php:147
+msgid "Failed to create the channel"
+msgstr "No se ha podido crear el canal"
+
+#: modules/reflex/reflex/channelEdit.php:153
+msgid "Channel updated"
+msgstr "Canal actualizado"
+
+#: modules/reflex/reflex/channelEdit.php:157
+msgid "Failed to update the channel"
+msgstr "No se ha podido actualizar el canal"
+
+#: modules/reflex/reflex/channelEdit.php:190
+#: modules/reflex/reflex/settings/tabChannels.php:39
+msgid "New channel"
+msgstr "Nuevo canal"
+
+#: modules/reflex/reflex/channelEdit.php:196
+msgid "Channel not found"
+msgstr "Canal no encontrado"
+
+#: modules/reflex/reflex/channelEdit.php:230
+msgid "Back to channels list"
+msgstr "Volver a la lista de canales"
+
+#: modules/reflex/reflex/channelEdit.php:245
+msgid "Only the email channel is delivered in this version. The other types are planned."
+msgstr "Solo el canal de correo electrónico se incluye en esta versión. Los demás tipos están previstos."
+
+#: modules/reflex/reflex/channelEdit.php:250
+msgid "Channel enabled"
+msgstr "Canal activado"
+
+#: modules/reflex/reflex/index.php:86
+#: modules/reflex/reflex/machineDetail.php:166
+#: modules/reflex/reflex/machineDetail.php:314
+msgid "Alerts in progress"
+msgstr "Alertas en curso"
+
+#: modules/reflex/reflex/index.php:92
+msgid "Click to view the matching alerts"
+msgstr "Haga clic para ver las alertas correspondientes"
+
+#: modules/reflex/reflex/index.php:103
+msgid "Click to view the machines"
+msgstr "Haga clic para ver las máquinas"
+
+#: modules/reflex/reflex/index.php:105
+msgid "Machines impacted"
+msgstr "Máquinas afectadas"
+
+#: modules/reflex/reflex/index.php:123
+msgid "Probes carrying the most alerts in progress"
+msgstr "Sondas con más alertas en curso"
+
+#: modules/reflex/reflex/index.php:130
+#: modules/reflex/reflex/machineDetail.php:370
+msgid "No alert in progress"
+msgstr "Ninguna alerta en curso"
+
+#: modules/reflex/reflex/ajaxAlertsList.php:226
+msgid "Finished alerts are in the history."
+msgstr "Las alertas terminadas están en el historial."
+
+#: modules/reflex/reflex/index.php:131
+msgid "No probe carries an alert, acknowledged ones included."
+msgstr "Ninguna sonda tiene alertas, incluidas las reconocidas."
+
+#: modules/reflex/reflex/machineDetail.php:39
+msgid "Invalid machine"
+msgstr "Máquina no válida"
+
+#: modules/reflex/reflex/machineDetail.php:40
+msgid "No machine identifier was supplied."
+msgstr "No se ha facilitado ningún identificador de máquina."
+
+#: modules/reflex/reflex/machineDetail.php:146
+msgid "Back to machines list"
+msgstr "Volver a la lista de máquinas"
+
+#: modules/reflex/reflex/machineDetail.php:158
+#: modules/reflex/reflex/machineDetail.php:659
+msgid "Assigned probes"
+msgstr "Sondas asignadas"
+
+#: modules/reflex/reflex/machineDetail.php:179
+msgid "This machine has reported nothing for over a day."
+msgstr "Esta máquina no reporta nada desde hace más de un día."
+
+#: modules/reflex/reflex/machineDetail.php:180
+#, php-format
+msgid "This machine has reported nothing for %s."
+msgstr "Esta máquina no reporta nada desde hace %s."
+
+#: modules/reflex/reflex/machineDetail.php:194
+msgid "1 probe has stopped reporting on this machine."
+msgstr "1 sonda ya no reporta en esta máquina."
+
+#: modules/reflex/reflex/machineDetail.php:195
+#, php-format
+msgid "%d probes have stopped reporting on this machine."
+msgstr "%d sondas ya no reportan en esta máquina."
+
+#: modules/reflex/reflex/machineDetail.php:266
+msgid "Agent configuration"
+msgstr "Configuración del agente"
+
+#: modules/reflex/reflex/machineDetail.php:285
+msgid "The agent reported an error while applying its configuration: part of this page is not measured."
+msgstr "El agente ha señalado un error al aplicar su configuración: parte de esta página no se mide."
+
+#: modules/reflex/reflex/machineDetail.php:290
+msgid "Last error"
+msgstr "Último error"
+
+#: modules/reflex/reflex/machineDetail.php:322
+msgid "No probe is placed on this machine."
+msgstr "No hay ninguna sonda colocada en esta máquina."
+
+#: modules/reflex/reflex/machineDetail.php:324
+msgid "No measure has reached the server for this machine yet."
+msgstr "Todavía no ha llegado ninguna medida al servidor para esta máquina."
+
+#: modules/reflex/reflex/machineDetail.php:326
+msgid "The state of this machine is unknown."
+msgstr "El estado de esta máquina es desconocido."
+
+#: modules/reflex/reflex/machineDetail.php:327
+msgid "Some probes have reported nothing yet: the state of this machine is unknown."
+msgstr "Algunas sondas todavía no han enviado nada: el estado de esta máquina es desconocido."
+
+#: modules/reflex/reflex/machineDetail.php:329
+msgid "Some metrics cannot be measured on this system: the state of this machine is unknown."
+msgstr "Algunas métricas no se pueden medir en este sistema: el estado de esta máquina es desconocido."
+
+#: modules/reflex/reflex/machineDetail.php:330
+msgid "Some conditions are decided over several measures: the state of this machine is unknown."
+msgstr "Algunas condiciones se deciden sobre varias medidas: el estado de esta máquina es desconocido."
+
+#: modules/reflex/reflex/machineDetail.php:334
+msgid "Some conditions could not be evaluated: the state of this machine is unknown."
+msgstr "Algunas condiciones no se han podido evaluar: el estado de esta máquina es desconocido."
+
+#: modules/reflex/reflex/machineDetail.php:247
+msgid "This machine is measured and raises no alert."
+msgstr "Esta máquina está monitorizada y no genera ninguna alerta."
+
+#: modules/reflex/reflex/machineDetail.php:383
+msgid "Alert already acknowledged"
+msgstr "Alerta ya confirmada"
+
+#: modules/reflex/reflex/machineDetail.php:457
+msgid "No measure received"
+msgstr "Ninguna medida recibida"
+
+#: modules/reflex/reflex/machineDetail.php:543
+msgid "What the measure was taken on, for a probe reporting several."
+msgstr "Aquello sobre lo que se tomó la medida, para una sonda que informa de varias."
+
+# Evolution charts of the machine sheet
+#: modules/reflex/reflex/machineDetail.php:562
+msgid "Evolution"
+msgstr "Evolución"
+
+#: modules/reflex/reflex/machineDetail.php:645
+msgid "Availability unknown over this period."
+msgstr "Disponibilidad desconocida en este período."
+
+#: modules/reflex/reflex/machineDetail.php:648
+msgid "The oldest part of this period is not shown on this strip."
+msgstr "El principio de este periodo no se muestra en esta franja."
+
+#: modules/reflex/reflex/machineDetail.php:685
+msgid "Availability"
+msgstr "Disponibilidad"
+
+#: modules/reflex/reflex/machineDetail.php:572
+msgid "No probe placed on this machine reports a number or a state."
+msgstr "Ninguna sonda colocada en esta máquina envía un número ni un estado."
+
+#: modules/reflex/reflex/machineDetail.php
+msgid "Last hour"
+msgstr "Última hora"
+
+#: modules/reflex/reflex/machineDetail.php
+msgid "Last 6 hours"
+msgstr "Últimas 6 horas"
+
+#: modules/reflex/reflex/machineDetail.php:581
+msgid "Last 24 hours"
+msgstr "Últimas 24 horas"
+
+#: modules/reflex/reflex/machineDetail.php:582
+msgid "Last 7 days"
+msgstr "Últimos 7 días"
+
+#: modules/reflex/reflex/machineDetail.php:583
+msgid "Last 30 days"
+msgstr "Últimos 30 días"
+
+#: modules/reflex/reflex/machineDetail.php:591
+msgid "Loading..."
+msgstr "Cargando..."
+
+#: modules/reflex/reflex/machineDetail.php:592
+msgid "No measure over this period."
+msgstr "Ninguna medida en este periodo."
+
+#: modules/reflex/reflex/machineDetail.php:593
+msgid "A single measure over this period: not enough to draw a chart."
+msgstr "Una sola medida en este periodo: no basta para trazar un gráfico."
+
+#: modules/reflex/reflex/machineDetail.php:602
+msgid "The oldest measures are not shown on this chart."
+msgstr "Las medidas más antiguas no se muestran en este gráfico."
+
+#: modules/reflex/reflex/machineDetail.php:601
+msgid "Measures could not be loaded."
+msgstr "No se han podido cargar las medidas."
+
+#: modules/reflex/reflex/machineDetail.php:602
+msgid "Charts cannot be drawn: the graphic library is missing on this server."
+msgstr "No se pueden trazar los gráficos: falta la biblioteca gráfica en este servidor."
+
+#: modules/reflex/reflex/machineDetail.php:612
+msgid "No measure"
+msgstr "Sin medida"
+
+#: modules/reflex/reflex/machineDetail.php
+#: modules/reflex/reflex/ajaxMachinesList.php
+msgid "Online"
+msgstr "En línea"
+
+#: modules/reflex/reflex/machineDetail.php
+#: modules/reflex/reflex/ajaxMachinesList.php
+msgid "Offline"
+msgstr "Fuera de línea"
+
+#: modules/reflex/reflex/machineDetail.php:615
+msgid "Period"
+msgstr "Periodo"
+
+#: modules/reflex/reflex/machineDetail.php:664
+msgid "No probe assigned"
+msgstr "Ninguna sonda asignada"
+
+#: modules/reflex/reflex/machineDetail.php:665
+msgid "Assign probes to this machine, to one of its groups or to its entity."
+msgstr "Asigne sondas a esta máquina, a uno de sus grupos o a su entidad."
+
+#: modules/reflex/reflex/machineDetail.php:692
+msgid "Stop measuring this probe on this machine"
+msgstr "Dejar de medir esta sonda en esta máquina"
+
+#: modules/reflex/reflex/machineDetail.php:701
+#: modules/reflex/reflex/probeDetail.php:524
+msgid "Measure this probe again on this machine"
+msgstr "Volver a medir esta sonda en esta máquina"
+
+#: modules/reflex/reflex/machineDetail.php:769
+#: modules/reflex/reflex/probeDetail.php:455
+msgid "Interval"
+msgstr "Intervalo"
+
+#: modules/reflex/reflex/probeDetail.php:54
+msgid "Invalid probe"
+msgstr "Sonda no válida"
+
+#: modules/reflex/reflex/probeDetail.php:55
+msgid "No probe identifier was supplied."
+msgstr "No se ha facilitado ningún identificador de sonda."
+
+#: modules/reflex/reflex/probeDetail.php:62
+#: modules/reflex/reflex/probeEdit.php:240
+msgid "Probe not found"
+msgstr "Sonda no encontrada"
+
+#: modules/reflex/reflex/probeDetail.php:158
+#: modules/reflex/reflex/probeEdit.php:267
+msgid "Back to probes list"
+msgstr "Volver a la lista de sondas"
+
+#: modules/reflex/reflex/probeDetail.php:167
+#, php-format
+msgid "Back to %s"
+msgstr "Volver a %s"
+
+#: modules/reflex/reflex/probeDetail.php:169
+msgid "Back to the machine"
+msgstr "Volver a la máquina"
+
+#: modules/reflex/reflex/probeDetail.php:183
+msgid "Default interval"
+msgstr "Intervalo por defecto"
+
+#: modules/reflex/reflex/probeDetail.php:187
+msgid "Minimum interval"
+msgstr "Intervalo mínimo"
+
+#: modules/reflex/reflex/probeDetail.php:191
+msgid "Systems"
+msgstr "Sistemas"
+
+#: modules/reflex/reflex/probeDetail.php:195
+msgid "Not stated"
+msgstr "Sin indicar"
+
+#: modules/reflex/reflex/probeDetail.php:203
+#, php-format
+msgid "(not measurable on %s)"
+msgstr "(no medible en %s)"
+
+#: modules/reflex/reflex/probeDetail.php:210
+msgid "Requires on the endpoint"
+msgstr "Requiere en el equipo"
+
+#: modules/reflex/reflex/probeDetail.php:257
+#: modules/reflex/reflex/probeEdit.php:355
+msgid "Alert conditions"
+msgstr "Condiciones de alerta"
+
+#: modules/reflex/reflex/probeDetail.php:262
+msgid "No condition defined"
+msgstr "Ninguna condición definida"
+
+#: modules/reflex/reflex/probeDetail.php:263
+msgid "This probe only collects measures."
+msgstr "Esta sonda solo recoge medidas."
+
+#: modules/reflex/reflex/probeDetail.php:304
+msgid "All the conditions of this probe are disabled: it will never raise an alert."
+msgstr "Todas las condiciones de esta sonda están desactivadas: nunca generará una alerta."
+
+#: modules/reflex/reflex/probeDetail.php:307
+#, php-format
+msgid "1 of the %d conditions of this probe is disabled."
+msgstr "1 de las %d condiciones de esta sonda está desactivada."
+
+#: modules/reflex/reflex/probeDetail.php:312
+#, php-format
+msgid "%d of the %d conditions of this probe are disabled."
+msgstr "%d de las %d condiciones de esta sonda están desactivadas."
+
+#: modules/reflex/reflex/probeDetail.php:329
+msgid "Adapt this condition"
+msgstr "Adaptar esta condición"
+
+#: modules/reflex/reflex/probeDetail.php:330
+msgid "Edit this condition"
+msgstr "Modificar esta condición"
+
+#: modules/reflex/reflex/probeDetail.php:352
+msgid "Assignments"
+msgstr "Asignaciones"
+
+#: modules/reflex/reflex/probeDetail.php:357
+msgid "Assign probe"
+msgstr "Asignar la sonda"
+
+#: modules/reflex/reflex/probeDetail.php:368
+msgid "Probe not assigned"
+msgstr "Sonda no asignada"
+
+#: modules/reflex/reflex/probeDetail.php:369
+msgid "Assign this probe to machines, a group or an entity so that agents start measuring."
+msgstr "Asigne esta sonda a máquinas, a un grupo o a una entidad para que los agentes empiecen a medir."
+
+#: modules/reflex/reflex/probeDetail.php:380
+msgid "Remove assignment"
+msgstr "Retirar la asignación"
+
+#: modules/reflex/includes/html.inc.php
+msgid "Placed on your whole estate."
+msgstr "Asignada a todo su parque."
+
+#: modules/reflex/includes/html.inc.php
+#, php-format
+msgid "Placed on %1$d of your %2$d entities."
+msgstr "Asignada a %1$d de sus %2$d entidades."
+
+#: modules/reflex/reflex/ajaxUnassignProbe.php
+#, php-format
+msgid "Remove these %d assignments?"
+msgstr "¿Retirar estas %d asignaciones?"
+
+#: modules/reflex/reflex/ajaxUnassignProbe.php
+msgid "Failed to remove these assignments"
+msgstr "Error al retirar estas asignaciones"
+
+#: modules/reflex/reflex/ajaxEditAssignmentInterval.php
+#, php-format
+msgid "Cadence changed on %1$d assignment(s) out of %2$d."
+msgstr "Cadencia cambiada en %1$d asignación(es) de %2$d."
+
+#: modules/reflex/reflex/machineDetail.php
+msgid "This probe arrives through a group of another client: its cadence cannot be changed here"
+msgstr "Esta sonda llega a través de un grupo de otro cliente: su cadencia no se puede cambiar aquí"
+
+#: modules/reflex/reflex/probeDetail.php:402
+msgid "Remove selected assignments"
+msgstr "Retirar las asignaciones seleccionadas"
+
+#: modules/reflex/reflex/probeDetail.php:405
+msgid "Remove these assignments? The probe stops being measured on these targets, and the alerts open on the machines that lose it are closed."
+msgstr "¿Retirar estas asignaciones? La sonda deja de medirse en estos destinos, y las alertas abiertas en las máquinas que la pierden se cierran."
+
+#: modules/reflex/reflex/probeDetail.php:406
+msgid "Assignment removal report:"
+msgstr "Informe del retiro de las asignaciones:"
+
+#: modules/reflex/reflex/probeDetail.php:407
+msgid "An error occurred while removing the assignments."
+msgstr "Se produjo un error al retirar las asignaciones."
+
+#: modules/reflex/reflex/probeDetail.php:488
+msgid "Exceptions"
+msgstr "Excepciones"
+
+#: modules/reflex/reflex/probeDetail.php:490
+msgid "These machines are covered by an assignment above but are no longer measured by this probe."
+msgstr "Estas máquinas están cubiertas por una asignación anterior pero ya no son medidas por esta sonda."
+
+#: modules/reflex/reflex/probeDetail.php:542
+msgid "Excluded by"
+msgstr "Excluida por"
+
+#: modules/reflex/reflex/probeDetail.php:543
+msgid "Excluded on"
+msgstr "Excluida el"
+
+#: modules/reflex/reflex/probeEdit.php:125
+msgid "Unknown category"
+msgstr "Categoría desconocida"
+
+#: modules/reflex/reflex/probeEdit.php:128
+msgid "Unknown value type"
+msgstr "Tipo de valor desconocido"
+
+#: modules/reflex/reflex/probeEdit.php:161
+msgid "The server refused these alert conditions."
+msgstr "El servidor ha rechazado estas condiciones de alerta."
+
+#: modules/reflex/reflex/probeEdit.php:175
+msgid "Probe created"
+msgstr "Sonda creada"
+
+#: modules/reflex/reflex/probeEdit.php:193
+msgid "Failed to create the probe"
+msgstr "No se ha podido crear la sonda"
+
+#: modules/reflex/reflex/probeEdit.php:208
+msgid "Probe updated"
+msgstr "Sonda actualizada"
+
+#: modules/reflex/reflex/probeEdit.php:223
+msgid "Failed to update the probe"
+msgstr "No se ha podido actualizar la sonda"
+
+#: modules/reflex/reflex/probes.php:46
+msgid "Show"
+msgstr "Mostrar"
+
+#: modules/reflex/reflex/probeEdit.php:234 modules/reflex/reflex/probes.php:56
+msgid "New probe"
+msgstr "Nueva sonda"
+
+#: modules/reflex/reflex/probeEdit.php:241
+msgid "This probe does not exist any more or you are not allowed to edit it."
+msgstr "Esta sonda ya no existe o no está autorizado a modificarla."
+
+#: modules/reflex/reflex/probeEdit.php:248
+msgid "Built-in probe"
+msgstr "Sonda incluida"
+
+#: modules/reflex/reflex/probeEdit.php:249
+msgid "Duplicate this probe to obtain an editable variant."
+msgstr "Duplique esta sonda para obtener una variante editable."
+
+#: modules/reflex/reflex/probeEdit.php:305
+msgid "Description"
+msgstr "Descripción"
+
+#: modules/reflex/reflex/probeEdit.php:320
+msgid "Unit"
+msgstr "Unidad"
+
+#: modules/reflex/reflex/ruleEdit.php:106
+msgid "Please select a notification channel"
+msgstr "Seleccione un canal de notificación"
+
+#: modules/reflex/reflex/ruleEdit.php:110
+msgid "The cooldown must not be negative"
+msgstr "La antirrepetición no debe ser negativa"
+
+#: modules/reflex/reflex/ruleEdit.php:113
+msgid "Please pick a target restriction in the list"
+msgstr "Elija una restricción de destino en la lista"
+
+#: modules/reflex/reflex/ruleEdit.php:124
+msgid "Notification rule created"
+msgstr "Regla de notificación creada"
+
+#: modules/reflex/reflex/ruleEdit.php:130
+msgid "Failed to create the notification rule"
+msgstr "No se ha podido crear la regla de notificación"
+
+#: modules/reflex/reflex/ruleEdit.php:134
+msgid "Notification rule updated"
+msgstr "Regla de notificación actualizada"
+
+#: modules/reflex/reflex/ruleEdit.php:140
+msgid "Failed to update the notification rule"
+msgstr "No se ha podido actualizar la regla de notificación"
+
+#: modules/reflex/reflex/ruleEdit.php:145
+#: modules/reflex/reflex/settings/tabRules.php:35
+msgid "New notification rule"
+msgstr "Nueva regla de notificación"
+
+#: modules/reflex/reflex/ruleEdit.php:145
+msgid "Edit notification rule"
+msgstr "Editar la regla de notificación"
+
+#: modules/reflex/reflex/ruleEdit.php:151
+msgid "Notification rule not found"
+msgstr "Regla de notificación no encontrada"
+
+#: modules/reflex/reflex/ruleEdit.php:152
+msgid "This notification rule does not exist any more."
+msgstr "Esta regla de notificación ya no existe."
+
+#: modules/reflex/reflex/ruleEdit.php:160
+msgid "Create a notification channel before adding a rule."
+msgstr "Cree un canal de notificación antes de añadir una regla."
+
+#: modules/reflex/reflex/ruleEdit.php:173
+msgid "Back to notification rules"
+msgstr "Volver a las reglas de notificación"
+
+#: modules/reflex/reflex/ruleEdit.php:229
+msgid "Trigger"
+msgstr "Activación"
+
+#: modules/reflex/reflex/ruleEdit.php:235
+msgid "Restrict the rule to a single probe, or leave it on all probes."
+msgstr "Restringir la regla a una sola sonda, o dejarla en todas las sondas."
+
+#: modules/reflex/reflex/ruleEdit.php:240
+msgid "Rule enabled"
+msgstr "Regla activada"
+
+#: modules/reflex/reflex/ruleEdit.php:257
+msgid "One address per line."
+msgstr "Una dirección por línea."
+
+#: modules/reflex/reflex/ruleEdit.php:264
+msgid "No restriction"
+msgstr "Sin restricción"
+
+#: modules/reflex/reflex/ruleEdit.php:277
+msgid "Limits the rule to the machines of one group or entity."
+msgstr "Limita la regla a las máquinas de un grupo o una entidad."
+
+#: modules/reflex/reflex/ruleEdit.php:280
+#, php-format
+msgid "The restriction saved for this rule, '%s', matches no group and no entity."
+msgstr "La restricción guardada para esta regla, «%s», no corresponde a ningún grupo ni entidad."
+
+#: modules/reflex/reflex/ruleEdit.php:294
+msgid "Sending rhythm"
+msgstr "Ritmo de envío"
+
+#: modules/reflex/reflex/ruleEdit.php:300
+msgid "Minimum delay before the same alert is sent again through this channel."
+msgstr "Retardo mínimo antes de que la misma alerta vuelva a enviarse por este canal."
+
+#: modules/reflex/reflex/ruleEdit.php:311
+msgid "Second send if a critical alert is still not acknowledged. Leave empty to disable escalation."
+msgstr "Segundo envío si una alerta crítica sigue sin confirmarse. Déjelo vacío para desactivar el escalado."
+
+#: modules/reflex/reflex/settings.php:35
+msgid "Channels"
+msgstr "Canales"
+
+#: modules/reflex/reflex/settings.php:44
+#: modules/reflex/reflex/settings/tabRules.php:27
+msgid "Notification rules"
+msgstr "Reglas de notificación"
+
+#: modules/reflex/reflex/settings/tabChannels.php:27
+msgid "Notification channels"
+msgstr "Canales de notificación"
+
+#: modules/reflex/reflex/alerts.php:48
+msgid "In progress"
+msgstr "En curso"
+
+#: modules/reflex/reflex/ajaxAlertsHistory.php:172
+msgid "No alert opened over this period."
+msgstr "Ninguna alerta abierta en este periodo."
+
+#: modules/reflex/reflex/ajaxAlertsHistory.php:173
+msgid "No alert has been resolved yet."
+msgstr "Todavía no se ha resuelto ninguna alerta."
+
+#: modules/reflex/reflex/ajaxMachinesList.php:113
+msgid "No machine found"
+msgstr "Ninguna máquina encontrada"
+
+#: modules/reflex/reflex/ajaxMachinesList.php:114
+msgid "No machine matches the search."
+msgstr "Ninguna máquina coincide con la búsqueda."
+
+#: modules/reflex/reflex/machineDetail.php:588
+#, php-format
+msgid "Show the other charts (%d)"
+msgstr "Mostrar los otros gráficos (%d)"
+
+#: modules/reflex/reflex/machineDetail.php:603
+msgid "Hide the other charts"
+msgstr "Ocultar los otros gráficos"
+
+#: pulse_xmpp_master_substitute/lib/plugins/reflex/__init__.py
+msgid "Alert"
+msgstr "Alerta"
+
+#: pulse_xmpp_master_substitute/lib/plugins/reflex/__init__.py
+msgid "Alert not acknowledged, second notice."
+msgstr "Alerta no confirmada, segundo aviso."
+
+#: pulse_xmpp_master_substitute/lib/plugins/reflex/__init__.py
+msgid "Alerts in the Medulla console:"
+msgstr "Las alertas en la consola Medulla:"
+
+#: pulse_xmpp_master_substitute/lib/plugins/reflex/__init__.py
+msgid "Automatic message from Medulla Reflex. Do not reply: notification channels and rules are set in the Medulla console."
+msgstr "Mensaje automático de Medulla Reflex. No responda: los canales y las reglas de notificación se configuran en la consola Medulla."
+
+#: pulse_xmpp_master_substitute/lib/plugins/reflex/__init__.py
+msgid "Measured value"
+msgstr "Valor medido"
+
+#: pulse_xmpp_master_substitute/lib/plugins/reflex/__init__.py
+msgid "Medulla Reflex raised an alert."
+msgstr "Medulla Reflex ha levantado una alerta."
+
+#: pulse_xmpp_master_substitute/lib/plugins/reflex/__init__.py
+msgid "Message"
+msgstr "Mensaje"
+
+#: pulse_xmpp_master_substitute/lib/plugins/reflex/__init__.py
+msgid "Open in the Medulla console"
+msgstr "Abrir en la consola Medulla"
+
+#: pulse_xmpp_master_substitute/lib/plugins/reflex/__init__.py
+msgid "Opened at"
+msgstr "Abierta el"
+
+#: pulse_xmpp_master_substitute/lib/plugins/reflex/__init__.py
+msgid "open for %s"
+msgstr "abierta desde hace %s"
+
+#: mmc/plugins/reflex/mail.py
+msgid "Test message"
+msgstr "Mensaje de prueba"
+
+#: mmc/plugins/reflex/mail.py
+msgid "Test"
+msgstr "Prueba"
+
+#: mmc/plugins/reflex/mail.py
+msgid "Test message of this notification channel."
+msgstr "Mensaje de prueba de este canal de notificación."
+
+#: mmc/plugins/reflex/mail.py
+msgid "Receiving this message proves that this channel delivers its notifications to its mail server."
+msgstr "La recepción de este mensaje demuestra que este canal entrega correctamente sus notificaciones a su servidor de correo."
+
+#: mmc/plugins/reflex/mail.py
+msgid "Mail server"
+msgstr "Servidor de correo"
+
+#: mmc/plugins/reflex/mail.py
+msgid "Sent at"
+msgstr "Enviado el"
+
+#: modules/reflex/includes/html.inc.php:880
+msgid "This machine belongs to another entity than the channel: the alert is not sent outside its own entity."
+msgstr "Esta máquina pertenece a otra entidad que el canal: la alerta no se envía fuera de su entidad."
+
+#: modules/reflex/includes/html.inc.php:881
+msgid "This machine belongs to another entity than the channel: the resending was abandoned."
+msgstr "Esta máquina pertenece a otra entidad que el canal: el reenvío se ha abandonado."
+
+#: modules/reflex/reflex/channelEdit.php:132
+msgid "Choose the entity the channel belongs to"
+msgstr "Elija la entidad a la que pertenece el canal"
+
+#: modules/reflex/reflex/channelEdit.php:249
+msgid "No entity within your reach"
+msgstr "Ninguna entidad a su alcance"
+
+#: modules/reflex/reflex/channelEdit.php:250
+msgid "A channel belongs to an entity, and your account reaches none. Ask an administrator for access to an entity before creating a channel."
+msgstr "Un canal pertenece a una entidad y su cuenta no alcanza ninguna. Pida a un administrador acceso a una entidad antes de crear un canal."
+
+#: modules/reflex/reflex/ajaxChannelsList.php:141
+msgid "The client the channel belongs to: it only receives the alerts of the machines of that entity, not those of its sub-entities."
+msgstr "El cliente al que pertenece el canal: solo recibe las alertas de las máquinas de esa entidad, no las de sus subentidades."
+
+msgid "Supervision of %s"
+msgstr "Supervisión de %s"
+
+#: modules/reflex/includes/html.inc.php:1736
+#, php-format
+msgid "outside %s"
+msgstr "fuera de %s"
+
+#: modules/reflex/includes/html.inc.php:1110
+msgid "d"
+msgstr "d"
+
+#: modules/reflex/reflex/ajaxProbesList.php:186
+msgid "Alert when"
+msgstr "Alerta si"
+
+#: modules/reflex/reflex/ajaxProbesList.php:188
+msgid "Conditions applied in the selected entity."
+msgstr "Condiciones aplicadas en la entidad seleccionada."
+
+msgid "Commands"
+msgstr "Comandos"
+
+msgid "Measure"
+msgstr "Medida"
+
+msgid "native Medulla"
+msgstr "nativa de Medulla"
+
+msgid "Optional, for a number"
+msgstr "Opcional, para un número"
+
+msgid "Command executed"
+msgstr "Comando ejecutado"
+
+msgid "The probe name is required"
+msgstr "El nombre de la sonda es obligatorio"
+
+msgid "Enter a command for at least one system"
+msgstr "Introduzca un comando para al menos un sistema"
+
+msgid "Command failed"
+msgstr "Error del comando"
+
+msgid "The command returned nothing usable."
+msgstr "El comando no devolvió nada utilizable."
+
+msgid "Some commands failed: the state of this machine is unknown."
+msgstr "Algunos comandos fallaron: el estado de esta máquina es desconocido."
+
+msgid "Linux and macOS"
+msgstr "Linux y macOS"
+
+msgid "Alert if the result"
+msgstr "Alerta si el resultado"
+
+msgid "is greater than"
+msgstr "es mayor que"
+
+msgid "is greater than or equal to"
+msgstr "es mayor o igual que"
+
+msgid "is less than"
+msgstr "es menor que"
+
+msgid "is less than or equal to"
+msgstr "es menor o igual que"
+
+msgid "is between"
+msgstr "está entre"
+
+msgid "is outside"
+msgstr "está fuera de"
+
+msgid "is equal to"
+msgstr "es igual a"
+
+msgid "is different from"
+msgstr "es distinto de"
+
+msgid "is Yes"
+msgstr "vale Sí"
+
+msgid "is No"
+msgstr "vale No"
+
+msgid "has changed"
+msgstr "ha cambiado"
+
+msgid "and"
+msgstr "y"
+
+msgid "Options"
+msgstr "Opciones"
+
+msgid "Command"
+msgstr "Comando"
+
+msgid "Templates"
+msgstr "Plantillas"
+
+msgid "Disk space used"
+msgstr "Espacio en disco usado"
+
+msgid "Service running"
+msgstr "Servicio en ejecución"
+
+msgid "Port listening"
+msgstr "Puerto en escucha"
+
+msgid "Process running"
+msgstr "Proceso en ejecución"
+
+msgid "Backup age"
+msgstr "Antigüedad de una copia de seguridad"
+
+msgid "Uptime"
+msgstr "Tiempo de actividad"
+
+msgid "is not Yes"
+msgstr "no vale Sí"
+
+msgid "is not No"
+msgstr "no vale No"
+
+msgid "No notification channel configured."
+msgstr "Ningún canal de notificación configurado."
+
+msgid "No rule covers this probe."
+msgstr "Ninguna regla cubre esta sonda."
+
+msgid "Configure"
+msgstr "Configurar"
+
+msgid "The machine has never been reached: its configuration has not been delivered."
+msgstr "Nunca se ha contactado con la máquina: su configuración no le ha llegado."
+
+msgid "The machine received its configuration but has not reported anything yet."
+msgstr "La máquina recibió su configuración pero aún no ha enviado nada."
+
+msgid "No machine is targeted by a probe yet."
+msgstr "Ninguna máquina está aún cubierta por una sonda."
+
+msgid "Recent alerts"
+msgstr "Alertas recientes"
+
+msgid "No alert raised by this probe."
+msgstr "Esta sonda no ha generado ninguna alerta."
+
+msgid "See the whole history"
+msgstr "Ver todo el historial"
+
+msgid "See the alerts in progress"
+msgstr "Ver las alertas en curso"
+
+msgid "Retention"
+msgstr "Conservación"
+
+msgid "Measures"
+msgstr "Medidas"
+
+msgid "Resolved alerts"
+msgstr "Alertas resueltas"
+
+msgid "Sending history"
+msgstr "Historial de envíos"
+
+msgid "Older data is deleted every night."
+msgstr "Los datos más antiguos se eliminan cada noche."
+
+msgid "Retention saved"
+msgstr "Conservación guardada"
+
+msgid "Failed to save the retention"
+msgstr "Error al guardar la conservación"
+
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d día"
+msgstr[1] "%d días"
+
+msgid "%d year"
+msgid_plural "%d years"
+msgstr[0] "%d año"
+msgstr[1] "%d años"
+
+msgid "A whole number is expected."
+msgstr "Se espera un número entero."
+
+msgid "This value is outside the allowed range."
+msgstr "Este valor está fuera de los límites permitidos."
+
+msgid "Import a list…"
+msgstr "Importar una lista…"
+
+msgid "No address found in this file."
+msgstr "No se encontró ninguna dirección en este archivo."
+
+msgid "Invalid addresses: %s"
+msgstr "Direcciones no válidas: %s"
+
+msgid "Some addresses are not valid e-mail addresses."
+msgstr "Algunas direcciones no son direcciones de correo electrónico válidas."
+
+msgid "The rule names no recipient: nothing was sent."
+msgstr "La regla no designa ningún destinatario: no se ha enviado nada."
+
+msgid "Send the test to"
+msgstr "Enviar la prueba a"
+
+msgid "Enter the address to send the test to."
+msgstr "Introduzca la dirección a la que enviar la prueba."
+
+msgid "Change the cadence"
+msgstr "Modificar la cadencia"
+
+msgid "Cadence changed"
+msgstr "Cadencia modificada"
+
+msgid "Failed to change the cadence"
+msgstr "Error al modificar la cadencia"
+
+msgid "This assignment does not exist any more."
+msgstr "Esta asignación ya no existe."
+
+msgid "Evaluated by the server: this probe has no cadence"
+msgstr "Evaluada por el servidor: esta sonda no tiene cadencia"
+
+#: modules/reflex/reflex/machineDetail.php
+msgid "Unknown machine"
+msgstr "Máquina desconocida"
+
+#: modules/reflex/reflex/machineDetail.php
+msgid "This machine does not exist or is outside your scope."
+msgstr "Esta máquina no existe o está fuera de su ámbito."
+
+#: modules/reflex/includes/html.inc.php
+msgid "This address is not valid: %s"
+msgstr "Esta dirección no es válida: %s"
+
+#: modules/reflex/includes/html.inc.php
+msgid "A test is sent to one address only."
+msgstr "Una prueba se envía a una sola dirección."
+
+#: modules/reflex/includes/html.inc.php
+msgid "Addresses typed: %s"
+msgstr "Direcciones introducidas: %s"
+
+#: modules/reflex/reflex/probeDetail.php:580
+msgid "Settings per entity"
+msgstr "Ajustes por entidad"
+
+#: modules/reflex/includes/html.inc.php
+msgid "This entity holds no machine you can see: what is set on it is never read."
+msgstr "Esta entidad no cuenta con ninguna máquina visible para usted: lo que se ajusta en ella nunca se lee."
+
+#: modules/reflex/includes/html.inc.php
+msgid "The condition as the probe defines it."
+msgstr "La condición tal como la define la sonda."
+
+#: modules/reflex/reflex/probeDetail.php:584
+msgid "The machines of each entity could not be counted: every entity you reach is listed."
+msgstr "No se han podido contar las máquinas de cada entidad: se listan todas las entidades que usted alcanza."
+
+#: modules/reflex/includes/html.inc.php
+msgid "Import a file…"
+msgstr "Importar un archivo…"
+
+#: modules/reflex/includes/html.inc.php
+msgid "Import a file into the command for %s"
+msgstr "Importar un archivo en el comando para %s"
+
+#: modules/reflex/includes/html.inc.php
+msgid "Replace the command already written with the contents of this file?"
+msgstr "¿Reemplazar el comando ya escrito por el contenido de este archivo?"
+
+#: modules/reflex/includes/html.inc.php
+msgid "This file holds no command."
+msgstr "Este archivo no contiene ningún comando."
+
+#: modules/reflex/includes/html.inc.php
+msgid "This file could not be read."
+msgstr "No se ha podido leer este archivo."
+
+#: modules/reflex/includes/html.inc.php
+msgid "This file holds %s characters, more than the %s a command may carry."
+msgstr "Este archivo tiene %s caracteres, más de los %s que puede contener un comando."
+
+#: modules/reflex/includes/html.inc.php
+msgid "Command read from %s."
+msgstr "Comando leído de %s."

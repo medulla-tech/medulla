@@ -141,7 +141,11 @@ foreach ($userDetails as $user) {
                     ? _T("Are you sure you want to deactivate this user <strong>%s</strong>?", "admin")
                     : _T("Are you sure you want to reactivate this user <strong>%s</strong>?", "admin"),
                 htmlspecialchars($user['name'] ?? '', ENT_QUOTES, 'UTF-8')
-            )
+            ),
+            null,
+            300,
+            false,
+            'POST'
         );
 
         $userDeleteActions[] = new ActionConfirmItem(
@@ -154,7 +158,11 @@ foreach ($userDetails as $user) {
             addcslashes(strip_tags(sprintf(
                 _T("Are you sure you want to delete this user <strong>%s</strong>?", "admin"),
                 htmlspecialchars($user['name'] ?? '', ENT_QUOTES, 'UTF-8')
-            )), "\\'")
+            )), "\\'"),
+            null,
+            300,
+            false,
+            'POST'
         );
     } else {
         $userDesactivateActions[] = new EmptyActionItem1(

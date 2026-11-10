@@ -10,5 +10,14 @@ $start = (isset($_GET['start'])) ? htmlentities($_GET['start']) : 0;
 $end = (isset($_GET['end'])) ? htmlentities($_GET['end']) : $maxperpage;
 $filter = (isset($_GET['filter'])) ? htmlentities($_GET['filter']) : "";
 $params = ["source" => "xmppmaster"];
-echo "Centos";
+
+$timerefresh= 90;
+
+$ajax = new AjaxPagebartitlletime(urlStrRedirect("updates/updates/ajaxMajorEntitiesListCentos"),
+                                  "EntityCompliancediv",
+                                  getFilteredGetParams(),
+                                  $timerefresh,
+                                  "idcircularProgress");
+
+$ajax->display();
 ?>

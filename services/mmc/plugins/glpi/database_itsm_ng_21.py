@@ -5970,6 +5970,29 @@ class Itsmng21(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    @DatabaseHelper._sessionm
+    def get_phone_inventories_for_dashboard(self, session, entities: list = []) -> dict:
+        orange = self.config.orange
+        red = self.config.red
+
+        now = datetime.datetime.now()
+        orange_date = now - datetime.timedelta(days=orange)
+        red_date = now - datetime.timedelta(days=red)
+
+        phones = self.phones
+        date_mod = phones.c.date_mod
+
+        base_query = session.query(phones).filter(phones.c.entities_id.in_(entities))
+
+        green_count  = base_query.filter(date_mod > orange_date).count()
+        orange_count = base_query.filter(and_(date_mod <= orange_date, date_mod > red_date)).count()
+        red_count    = base_query.filter(date_mod <= red_date).count()
+
+        return {
+            "days": {"red": red, "orange": orange},
+            "count": {"red": int(red_count), "orange": int(orange_count), "green": int(green_count)}
+        }
+
     def getMachineNumberByState(self, ctx):
         """
         return number of machines sorted by state
@@ -8911,9 +8934,14 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
                     gi.completename AS complet_entity_name_,
                     gi.name AS entity_name_,
                     gp.name AS profile_name,
-                    (SELECT GROUP_CONCAT(gi2.id ORDER BY gi2.id SEPARATOR ',')
-                        FROM glpi_entities gi2
-                        WHERE gi2.completename LIKE CONCAT(gi.completename, '%')
+                    (SELECT GROUP_CONCAT(DISTINCT gi2.id ORDER BY gi2.id SEPARATOR ',')
+                        FROM glpi_profiles_users gpu
+                        JOIN glpi_entities ge ON ge.id = gpu.entities_id
+                        JOIN glpi_entities gi2
+                            ON gi2.id = ge.id
+                            OR (gpu.is_recursive = 1
+                                AND gi2.completename LIKE CONCAT(ge.completename, ' > %'))
+                        WHERE gpu.users_id = gu.id
                     ) AS liste_entities_user,
                     COALESCE(
                         (SELECT ga.app_token
@@ -9169,6 +9197,35 @@ where concat("UUID", c.id) = "%s"
 
         return result
 
+    @DatabaseHelper._sessionm
+    def get_machines_info_from_list(self, session, uuid_list=[]):
+        """Get the machines info from a list of UUID.
+
+        Args:
+            self (Glpi100): Instance of Glpi100 object.
+            session (sqlalchemy session): Session to access to the DB
+            uuid_list (list): List of machine UUID to get the machines info.
+
+        Returns:
+            dict: A dict of machines infos. The result is returned as a dict to be able to associate into a another result easily.
+            """
+
+        query = session.query(Machine)\
+            .filter(Machine.uuid.in_(uuid_list))
+
+        data = query.all()
+        if data == None:
+            return {}
+
+        result = {}
+        for machine in data:
+            result[machine.uuid] = {
+                "id":machine.id,
+                "uuid": machine.uuid,
+                "name":machine.name,
+            }
+
+        return result
 
 # Class for SQLalchemy mapping
 class Machine(object):
