@@ -1326,6 +1326,9 @@ EOF
 # --- End of specific update functions for each version ---
 
 temp_updates() {
+    str="[v] Running temporary updates if any."
+    echo "$str"
+    write_to_log "$str"
 }
 
 
@@ -1491,12 +1494,14 @@ case "$CURRENT_VERSION" in
         echo "$str"
         write_to_log "$str"
         update_medulla
-        temp_updates
         str="[!] Medulla is already at the latest version or an unsupported version is detected."
         echo "$str"
         write_to_log "$str"
         ;;
 esac
+
+# Run any temporary updates
+temp_updates
 
 # Call final operations
 final_operations
