@@ -424,7 +424,8 @@ WINDOWS_MACHINE_CARDS = {
     "to_update": f"""{MACHINE_COUNTED_SQL} AND m.missing > 0 AND NOT m.search_failed
                 AND NOT m.updating AND NOT m.reboot_pending AND NOT m.unsupported""",
     "critical": f"{MACHINE_COUNTED_SQL} AND m.critical > 0",
-    "reboot_pending": "m.evaluated AND m.reboot_pending AND NOT m.search_failed AND NOT m.updating",
+    "reboot_pending": """m.evaluated AND m.reboot_pending AND NOT m.search_failed AND NOT m.updating
+                AND NOT m.restart_requested""",
 }
 
 WINDOWS_SEVERITY_ORDER = ("Critical", "Important", "Moderate", "Low")
