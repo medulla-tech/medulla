@@ -1298,16 +1298,15 @@ EOF
 
     ## Setup new MMC module: mobile
     setup_new_mmc_module "mobile"
-    # Configure mobile module
-    crudini --set /etc/mmc/plugins/mobile.ini.local main disable 1
-    if [[ $? -ne 0 ]]; then
-        str="[x] Error configuring mobile module. Aborting."
-        echo "$str"
-        write_to_log "$str"
-        exit 1
-    fi
     # mmc-agent will be restarted in final_operations
     str="[v] Medulla MMC module 'mobile' setup and configuration applied successfully."
+    echo "$str"
+    write_to_log "$str"
+
+    ## Setup new MMC module: reflex
+    setup_new_mmc_module "reflex"
+    # mmc-agent will be restarted in final_operations
+    str="[v] Medulla MMC module 'reflex' setup and configuration applied successfully."
     echo "$str"
     write_to_log "$str"
 
