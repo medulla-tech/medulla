@@ -191,7 +191,10 @@ if (isset($_POST["bConnect"]) || isset($_POST["bMagicLink"])) {
     }
     // Connexion - Password
     else {
-        if (empty($error) && auth_user($login, $pass)) {
+        if ($conf['global']['disable_root_login'] && $login === 'root') {
+            $error = _("Login failed. The root user cannot log in through the web interface.");
+        }
+        elseif (empty($error) && auth_user($login, $pass)) {
             include "includes/createSession.inc.php";
             header("Location: main.php");
             exit;

@@ -9,6 +9,7 @@ sessiontimeout = 7200
 login = mmc
 password = s3cr3t
 magic_link = 0
+disable_root_login = 0
 
 ; Root URL where the MMC web pages are installed
 ; root= /mmc/ for http://127.0.0.1/mmc/
