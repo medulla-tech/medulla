@@ -276,8 +276,21 @@ msgid "An error occurred while deleting."
 msgstr "Se ha producido un error durante la eliminación."
 
 #: modules/kiosk/kiosk/ajaxProfilesList.php
+msgid "Yes"
+msgstr "Sí"
+
+#: modules/kiosk/kiosk/ajaxProfilesList.php
+msgid "No"
+msgstr "No"
+
+#: modules/kiosk/kiosk/ajaxProfilesList.php
 msgid "Close"
 msgstr "Cerrar"
+
+#: modules/kiosk/kiosk/ajaxProfilesList.php
+#, php-format
+msgid "and %d more"
+msgstr "y %d más"
 
 #: modules/kiosk/kiosk/deleteProfile.php
 #, php-format

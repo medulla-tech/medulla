@@ -1465,7 +1465,7 @@ EOF
 # --- End of specific update functions for each version ---
 
 temp_updates() {
-    str="[v] Running temporary updates if any"
+    str="[v] Running temporary updates if any."
     echo "$str"
     write_to_log "$str"
 }

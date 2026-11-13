@@ -232,13 +232,42 @@ def associatePackages(pid, fs, level=0):
     tmp_input_dir = os.path.join("/", "var", "lib", "pulse2", "package-server-tmpdir")
     packages_input_dir = os.path.join("/", "var", "lib", "pulse2", "packages")
     destination = os.path.join(packages_input_dir, pid)
+    destination_for_rsync = destination
     errortransfert = []
     result = []
     boolsucess = True
+    if os.path.islink(destination):
+        destination_realpath = os.path.realpath(destination)
+        sharing_root = os.path.realpath(
+            os.path.join(packages_input_dir, "sharing")
+        )
+        try:
+            target_is_in_sharing = (
+                os.path.commonpath((sharing_root, destination_realpath))
+                == sharing_root
+            )
+        except ValueError:
+            target_is_in_sharing = False
+
+        if (
+            not target_is_in_sharing
+            or destination_realpath == sharing_root
+            or not os.path.isdir(destination_realpath)
+        ):
+            logger.error(
+                "Package association refused unsafe or missing destination "
+                "symlink target: %s -> %s",
+                destination,
+                destination_realpath,
+            )
+            return [False, ["Unsafe or missing package destination"]]
+
+        destination_for_rsync = destination_realpath
+
     if len(fs) > 0:
         for repfiles in fs:
             source = os.path.join(tmp_input_dir, repfiles)
-            cmd = "rsync -a %s/ %s/" % (source, destination)
+            cmd = "rsync -a %s/ %s/" % (source, destination_for_rsync)
             rest = simplecommand(cmd)
             if rest["code"] != 0:
                 boolsucess = False

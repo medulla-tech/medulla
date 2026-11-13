@@ -35,7 +35,13 @@ Our team is available for any questions or demonstration requests.
 
 ## Supported clients
 
-Manage your Windows (from version 10 to lastest CBB and LTSB) and Linux systems
+- Windows 10 and later (including LTSC releases)
+- Debian 12 (Bookworm)
+- Ubuntu
+- Zorin OS
+- macOS 26.2 or later
+
+**Upcoming support:** Debian 13 and Android agents.
 
 ## Documentation
 
