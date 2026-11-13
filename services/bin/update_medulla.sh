@@ -1360,15 +1360,15 @@ EOF
     fi
     # Cleanup of legacy files, folders, packages and databases related to updates substitute
     files=(
-        '/usr/sbin/medulla-generate-update-package.py', 
-        '/usr/sbin/medulla-generate-winupdate-packages', 
-        '/usr/sbin/medulla-generate-winupdatemajor-packages', 
-        '/usr/sbin/medulla-mariadb-move-update-package.py', 
-        '/usr/sbin/medulla_mysql_exec_update.sh', 
-        '/usr/sbin/medulla_mysql_exec_uninstall_unnecessary_update_package.sh', 
-        '/etc/cron.d/medulla_osupgrade_dl', 
-        '/etc/cron.d/medulla_winupdates_dl',
-        '/etc/pulse-xmpp-agent-substitute/loadactionupdate.ini.local',
+        '/usr/sbin/medulla-generate-update-package.py' 
+        '/usr/sbin/medulla-generate-winupdate-packages'
+        '/usr/sbin/medulla-generate-winupdatemajor-packages'
+        '/usr/sbin/medulla-mariadb-move-update-package.py'
+        '/usr/sbin/medulla_mysql_exec_update.sh'
+        '/usr/sbin/medulla_mysql_exec_uninstall_unnecessary_update_package.sh'
+        '/etc/cron.d/medulla_osupgrade_dl'
+        '/etc/cron.d/medulla_winupdates_dl'
+        '/etc/pulse-xmpp-agent-substitute/loadactionupdate.ini.local'
         '/etc/pulse-xmpp-agent-substitute/update_windows.ini.local'
     )
     for file in "${files[@]}"; do
@@ -1401,9 +1401,9 @@ EOF
         write_to_log "$str"
     fi
     packages=(
-        'dfd3b8dc-linuxupdategenericcommand_p',
-        '34181a66-updateslinuxkernel_i8ppnmrs',
-        'aa365fe6-linuxupdateother_cew74x5bi0',
+        'dfd3b8dc-linuxupdategenericcommand_p'
+        '34181a66-updateslinuxkernel_i8ppnmrs'
+        'aa365fe6-linuxupdateother_cew74x5bi0'
         'e05e689e-linuxupdatesecutity_ivvfn4b'
     )
     for package in "${packages[@]}"; do
@@ -1446,6 +1446,28 @@ EOF
         exit 1
     fi
     str="[v] Updates substitute successfully configured."
+    echo "$str"
+    write_to_log "$str"
+
+    ## Fix apache permissions
+    str='[=] Fixing apache permissions.'
+    echo "$str"
+    write_to_log "$str"
+    sed -i 's/+Indexes/-Indexes/' /etc/apache2/conf-enabled/pulse.conf
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error fixing apache permissions."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    systemctl restart apache2
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error restarting apache2 service."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    str="[v] Apache permissions fixed successfully."
     echo "$str"
     write_to_log "$str"
 
