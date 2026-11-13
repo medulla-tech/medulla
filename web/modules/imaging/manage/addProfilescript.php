@@ -60,7 +60,7 @@ if(!empty($_POST)){
         foreach($_POST as $key=>$value){
             if(str_starts_with($key, "order_")){
                 $id = substr($key, 6);
-                $orders[$id] = $value;
+                $orders[] = [$id, $value];
             }
         }
         $result = xmlrpc_add_postinstalls_in_profile($location, $name, $description, $orders);
