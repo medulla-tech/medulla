@@ -262,7 +262,7 @@ class MUCBot(slixmpp.ClientXMPP):
         self.plugindata = {}
         self.plugindatascheduler = {}
         self.loadbasepluginagent()  # update base list plugin and remote agent
-        sleekxmpp.ClientXMPP.__init__(self, conf.jidagent, conf.passwordconnection)
+        slixmpp.ClientXMPP.__init__(self, conf.jidagent, conf.passwordconnection)
 
         self.manage_scheduler = manage_scheduler(self)
         self.xmppbrowsingpath = xmppbrowsing(

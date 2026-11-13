@@ -666,6 +666,7 @@ class P2PServerCP(pulse2.utils.Singleton):
         self.connection_recipient = ""
         self.connection_server = ""  # ip
         self.connection_port = 0
+        self.connection_websocket_url = ""
         self.connection_timeout = 40
         if self.cp.has_section("connection") and self.cp.has_option(
             "connection", "jid"
@@ -691,6 +692,11 @@ class P2PServerCP(pulse2.utils.Singleton):
             "connection", "port"
         ):
             self.connection_port = self.cp.getint("connection", "port")
+
+        if self.cp.has_section("connection") and self.cp.has_option(
+            "connection", "websocket_url"
+        ):
+            self.connection_websocket_url = self.cp.get("connection", "websocket_url")
 
         if self.cp.has_section("connection") and self.cp.has_option(
             "connection", "recipient"

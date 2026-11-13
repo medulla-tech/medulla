@@ -6,7 +6,7 @@
 import json
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.xmppmaster.master.lib.utils import name_randomplus
-from sleekxmpp import jid
+from slixmpp import jid
 
 import logging
 

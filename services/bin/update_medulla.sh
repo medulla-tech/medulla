@@ -1510,6 +1510,50 @@ final_operations() {
     mysql -u"${DBUSER}" -p"${DBPASS}" -h"${DBHOST:-localhost}" admin -e \
         "UPDATE medulla_update_availability SET update_available=0, current_version='${NEW_VERSION}', available_version=NULL, last_check=NOW(), last_check_status='success' WHERE id=1;" 2>/dev/null
 
+    # The ORM maps relayserver.websocket_url, so RelayServer queries fail until schema 118 is applied.
+    # Only applied when the column is missing, so an existing newer version is never overwritten.
+    WS_COLUMN_COUNT=$(mysql -u"${DBUSER}" -p"${DBPASS}" -h"${DBHOST:-localhost}" -sse \
+        "SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='xmppmaster' AND TABLE_NAME='relayserver' AND COLUMN_NAME='websocket_url';" 2>/dev/null)
+    if [[ "${WS_COLUMN_COUNT}" == "0" ]]; then
+        if mysql -u"${DBUSER}" -p"${DBPASS}" -h"${DBHOST:-localhost}" < /usr/share/doc/pulse2/contrib/xmppmaster/sql/schema-118.sql; then
+            str="[v] Applied xmppmaster schema 118 (relayserver.websocket_url)."
+        else
+            str="[x] Failed to apply xmppmaster schema 118."
+        fi
+        echo "$str"
+        write_to_log "$str"
+    elif [[ -z "${WS_COLUMN_COUNT}" ]]; then
+        str="[x] Could not check xmppmaster.relayserver.websocket_url."
+        echo "$str"
+        write_to_log "$str"
+    fi
+
+    # Modules and the pulse conf required by the /ws XMPP-over-WebSocket proxy in web/conf/apache/pulse.conf
+    if ! a2enmod proxy_wstunnel ssl || ! a2enconf pulse; then
+        str="[x] Failed to enable Apache modules or the pulse conf for XMPP WebSocket."
+        echo "$str"
+        write_to_log "$str"
+    elif ! apache2ctl configtest || ! systemctl reload apache2; then
+        str="[x] Failed to reload Apache after enabling XMPP WebSocket."
+        echo "$str"
+        write_to_log "$str"
+    fi
+
+    # Package server WebSocket endpoint: the public host the agent already connects to.
+    # Not INTERNAL_FQDN, and not relayconf.ini.local (it holds the LAN IP).
+    # A websocket_url key in package-server.ini.local (even empty) wins over the base file, as in config.py.
+    PKG_SERVER_INI=/etc/mmc/pulse2/package-server/package-server.ini
+    PUBLIC_HOST=$(crudini --get /etc/pulse-xmpp-agent/relayconf.ini connection server 2> /dev/null || echo "")
+    LOCAL_HAS_WS_KEY=false
+    crudini --get "${PKG_SERVER_INI}.local" connection websocket_url &> /dev/null && LOCAL_HAS_WS_KEY=true
+    BASE_WS_URL=$(crudini --get "${PKG_SERVER_INI}" connection websocket_url 2> /dev/null || echo "")
+    if [[ -n "${PUBLIC_HOST}" && "${LOCAL_HAS_WS_KEY}" == "false" && -z "${BASE_WS_URL}" ]]; then
+        crudini --set "${PKG_SERVER_INI}.local" connection websocket_url "wss://${PUBLIC_HOST}/ws"
+        str="[v] Set package server websocket_url to wss://${PUBLIC_HOST}/ws"
+        echo "$str"
+        write_to_log "$str"
+    fi
+
     ## Restart services then generate agents (all in background, survives service restart)
     str="[=] Restarting Medulla services..."
     echo "$str"

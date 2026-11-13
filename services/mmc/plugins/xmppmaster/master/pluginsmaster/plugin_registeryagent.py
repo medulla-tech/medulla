@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from manageRSAsigned import MsgsignedRSA
-from sleekxmpp import jid
+from slixmpp import jid
 from mmc.plugins.xmppmaster.master.lib.utils import getRandomName
 import re
 from distutils.version import LooseVersion

@@ -19,8 +19,12 @@ from argparse import ArgumentParser
 logger = logging.getLogger("message-sender")
 # Additionnal path
 
+WEBSOCKET_TIMEOUT = 5
+TCP_TIMEOUT = 10
+FLUSH_DELAY = 3
 
-class MyXMPPClient(ClientXMPP):
+
+class MessageSenderMixin:
     def __init__(
         self,
         jid,
@@ -30,13 +34,15 @@ class MyXMPPClient(ClientXMPP):
         toagent="master@pulse",
         ipv4="127.0.0.1",
         port=5222,
+        **kwargs,
     ):
-        super().__init__(jid, password)
+        super().__init__(jid, password, **kwargs)
         self.stanzamessage = message
         self.timeout = timeout
         self.toagent = toagent
         self.ipv4 = ipv4
         self.port = port
+        self.message_sent = asyncio.Event()
 
         self.add_event_handler("session_start", self.start)
         self.add_event_handler("message", self.message)
@@ -47,10 +53,13 @@ class MyXMPPClient(ClientXMPP):
         self.add_event_handler("connected", self.handle_connected)
 
     async def start(self, event):
+        if self.message_sent.is_set():
+            return
         self.send_presence()
         await self.get_roster()
         # We're only concerned about registering, so nothing more to do here.
         self.send_message(mto=self.toagent, mbody=self.stanzamessage, mtype="chat")
+        self.message_sent.set()
         self.disconnect()
 
     async def message(self, msg):
@@ -111,11 +120,72 @@ class MyXMPPClient(ClientXMPP):
             await resp.send()
             logger.info("Account created for %s!" % self.boundjid)
         except IqError as e:
+            if e.condition == "conflict":
+                # A previous attempt (WebSocket before the TCP fallback) already created it
+                logger.info("Account already exists for %s" % self.boundjid)
+                return
             logger.error("Could not register account: %s" % e.iq["error"]["text"])
             self.disconnect()
         except IqTimeout:
             logger.error("No response from server.")
             self.disconnect()
+
+
+class MyXMPPClient(MessageSenderMixin, ClientXMPP):
+    pass
+
+
+try:
+    from slixmpp.websocket import WebSocketXMPP
+
+    # The WebSocket transport only imports websockets at connect time, so check it here
+    import websockets
+except ImportError:
+    WebSocketXMPP = None
+else:
+
+    class MyWebSocketXMPPClient(MessageSenderMixin, WebSocketXMPP):
+        pass
+
+
+def create_client(client_cls, args, **kwargs):
+    xmpp = client_cls(
+        args.jid,
+        args.password,
+        args.message,
+        args.timeout,
+        args.toagent,
+        args.ipv4,
+        args.port,
+        **kwargs,
+    )
+    xmpp.register_plugin("xep_0030")  # Service Discovery
+    xmpp.register_plugin("xep_0045")  # Multi-User Chat
+    xmpp.register_plugin("xep_0004")  # Data Forms
+    xmpp.register_plugin("xep_0050")  # Adhoc Commands
+    xmpp.register_plugin(
+        "xep_0199",
+        {"keepalive": True, "frequency": 600, "interval": 600, "timeout": 500},
+    )
+    xmpp.register_plugin("xep_0077")  # In-band Registration
+    xmpp["xep_0077"].force_registration = True
+    return xmpp
+
+
+async def deliver(xmpp, timeout):
+    xmpp.connect()
+    try:
+        await asyncio.wait_for(xmpp.message_sent.wait(), timeout)
+    except asyncio.TimeoutError:
+        logger.error("Message not sent within %s seconds" % timeout)
+        # Cancel the pending connection retries, which abort() alone does not do without a transport
+        xmpp.cancel_connection_attempt()
+        xmpp.abort()
+        return False
+    # The message is queued before the stream close, so wait for the close to flush it
+    await asyncio.sleep(FLUSH_DELAY)
+    await xmpp.stop()
+    return True
 
 
 async def main():
@@ -134,6 +204,13 @@ async def main():
         dest="ipv4",
         default="127.0.0.1",
         help="adresse IPv4 de destination",
+    )
+    parser.add_argument(
+        "-W",
+        "--websocket-url",
+        dest="websocket_url",
+        default="",
+        help="URL WebSocket XMPP (wss://hote/ws) essayée avant TCP (vide: TCP seul)",
     )
     parser.add_argument("-j", "--jid", dest="jid", help="JID à utiliser")
     parser.add_argument(
@@ -195,32 +272,20 @@ async def main():
         logging.error("Medulla agent must be running as root")
         sys.exit(0)
     # xmpp = MyXMPPClient(jid, password, message, timeout, toagent, ipv4, port)
-    xmpp = MyXMPPClient(
-        args.jid,
-        args.password,
-        args.message,
-        args.timeout,
-        args.toagent,
-        args.ipv4,
-        args.port,
-    )
-    xmpp.register_plugin("xep_0030")  # Service Discovery
-    xmpp.register_plugin("xep_0045")  # Multi-User Chat
-    xmpp.register_plugin("xep_0004")  # Data Forms
-    xmpp.register_plugin("xep_0050")  # Adhoc Commands
-    xmpp.register_plugin(
-        "xep_0199",
-        {"keepalive": True, "frequency": 600, "interval": 600, "timeout": 500},
-    )
-    xmpp.register_plugin("xep_0077")  # In-band Registration
-    xmpp["xep_0077"].force_registration = True
-    # Démarre le client XMPP dans une boucle asyncio
-
-    xmpp.connect()
-    # Temporisateur pour déclencher l'événement après 10 secondes
-    await asyncio.sleep(10)
-    # Déclenche l'événement d'arrêt pour déconnecter proprement le client XMPP
-    await xmpp.stop()
+    delivered = False
+    if args.websocket_url:
+        if WebSocketXMPP is None:
+            logger.warning("WebSocket support not available, using TCP only")
+        else:
+            xmpp = create_client(
+                MyWebSocketXMPPClient, args, ws_url=args.websocket_url
+            )
+            delivered = await deliver(xmpp, WEBSOCKET_TIMEOUT)
+            if not delivered:
+                logger.warning("Delivery over WebSocket failed, falling back to TCP")
+    if not delivered:
+        xmpp = create_client(MyXMPPClient, args)
+        await deliver(xmpp, TCP_TIMEOUT)
 
 
 if __name__ == "__main__":

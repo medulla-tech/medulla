@@ -9,7 +9,7 @@ from mmc.plugins.xmppmaster.master.lib.utils import getRandomName
 from update_remote_agent import Update_Remote_Agent
 import types
 import configparser
-from sleekxmpp import jid
+from slixmpp import jid
 from pulse2.database.xmppmaster import XmppMasterDatabase
 
 logger = logging.getLogger()

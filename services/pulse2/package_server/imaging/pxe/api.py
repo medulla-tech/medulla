@@ -651,6 +651,8 @@ class PXEImagingApi(PXEMethodParser):
         recipient = self.config.connection_recipient
         server = self.config.connection_server
         port = self.config.connection_port
+        websocket_url = self.config.connection_websocket_url
+        websocket_args = ["-W", websocket_url] if websocket_url else []
         timeout = self.config.connection_timeout
         result = {}
         result["action"] = "resultinventory"
@@ -683,6 +685,7 @@ class PXEImagingApi(PXEMethodParser):
                     password,
                     "-I",
                     server,
+                    *websocket_args,
                     "-m",
                     json.dumps(result),
                     "-t",
@@ -705,6 +708,7 @@ class PXEImagingApi(PXEMethodParser):
                     password,
                     "-I",
                     server,
+                    *websocket_args,
                     "-m",
                     json.dumps(result),
                     "-t",
