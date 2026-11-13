@@ -698,7 +698,6 @@ This package contains Pulse 2 common files like documentation.
 %{_sbindir}/update_medulla.sh
 %{_sbindir}/import_masters.sh
 %{_sbindir}/check_medulla_updates.sh
-%{_sbindir}/medulla-clean-legacy-updates.sh
 %{_sbindir}/medulla-generate-winupdatemajor-packages
 %{_sbindir}/generate_medulla_agent.sh
 

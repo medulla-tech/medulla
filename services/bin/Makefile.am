@@ -28,7 +28,7 @@ dist_sbin_SCRIPTS = pulse2-package-server pulse2-package-server-register-imaging
 	pulse2-connect-machine-backuppc pulse2-disconnect-machine-backuppc \
 	restart-pulse-services pulse2-inscription_packages_in_base.py pulse2-generation_package.py \
 	medulla-stats.sh update_medulla.sh check_medulla_updates.sh import_masters.sh \
-	medulla-generate-winupdatemajor-packages medulla-clean-legacy-updates.sh \
+	medulla-generate-winupdatemajor-packages \
 	generate_medulla_agent.sh
 
 dist_bin_SCRIPTS = pulse2-uuid-resolver pulse2-backup-handler pulse2-synch-masters

@@ -46,6 +46,5 @@ usr/sbin/update_medulla.sh
 usr/sbin/import_masters.sh
 usr/sbin/check_medulla_updates.sh
 usr/sbin/medulla-generate-winupdatemajor-packages
-usr/sbin/medulla-clean-legacy-updates.sh
 usr/sbin/generate_medulla_agent.sh
 var/lib/pulse2/file-transfer
