@@ -1073,8 +1073,402 @@ update_564_to_565() {
     fi
 }
 
+update_565_to_566() {
+    str="Applying Medulla config update from 5.6.5 to 5.6.6..."
+    echo "$str"
+    write_to_log "$str"
+    update_medulla
+
+    # Federated table updates
+    str="[=] Applying federated table updates..."
+    echo "$str"
+    write_to_log "$str"
+    mysql --defaults-group-suffix=medulla xmppmaster -e  "CREATE OR REPLACE TABLE \`local_glpi_machines\` (\`id\` int NOT NULL, primary key(id), \`entities_id\` int(10) NOT NULL DEFAULT 0, \`name\` varchar(255) NULL DEFAULT NULL, \`is_template\` tinyint(4) NOT NULL DEFAULT 0, \`is_deleted\` tinyint(4) NOT NULL DEFAULT 0, \`last_inventory_update\` timestamp NULL DEFAULT NULL, \`last_boot\` timestamp NULL DEFAULT NULL, \`date_mod\` timestamp NULL DEFAULT NULL) ENGINE=FEDERATED DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci CONNECTION='itsm_federated/glpi_computers';"
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error updating local_glpi_machines federated table."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    str="[v] Federated table updates applied successfully."
+    echo "$str"
+    write_to_log "$str"
+
+    # pkgs database configuration for deployment substitute
+    str="[=] Configuring pkgs database for deployment substitute..."
+    echo "$str"
+    write_to_log "$str"
+    crudini --set /etc/pulse-xmpp-agent-substitute/agent_master_substitute_depl.ini.local pkgsdatabase pkgs_dbhost $DBHOST
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring pkgs database for deployment substitute."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    crudini --set /etc/pulse-xmpp-agent-substitute/agent_master_substitute_depl.ini.local pkgsdatabase pkgs_dbport $DBPORT
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring pkgs database for deployment substitute."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    crudini --set /etc/pulse-xmpp-agent-substitute/agent_master_substitute_depl.ini.local pkgsdatabase pkgs_dbuser $DBUSER
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring pkgs database for deployment substitute."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    crudini --set /etc/pulse-xmpp-agent-substitute/agent_master_substitute_depl.ini.local pkgsdatabase pkgs_dbpasswd $DBPASS
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring pkgs database for deployment substitute."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    systemctl restart pulse-xmpp-master-substitute-deployment
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error restarting pulse-xmpp-master-substitute-deployment service."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    str="[v] pkgs database successfully configured for deployment substitute."
+    echo "$str"
+    write_to_log "$str"
+
+    # HMDM Setup
+    str="[=] Installing HMDM for Medulla..."
+    echo "$str"
+    write_to_log "$str"
+    HMDM_HOSTNAME="${INTERNAL_FQDN}"
+    HMDM_DBHOST="localhost"
+    HMDM_DBPORT="3306"
+    HMDM_DBNAME="hmdm"
+    HMDM_DBUSER="hmdm"
+    HMDM_DBPASSWD=$(openssl rand -base64 24)
+    HMDM_TOMCAT_PORT="8081"
+    HMDM_APACHE_CONF="/etc/apache2/conf-available/hmdm.conf"
+
+    HMDM_ADMINPASSWD=$(crudini --get /etc/mmc/plugins/base.ini.local ldap password)
+
+    HMDM_TURNHOST="${HMDM_HOSTNAME}"
+    HMDM_TURNPORT="3478"
+    HMDM_TURNUSER="turnuser"
+    HMDM_TURNPASSWD=$(openssl rand -base64 24)
+
+    HMDM_BUILD_DEST="/opt/HMDM_BUILD"
+
+    if [[ ! -f /var/lib/hmdm/.hmdminitialised ]]; then
+
+        apt -y install tomcat9 mariadb-client aapt wget curl openssl hmdm-build > /dev/null 2>&1
+        if [[ $? -ne 0 ]]; then
+            str="[x] Error installing dependencies for HMDM. Aborting."
+            echo "$str"
+            write_to_log "$str"
+            exit 1
+        fi
+
+        mysql --defaults-group-suffix=dbsetup -e "CREATE DATABASE IF NOT EXISTS ${HMDM_DBNAME} DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+        if [[ $? -ne 0 ]]; then
+            str="[x] Error creating HMDM database. Aborting."
+            echo "$str"
+            write_to_log "$str"
+            exit 1
+        fi
+
+        mysql --defaults-group-suffix=dbsetup -e "GRANT ALL PRIVILEGES ON ${HMDM_DBNAME}.* TO '${HMDM_DBUSER}'@'localhost' IDENTIFIED BY '${HMDM_DBPASSWD}'; FLUSH PRIVILEGES;"
+        mysql --defaults-group-suffix=dbsetup -e "GRANT ALL PRIVILEGES ON ${HMDM_DBNAME}.* TO '${HMDM_DBUSER}'@'${IP_ADDRESS}' IDENTIFIED BY '${HMDM_DBPASSWD}'; FLUSH PRIVILEGES;"
+        mysql --defaults-group-suffix=dbsetup -e "GRANT ALL PRIVILEGES ON ${HMDM_DBNAME}.* TO '${HMDM_DBUSER}'@'${INTERNAL_FQDN}' IDENTIFIED BY '${HMDM_DBPASSWD}'; FLUSH PRIVILEGES;"
+        if [[ -n "${PUBLIC_IP}" ]]; then
+            mysql --defaults-group-suffix=dbsetup -e "GRANT ALL PRIVILEGES ON ${HMDM_DBNAME}.* TO '${HMDM_DBUSER}'@'${PUBLIC_IP}' IDENTIFIED BY '${HMDM_DBPASSWD}'; FLUSH PRIVILEGES;"
+        fi
+
+        HMDM_INSTALL_RC=0
+
+        if (
+            cd "${HMDM_BUILD_DEST}" || exit 1
+            str="[!] Running HMDM install script. This process can take up to 20 minutes."
+            echo "$str"
+            write_to_log "$str"
+            ./hmdm_install.sh \
+                --hostname "${HMDM_HOSTNAME}" \
+                --db-host "${HMDM_DBHOST}" \
+                --db-port "${HMDM_DBPORT}" \
+                --db-name "${HMDM_DBNAME}" \
+                --db-user "${HMDM_DBUSER}" \
+                --db-pass "${HMDM_DBPASSWD}" \
+                --admin-pass "${HMDM_ADMINPASSWD}" \
+                --turn-host "${HMDM_TURNHOST}" \
+                --turn-port "${HMDM_TURNPORT}" \
+                --turn-user "${HMDM_TURNUSER}" \
+                --turn-pass "${HMDM_TURNPASSWD}"
+        ); then
+            HMDM_INSTALL_RC=0
+        else
+            HMDM_INSTALL_RC=$?
+        fi
+
+        if [[ ${HMDM_INSTALL_RC} -ne 0 ]]; then
+            str="[!] HMDM installer returned an error. Waiting for deployment..."
+            echo "$str"
+            write_to_log "$str"
+
+            HMDM_DEPLOY_TIMEOUT=180
+            HMDM_CHECK_INTERVAL=5
+
+            for ((i=0; i<HMDM_DEPLOY_TIMEOUT/HMDM_CHECK_INTERVAL; i++)); do
+                if curl -fsS --connect-timeout 2 --max-time 3 \
+                    "http://127.0.0.1:${HMDM_TOMCAT_PORT}/hmdm/" \
+                    >/dev/null 2>&1; then
+                    HMDM_INSTALL_RC=0
+                    break
+                fi
+
+                sleep "${HMDM_CHECK_INTERVAL}"
+            done
+        fi
+
+        if [[ ${HMDM_INSTALL_RC} -ne 0 ]]; then
+            str="[x] HMDM installation failed."
+            echo "$str"
+            write_to_log "$str"
+            exit 1
+        fi
+
+        str="[v] HMDM installed successfully."
+        echo "$str"
+        write_to_log "$str"
+
+        mkdir -p /var/lib/hmdm
+        touch /var/lib/hmdm/.hmdminitialised
+    fi
+
+    str="[=] Configuring Apache reverse proxy for HMDM..."
+    echo "$str"
+    write_to_log "$str"
+
+    if ! a2enmod proxy proxy_http; then
+        str="[x] Failed to enable Apache proxy modules."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    cat > "${HMDM_APACHE_CONF}" <<EOF
+<IfModule mod_proxy.c>
+    ProxyPreserveHost On
+
+    ProxyPass        /hmdm/ http://127.0.0.1:${HMDM_TOMCAT_PORT}/hmdm/
+    ProxyPassReverse /hmdm/ http://127.0.0.1:${HMDM_TOMCAT_PORT}/hmdm/
+
+    RedirectMatch 301 ^/hmdm$ /hmdm/
+
+</IfModule>
+EOF
+
+    if ! a2enconf hmdm; then
+        str="[x] Failed to enable HMDM Apache configuration."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+
+    if ! apache2ctl configtest; then
+        str="[x] Invalid Apache configuration for HMDM."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+
+    if ! systemctl reload apache2; then
+        str="[x] Failed to reload Apache after HMDM configuration."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+
+    str="[v] Apache reverse proxy for HMDM configured successfully."
+    echo "$str"
+    write_to_log "$str"
+
+    ## Setup new MMC module: mobile
+    setup_new_mmc_module "mobile"
+    # mmc-agent will be restarted in final_operations
+    str="[v] Medulla MMC module 'mobile' setup and configuration applied successfully."
+    echo "$str"
+    write_to_log "$str"
+
+    ## Setup new MMC module: reflex
+    setup_new_mmc_module "reflex"
+    # mmc-agent will be restarted in final_operations
+    str="[v] Medulla MMC module 'reflex' setup and configuration applied successfully."
+    echo "$str"
+    write_to_log "$str"
+
+    ## Setup for updates module
+    str="[=] Configuring updates substitute..."
+    echo "$str"
+    write_to_log "$str"
+    crudini --set /etc/pulse-xmpp-agent-substitute/agent_master_substitute_upd.ini.local updatesdatabase updates_dbhost $DBHOST
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring updates database for updates substitute."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    crudini --set /etc/pulse-xmpp-agent-substitute/agent_master_substitute_upd.ini.local updatesdatabase updates_dbport $DBPORT
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring updates database for updates substitute."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    crudini --set /etc/pulse-xmpp-agent-substitute/agent_master_substitute_upd.ini.local updatesdatabase updates_dbuser $DBUSER
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring updates database for updates substitute."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    crudini --set /etc/pulse-xmpp-agent-substitute/agent_master_substitute_upd.ini.local updatesdatabase updates_dbpasswd $DBPASS
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring updates database for updates substitute."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    crudini --set /etc/pulse-xmpp-agent-substitute/loadupdates.ini.local parameters url https://updates.medulla-tech.io
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring loadupdates plugin for updates substitute."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    crudini --set /etc/pulse-xmpp-agent-substitute/loadupdates.ini.local parameters server_id $(crudini --get /etc/mmc/mmc.ini.local server_01 description)
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring loadupdates plugin for updates substitute."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    crudini --set /etc/pulse-xmpp-agent-substitute/loadupdates.ini.local parameters key $(crudini --get /etc/mmc/plugins/xmppmaster.ini.local defaultconnection keyAES32)
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring loadupdates plugin for updates substitute."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    # Cleanup of legacy files, folders, packages and databases related to updates substitute
+    files=(
+        '/usr/sbin/medulla-generate-update-package.py', 
+        '/usr/sbin/medulla-generate-winupdate-packages', 
+        '/usr/sbin/medulla-generate-winupdatemajor-packages', 
+        '/usr/sbin/medulla-mariadb-move-update-package.py', 
+        '/usr/sbin/medulla_mysql_exec_update.sh', 
+        '/usr/sbin/medulla_mysql_exec_uninstall_unnecessary_update_package.sh', 
+        '/etc/cron.d/medulla_osupgrade_dl', 
+        '/etc/cron.d/medulla_winupdates_dl',
+        '/etc/pulse-xmpp-agent-substitute/loadactionupdate.ini.local',
+        '/etc/pulse-xmpp-agent-substitute/update_windows.ini.local'
+    )
+    for file in "${files[@]}"; do
+        if [[ -n "$file" ]] && [[ -f "$file" ]]; then
+            rm -f "$file" &> /dev/null
+            if [[ $? -ne 0 ]]; then
+                str="[x] Error removing legacy file $file."
+                echo "$str"
+                write_to_log "$str"
+            fi
+        fi
+    done
+    folders=(
+        '/var/lib/pulse2/base_update_package'
+    )
+    for folder in "${folders[@]}"; do
+        if [[ -n "$folder" ]] && [[ -d "$folder" ]]; then
+            rm -rf "$folder" &> /dev/null
+            if [[ $? -ne 0 ]]; then
+                str="[x] Error removing legacy folder $folder."
+                echo "$str"
+                write_to_log "$str"
+            fi
+        fi
+    done
+    mysql --defaults-group-suffix=dbsetup -e "DROP DATABASE IF EXISTS base_wsusscn2;"
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error dropping database base_wsusscn2. Aborting."
+        echo "$str"
+        write_to_log "$str"
+    fi
+    packages=(
+        'dfd3b8dc-linuxupdategenericcommand_p',
+        '34181a66-updateslinuxkernel_i8ppnmrs',
+        'aa365fe6-linuxupdateother_cew74x5bi0',
+        'e05e689e-linuxupdatesecutity_ivvfn4b'
+    )
+    for package in "${packages[@]}"; do
+        if [[ -n "$package" ]] && [[ -d "/var/lib/pulse2/packages/sharing/global/$package" ]]; then
+            rm -rf "/var/lib/pulse2/packages/sharing/global/$package" "/var/lib/pulse2/packages/$package" &> /dev/null
+            if [[ $? -ne 0 ]]; then
+                str="[x] Error removing legacy package $package."
+                echo "$str"
+                write_to_log "$str"
+            fi
+            mysql --defaults-group-suffix=medulla pkgs -Bse "DELETE FROM pkgs.packages WHERE uuid = '$package'"
+        fi
+    done
+    for share in winupdates winupdatesmajor; do
+        packages=$(ls /var/lib/pulse2/packages/sharing/$share)
+        for package in $packages; do
+            if [[ -n "$package" ]] && [[ -d "/var/lib/pulse2/packages/sharing/$share/$package" ]]; then
+                rm -rf "/var/lib/pulse2/packages/sharing/$share/$package" "/var/lib/pulse2/packages/$package" &> /dev/null
+                if [[ $? -ne 0 ]]; then
+                    str="[x] Error removing legacy package $package."
+                    echo "$str"
+                    write_to_log "$str"
+                fi
+                mysql --defaults-group-suffix=medulla pkgs -Bse "DELETE FROM pkgs.packages WHERE uuid = '$package'"
+            fi
+        done
+    done
+    systemctl restart cron
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error restarting cron service."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    systemctl restart pulse-xmpp-master-substitute-updates
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error restarting pulse-xmpp-master-substitute-updates service."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    str="[v] Updates substitute successfully configured."
+    echo "$str"
+    write_to_log "$str"
+
+    echo "5.6.6" > /var/lib/mmc/version
+    
+    str="[v] Medulla config update from 5.6.5 to 5.6.6 applied successfully."
+    echo "$str"
+    write_to_log "$str"
+    
+    if [[ -f /tmp/update_medulla.sh ]]; then
+        exec /tmp/update_medulla.sh "$@"
+    else
+        exec /usr/sbin/update_medulla.sh "$@"
+    fi
+}
+
 # --- End of specific update functions for each version ---
 
+temp_updates() {
+    str="[v] Running temporary updates if any"
+    echo "$str"
+    write_to_log "$str"
+}
 
 
 final_operations() {
@@ -1133,8 +1527,8 @@ else
     download_migration_script_and_restart
 fi
 
-# Setup apt sources for Medulla updates
-setup_apt_sources
+# Setup apt sources for Medulla updates - Not needed anymore
+# setup_apt_sources
 # Update repo definitions
 update_repo_defs
 
@@ -1229,6 +1623,11 @@ case "$CURRENT_VERSION" in
             update_564_to_565
         fi
         ;;
+    "5.6.5")
+        if [[ "$AVAILABLE_VERSION" > "5.6.5" ]]; then
+            update_565_to_566
+        fi
+        ;;
     *)
         str="Updating minor version if needed..."
         echo "$str"
@@ -1239,6 +1638,9 @@ case "$CURRENT_VERSION" in
         write_to_log "$str"
         ;;
 esac
+
+# Run any temporary updates
+temp_updates
 
 # Call final operations
 final_operations
