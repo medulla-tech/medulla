@@ -32,7 +32,7 @@
  * - .empty-state-box-description
  *
  * @param string $title The main message (e.g. "No items found")
- * @param string $description Optional description text
+ * @param string $description Optional description text, **text** is rendered bold
  */
 class EmptyStateBox
 {
@@ -50,7 +50,8 @@ class EmptyStateBox
         echo '<div class="empty-state-box">';
         echo '<div class="empty-state-box-title">' . htmlspecialchars($this->title) . '</div>';
         if (!empty($this->description)) {
-            echo '<div class="empty-state-box-description">' . htmlspecialchars($this->description) . '</div>';
+            $description = preg_replace('/\*\*([^*\r\n]+?)\*\*/', '<strong>$1</strong>', htmlspecialchars($this->description));
+            echo '<div class="empty-state-box-description">' . $description . '</div>';
         }
         echo '</div>';
     }
@@ -130,6 +131,103 @@ class ServiceUnavailableBox
         ) . '</p>';
         echo '</div>';
         echo '</div>';
+        echo '</div>';
+    }
+}
+
+/**
+ * Displays a row of counter cards (dashboard summary).
+ *
+ * CSS classes used (defined in global.css):
+ * - .stat-cards
+ * - .stat-card, .stat-card-clickable, .stat-card-<variant>
+ * - .stat-card-value, .stat-card-date, .stat-card-total
+ * - .stat-card-label
+ *
+ * Usage:
+ *   $cards = new StatCards();
+ *   $cards->addCard(12, _T("Critical", "mymodule"), 'critical', array('href' => $url));
+ *   $cards->addCard($count, $label, 'info', array('total' => $total, 'link_html' => $popupLink));
+ *   $cards->display();
+ */
+class StatCards
+{
+    private static $variants = array('critical', 'high', 'medium', 'low', 'info', 'exploited', 'neutral');
+    private $cards = array();
+
+    /**
+     * Register a card.
+     *
+     * $value, $label and every option except link_html are escaped here.
+     * An integer value is printed as is.
+     *
+     * Options:
+     * - total     (int)    shown as " / N" next to the value
+     * - href      (string) URL, the whole card becomes a link
+     * - link_html (string) raw HTML replacing the value, typically an
+     *                      ActionAjaxPopup link; its click area covers the
+     *                      whole card. NOT escaped: the caller builds it safe.
+     *                      Ignored when href is set (nested links).
+     * - title     (string) tooltip on the card
+     * - date      (bool)   smaller value, for a date
+     *
+     * @param int|string $value
+     * @param string     $label
+     * @param string     $variant critical|high|medium|low|info|exploited|neutral
+     * @param array      $options
+     */
+    public function addCard($value, $label, $variant = 'neutral', array $options = array())
+    {
+        if (!in_array($variant, self::$variants, true)) {
+            $variant = 'neutral';
+        }
+        $this->cards[] = array(
+            'value'   => $value,
+            'label'   => $label,
+            'variant' => $variant,
+            'options' => $options,
+        );
+    }
+
+    public function display()
+    {
+        echo '<div class="stat-cards">';
+        foreach ($this->cards as $card) {
+            $opt = $card['options'];
+            $href = isset($opt['href']) ? (string) $opt['href'] : '';
+            $linkHtml = ($href === '' && isset($opt['link_html'])) ? (string) $opt['link_html'] : '';
+
+            $classes = 'stat-card';
+            if ($card['variant'] !== 'neutral') {
+                $classes .= ' stat-card-' . $card['variant'];
+            }
+            if ($href !== '' || $linkHtml !== '') {
+                $classes .= ' stat-card-clickable';
+            }
+            $title = !empty($opt['title']) ? ' title="' . htmlspecialchars($opt['title']) . '"' : '';
+
+            if ($href !== '') {
+                echo '<a class="' . $classes . '" href="' . htmlspecialchars($href) . '"' . $title . '>';
+            } else {
+                echo '<div class="' . $classes . '"' . $title . '>';
+            }
+
+            if ($linkHtml !== '') {
+                $value = $linkHtml;
+            } elseif (is_int($card['value'])) {
+                $value = (string) $card['value'];
+            } else {
+                $value = htmlspecialchars((string) $card['value']);
+            }
+            echo '<div class="stat-card-value' . (!empty($opt['date']) ? ' stat-card-date' : '') . '">' . $value;
+            if (isset($opt['total'])) {
+                echo '<span class="stat-card-total"> / ' . intval($opt['total']) . '</span>';
+            }
+            echo '</div>';
+            echo '<div class="stat-card-label">' . htmlspecialchars($card['label']) . '</div>';
+
+            echo ($href !== '') ? '</a>' : '</div>';
+        }
         echo '</div>';
     }
 }

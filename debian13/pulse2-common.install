@@ -41,15 +41,11 @@ usr/sbin/pulse2-packageparser.py
 usr/sbin/pulse2-inscription_packages_in_base.py
 usr/sbin/pulse2-generation_package.py
 usr/sbin/pulse2-migration_old_package.py
-usr/sbin/medulla-generate-update-package.py
-usr/sbin/medulla-mariadb-move-update-package.py
-usr/sbin/medulla_mysql_exec_update.sh
-usr/sbin/medulla_mysql_exec_uninstall_unnecessary_update_package.sh
 usr/sbin/medulla-stats.sh
 usr/sbin/update_medulla.sh
 usr/sbin/import_masters.sh
 usr/sbin/check_medulla_updates.sh
-usr/sbin/medulla-generate-winupdate-packages
 usr/sbin/medulla-generate-winupdatemajor-packages
+usr/sbin/medulla-clean-legacy-updates.sh
 usr/sbin/generate_medulla_agent.sh
 var/lib/pulse2/file-transfer

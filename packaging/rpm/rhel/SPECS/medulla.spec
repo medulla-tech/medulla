@@ -487,10 +487,6 @@ This package contains the updates plugin for the MMC agent.
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/updates.ini
 %python3_sitelib/mmc/plugins/updates
 %python3_sitelib/pulse2/database/updates
-%{_sharedstatedir}/pulse2/packages/sharing/global/34181a66-updateslinuxkernel_i8ppnmrs
-%{_sharedstatedir}/pulse2/packages/sharing/global/aa365fe6-linuxupdateother_cew74x5bi0
-%{_sharedstatedir}/pulse2/packages/sharing/global/dfd3b8dc-linuxupdategenericcommand_p
-%{_sharedstatedir}/pulse2/packages/sharing/global/e05e689e-linuxupdatesecutity_ivvfn4b
 
 
 
@@ -698,15 +694,11 @@ This package contains Pulse 2 common files like documentation.
 %{_sbindir}/pulse2-generation_package.py
 %{_sbindir}/pulse2-migration_old_package.py
 %{_sbindir}/pulse2-create-group
-%{_sbindir}/medulla-generate-update-package.py
-%{_sbindir}/medulla-mariadb-move-update-package.py
-%{_sbindir}/medulla_mysql_exec_update.sh
 %{_sbindir}/medulla-stats.sh
 %{_sbindir}/update_medulla.sh
 %{_sbindir}/import_masters.sh
 %{_sbindir}/check_medulla_updates.sh
-%{_sbindir}/medulla_mysql_exec_uninstall_unnecessary_update_package.sh
-%{_sbindir}/medulla-generate-winupdate-packages
+%{_sbindir}/medulla-clean-legacy-updates.sh
 %{_sbindir}/medulla-generate-winupdatemajor-packages
 %{_sbindir}/generate_medulla_agent.sh
 

@@ -29,7 +29,8 @@ from sqlalchemy import (
     desc,
     func,
     not_,
-    distinct,text
+    distinct,text,
+    bindparam
 )
 from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.exc import NoSuchTableError, TimeoutError
@@ -524,6 +525,26 @@ class MscDatabase(DatabaseHelper):
         except Exception as e:
             print(f"An error occurred: {e}")
             return False
+
+    def pending_command_targets(self, package_id, target_uuids):
+        """Target uuids with a command of package_id not yet handed to the deployment loop."""
+        if not target_uuids:
+            return set()
+        query = text("""
+            SELECT DISTINCT target.target_uuid
+            FROM commands
+            JOIN commands_on_host ON commands_on_host.fk_commands = commands.id
+            JOIN target ON target.id = commands_on_host.fk_target
+            JOIN phase ON phase.fk_commands_on_host = commands_on_host.id
+            WHERE commands.package_id = :package_id
+              AND target.target_uuid IN :target_uuids
+              AND phase.name = 'execute'
+              AND phase.state = 'ready'
+              AND commands.end_date >= NOW()
+            """).bindparams(bindparam("target_uuids", expanding=True))
+        rows = self.db.execute(query, {"package_id": package_id,
+                                       "target_uuids": list(target_uuids)})
+        return {row.target_uuid for row in rows}
 
     def get_counta(self, q):
         count_q = q.statement.with_only_columns([func.count()]).order_by(None)
@@ -3844,7 +3865,7 @@ class MscDatabase(DatabaseHelper):
 
             # Si start_date est égal à end_date, incrémenter end_date d'une heure
             if start_date == end_date:
-                end_date = start_date + timedelta(hours=1)
+                end_date = start_date + datetime.timedelta(hours=1)
 
             # Le champ msc.commands.parameters doit contenir un JSON complet.
             # Respecte la section transmise en upgrade_parameters (important pour upgrade majeur: section=upgrade)
@@ -3918,7 +3939,7 @@ class MscDatabase(DatabaseHelper):
                                                                     hostname,
                                                                     commandstop,
                                                                     commandstart)
-            if com_on_host is not None or com_on_host is not False:
+            if com_on_host:
                 MscDatabase().xmpp_create_CommandsOnHostPhasedeploykiosk(com_on_host.id)
         except Exception as e:
             logger.error("\n%s" % (traceback.format_exc()))

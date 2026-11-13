@@ -142,40 +142,6 @@ class pkgmanage:
     def get_extension(self, id):
         return PkgsDatabase().get_extension(id)
 
-def create_winupdate_package(
-                                label: str,
-                                description: str,
-                                uuid: str,
-                                version: str,
-                                os: str,
-                                metagenerator: str,
-                                entity_id: str,
-                                reboot: int,
-                                inventory_associateinventory: int,
-                                inventory_licenses: str,
-                                Qvendor: str,
-                                command_command: str,
-                                edition_status: int = 1,
-                                conf_json: str = None,
-                            ):
-    return PkgsDatabase().create_winupdate_package(
-                                                    label,
-                                                    description,
-                                                    uuid,
-                                                    version,
-                                                    os,
-                                                    metagenerator,
-                                                    entity_id,
-                                                    reboot,
-                                                    inventory_associateinventory,
-                                                    inventory_licenses,
-                                                    Qvendor,
-                                                    command_command,
-                                                    edition_status,
-                                                    conf_json,
-                                                )
-
-
 def dirpackage():
     return PkgsDatabase().dirpackage
 

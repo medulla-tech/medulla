@@ -875,10 +875,6 @@ msgstr "Uptime"
 msgid "Medulla Updates"
 msgstr "Mises à Jour Medulla"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:286
-msgid "Updates compliance by machines"
-msgstr "Conformité par machines"
-
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:261
 msgid "Deploy specific update on this group"
 msgstr "Déployer mise à jour spécifique sur ce groupe"

@@ -2556,6 +2556,105 @@ td img[src*="img/other/"],
 }
 
 /* ---------------------------------------- */
+/* Stat Cards                               */
+/* ---------------------------------------- */
+
+.stat-cards {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 10px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.stat-card {
+  position: relative;
+  background: var(--color-bg-white);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: 12px 15px;
+  flex: 1;
+  min-width: 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+a.stat-card {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.stat-card-clickable {
+  cursor: pointer;
+}
+
+.stat-card-clickable:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  z-index: 10;
+}
+
+.stat-card-clickable.stat-card-critical:hover { border-color: var(--severity-critical); }
+.stat-card-clickable.stat-card-high:hover { border-color: var(--severity-high); }
+.stat-card-clickable.stat-card-medium:hover { border-color: var(--severity-medium); }
+.stat-card-clickable.stat-card-low:hover { border-color: var(--severity-low); }
+.stat-card-clickable.stat-card-info:hover { border-color: var(--color-info); }
+
+.stat-card-clickable:active {
+  transform: scale(1.02);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.stat-card-critical { border-left: 4px solid var(--severity-critical); }
+.stat-card-high { border-left: 4px solid var(--severity-high); }
+.stat-card-medium { border-left: 4px solid var(--severity-medium); }
+.stat-card-low { border-left: 4px solid var(--severity-low); }
+.stat-card-info { border-left: 4px solid var(--color-info); }
+.stat-card-exploited { border-left: 4px solid var(--color-bg-dark); }
+.stat-card-clickable.stat-card-exploited:hover { border-color: var(--color-bg-dark); }
+
+.stat-card-value {
+  font-size: 1.8em;
+  font-weight: bold;
+  color: var(--color-text-dark);
+}
+
+.stat-card-value.stat-card-date {
+  font-size: 1.2em;
+}
+
+.stat-card-label {
+  font-size: 0.85em;
+  color: var(--color-text-medium);
+  margin-top: 3px;
+}
+
+.stat-card-critical .stat-card-value { color: var(--severity-critical); }
+.stat-card-high .stat-card-value { color: var(--severity-high); }
+.stat-card-medium .stat-card-value { color: var(--severity-medium-text); }
+.stat-card-low .stat-card-value { color: var(--severity-low); }
+
+/* A link inside the value covers the whole card */
+.stat-card .stat-card-value a {
+  font: inherit;
+  color: inherit;
+  text-decoration: none;
+}
+
+.stat-card .stat-card-value a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.stat-card-total {
+  font-size: 0.55em;
+  font-weight: normal;
+  color: var(--color-text-light);
+}
+
+/* ---------------------------------------- */
 /* Password Toggle (show/hide)              */
 /* ---------------------------------------- */
 

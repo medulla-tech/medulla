@@ -21,15 +21,25 @@
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 
-$p = new TabbedPageGenerator();
+require_once("modules/updates/includes/html.inc.php");
+
+if (!updatesModuleOpen()) {
+    updatesClosedPage(_T("Tracked products", "updates"), $sidemenu);
+    return;
+}
+
+$p = new PageGenerator(_T("Tracked products", "updates"));
 $p->setSideMenu($sidemenu);
-$p->setTitle(_T("Products", "updates"));
-
-$p->addTab("tabwin", _T("Windows", "updates"), "",
-           "modules/updates/updates/products/windowsProducts.php", array());
-
-$p->addTab("tablinux", _T("Linux", "updates"), "",
-           "modules/updates/updates/products/linuxReleases.php", array());
-
 $p->display();
+updatesStaleNotice();
+
+$visibleTabs = updatesVisibleTabs(updatesProductsTabs());
+if (empty($visibleTabs)) {
+    return;
+}
+
+$entity = updatesSelectedEntity();
+$tabParams = $entity ? array('location' => $entity['uuid']) : array();
+
+updatesTabbedPage($visibleTabs, $tabParams);
 ?>

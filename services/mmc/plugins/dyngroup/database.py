@@ -305,7 +305,6 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         Récupère tous les groupes filtrés par params.
         - Ajoute une pagination avec min/max
-        - Exclut les groupes techniques commençant par "_@med_Grp_Major_update_win_"
         - Marque si l'utilisateur courant est le créateur (is_owner)
         - Ajoute le login et l'id du propriétaire (owner_login / owner_id)
         Retourne une liste d'objets Groups (compatibles avec g.toH()).
@@ -313,9 +312,6 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         session = create_session()
         groups = self.__allgroups_query(ctx, params, session, type)
         groups = groups.order_by(self.groups.c.name)
-
-        # Exclure certains groupes techniques
-        groups = groups.filter(~self.groups.c.name.startswith("_@med_Grp_Major_update_win_"))
 
         # Pagination
         min_idx = int(params.get("min", 0))

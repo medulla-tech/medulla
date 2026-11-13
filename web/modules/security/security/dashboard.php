@@ -45,32 +45,33 @@ SecurityFilter::script();
     <?php SecurityFilter::entitySelect($location); ?>
 </div>
 
-<div class="security-dashboard">
-    <a class="security-card exploited clickable" href="<?php echo htmlspecialchars(urlStrRedirect("security/security/allcves", $scope + array('exploited_only' => 1))); ?>"
-       title="<?php echo htmlspecialchars(_T("Click to view exploited CVEs", "security")); ?>">
-        <div class="card-value"><?php echo intval($summary['exploited'] ?? 0); ?></div>
-        <div class="card-label"><?php echo _T("Exploited CVEs", "security"); ?></div>
-    </a>
-    <a class="security-card critical clickable" href="<?php echo htmlspecialchars(urlStrRedirect("security/security/allcves", $scope + array('severity' => 'Critical'))); ?>"
-       title="<?php echo htmlspecialchars(_T("Click to view critical CVEs", "security")); ?>">
-        <div class="card-value"><?php echo intval($summary['critical'] ?? 0); ?></div>
-        <div class="card-label"><?php echo _T("Critical", "security"); ?></div>
-    </a>
-    <a class="security-card info clickable" href="<?php echo htmlspecialchars(urlStrRedirect("security/security/machines", $scope)); ?>"
-       title="<?php echo htmlspecialchars(_T("Click to view affected machines", "security")); ?>">
-        <div class="card-value"><?php echo intval($summary['machines_affected'] ?? 0); ?></div>
-        <div class="card-label"><?php echo _T("Machines Affected", "security"); ?></div>
-    </a>
-    <div class="security-card info">
-        <?php if ($lastScan): $status = $lastScan['status'] ?? ''; ?>
-        <div class="card-value card-date"><?php echo !empty($lastScan['started_at']) ? date('d/m/Y H:i', strtotime($lastScan['started_at'])) : '-'; ?></div>
-        <div class="card-label"><?php echo _T("Last Scan", "security") . ' : ' . ($scanStatuses[$status] ?? htmlspecialchars($status)); ?></div>
-        <?php else: ?>
-        <div class="card-value card-date">-</div>
-        <div class="card-label"><?php echo _T("No scan has been performed yet", "security"); ?></div>
-        <?php endif; ?>
-    </div>
-</div>
+<?php
+$cards = new StatCards();
+$cards->addCard(intval($summary['exploited'] ?? 0), _T("Exploited CVEs", "security"), 'exploited', array(
+    'href'  => urlStrRedirect("security/security/allcves", $scope + array('exploited_only' => 1)),
+    'title' => _T("Click to view exploited CVEs", "security"),
+));
+$cards->addCard(intval($summary['critical'] ?? 0), _T("Critical", "security"), 'critical', array(
+    'href'  => urlStrRedirect("security/security/allcves", $scope + array('severity' => 'Critical')),
+    'title' => _T("Click to view critical CVEs", "security"),
+));
+$cards->addCard(intval($summary['machines_affected'] ?? 0), _T("Machines Affected", "security"), 'info', array(
+    'href'  => urlStrRedirect("security/security/machines", $scope),
+    'title' => _T("Click to view affected machines", "security"),
+));
+if ($lastScan) {
+    $status = $lastScan['status'] ?? '';
+    $cards->addCard(
+        !empty($lastScan['started_at']) ? date('d/m/Y H:i', strtotime($lastScan['started_at'])) : '-',
+        _T("Last Scan", "security") . ' : ' . ($scanStatuses[$status] ?? $status),
+        'info',
+        array('date' => true)
+    );
+} else {
+    $cards->addCard('-', _T("No scan has been performed yet", "security"), 'info', array('date' => true));
+}
+$cards->display();
+?>
 
 <div class="priority-header">
     <h3><?php echo _T("To fix first", "security"); ?></h3>

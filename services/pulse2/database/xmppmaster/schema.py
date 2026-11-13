@@ -11,7 +11,6 @@ from sqlalchemy import (
     DateTime,
     Text,
     Enum,
-    UniqueConstraint,
 )  # LargeBinary
 from sqlalchemy.dialects.mysql import TINYINT
 from sqlalchemy.ext.declarative import declarative_base
@@ -805,92 +804,6 @@ class Mon_panels_template(Base, XmppMasterDBObj):
     comment = Column(String(1024), default="")
 
 
-class Update_data(Base):
-    # ====== Table name =========================
-    __tablename__ = "update_data"
-    # ====== Fields =============================
-    updateid = Column(String(38), primary_key=True)
-    revisionid = Column(String(16), nullable=False, default="")
-    creationdate = Column(DateTime, default=datetime.datetime.now)
-    compagny = Column(String(36), default="")
-    product = Column(String(512), default="")
-    productfamily = Column(String(100), default="")
-    updateclassification = Column(String(36), default="")
-    prerequisite = Column(String(2048), default="")
-    title = Column(String(500), default="")
-    description = Column(String(2048), default="")
-    msrcseverity = Column(String(16), default="")
-    msrcnumber = Column(String(16), default="")
-    kb = Column(String(16), default="")
-    languages = Column(String(16), default="")
-    category = Column(String(80), default="")
-    supersededby = Column(String(2048), default="")
-    supersedes = Column(Text, default=None)
-    payloadfiles = Column(String(1024), default="")
-    revisionnumber = Column(String(30), default="")
-    bundledby_revision = Column(String(30), default="")
-    isleaf = Column(String(6), default="")
-    issoftware = Column(String(30), default="")
-    deploymentaction = Column(String(30), default="")
-    title_short = Column(String(500), default="")
-
-
-class Up_black_list(Base, XmppMasterDBObj):
-    # ====== Table name =========================
-    __tablename__ = "up_black_list"
-    # ====== Fields =============================
-    updateid = Column(String(38), nullable=False)
-    userjid_regexp = Column(String(180), nullable=False)
-    enable_rule = Column(Boolean, unique=True)
-    type_rule = Column(String(2), nullable=False, default="id")
-
-
-class Up_machine_windows(Base):
-    # ====== Table name =========================
-    __tablename__ = "up_machine_windows"
-    # ====== Fields =============================
-    id_machine = Column(Integer, primary_key=True)
-    update_id = Column(String(38), primary_key=True)
-    kb = Column(String(45), default="")
-    curent_deploy = Column(Boolean, unique=False)
-    required_deploy = Column(Boolean, unique=False)
-    start_date = Column(DateTime, default=None)
-    end_date = Column(DateTime, default=None)
-    intervals = Column(String(256), nullable=True, default=None)
-    msrcseverity = Column(String(16), nullable=True)
-
-
-class Up_white_list(Base):
-    # ====== Table name =========================
-    __tablename__ = "up_white_list"
-    # ====== Fields =============================
-    updateid = Column(String(38), primary_key=True)
-    creationdate = Column(DateTime, default=datetime.datetime.now)
-    title = Column(String(1024), default="")
-    description = Column(String(3096), default="")
-    kb = Column(String(16), default="")
-    title_short = Column(String(1024), default="")
-    valided = Column(Boolean, unique=False)
-
-
-class Up_gray_list(Base):
-    # ====== Table name =========================
-    __tablename__ = "up_gray_list"
-    # ====== Fields =============================
-    updateid = Column(String(38), primary_key=True)
-    revisionid = Column(String(16), nullable=False, default="")
-    creationdate = Column(DateTime, default=datetime.datetime.now)
-    title = Column(String(1024), default="")
-    description = Column(String(3096), default="")
-    updateid_package = Column(String(38))
-    kb = Column(String(16), default="")
-    supersededby = Column(String(3072), default="")
-    payloadfiles = Column(String(2048), default="")
-    title_short = Column(String(1024), default="")
-    valided = Column(Boolean, unique=False)
-    validity_date = Column(DateTime, default=datetime.datetime.now)
-
-
 class Mmc_module_actif(Base):
     # ====== Table name =========================
     __tablename__ = "mmc_module_actif"
@@ -902,60 +815,12 @@ class Mmc_module_actif(Base):
     informations = Column(String(1024), default="")
 
 
-class Up_history(Base, XmppMasterDBObj):
-    # ====== Table name =========================
-    __tablename__ = "up_history"
-    # ====== Fields =============================
-    update_id = Column(String(38))
-    id_machine = Column(Integer)
-    jid = Column(String(255), nullable=False)
-    update_list = Column(Enum("white", "gray"))
-    required_date = Column(DateTime, default=None)
-    curent_date = Column(DateTime, default=None)
-    deploy_date = Column(DateTime, default=None)
-    delete_date = Column(DateTime, default=None)
-    command = Column(Integer)
-    id_deploy = Column(Integer)
-    deploy_title = Column(String(255))
-
-
 class Users_adgroups(Base):
     # ====== Table name =========================
     __tablename__ = "users_adgroups"
     # ====== Fields =============================
     lastuser = Column(String(255), nullable=False, primary_key=True)
     adname = Column(String(255), nullable=False, primary_key=True)
-
-class Up_machine_activated(Base):
-    # ====== Table name =========================
-    __tablename__ = "up_machine_activated"
-    # ====== Fields =============================
-    kb = Column(String(45), default="")
-    id_machine = Column(Integer, primary_key=True)
-    glpi_id = Column(Integer, nullable=False)
-    hostname = Column(String(45))
-    jid = Column(String(255))
-    entities_id = Column(Integer, default=0)
-    update_id = Column(String(45), nullable=False, primary_key=True)
-    curent_deploy = Column(Boolean, nullable=True, default=0)
-    required_deploy =Column(Boolean, nullable=True, default=0)
-    start_date =Column(DateTime, default=None)
-    end_date =Column(DateTime, default=None)
-    intervals =Column(String(255), nullable=True)
-    msrcseverity =Column(String(16))
-    list = Column(String(5), nullable=False)
-
-class Up_action_update_packages(Base, XmppMasterDBObj):
-    # ====== Table name =========================
-    __tablename__ = "up_action_update_packages"
-    # ====== Fields =============================
-    action = Column(String(1024), nullable=False, unique=True)
-    date = Column(DateTime, nullable=False, default=datetime.datetime.now)
-    in_process = Column(TINYINT(4), nullable=False, default=0)
-    packages = Column(String(45), nullable=False, unique=True)
-    option = Column(String(45), nullable=False)
-    pid_run = Column(Integer, default=None)
-
 
 """
 This code is kept here as a comment, "if" we need to use it
@@ -984,70 +849,4 @@ class Ban_machines(Base, XmppMasterDBObj):
     jid = Column(String(255), nullable=False)
     date  =  Column(DateTime, default=datetime.datetime.now)
     ars_server     = Column(String(255), nullable=False,default="")
-
-class Up_packages(Base):
-    # ====== Table name =========================
-    __tablename__ = "up_packages"
-    # ====== Fields =============================
-    updateid = Column(String(38), primary_key=True)
-    kb = Column(String(45),  default="")
-    revisionid = Column(String(45),  default="")
-    title = Column(String(1024),  default="")
-    id_machine = Column(Integer)
-    updateid_package = Column(String(38))
-    payloadfiles = Column(String(1024),  default="")
 """
-
-
-
-# -- Cette table permet quand on deploy 1 uninstall de kb 
-# -- pour 1 machine on peut etre dans 1 cas 
-# -- ou la mise a jour ne peut pas etre deinstalle.
-# -- REASON_DETAIL:
-# --   SSU : mise à jour système critique (Servicing Stack), non désinstallable
-# --   CUMULATIVE : mise à jour cumulative, incluse dans une version plus récente
-# --   GPO : désinstallation bloquée par stratégie de groupe
-# --   WSUS : désinstallation bloquée par gestion centralisée des mises à jour
-# --   CBS_ERROR : échec technique lors de la désinstallation (erreur système)
-# --   ISO : mise à jour intégrée via image ISO / upgrade système, non désinstallable individuellement
-
-
-class Up_auto_approve_rules(Base, XmppMasterDBObj):
-    # ====== Table name =========================
-    __tablename__ = "up_auto_approve_rules"
-    # ====== Fields =============================
-    entityid = Column(Integer, nullable=False)
-    msrcseverity = Column(String(45), nullable=True, default=None)
-    updateclassification = Column(String(45), nullable=True, default=None)
-    active_rule = Column(Integer, nullable=True, default=0)
-
-    __table_args__ = (
-        UniqueConstraint(
-            "msrcseverity",
-            "updateclassification",
-            name="rule_unique",
-        ),
-        UniqueConstraint(
-            "entityid",
-            "msrcseverity",
-            "updateclassification",
-            name="uniq_entity_rule",
-        ),
-    )
-class UpWindowsKbUninstall(Base):
-    __tablename__ = "up_windows_kb_uninstall"
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-
-    updateid = Column(String(38), nullable=False)
-    hostname = Column(String(45), nullable=False)
-
-    kb = Column(String(45), default="")
-    jid = Column(String(255))
-    entities_id = Column(Integer, default=0)
-    count_uninstall = Column(Integer, default=0)
-    status = Column(String(255))
-
-    __table_args__ = (
-        UniqueConstraint("updateid", "hostname", name="uniq_update_host"),
-    )

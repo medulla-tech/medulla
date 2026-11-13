@@ -698,20 +698,6 @@ update_550_to_551() {
     echo "$str"
     write_to_log "$str"
 
-    # Regenerate Windows update database
-    str="[=] Regenerating Windows update database..."
-    echo "$str"
-    write_to_log "$str"
-    /usr/sbin/medulla-generate-winupdate-packages 2>&1 | tee -a /tmp/medulla-generate-winupdate-packages.log
-    if [[ $? -ne 0 ]]; then
-        str="[x] Error regenerating Windows update database."
-        echo "$str"
-        write_to_log "$str"
-    fi
-    str="[v] Windows update database regenerated successfully."
-    echo "$str"
-    write_to_log "$str"
-
     # Remove products section from updates.ini.local
     str="[=] Removing products section from updates.ini.local..."
     echo "$str"
@@ -819,24 +805,6 @@ update_552_to_560() {
     echo "$str"
     write_to_log "$str"
     update_medulla
-
-    # Reconfigure cron job for downloading Windows updates
-    str="[=] Setting up cron job for downloading Windows updates..."
-    echo "$str"
-    write_to_log "$str"
-    # Create /etc/cron.d/medulla_winupdates_dl
-    echo "30 1 * * * root /usr/sbin/medulla-generate-winupdate-packages 2>&1 | tee -a /tmp/medulla-generate-winupdate-packages.log" > /etc/cron.d/medulla_winupdates_dl
-    # Restart cron service to apply changes
-    systemctl restart cron
-    if [[ $? -ne 0 ]]; then
-        str="[x] Error setting up cron job for downloading Windows updates. Aborting."
-        echo "$str"
-        write_to_log "$str"
-        exit 1
-    fi
-    str="[v] Cron job for downloading Windows updates set up successfully."
-    echo "$str"
-    write_to_log "$str"
 
     ## Setup new MMC module: store
     setup_new_mmc_module "store"
@@ -1120,27 +1088,54 @@ update_565_to_566() {
         str="[x] Error updating local_glpi_machines federated table."
         echo "$str"
         write_to_log "$str"
+        exit 1
     fi
+    str="[v] Federated table updates applied successfully."
+    echo "$str"
+    write_to_log "$str"
 
     # pkgs database configuration for deployment substitute
     str="[=] Configuring pkgs database for deployment substitute..."
     echo "$str"
     write_to_log "$str"
     crudini --set /etc/pulse-xmpp-agent-substitute/agent_master_substitute_depl.ini.local pkgsdatabase pkgs_dbhost $DBHOST
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring pkgs database for deployment substitute."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
     crudini --set /etc/pulse-xmpp-agent-substitute/agent_master_substitute_depl.ini.local pkgsdatabase pkgs_dbport $DBPORT
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring pkgs database for deployment substitute."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
     crudini --set /etc/pulse-xmpp-agent-substitute/agent_master_substitute_depl.ini.local pkgsdatabase pkgs_dbuser $DBUSER
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring pkgs database for deployment substitute."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
     crudini --set /etc/pulse-xmpp-agent-substitute/agent_master_substitute_depl.ini.local pkgsdatabase pkgs_dbpasswd $DBPASS
     if [[ $? -ne 0 ]]; then
         str="[x] Error configuring pkgs database for deployment substitute."
         echo "$str"
         write_to_log "$str"
+        exit 1
     fi
     systemctl restart pulse-xmpp-master-substitute-deployment
     if [[ $? -ne 0 ]]; then
         str="[x] Error restarting pulse-xmpp-master-substitute-deployment service."
         echo "$str"
         write_to_log "$str"
+        exit 1
     fi
+    str="[v] pkgs database successfully configured for deployment substitute."
+    echo "$str"
+    write_to_log "$str"
 
     # HMDM Setup
     str="[=] Installing HMDM for Medulla..."
@@ -1307,6 +1302,150 @@ EOF
     setup_new_mmc_module "reflex"
     # mmc-agent will be restarted in final_operations
     str="[v] Medulla MMC module 'reflex' setup and configuration applied successfully."
+    echo "$str"
+    write_to_log "$str"
+
+    ## Setup for updates module
+    str="[=] Configuring updates substitute..."
+    echo "$str"
+    write_to_log "$str"
+    crudini --set /etc/pulse-xmpp-agent-substitute/agent_master_substitute_upd.ini.local updatesdatabase updates_dbhost $DBHOST
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring updates database for updates substitute."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    crudini --set /etc/pulse-xmpp-agent-substitute/agent_master_substitute_upd.ini.local updatesdatabase updates_dbport $DBPORT
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring updates database for updates substitute."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    crudini --set /etc/pulse-xmpp-agent-substitute/agent_master_substitute_upd.ini.local updatesdatabase updates_dbuser $DBUSER
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring updates database for updates substitute."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    crudini --set /etc/pulse-xmpp-agent-substitute/agent_master_substitute_upd.ini.local updatesdatabase updates_dbpasswd $DBPASS
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring updates database for updates substitute."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    crudini --set /etc/pulse-xmpp-agent-substitute/loadupdates.ini.local parameters url https://updates.medulla-tech.io
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring loadupdates plugin for updates substitute."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    crudini --set /etc/pulse-xmpp-agent-substitute/loadupdates.ini.local parameters server_id $(crudini --get /etc/mmc/mmc.ini.local server_01 description)
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring loadupdates plugin for updates substitute."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    crudini --set /etc/pulse-xmpp-agent-substitute/loadupdates.ini.local parameters key $(crudini --get /etc/mmc/plugins/xmppmaster.ini.local defaultconnection keyAES32)
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring loadupdates plugin for updates substitute."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    # Cleanup of legacy files, folders, packages and databases related to updates substitute
+    files=(
+        '/usr/sbin/medulla-generate-update-package.py', 
+        '/usr/sbin/medulla-generate-winupdate-packages', 
+        '/usr/sbin/medulla-generate-winupdatemajor-packages', 
+        '/usr/sbin/medulla-mariadb-move-update-package.py', 
+        '/usr/sbin/medulla_mysql_exec_update.sh', 
+        '/usr/sbin/medulla_mysql_exec_uninstall_unnecessary_update_package.sh', 
+        '/etc/cron.d/medulla_osupgrade_dl', 
+        '/etc/cron.d/medulla_winupdates_dl',
+        '/etc/pulse-xmpp-agent-substitute/loadactionupdate.ini.local',
+        '/etc/pulse-xmpp-agent-substitute/update_windows.ini.local'
+    )
+    for file in "${files[@]}"; do
+        if [[ -n "$file" ]] && [[ -f "$file" ]]; then
+            rm -f "$file" &> /dev/null
+            if [[ $? -ne 0 ]]; then
+                str="[x] Error removing legacy file $file."
+                echo "$str"
+                write_to_log "$str"
+            fi
+        fi
+    done
+    folders=(
+        '/var/lib/pulse2/base_update_package'
+    )
+    for folder in "${folders[@]}"; do
+        if [[ -n "$folder" ]] && [[ -d "$folder" ]]; then
+            rm -rf "$folder" &> /dev/null
+            if [[ $? -ne 0 ]]; then
+                str="[x] Error removing legacy folder $folder."
+                echo "$str"
+                write_to_log "$str"
+            fi
+        fi
+    done
+    mysql --defaults-group-suffix=dbsetup -e "DROP DATABASE IF EXISTS base_wsusscn2;"
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error dropping database base_wsusscn2. Aborting."
+        echo "$str"
+        write_to_log "$str"
+    fi
+    packages=(
+        'dfd3b8dc-linuxupdategenericcommand_p',
+        '34181a66-updateslinuxkernel_i8ppnmrs',
+        'aa365fe6-linuxupdateother_cew74x5bi0',
+        'e05e689e-linuxupdatesecutity_ivvfn4b'
+    )
+    for package in "${packages[@]}"; do
+        if [[ -n "$package" ]] && [[ -d "/var/lib/pulse2/packages/sharing/global/$package" ]]; then
+            rm -rf "/var/lib/pulse2/packages/sharing/global/$package" "/var/lib/pulse2/packages/$package" &> /dev/null
+            if [[ $? -ne 0 ]]; then
+                str="[x] Error removing legacy package $package."
+                echo "$str"
+                write_to_log "$str"
+            fi
+            mysql --defaults-group-suffix=medulla pkgs -Bse "DELETE FROM pkgs.packages WHERE uuid = '$package'"
+        fi
+    done
+    for share in winupdates winupdatesmajor; do
+        packages=$(ls /var/lib/pulse2/packages/sharing/$share)
+        for package in $packages; do
+            if [[ -n "$package" ]] && [[ -d "/var/lib/pulse2/packages/sharing/$share/$package" ]]; then
+                rm -rf "/var/lib/pulse2/packages/sharing/$share/$package" "/var/lib/pulse2/packages/$package" &> /dev/null
+                if [[ $? -ne 0 ]]; then
+                    str="[x] Error removing legacy package $package."
+                    echo "$str"
+                    write_to_log "$str"
+                fi
+                mysql --defaults-group-suffix=medulla pkgs -Bse "DELETE FROM pkgs.packages WHERE uuid = '$package'"
+            fi
+        done
+    done
+    systemctl restart cron
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error restarting cron service."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    systemctl restart pulse-xmpp-master-substitute-updates
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error restarting pulse-xmpp-master-substitute-updates service."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    str="[v] Updates substitute successfully configured."
     echo "$str"
     write_to_log "$str"
 

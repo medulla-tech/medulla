@@ -11,69 +11,61 @@ require_once("modules/dyngroup/includes/dyngroup.php"); # for Group Class
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
 require_once("modules/updates/includes/xmlrpc.php");
+require_once("modules/updates/includes/html.inc.php");
 
-if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
-    http_response_code(405);
+$title = _T("Create a group", "updates");
+$request = updatesGroupRequest();
+$groupName = $request ? implode(" - ", array($request['tabLabel'], $request['categoryLabel'], date("Y-m-d H:i"))) : '';
+$entity = updatesSelectedEntity();
+$machines = array();
+if (!hasCorrectAcl("base", "computers", "computersgroupcreator")) {
+    $error = _T("You are not allowed to create groups.", "updates");
+} elseif (!$entity && !empty($_GET['location'])) {
+    $error = _T("Unknown entity.", "updates");
+} else {
+    list($machines, $error) = updatesGroupMachines($entity);
+}
+$count = count($machines);
+
+if (isset($_POST['bconfirm'])) {
+    verifyCSRFToken($_POST);
+    $back = $request ? $request['back'] : updatesUpgradeUrl($entity, updatesUpgradeRequestTab());
+    $group = new Group();
+    if ($error !== null) {
+        new NotifyWidgetFailure(htmlspecialchars($error));
+    } elseif (!$group->create($groupName, false)) {
+        new NotifyWidgetFailure(htmlspecialchars(_T("The group could not be created.", "updates")));
+    } else {
+        // miniAddMembers : addmembers_to_group bute sur les ecarts de casse UUID du cache dyngroup
+        $added = $group->miniAddMembers($machines);
+        if (!is_array($added) || empty($added[0])) {
+            new NotifyWidgetFailure(htmlspecialchars(_T("The machines could not be added to the group.", "updates")));
+        } else {
+            $message = ($count === 1)
+                ? updatesActionText(_T("Group \"%s\" created with 1 machine.", "updates"), $groupName)
+                : updatesActionText(_T("Group \"%s\" created with %d machines.", "updates"), $groupName, $count);
+            new NotifyWidgetSuccess($message);
+            $back = urlStrRedirect("base/computers/display",
+                                   array('id' => $group->getId(), 'gid' => $group->getId(), 'groupname' => $groupName));
+        }
+    }
+    header("Location: " . $back);
     exit;
 }
 
-verifyCSRFToken($_POST);
-$requestData = $_POST;
-
-try {
-    // Vérification des paramètres obligatoires
-    $requiredParams = ['entity_id', 'typeaction', 'grp', 'namegrp'];
-    foreach ($requiredParams as $param) {
-        if (!array_key_exists($param, $requestData)) {
-            throw new Exception("Paramètre '$param' manquant.");
-        }
-    }
-
-    // Récupération des machines
-    $namemachine = xmlrpc_get_machines_update_grp(
-        $requestData['entity_id'],
-        $requestData['typeaction'],
-        $requestData['grp']
-    );
-
-    if ($namemachine === false || empty($namemachine)) {
-        throw new Exception("Aucune machine trouvée pour les critères spécifiés.");
-    }
-
-    // Création du groupe
-    $group = new Group();
-    $groupCreated = $group->create($requestData['namegrp'], false);
-
-    if (!$groupCreated) {
-        throw new Exception("Échec de la création du groupe.");
-    }
-
-    // Ajout des membres : miniAddMembers évite le chemin addmembers_to_group
-    // qui est sensible aux écarts de casse UUID dans le cache dyngroup.
-    $membersAdded = $group->miniAddMembers($namemachine);
-
-    if ($membersAdded === false) {
-        throw new Exception("Échec de l'ajout des membres au groupe.");
-    }
-
-    // HTML pour le succès
-    ?>
-    <div class="alert alert-success" style="padding: 10px; background: #dff0d8; color: #3c763d; border: 1px solid #d6e9c6; border-radius: 4px;">
-        <strong>Succès !</strong><br>
-        Création du groupe <strong>'<?php echo htmlspecialchars($requestData['namegrp']); ?>'</strong> réussie.
-    </div>
-    <?php
-
-} catch (Exception $e) {
-    // HTML pour l'erreur
-    ?>
-    <div class="alert alert-danger" style="padding: 10px; background: #f2dfdf; color: #a94442; border: 1px solid #ebccd1; border-radius: 4px;">
-        <strong>Erreur !</strong><br>
-        Erreur lors de la création du groupe <strong>'<?php echo htmlspecialchars($requestData['namegrp']); ?>'</strong> :
-        <br>
-        <?php echo htmlspecialchars($e->getMessage()); ?>
-    </div>
-    <?php
+$f = new PopupForm($title);
+if ($error === null) {
+    $machinesText = ($count === 1) ? _T("1 machine", "updates") : sprintf(_T("%d machines", "updates"), $count);
+    $what = $request['what'];
+    $f->addText($entity
+        ? updatesActionText(_T("Create a group with <b>%s</b> %s from entity <b>%s</b>?", "updates"),
+                            $machinesText, $what, updatesEntityName($entity))
+        : updatesActionText(_T("Create a group with <b>%s</b> %s?", "updates"), $machinesText, $what));
+    $f->addText('<em>' . htmlspecialchars($groupName, ENT_QUOTES, 'UTF-8') . '</em>');
+    $f->addValidateButtonWithValue("bconfirm", _T("Create", "updates"));
+} else {
+    $f->addText(htmlspecialchars($error));
 }
-
+$f->addCancelButton("bback");
+$f->display();
 ?>

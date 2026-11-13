@@ -1,1698 +1,2022 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: medulla\n"
+"POT-Creation-Date: 2026-11-05 09:32+0100\n"
+"Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es_ES\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: modules/updates/updates/ajaxDeployAllUpdates.php:43
-#, php-format
-msgid "Run all updates on entitie : \"%s\""
-msgstr "Ejecutar todas las actualizaciones en entitie : \"%s\""
-
-#: modules/updates/updates/ajaxDeployAllUpdates.php:45
-#, php-format
-msgid "Run all updates on group : \"%s\""
-msgstr "Ejecutar todas las actualizaciones en el grupo : \"%s\""
-
-#: modules/updates/updates/ajaxDeployAllUpdates.php:52
-#: modules/updates/updates/deployUpdate.php:296
-#: modules/updates/updates/deployUpdatemajor.php:366
-#: modules/updates/updates/grpDeployUpdatemajor.php:334
-msgid "Deployment interval"
-msgstr "Intervalo de despliegue"
-
-#: modules/updates/updates/ajaxDeployAllUpdates.php:61
-msgid "bandwidth throttling (ko)"
-msgstr "limitación del ancho de banda (ko)"
-
-#: modules/updates/updates/ajaxDeployAllUpdates.php:62
-msgid "<in ko>"
-msgstr "<in ko>"
-
-#: modules/updates/updates/greylistUpdate.php:34
-msgid "Package moved successfully to grey list"
-msgstr "Paquete movido con éxito a la lista gris"
-
-#: modules/updates/updates/greylistUpdate.php:38
-msgid "Error moving package to grey list"
-msgstr "Error al mover un paquete a la lista gris"
-
-#: modules/updates/updates/greylistUpdate.php:45
-msgid "Unlist Update"
-msgstr "Actualización de la Unlist"
-
-#: modules/updates/updates/ajaxDetailsSpecificUpdate.php:69
-msgid "Machines with update"
-msgstr "Máquinas con actualización"
-
-#: modules/updates/updates/ajaxDetailsSpecificUpdate.php:70
-msgid "Machine Name"
-msgstr "Nombre de la máquina"
-
-#: modules/updates/updates/ajaxDetailsSpecificUpdate.php:73
-#: modules/updates/updates/hardwareConstraintsForMajorUpdates.php:57
-#: modules/updates/updates/ajaxDetailsByMachines.php:247
-#: modules/updates/updates/ajaxMajorDetailsByMachines.php:145
-#: modules/updates/updates/ajaxDetailsSpecificUpdateWithout.php:46
-msgid "Platform"
-msgstr "Plataforma"
-
-#: modules/updates/updates/deployAllUpdates.php:27
-#: modules/updates/infoPackage.inc.php:57
-#: modules/updates/infoPackage.inc.php:61
-msgid "Deploy all Updates"
-msgstr "Implantar todas las actualizaciones"
-
-#: modules/updates/updates/banUpdate.php:31
-#, php-format
-msgid "The package %s (%s) has been banned."
-msgstr "El paquete %s (%s) ha sido prohibido."
-
-#: modules/updates/updates/banUpdate.php:35
-#, php-format
-msgid "The package %s (%s) failed to move"
-msgstr "No se ha podido mover el paquete %s (%s)"
-
-#: modules/updates/updates/banUpdate.php:42
-#, php-format
-msgid "<b>Ban</b> update %s (%s) ?"
-msgstr "¿ <b>Prohibir</b> actualización %s (%s) ?"
-
-#: modules/updates/updates/auditUpdateByMachine.php:27
-#, php-format
-msgid "Updates history for machine %s"
-msgstr "Historial de actualizaciones de la máquina %s"
-
-#: modules/updates/updates/auditUpdateByMachine.php:27
-#: modules/updates/updates/ajaxDetailsByMachines.php:73
-#: modules/updates/updates/ajaxDetailsByMachines.php:139
-#: modules/updates/updates/ajaxDetailsByMachines.php:179
-#: modules/updates/updates/ajaxMajorDetailsByMachines.php:106
-#: modules/updates/infoPackage.inc.php:214
-#: modules/updates/infoPackage.inc.php:217
-msgid "Updates History"
-msgstr "Actualizaciones Historia"
-
-#: modules/updates/updates/index.php:35
-#: modules/updates/updates/MajorEntitiesList.php:17
-#: modules/updates/infoPackage.inc.php:137
-
-#: modules/updates/updates/ajaxDeploySpecificUpdate.php:112
-#: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:113
-#: modules/updates/updates/ajaxUpdatesListWinGray.php:137
-#: modules/updates/updates/ajaxUpdatesListWinBlack.php:79
-#: modules/updates/updates/ajaxDetailsByUpdatesGray.php:113
-#: modules/updates/updates/ajaxDetailsByUpdates.php:116
-#: modules/updates/updates/ajaxUpdatesListWinWhite.php:84
-msgid "Update name"
-msgstr "Actualizar nombre"
-
-#: modules/updates/updates/ajaxDeploySpecificUpdate.php:113
-#: modules/updates/updates/ajaxUpdatesListWinGray.php:141
-#: modules/updates/updates/ajaxUpdatesListWinBlack.php:81
-#: modules/updates/updates/ajaxUpdatesListWinWhite.php:87
-msgid "Update Id"
-msgstr "Actualizar Id"
-
-#: modules/updates/updates/ajaxDeploySpecificUpdate.php:114
-#: modules/updates/updates/ajaxUpdatesListWinGray.php:142
-#: modules/updates/updates/ajaxUpdatesListWinBlack.php:82
-#: modules/updates/updates/ajaxUpdatesListWinWhite.php:88
-msgid "Severity"
-msgstr "Gravedad"
-
-#: modules/updates/updates/ajaxDeploySpecificUpdate.php:116
-#: modules/updates/updates/ajaxAuditByUpdate.php:34
-#: modules/updates/updates/ajaxAuditByEntity.php:34
-msgid "Machine"
-msgstr "Máquina"
-
-#: modules/updates/updates/ajaxDeploySpecificUpdate.php:119
-msgid "Jid"
-msgstr "Jid"
-
-#: modules/updates/updates/grayEnable.php:31
-#, php-format
-msgid "The update %s (%s) has been enabled."
-msgstr "La actualización %s (%s) ha sido activada."
-
-#: modules/updates/updates/grayEnable.php:35
-#, php-format
-msgid "The update %s (%s) hasn't been enabled."
-msgstr "La actualización %s (%s) no ha sido activada."
-
-#: modules/updates/updates/ajaxAuditByUpdate.php:17
-#: modules/updates/updates/ajaxAuditUpdateByMachine.php:38
-#: modules/updates/updates/ajaxAuditByEntity.php:17
-msgid "Detail"
-msgstr "Detalle"
-
-#: modules/updates/updates/ajaxAuditByUpdate.php:32
-#: modules/updates/updates/ajaxAuditUpdateByMachine.php:51
-#: modules/updates/updates/ajaxAuditByEntity.php:32
-msgid "Title"
-msgstr "Título"
-
-#: modules/updates/updates/ajaxAuditByUpdate.php:35
-#: modules/updates/updates/ajaxAuditUpdateByMachine.php:53
-#: modules/updates/updates/ajaxAuditByEntity.php:35
-msgid "Started at"
-msgstr "Comenzó en"
-
-#: modules/updates/updates/ajaxAuditByUpdate.php:37
-#: modules/updates/updates/ajaxAuditUpdateByMachine.php:55
-#: modules/updates/updates/ajaxAuditByEntity.php:37
-msgid "Status"
-msgstr "Estado"
-
-#: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:30
-msgid "Details by White Updates"
-msgstr "Detalles de White Updates"
-
-#: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:81
-#: modules/updates/updates/ajaxDetailsByUpdatesGray.php:81
-#: modules/updates/updates/ajaxDetailsByUpdates.php:81
-msgid "Details"
-msgstr "Detalles"
-
-#: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:116
-#: modules/updates/updates/ajaxDetailsByMachines.php:248
-#: modules/updates/updates/ajaxEntitiesList.php:150
-#: modules/updates/updates/ajaxDetailsByUpdatesGray.php:116
-#: modules/updates/updates/ajaxDetailsByUpdates.php:119
-#: modules/updates/updates/ajaxMajorEntitiesList.php:228
-msgid "Compliance rate"
-msgstr "Tasa de conformidad"
-
-#: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:117
-#: modules/updates/updates/ajaxDetailsByUpdatesGray.php:117
-#: modules/updates/updates/ajaxDetailsByUpdates.php:120
-msgid "Machines with this update"
-msgstr "Máquinas con esta actualización"
-
-#: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:118
-#: modules/updates/updates/ajaxDetailsByUpdatesGray.php:118
-#: modules/updates/updates/ajaxDetailsByUpdates.php:121
-msgid "Machines asking for this update"
-msgstr "Máquinas que piden esta actualización"
-
-#: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:119
-#: modules/updates/updates/ajaxDetailsByUpdatesGray.php:119
-#: modules/updates/updates/ajaxDetailsByUpdates.php:122
-msgid "Total of machines"
-msgstr "Total de máquinas"
-
-#: modules/updates/updates/ajaxUpdatesListWin.php:27
-msgid "Entity : "
-msgstr "Entidad : "
-
-#: modules/updates/updates/ajaxUpdatesListWin.php:66
-#: modules/updates/updates/ajaxUpdatesListWinGray.php:64
-msgid "Grey list (manual updates)"
-msgstr "Lista gris (actualizaciones manuales)"
-
-#: modules/updates/updates/ajaxUpdatesListWin.php:69
-#: modules/updates/updates/ajaxUpdatesListWinWhite.php:102
-msgid "White list (automatic updates)"
-msgstr "Lista blanca (actualizaciones automáticas)"
-
-#: modules/updates/updates/ajaxUpdatesListWin.php:72
-#: modules/updates/updates/ajaxUpdatesListWinBlack.php:98
-msgid "Black list (banned updates)"
-msgstr "Lista negra (actualizaciones prohibidas)"
-
-#: modules/updates/updates/ajaxUpdatesListWinGray.php:65
-msgid "No updates are currently available in the Grey List  (manual updates) for the entity"
-msgstr "Actualmente no hay actualizaciones disponibles en la Lista Gris (actualizaciones manuales) para la entidad"
-
-#: modules/updates/updates/ajaxUpdatesListWinGray.php:82
-#: modules/updates/updates/ajaxUpdatesListWinGray.php:83
-#: modules/updates/infoPackage.inc.php:157
-msgid "Enable for manual update"
-msgstr "Habilitar para actualización manual"
-
-#: modules/updates/updates/ajaxUpdatesListWinGray.php:84
-#: modules/updates/updates/ajaxUpdatesListWinGray.php:85
-#: modules/updates/infoPackage.inc.php:161
-msgid "Disable for manual update"
-msgstr "Desactivar para actualización manual"
-
-#: modules/updates/updates/ajaxUpdatesListWinGray.php:86
-#: modules/updates/updates/whitelistUpdate.php:44
-#: modules/updates/infoPackage.inc.php:165
-msgid "Approve for automatic update"
-msgstr "Aprobar para actualización automática"
-
-#: modules/updates/updates/ajaxUpdatesListWinGray.php:87
-#: modules/updates/updates/ajaxUpdatesListWinWhite.php:36
-#: modules/updates/infoPackage.inc.php:169
-#: modules/updates/infoPackage.inc.php:194
-msgid "Ban update"
-msgstr "Actualización de la prohibición"
-
-#: modules/updates/updates/ajaxApproveProduct.php:73
-msgid "MICROSOFT SERVER"
-msgstr "SERVIDOR MICROSOFT"
-
-#: modules/updates/updates/ajaxApproveProduct.php:75
-msgid "MICROSOFT VISUAL STUDIO"
-msgstr "MICROSOFT VISUAL STUDIO"
-
-#: modules/updates/updates/ajaxApproveProduct.php:77
-msgid "MICROSOFT OFFICE"
-msgstr "MICROSOFT OFFICE"
-
-#: modules/updates/updates/ajaxApproveProduct.php:79
-msgid "MICROSOFT WINDOWS 10"
-msgstr "MICROSOFT WINDOWS 10"
-
-#: modules/updates/updates/ajaxApproveProduct.php:81
-msgid "MICROSOFT WINDOWS 11"
-msgstr "MICROSOFT WINDOWS 11"
-
-#: modules/updates/updates/ajaxApproveProduct.php:83
-msgid "MALICIOUS SOFTWARE REMOVAL TOOL"
-msgstr "HERRAMIENTA DE ELIMINACIÓN DE SOFTWARE MALINTENCIONADO"
-
-#: modules/updates/updates/ajaxApproveProduct.php:92
-#: modules/updates/updates/ajaxApproveProduct.php:98
-msgid "Microsoft Server Operating System"
-msgstr "Sistema operativo Microsoft Server"
-
-#: modules/updates/updates/ajaxApproveProduct.php:93
-msgid "Visual studio"
-msgstr "Estudio visual"
-
-#: modules/updates/updates/ajaxApproveProduct.php:94
-msgid "Malicious Software Removal Tool_"
-msgstr "Herramienta de eliminación de software malintencionado_"
-
-#: modules/updates/updates/ajaxApproveProduct.php:142
-msgid "Product Microsoft"
-msgstr "Producto Microsoft"
-
-#: modules/updates/updates/ajaxApproveProduct.php:145
-msgid "approve update"
-msgstr "aprobar la actualización"
-
-msgid "Approve update"
-msgstr "Aprobar actualización"
-
-msgid "End date"
-msgstr "Fecha de fin"
-
-msgid "Version"
-msgstr "Versión"
-
-msgid "Missing"
-msgstr "Pendientes"
-
-msgid "Installed"
-msgstr "Instaladas"
-
-
-#, php-format
-msgid "Updates history for entity %s"
-msgstr "Historial de actualizaciones para la entidad %s"
-
-#, php-format
-msgid "Updates history for update %s"
-msgstr "Historial de actualizaciones para %s"
-
-#, php-format
-msgid "Machine details for update KB%s"
-msgstr "Detalles de máquinas para la actualización KB%s"
-
-#, php-format
-msgid "Updates on Entity %s"
-msgstr "Actualizaciones en la entidad %s"
-
-#, php-format
-msgid "Updates on Group %s"
-msgstr "Actualizaciones en el grupo %s"
-
-#, php-format
-msgid "Updates on machine %s"
-msgstr "Actualizaciones en la máquina %s"
-
-#, php-format
-msgid "Deploy this update on entity %s"
-msgstr "Desplegar esta actualización en la entidad %s"
-
-#, php-format
-msgid "Deploy this update on group %s"
-msgstr "Desplegar esta actualización en el grupo %s"
-
-#, php-format
-msgid "Deploy this update on machine %s"
-msgstr "Desplegar esta actualización en la máquina %s"
-
-#: modules/updates/updates/ajaxApproveProduct.php:165
-#: modules/updates/updates/ajaxApproveRules.php:104
-msgid "Apply"
-msgstr "Solicitar"
-
-#: modules/updates/updates/hardwareConstraintsForMajorUpdates.php:45
-#, php-format
-msgid "List of machines that should not be updated [ Entity %s ]"
-msgstr "Lista de máquinas que no deben actualizarse [ Entidad %s ]"
-
-#: modules/updates/updates/hardwareConstraintsForMajorUpdates.php:56
-msgid "Computer"
-msgstr "Equipo"
-
-#: modules/updates/updates/hardwareConstraintsForMajorUpdates.php:58
-msgid "Version Code"
-msgstr "Código de versión"
-
-#: modules/updates/updates/hardwareConstraintsForMajorUpdates.php:59
-msgid "Language Code"
-msgstr "Código de idioma"
-
-#: modules/updates/updates/ajaxDetailsByMachines.php:71
-#: modules/updates/updates/ajaxDetailsByMachines.php:137
-#: modules/updates/updates/ajaxDetailsByMachines.php:177
-msgid "View details"
-msgstr "Ver detalles"
-
-#: modules/updates/updates/ajaxDetailsByMachines.php:72
-#: modules/updates/updates/ajaxDetailsByMachines.php:138
-#: modules/updates/updates/ajaxDetailsByMachines.php:178
-#: modules/updates/updates/ajaxPendingUpdateByMachine.php:66
-#: modules/updates/updates/pendingUpdateByMachine.php:27
-#: modules/updates/infoPackage.inc.php:207
-#: modules/updates/infoPackage.inc.php:210
-msgid "Pending Updates"
-msgstr "Actualizaciones pendientes"
-
-#: modules/updates/updates/ajaxDetailsByMachines.php:126
-#, php-format
-msgid "Computers from group %s"
-msgstr "Ordenadores del grupo %s"
-
-#: modules/updates/updates/ajaxDetailsByMachines.php:132
-#, php-format
-msgid "Computers from entity %s"
-msgstr "Ordenadores de la entidad %s"
-
-#: modules/updates/updates/ajaxDetailsByMachines.php:245
-#: modules/updates/updates/ajaxMajorDetailsByMachines.php:143
-msgid "Machine name"
-msgstr "Nombre de la máquina"
-
-#: modules/updates/updates/ajaxDetailsByMachines.php:249
-#: modules/updates/updates/ajaxEntitiesList.php:151
-msgid "Missing updates"
-msgstr "Actualizaciones pendientes"
-
-#: modules/updates/updates/ajaxDetailsByMachines.php:250
-msgid "In progress"
-msgstr "En curso"
-
-#: modules/updates/updates/ajaxDetailsByMachines.php:251
-msgid "Installed updates"
-msgstr "Actualizaciones instaladas"
-
-#: modules/updates/updates/ajaxDetailsByMachines.php:252
-msgid "Total updates"
-msgstr "Actualizaciones totales"
-
-#: modules/updates/updates/ajaxDetailsByMachines.php:288
-msgid "Actions are disabled for this machine (MISSING AGENT)"
-msgstr "Las acciones están desactivadas para esta máquina (FALTA AGENTE)"
-
-#: modules/updates/updates/ajaxUpdatesListWinBlack.php:36
-msgid "Unban update"
-msgstr "Actualización de la prohibición"
-
-#: modules/updates/updates/ajaxUpdatesListWinBlack.php:96
-msgid "No updates are currently available in the Black list (banned updates)"
-msgstr "Actualmente no hay actualizaciones disponibles en la Lista negra (actualizaciones prohibidas)"
-
-#: modules/updates/updates/updatesListWin.php:31
-#: modules/updates/updates/localSidebar.php:36
-#: modules/updates/infoPackage.inc.php:128
-#: modules/updates/infoPackage.inc.php:142
-#: modules/updates/infoPackage.inc.php:147
-#: modules/updates/infoPackage.inc.php:152
-msgid "Manage Updates Lists"
-msgstr "Listas de actualizaciones"
-
-#: modules/updates/updates/ajaxEntitiesList.php:46
-#: modules/updates/updates/ajaxMajorEntitiesList.php:118
-msgid "Details by machines"
-msgstr "Detalles por máquinas"
-
-#: modules/updates/updates/ajaxEntitiesList.php:47
-msgid "Details by updates"
-msgstr "Detalles por actualizaciones"
-
-#: modules/updates/updates/ajaxEntitiesList.php:48
-#: modules/updates/updates/ajaxEntitiesList.php:49
-msgid "Deploy all updates"
-msgstr "Implantar todas las actualizaciones"
-
-#: modules/updates/updates/ajaxEntitiesList.php:50
-#: modules/updates/updates/ajaxEntitiesList.php:51
-msgid "Deploy specific updates"
-msgstr "Implantar actualizaciones específicas"
-
-#: modules/updates/updates/ajaxEntitiesList.php:52
-#: modules/updates/infoPackage.inc.php:284
-#: modules/updates/infoPackage.inc.php:289
-msgid "History by Entity"
-msgstr "Historia por entidad"
-
-#: modules/updates/updates/ajaxEntitiesList.php:53
-#, php-format
-msgid "%s updates for %s machines in the %s entity"
-msgstr "%s actualizaciones para %s máquinas en la entidad %s"
-
-#: modules/updates/updates/ajaxEntitiesList.php:146
-#: modules/updates/updates/ajaxMajorEntitiesList.php:226
-msgid "Entity name"
-msgstr "Nombre de la entidad"
-
-#: modules/updates/updates/ajaxEntitiesList.php:152
-msgid "Non-compliant machines"
-msgstr "Máquinas no conformes"
-
-#: modules/updates/updates/ajaxEntitiesList.php:153
-#: modules/updates/updates/ajaxMajorEntitiesList.php:236
-#: modules/updates/updates/ajaxMajorDetailsByMachines.php:52
-msgid "Total machines"
-msgstr "Total máquinas"
-
-#: modules/updates/updates/ajaxDetailsByUpdatesGray.php:30
-msgid "Details by Gray Updates"
-msgstr "Detalles de Gray Updates"
-
-#: modules/updates/updates/detailsByUpdates.php:28
-msgid "Details by Updates"
-msgstr "Detalles por actualizaciones"
-
-#: modules/updates/updates/deployUpdate.php:89
-#: modules/updates/updates/deployUpdate.php:122
-#: modules/updates/updates/deployUpdatemajor.php:98
-#: modules/updates/updates/deployUpdatemajor.php:131
-#: modules/updates/updates/grpDeployUpdatemajor.php:98
-#: modules/updates/updates/grpDeployUpdatemajor.php:131
-msgid "Wrong deployment intervals"
-msgstr "Intervalos de despliegue incorrectos"
-
-#: modules/updates/updates/deployUpdate.php:212
-msgid "Schedule update deployment on entity"
-msgstr "Programar el despliegue de actualizaciones en la entidad"
-
-#: modules/updates/updates/deployUpdate.php:215
-msgid "Schedule update deployment on group"
-msgstr "Programar el despliegue de actualizaciones en el grupo"
-
-#: modules/updates/updates/deployUpdate.php:218
-msgid "Schedule update deployment on machine"
-msgstr "Programar el despliegue de actualizaciones en la máquina"
-
-#: modules/updates/updates/deployUpdate.php:264
-#: modules/updates/updates/deployUpdatemajor.php:334
-#: modules/updates/updates/grpDeployUpdatemajor.php:302
-msgid "The command must start after"
-msgstr "El comando debe comenzar después de"
-
-#: modules/updates/updates/deployUpdate.php:276
-#: modules/updates/updates/deployUpdatemajor.php:346
-#: modules/updates/updates/grpDeployUpdatemajor.php:314
-msgid "The command must stop before"
-msgstr "El comando debe detenerse antes de"
-
-#: modules/updates/updates/deployUpdate.php:286
-#: modules/updates/updates/deployUpdatemajor.php:356
-#: modules/updates/updates/grpDeployUpdatemajor.php:324
-msgid "Example for lunch and night (24h format): 12-14,20-24,0-8"
-msgstr "Ejemplo para el almuerzo y la noche (formato 24h): 12-14,20-24,0-8"
-
-#: modules/updates/updates/cancelUpdate.php:33
-#, php-format
-msgid "The update %s has been removed from pending"
-msgstr "La actualización %s ha sido eliminada de las pendientes"
-
-#: modules/updates/updates/cancelUpdate.php:35
-#, php-format
-msgid "A problem occurs, impossible to remove %s from pending"
-msgstr "Se produce un problema, imposible eliminar %s de pendientes"
-
-#: modules/updates/updates/cancelUpdate.php:41
-msgid "Cancel pending update"
-msgstr "Cancelar actualización pendiente"
-
-#: modules/updates/updates/cancelUpdate.php:42
-#, php-format
-msgid "You will cancel update <b>%s</b>."
-msgstr "Cancelará la actualización <b>%s</b>."
-
-#: modules/updates/updates/ajaxDetailsByUpdates.php:82
-#: modules/updates/infoPackage.inc.php:294
-#: modules/updates/infoPackage.inc.php:299
-msgid "History by Update"
-msgstr "Historia por actualización"
-
-#: modules/updates/updates/deployUpdatemajor.php:205
-msgid "An update to the latest version of Windows 11 is available for this machine."
-msgstr "Hay disponible una actualización a la última versión de Windows 11 para esta máquina."
-
-#: modules/updates/updates/deployUpdatemajor.php:209
-msgid "An update to the latest release of Windows 10 is available for this machine."
-msgstr "Hay disponible una actualización a la última versión de Windows 10 para esta máquina."
-
-#: modules/updates/updates/deployUpdatemajor.php:213
-msgid "The version of Windows 10 allows upgrading to Windows 11 if the machine's hardware context is compatible with Windows 11."
-msgstr "La versión de Windows 10 permite actualizar a Windows 11 si el contexto de hardware de la máquina es compatible con Windows 11."
-
-#: modules/updates/updates/deployUpdatemajor.php:275
-msgid "Deployment major update "
-msgstr "Actualización importante de la implantación "
-
-#: modules/updates/updates/deploySpecificUpdate.php:46
-#: modules/updates/infoPackage.inc.php:28
-#: modules/updates/infoPackage.inc.php:33
+#: modules/updates/includes/html.inc.php:127
+#: modules/updates/includes/html.inc.php:378
+#: modules/updates/includes/html.inc.php:675
+#: modules/updates/includes/html.inc.php:3506
+msgid "Read failed"
+msgstr "Lectura imposible"
+
+#: modules/updates/includes/html.inc.php:137
+#: modules/updates/updates/ajaxUpdateCreateGroup.php:24
+msgid "Unknown entity."
+msgstr "Entidad desconocida."
+
+#: modules/updates/includes/html.inc.php:147
+#: modules/updates/includes/html.inc.php:3491
+#: modules/updates/includes/html.inc.php:3505
+#: modules/updates/updates/ajaxDeployWinGroup.php:11
+#: modules/updates/updates/deployWinGroup.php:22
+msgid "Unknown group."
+msgstr "Grupo desconocido."
+
+#: modules/updates/includes/html.inc.php:174
+msgid "Open the Microsoft article"
+msgstr "Abrir el artículo de Microsoft"
+
+#: modules/updates/includes/html.inc.php:258
+msgid "Critical Updates"
+msgstr "Actualizaciones críticas"
+
+#: modules/updates/includes/html.inc.php:259
+msgid "Security Updates"
+msgstr "Actualizaciones de seguridad"
+
+#: modules/updates/includes/html.inc.php:260
+msgid "Definition Updates"
+msgstr "Actualizaciones de definiciones"
+
+#: modules/updates/includes/html.inc.php:261
+msgid "Service Packs"
+msgstr "Service Packs"
+
+#: modules/updates/includes/html.inc.php:262
+msgid "Update Rollups"
+msgstr "Paquetes acumulativos de actualizaciones"
+
+#: modules/updates/includes/html.inc.php:263
+#: modules/updates/infoPackage.inc.php:13
+#: modules/updates/infoPackage.inc.php:18
 msgid "Updates"
 msgstr "Actualizaciones"
 
-#: modules/updates/updates/whiteUnlist.php:33
-#, php-format
-msgid "The update %s (%s) has been unlisted."
-msgstr "La actualización %s (%s) ha sido eliminada de la lista."
+#: modules/updates/includes/html.inc.php:264
+msgid "Feature Packs"
+msgstr "Paquetes de características"
 
-#: modules/updates/updates/whiteUnlist.php:37
-#, php-format
-msgid "The update %s (%s) hasn't been unlisted"
-msgstr "La actualización %s (%s) no ha sido eliminada de la lista"
+#: modules/updates/includes/html.inc.php:265
+msgid "Tools"
+msgstr "Herramientas"
 
-#: modules/updates/updates/whiteUnlist.php:45
-#, php-format
-msgid "<b>Unlist</b> update %s (%s) ?"
-msgstr "<b>Unlist</b> update %s (%s) ?"
+#: modules/updates/includes/html.inc.php:266
+msgid "Drivers"
+msgstr "Controladores"
 
-#: modules/updates/updates/ajaxPendingUpdateByMachine.php:30
-#: modules/updates/updates/ajaxPendingUpdateByMachine.php:31
-#: modules/updates/infoPackage.inc.php:221
-msgid "Cancel Update"
-msgstr "Cancelar actualización"
-
-#: modules/updates/updates/ajaxPendingUpdateByMachine.php:68
-msgid "Description"
-msgstr "Descripción "
-
-#: modules/updates/updates/ajaxPendingUpdateByMachine.php:69
-msgid "Kb"
-msgstr "Kb"
-
-#: modules/updates/updates/ajaxPendingUpdateByMachine.php:70
-msgid "Update"
-msgstr "Actualización"
-
-#: modules/updates/updates/ajaxPendingUpdateByMachine.php:71
-msgid "Start Date"
-msgstr "Fecha de inicio"
-
-#: modules/updates/updates/ajaxPendingUpdateByMachine.php:72
-msgid "End Date"
-msgstr "Fecha final"
-
-#: modules/updates/updates/whitelistUpdate.php:33
-msgid "Package moved successfully to white list"
-msgstr "Paquete movido con éxito a la lista blanca"
-
-#: modules/updates/updates/whitelistUpdate.php:37
-msgid "Error moving package to white list"
-msgstr "Error al mover un paquete a la lista blanca"
-
-#: modules/updates/updates/ajaxApproveRules.php:75
-msgid "Update Severity"
-msgstr "Gravedad de la actualización"
-
-#: modules/updates/updates/ajaxApproveRules.php:77
-msgid "Update Classification"
-msgstr "Actualizar Clasificación"
-
-#: modules/updates/updates/ajaxApproveRules.php:78
-msgid "Automatic approval (White list)"
-msgstr "Aprobación automática (Lista blanca)"
-
-#: modules/updates/updates/updatesListMajorWin.php:26
-#: modules/updates/infoPackage.inc.php:250
-msgid "Manage Major Updates Lists"
-msgstr "Gestionar listas de actualizaciones importantes"
-
-#: modules/updates/updates/majorDetailsByMachines.php:33
-msgid "OS Upgrade details by Machines"
-msgstr "Detalles de actualización del SO por máquinas"
-
-#: modules/updates/updates/grayDisable.php:32
-#, php-format
-msgid "The update %s (%s) has been disabled."
-msgstr "La actualización %s (%s) ha sido desactivada."
-
-#: modules/updates/updates/grayDisable.php:35
-#, php-format
-msgid "The update %s (%s) hasn't been disabled"
-msgstr "La actualización %s (%s) no ha sido desactivada"
-
-#: modules/updates/updates/grayDisable.php:41
-#, php-format
-msgid "<b>Disable</b> update %s (%s) ?"
-msgstr "<b>Desactivar</b> actualización %s (%s) ?"
-
-#: modules/updates/updates/approve_rules.php:29
-#: modules/updates/infoPackage.inc.php:305
-
-#: modules/updates/updates/approve_rules.php:50
-msgid "Rules updated successfully."
-msgstr "Normas actualizadas correctamente."
-
-#: modules/updates/updates/approve_rules.php:54
-msgid "Failed to update rules."
-msgstr "Error al actualizar las reglas."
-
-#: modules/updates/updates/pendingUpdateByMachine.php:27
-#, php-format
-msgid "Pending Updates for machine %s"
-msgstr "Actualizaciones pendientes para la máquina %s"
-
-#: modules/updates/updates/detailsByMachines.php:26
-#: modules/updates/infoPackage.inc.php:48
+#: modules/updates/includes/html.inc.php:267
 #: modules/updates/infoPackage.inc.php:52
-msgid "Details by Machines"
-msgstr "Detalles por máquinas"
-
-#: modules/updates/updates/approve_products.php:47
-
-#: modules/updates/updates/localSidebar.php:25
-#: modules/updates/infoPackage.inc.php:39
-#: modules/updates/infoPackage.inc.php:42
-msgid "Entities Compliance"
-msgstr "Entidades Cumplimiento"
-
-#: modules/updates/updates/localSidebar.php:30
-#: modules/updates/updates/ajaxMajorEntitiesList.php:57
-#: modules/updates/updates/ajaxMajorEntitiesList.php:62
-#: modules/updates/updates/ajaxMajorEntitiesList.php:169
-msgid "OS Upgrades"
-msgstr "Actualizaciones"
-
-#: modules/updates/updates/localSidebar.php:42
-msgid "Automatic Approval Rules"
-msgstr "Normas de aprobación automática"
-
-#: modules/updates/updates/localSidebar.php:49
-msgid "Microsoft Products Approval"
-msgstr "Productos Microsoft supervisados"
-
-#: modules/updates/updates/grayApprove.php:31
-#, php-format
-msgid "The update %s (%s) has been approved."
-msgstr "La actualización %s (%s) ha sido aprobada."
-
-#: modules/updates/updates/grayApprove.php:35
-#, php-format
-msgid "The update %s (%s) hasn't been approved"
-msgstr "La actualización %s (%s) no ha sido aprobada"
-
-#: modules/updates/updates/grayApprove.php:42
-#, php-format
-msgid "<b>Approve update</b><br>%s<br>(package: %s) ?"
-msgstr "<b>Aprobar actualización</b><br>%s<br>(paquete: %s) ?"
-
-#: modules/updates/updates/grpDeployUpdatemajor.php:221
-msgid "Slot start date missing"
-msgstr "Falta la fecha de inicio de la franja horaria"
-
-#: modules/updates/updates/grpDeployUpdatemajor.php:227
-msgid "Slot end date missing"
-msgstr "Falta la fecha de finalización de la franja horaria"
-
-#: modules/updates/updates/ajaxUpdatesListWinWhite.php:35
-#: modules/updates/infoPackage.inc.php:173
-msgid "Unlist update"
-msgstr "Actualización de la lista"
-
-#: modules/updates/updates/ajaxUpdatesListWinWhite.php:100
-msgid "No updates are currently available in the White list (automatic updates)"
-msgstr "Actualmente no hay actualizaciones disponibles en la Lista blanca (actualizaciones automáticas)"
-
-#: modules/updates/updates/blackUnban.php:32
-#, php-format
-msgid "The package %s (%s) has been unbanned."
-msgstr "El paquete %s (%s) ha sido desbaneado."
-
-#: modules/updates/updates/blackUnban.php:36
-#, php-format
-msgid "The package %s (%s) hasn't been unbanned."
-msgstr "El paquete %s (%s) no ha sido desbaneado."
-
-#: modules/updates/updates/ajaxMajorEntitiesList.php:125
-msgid "no major updates for this entity"
-msgstr "no hay actualizaciones importantes para esta entidad"
-
-#: modules/updates/updates/ajaxMajorEntitiesList.php:137
-msgid "Please do not perform the update for now, as long as certain essential hardware constraints are not met."
-msgstr "Por favor, no realice la actualización por ahora, mientras no se cumplan ciertas restricciones esenciales de hardware."
-
-#: modules/updates/updates/ajaxMajorEntitiesList.php:146
-msgid "No machines are affected by hardware constraints for major updates."
-msgstr "Ninguna máquina se ve afectada por limitaciones de hardware para actualizaciones importantes."
-
-#: modules/updates/updates/ajaxMajorEntitiesList.php:153
-msgid "Deploy all major updates on entity"
-msgstr "Implantar todas las actualizaciones importantes en la entidad"
-
-#: modules/updates/updates/ajaxMajorEntitiesList.php:162
-msgid "There are no major updates to deploy for the entity."
-msgstr "No hay actualizaciones importantes que desplegar para la entidad."
-
-#: modules/updates/updates/ajaxMajorEntitiesList.php:170
-#, php-format
-msgid "%s machines in the entity \"%s\" can benefit from a major update."
-msgstr "%s máquinas de la entidad \"%s\" pueden beneficiarse de una actualización mayor."
-
-#: modules/updates/updates/ajaxMajorEntitiesList.php:229
-#: modules/updates/updates/ajaxMajorDetailsByMachines.php:47
-msgid "Upgrade W10->W10"
-msgstr "Actualizar W10-&gt;W10"
-
-#: modules/updates/updates/ajaxMajorEntitiesList.php:230
-#: modules/updates/updates/ajaxMajorDetailsByMachines.php:48
-msgid "Upgrade W10->W11"
-msgstr "Actualizar W10-&gt;W11"
-
-#: modules/updates/updates/ajaxMajorEntitiesList.php:231
-#: modules/updates/updates/ajaxMajorDetailsByMachines.php:49
-msgid "Upgrade W11->W11"
-msgstr "Actualización W11-&gt;W11"
-
-#: modules/updates/updates/ajaxMajorEntitiesList.php:233
-#: modules/updates/updates/ajaxMajorDetailsByMachines.php:50
-msgid "Up to date"
-msgstr "Al día"
-
-#: modules/updates/updates/ajaxMajorEntitiesList.php:234
-#: modules/updates/updates/ajaxMajorDetailsByMachines.php:51
-msgid "Upgrade Not recommended"
-msgstr "Actualización No recomendada"
-
-#: modules/updates/updates/ajaxMajorDetailsByMachines.php:59
-msgid "Summary of OS Upgrades on entity"
-msgstr "Resumen de las actualizaciones del sistema operativo en la entidad"
-
-#: modules/updates/updates/ajaxMajorDetailsByMachines.php:146
-msgid "version"
-msgstr "versión"
-
-#: modules/updates/updates/ajaxMajorDetailsByMachines.php:147
-msgid "Upgrade"
-msgstr "Actualizar"
-
-#: modules/updates/updates/AjaxcreateGrouplistglpiid.php:19
-#, php-format
-msgid "List_Machines_do_not_perform_the_update_%s"
-msgstr "Lista_Máquinas_no_realizan_la_actualización_%s"
-
-#: modules/updates/updates/ajaxDetailsSpecificUpdateWithout.php:42
-msgid "Machines without update"
-msgstr "Máquinas sin actualizar"
-
-#: modules/updates/updates/ajaxDetailsSpecificUpdateWithout.php:43
-msgid "Hostname"
-msgstr "Nombre de host"
-
-#: modules/updates/infoPackage.inc.php:66
-msgid "Deploy Specific Updates On Entity"
-msgstr "Despliegue de actualizaciones específicas en la entidad"
-
-#: modules/updates/infoPackage.inc.php:72
-msgid "Deploy specific update"
-msgstr "Despliegue de una actualización específica"
-
-#: modules/updates/infoPackage.inc.php:76
-msgid "List updates"
-msgstr "Actualizaciones de la lista"
-
-#: modules/updates/infoPackage.inc.php:80
-msgid "do not perform the update for now, as long as certain essential hardware constraints are not met"
-msgstr "no realice la actualización por ahora, mientras no se cumplan ciertas restricciones esenciales de hardware"
-
-#: modules/updates/infoPackage.inc.php:84
-msgid "Machine details for specific update"
-msgstr "Detalles de la máquina para una actualización específica"
-
-#: modules/updates/infoPackage.inc.php:88
-#: modules/updates/infoPackage.inc.php:99
-msgid "Manage machine details for specific update"
-msgstr "Gestionar los detalles de la máquina para una actualización específica"
-
-#: modules/updates/infoPackage.inc.php:104
-msgid "Manage deploy specific update"
-msgstr "Gestionar la actualización específica del despliegue"
-
-#: modules/updates/infoPackage.inc.php:109
-msgid "List Updates"
-msgstr "Actualizaciones de la lista"
-
-#: modules/updates/infoPackage.inc.php:114
-msgid "Manage Gray List Updates"
-msgstr "Gestionar las actualizaciones de la Lista Gris"
-
-#: modules/updates/infoPackage.inc.php:119
-msgid "Manage White List Updates"
-msgstr "Gestionar las actualizaciones de la Lista Blanca"
-
-#: modules/updates/infoPackage.inc.php:124
-msgid "os updates"
-msgstr "actualizaciones del sistema operativo"
-
-#: modules/updates/infoPackage.inc.php:132
-msgid "Manage Updates Lists for entity"
-msgstr "Gestionar listas de actualizaciones para la entidad"
-
-#: modules/updates/infoPackage.inc.php:177
-msgid "UnBan update"
-msgstr "Actualización de UnBan"
-
-#: modules/updates/infoPackage.inc.php:181
-msgid "Gray Enable"
-msgstr "Gris Activar"
-
-#: modules/updates/infoPackage.inc.php:185
-msgid "Grey Disable"
-msgstr "Gris Desactivar"
-
-#: modules/updates/infoPackage.inc.php:189
-msgid "Grey Approve"
-msgstr "Gris Aprobar"
-
-#: modules/updates/infoPackage.inc.php:198
-msgid "White Unlist"
-msgstr "Lista blanca"
-
-#: modules/updates/infoPackage.inc.php:203
-msgid "Black Unban"
-msgstr "Negro Unban"
-
-#: modules/updates/infoPackage.inc.php:235
-msgid "Entities Major Compliance"
-msgstr "Entidades Principales Cumplimiento"
-
-#: modules/updates/infoPackage.inc.php:254
-msgid "Deploy Major Updates On Machine"
-msgstr "Implantar actualizaciones importantes en la máquina"
-
-#: modules/updates/infoPackage.inc.php:259
-msgid "Deploy Major Updates On entity"
-msgstr "Implantar actualizaciones importantes en la entidad"
-
-#: modules/updates/infoPackage.inc.php:265
-msgid "Details by Machines for major update"
-msgstr "Detalles por Máquinas para una actualización mayor"
-
-#: modules/updates/infoPackage.inc.php:270
-#: modules/updates/infoPackage.inc.php:280
-msgid "Machines major update"
-msgstr "Actualización importante de las máquinas"
-
-#: modules/updates/infoPackage.inc.php:274
-msgid "Deployment details on group entity"
-msgstr "Detalles de despliegue en la entidad de grupo"
-
-#: modules/updates/infoPackage.inc.php:309
-msgid "Choose update event for entity"
-msgstr "Seleccione el evento de actualización para la entidad"
-
-#: modules/updates/infoPackage.inc.php:315
-msgid "Approve Microsoft products updates"
-msgstr "Aprobar actualizaciones de productos Microsoft"
-
-#: modules/updates/infoPackage.inc.php:319
-msgid "Choose product for entity"
-msgstr "Elegir producto para entidad"
-
-# Empty state messages
-msgid "No deployment history"
-msgstr "Sin historial de despliegue"
-
-msgid "No update deployments have been recorded yet."
-msgstr "Aún no se han registrado despliegues de actualizaciones."
-
-msgid "No pending updates"
-msgstr "Sin actualizaciones pendientes"
-
-msgid "No updates are currently pending for this machine."
-msgstr "No hay actualizaciones pendientes para esta máquina."
-
-msgid "No entities found"
-msgstr "No se encontraron entidades"
-
-msgid "No entities match the current filter."
-msgstr "Ninguna entidad coincide con el filtro actual."
-
-msgid "No updates found"
-msgstr "No se encontraron actualizaciones"
-
-msgid "No updates match the current filter."
-msgstr "Ninguna actualización coincide con el filtro actual."
-
-msgid "No machines found"
-msgstr "No se encontraron máquinas"
-
-msgid "No machines are available for this deployment."
-msgstr "No hay máquinas disponibles para este despliegue."
-
-msgid "No machines have this update installed."
-msgstr "Ninguna máquina tiene esta actualización instalada."
-
-msgid "No machines are missing this update."
-msgstr "Ninguna máquina necesita esta actualización."
-
-msgid "No machines match the current filter."
-msgstr "Ninguna máquina coincide con el filtro actual."
-
-msgid "No machines match the hardware constraints."
-msgstr "Ninguna máquina coincide con las restricciones de hardware."
-
-msgid "No whitelisted updates found."
-msgstr "No se encontraron actualizaciones en lista blanca."
-
-msgid "No blacklisted updates found."
-msgstr "No se encontraron actualizaciones en lista negra."
-
-msgid "No updates available"
-msgstr "Sin actualizaciones disponibles"
-
-msgid "No updates to deploy on this machine."
-msgstr "No hay actualizaciones para desplegar en esta máquina."
-
-msgid "Name"
-msgstr "Nombre"
-
-msgid "Requested"
-msgstr "Solicitada"
-
-msgid "Non-compliant"
-msgstr "No conformes"
-
-msgid "The machine does not meet the minimum requirements for Windows 11"
-msgstr "El equipo no cumple los requisitos mínimos para Windows 11"
-
-
-# Conformidad de las entidades - pestana Linux
-msgid "Security"
-msgstr "Seguridad"
-
-msgid "Kernel"
-msgstr "Núcleo"
-
-msgid "Other"
-msgstr "Otras"
-
-msgid "Share of Linux machines with no pending update at all."
-msgstr "Proporción de máquinas Linux sin ninguna actualización pendiente."
-
-msgid "Number of machines with at least one pending security update."
-msgstr "Número de máquinas con al menos una actualización de seguridad pendiente."
-
-msgid "Number of machines with at least one pending kernel update."
-msgstr "Número de máquinas con al menos una actualización del núcleo pendiente."
-
-msgid "Number of machines with at least one pending update other than security or kernel."
-msgstr "Número de máquinas con al menos una actualización pendiente distinta de seguridad o núcleo."
-
-msgid "Number of machines with at least one pending update, all categories included."
-msgstr "Número de máquinas con al menos una actualización pendiente, todas las categorías incluidas."
-
-msgid "Total number of Linux machines attached to this entity that reported a scan."
-msgstr "Número total de máquinas Linux asociadas a esta entidad que han enviado un análisis."
-
-# Conformidad de las entidades - pestana Windows
-msgid "Share of machines with no missing update, out of all machines in the entity."
-msgstr "Proporción de máquinas sin actualizaciones pendientes, sobre el total de máquinas de la entidad."
-
-msgid "Number of distinct updates missing across the machines of the entity."
-msgstr "Número de actualizaciones distintas que faltan en el conjunto de máquinas de la entidad."
-
-msgid "Number of machines with at least one missing update."
-msgstr "Número de máquinas con al menos una actualización pendiente."
-
-msgid "Total number of machines attached to this entity."
-msgstr "Número total de máquinas asociadas a esta entidad."
-
-
-# Acciones de la tabla de conformidad Linux
-msgid "Update security"
-msgstr "Actualizar la seguridad"
-
-msgid "Update kernel"
-msgstr "Actualizar el núcleo"
-
-msgid "Update other packages"
-msgstr "Actualizar los demás paquetes"
-
-msgid "Full update"
-msgstr "Actualización completa"
-
-msgid "Linux distributions"
-msgstr "Distribuciones Linux"
-
-msgid "Machines to update"
-msgstr "Máquinas por actualizar"
-
-msgid "Machines with kernel to update"
-msgstr "Máquinas con el núcleo por actualizar"
-
-msgid "Machines with security to update"
-msgstr "Máquinas con la seguridad por actualizar"
-
-msgid "Machines with other packages to update"
-msgstr "Máquinas con otros paquetes por actualizar"
-
-# Detalle de las maquinas Linux de una entidad
-msgid "Linux machines of entity %s"
-msgstr "Máquinas Linux de la entidad %s"
-
-msgid "Operating system"
-msgstr "Sistema operativo"
-
-msgid "No Linux machine found"
-msgstr "Ninguna máquina Linux"
-
-msgid "No Linux machine has reported a scan for this entity yet."
-msgstr "Ninguna máquina Linux de esta entidad ha enviado todavía un análisis."
-
-msgid "No update pending"
-msgstr "Ninguna actualización pendiente"
-
-msgid "No kernel update pending"
-msgstr "Ninguna actualización del núcleo pendiente"
-
-msgid "No security update pending"
-msgstr "Ninguna actualización de seguridad pendiente"
-
-msgid "No other update pending"
-msgstr "Ninguna otra actualización pendiente"
-
-# Preguntas de creacion de grupo (popups Linux)
-msgid "Do you want to create a group containing<br> all Linux machines of entity %s?"
-msgstr "¿Desea crear un grupo que contenga<br> todas las máquinas Linux de la entidad %s?"
-
-msgid "Do you want to create a group of Linux machines with pending updates<br> for entity %s?"
-msgstr "¿Desea crear un grupo de máquinas Linux con actualizaciones pendientes<br> para la entidad %s?"
-
-msgid "Do you want to create a group of Linux machines missing security updates<br> for entity %s?"
-msgstr "¿Desea crear un grupo de máquinas Linux a las que les faltan actualizaciones de seguridad<br> para la entidad %s?"
-
-msgid "Do you want to create a group of Linux machines with outdated kernels<br> for entity %s?"
-msgstr "¿Desea crear un grupo de máquinas Linux con el núcleo desactualizado<br> para la entidad %s?"
-
-msgid "Do you want to create a group of Linux machines with other pending updates<br> for entity %s?"
-msgstr "¿Desea crear un grupo de máquinas Linux con otras actualizaciones pendientes<br> para la entidad %s?"
-
-msgid "Do you want to create this Linux group<br>for entity %s?"
-msgstr "¿Desea crear este grupo Linux<br>para la entidad %s?"
-
-msgid "Do you want to create a group containing<br> %1$s machines of entity %2$s?"
-msgstr "¿Desea crear un grupo que contenga<br> las máquinas %1$s de la entidad %2$s?"
-
-msgid "Do you want to create a group of %1$s machines with pending updates<br> for entity %2$s?"
-msgstr "¿Desea crear un grupo de máquinas %1$s con actualizaciones pendientes<br> para la entidad %2$s?"
-
-msgid "Do you want to create a group of %1$s machines missing security updates<br> for entity %2$s?"
-msgstr "¿Desea crear un grupo de máquinas %1$s a las que les faltan actualizaciones de seguridad<br> para la entidad %2$s?"
-
-msgid "Do you want to create a group of %1$s machines with outdated kernels<br> for entity %2$s?"
-msgstr "¿Desea crear un grupo de máquinas %1$s con el núcleo desactualizado<br> para la entidad %2$s?"
-
-msgid "Do you want to create a group of %1$s machines with other pending updates<br> for entity %2$s?"
-msgstr "¿Desea crear un grupo de máquinas %1$s con otras actualizaciones pendientes<br> para la entidad %2$s?"
-
-msgid "Do you want to create this %1$s group<br>for entity %2$s?"
-msgstr "¿Desea crear este grupo %1$s<br>para la entidad %2$s?"
-
-msgid "This machine has no pending update."
-msgstr "Esta máquina no tiene ninguna actualización pendiente."
-
-msgid "This machine has %s pending update(s)."
-msgstr "Esta máquina tiene %s actualización(es) pendiente(s)."
-
-msgid "Green when the machine has no pending update."
-msgstr "Verde cuando la máquina no tiene ninguna actualización pendiente."
-
-msgid "Windows computers from entity %s"
-msgstr "Ordenadores Windows de la entidad %s"
-
-msgid "Windows computers from group %s"
-msgstr "Ordenadores Windows del grupo %s"
-
-msgid "Linux computers from entity %s"
-msgstr "Ordenadores Linux de la entidad %s"
-
-# Titulos de los formularios de programacion
-msgid "Schedule kernel updates for all Linux systems in the entity"
-msgstr "Programar la actualización del núcleo en todos los sistemas Linux de la entidad"
-
-msgid "Schedule application updates for all Linux systems in the entity"
-msgstr "Programar la actualización de las aplicaciones en todos los sistemas Linux de la entidad"
-
-msgid "Schedule security updates for all Linux systems in the entity"
-msgstr "Programar las actualizaciones de seguridad en todos los sistemas Linux de la entidad"
-
-msgid "Schedule all updates for all Linux systems in the entity"
-msgstr "Programar todas las actualizaciones en todos los sistemas Linux de la entidad"
-
-msgid "Schedule complete update for %s in the entity"
-msgstr "Programar la actualización completa de %s en la entidad"
-
-msgid "Schedule kernel update for %s in the entity"
-msgstr "Programar la actualización del núcleo de %s en la entidad"
-
-msgid "Schedule security update for %s in the entity"
-msgstr "Programar la actualización de seguridad de %s en la entidad"
-
-msgid "Schedule application update for %s in the entity"
-msgstr "Programar la actualización de las aplicaciones de %s en la entidad"
-
-msgid "Schedule application and library updates for %s in the entity"
-msgstr "Programar la actualización de aplicaciones y bibliotecas de %s en la entidad"
-
-msgid "%s: %s"
-msgstr "%s: %s"
-
-msgid "OS Upgrades - Compliance Status"
-msgstr "Actualizaciones mayores - Estado de conformidad"
-
-
-
-
-
-
-
-
-msgid "Share of machines already running the latest version of their operating system."
-msgstr "Proporción de máquinas que ya ejecutan la última versión de su sistema operativo."
-
-msgid "Windows 10 machines that must first be upgraded to the latest Windows 10 version."
-msgstr "Máquinas Windows 10 que primero deben actualizarse a la última versión de Windows 10."
-
-msgid "Windows 10 machines already up to date, eligible for the upgrade to Windows 11."
-msgstr "Máquinas Windows 10 ya actualizadas, aptas para la actualización a Windows 11."
-
-msgid "Windows 11 machines that must be upgraded to the latest Windows 11 version."
-msgstr "Máquinas Windows 11 que deben actualizarse a la última versión de Windows 11."
-
-msgid "Machines already running the latest version of their operating system."
-msgstr "Máquinas que ya ejecutan la última versión de su sistema operativo."
-
-msgid "Machines that do not meet the hardware requirements for the target version."
-msgstr "Máquinas que no cumplen los requisitos de hardware de la versión de destino."
-
-# Onglets de montee de version par distribution
-msgid "Machines with %s version pending support update"
-msgstr "Máquinas cuya versión de %s está pendiente de soporte"
-
-msgid "Total %s machines in entity"
-msgstr "Número total de máquinas %s en la entidad"
-
-msgid "Upgrade to %s"
-msgstr "Actualización a %s"
-
-msgid "Share of %s machines already running the target version."
-msgstr "Proporción de máquinas %s que ya ejecutan la versión de destino."
-
-msgid "Machines running a version older than %s."
-msgstr "Máquinas que ejecutan una versión anterior a %s."
-
-msgid "Machines already running %s."
-msgstr "Máquinas que ya ejecutan %s."
-
-msgid "Machines running a version newer than %s, not managed yet."
-msgstr "Máquinas que ejecutan una versión posterior a %s, aún no soportada."
-
-msgid "Total number of %s machines attached to this entity."
-msgstr "Número total de máquinas %s asociadas a esta entidad."
-
-msgid "No distribution specified."
-msgstr "Ninguna distribución especificada."
-
-msgid "Windows Server 2012 machines to upgrade to Windows Server 2025."
-msgstr "Máquinas Windows Server 2012 que migrar a Windows Server 2025."
-
-msgid "Windows Server 2016 machines to upgrade to Windows Server 2025."
-msgstr "Máquinas Windows Server 2016 que migrar a Windows Server 2025."
-
-msgid "Windows Server 2019 machines to upgrade to Windows Server 2025."
-msgstr "Máquinas Windows Server 2019 que migrar a Windows Server 2025."
-
-msgid "Windows Server 2025 machines to upgrade to the latest available version."
-msgstr "Máquinas Windows Server 2025 que actualizar a la última versión disponible."
-
-msgid "Pending Support Update"
-msgstr "Pendiente de soporte"
-
-# Montees de version : actions et infobulles
-msgid "List of machines to be upgraded"
-msgstr "Lista de máquinas por migrar"
-
-msgid "List of machines that cannot be upgraded"
-msgstr "Lista de máquinas que no pueden migrar"
-
-msgid "No major updates for this entity"
-msgstr "Ninguna actualización mayor para esta entidad"
-
-msgid "Deployment history"
-msgstr "Historial de despliegues"
-
-msgid "No Windows major deployment history for this entity"
-msgstr "Ningún historial de actualización mayor de Windows para esta entidad"
-
-msgid "No Linux major deployment history for this entity"
-msgstr "Ningún historial de actualización mayor de Linux para esta entidad"
-
-msgid "Do you want to create the group?"
-msgstr "¿Desea crear el grupo?"
-
-msgid "Create group:"
-msgstr "Crear el grupo:"
-
-msgid "All machines"
-msgstr "Todas las máquinas"
-
-msgid "Outdated machines"
-msgstr "Máquinas no actualizadas"
-
-msgid "Up to date machines"
-msgstr "Máquinas actualizadas"
-
-msgid "These machines are up to date"
-msgstr "Estas máquinas están actualizadas"
-
-msgid "All machines are up to date with version"
-msgstr "Todas las máquinas están actualizadas en la versión"
-
-msgid "These machines need a Windows 10 update"
-msgstr "Estas máquinas necesitan una actualización de Windows 10"
-
-msgid "These machines need a Windows 11 update"
-msgstr "Estas máquinas necesitan una actualización de Windows 11"
-
-msgid "These machines need a Windows 10 to Windows 11 update"
-msgstr "Estas máquinas necesitan migrar de Windows 10 a Windows 11"
-
-msgid "These machines need a Windows SERVER 25 update"
-msgstr "Estas máquinas necesitan una actualización de Windows Server 2025"
-
-msgid "These machines need a Windows SERVER 25 24H2 update"
-msgstr "Estas máquinas necesitan una actualización de Windows Server 2025 24H2"
-
-msgid "These machines do not meet the hardware requirements for upgrading to a newer Windows release."
-msgstr "Estas máquinas no cumplen los requisitos de hardware para migrar a una versión más reciente de Windows."
-
-# Detail des machines a faire migrer
-msgid "List of machines to be upgraded (%s)"
-msgstr "Lista de máquinas por migrar (%s)"
-
-msgid "Machines to be upgraded"
-msgstr "Máquinas por migrar"
-
-msgid "Distribution"
-msgstr "Distribución"
-
-msgid "Latest %s version"
-msgstr "Última versión de %s"
-
-msgid "Current version"
-msgstr "Versión actual"
-
-msgid "Target version"
-msgstr "Versión de destino"
-
-msgid "Unknown machine"
-msgstr "Máquina desconocida"
-
-msgid "Upgrade unavailable"
-msgstr "Actualización no disponible"
-
-msgid "No Linux machines match the current filter."
-msgstr "Ninguna máquina Linux coincide con el filtro actual."
-
-msgid "Missing parameters to load Linux major upgrade details."
-msgstr "Faltan parámetros para cargar el detalle de las actualizaciones mayores de Linux."
-
-msgid "Details by Machines (%s)"
-msgstr "Detalles por máquinas (%s)"
-
-# Montees de version majeures Linux
-msgid "Linux major upgrades to next release [%s]"
-msgstr "Actualización mayor de Linux a la siguiente versión [%s]"
-
-msgid "Linux major upgrade: %s %s [%s]"
-msgstr "Actualización mayor de Linux: %s %s [%s]"
-
-msgid "Deployment major update Linux"
-msgstr "Despliegue de actualización mayor de Linux"
-
-# Historique des montees de version
-msgid "Linux major deployment history (%s)"
-msgstr "Historial de actualizaciones mayores de Linux (%s)"
-
-msgid "Windows major deployment history"
-msgstr "Historial de actualizaciones mayores de Windows"
-
-msgid "Past Linux major deployments (last month)"
-msgstr "Actualizaciones mayores de Linux pasadas (último mes)"
-
-msgid "Past Windows major deployments (last month)"
-msgstr "Actualizaciones mayores de Windows pasadas (último mes)"
-
-msgid "No Linux major deployments have been recorded for this entity in the last month."
-msgstr "No se ha registrado ninguna actualización mayor de Linux para esta entidad en el último mes."
-
-msgid "No Windows major deployments have been recorded for this entity in the last month."
-msgstr "No se ha registrado ninguna actualización mayor de Windows para esta entidad en el último mes."
-
-msgid "Missing entity for Linux major deployment history."
-msgstr "Falta la entidad para el historial de actualizaciones mayores de Linux."
-
-msgid "Missing entity for Windows major deployment history."
-msgstr "Falta la entidad para el historial de actualizaciones mayores de Windows."
-
-msgid "Deployment"
-msgstr "Despliegue"
-
-msgid "User"
-msgstr "Usuario"
-
-
-msgid "Automatic approval"
-msgstr "Validación automática"
-
-msgid "Updates matching a checked rule are moved to the white list and deployed automatically."
-msgstr "Las actualizaciones que coinciden con una regla marcada pasan a la lista blanca y se despliegan automáticamente."
-
-# Ecrans Linux : versions approuvees et politique d'auto-update
-msgid "Approved Linux Releases"
-msgstr "Versiones Linux supervisadas"
-
-msgid "Linux Auto-Update Policy"
-msgstr "Actualizaciones automáticas Linux"
-
-msgid "Latest major version"
-msgstr "Última versión mayor"
-
-msgid "Updates enabled"
-msgstr "Actualizaciones activadas"
-
-msgid "All versions"
-msgstr "Todas las versiones"
-
+#: modules/updates/infoPackage.inc.php:130
+#: modules/updates/updates/MajorEntitiesList.php:8
+#: modules/updates/updates/MajorEntitiesList.php:12
+#: modules/updates/updates/localSidebar.php:34
+#: modules/updates/updates/settingsWin.php:113
+msgid "Upgrades"
+msgstr "Actualizaciones de versión"
+
+#: modules/updates/includes/html.inc.php:268
+msgid "Critical"
+msgstr "Crítica"
+
+#: modules/updates/includes/html.inc.php:269
+msgid "Important"
+msgstr "Importante"
+
+#: modules/updates/includes/html.inc.php:270
+msgid "Moderate"
+msgstr "Moderada"
+
+#: modules/updates/includes/html.inc.php:271
+msgid "Low"
+msgstr "Baja"
+
+#: modules/updates/includes/html.inc.php:395
+msgid "You are not allowed to see this list."
+msgstr "No tiene permiso para ver esta lista."
+
+#: modules/updates/includes/html.inc.php:409
+#: modules/updates/updates/ajaxMachinesListWin.php:105
+#: modules/updates/updates/ajaxMajorTabMachines.php:122
+#: modules/updates/updates/detailsMachineWin.php:77
+#: modules/updates/updates/settingsWin.php:97
 msgid "Entity"
 msgstr "Entidad"
 
+#: modules/updates/includes/html.inc.php:429
+msgid "All my entities"
+msgstr "Todas mis entidades"
 
-msgid "Missing entity selection."
-msgstr "Ninguna entidad seleccionada."
+#: modules/updates/includes/html.inc.php:467
+msgid "Deployment Success"
+msgstr "Despliegue correcto"
 
-msgid "Linux releases updated successfully."
-msgstr "Versiones Linux actualizadas."
+#: modules/updates/includes/html.inc.php:468
+msgid "Deployment Partial Success"
+msgstr "Despliegue parcialmente correcto"
 
-msgid "Failed to update Linux releases."
-msgstr "Error al actualizar las versiones Linux."
+#: modules/updates/includes/html.inc.php:469
+msgid "Uninstall Success"
+msgstr "Desinstalación correcta"
 
-msgid "Auto-update policies saved."
-msgstr "Políticas de actualización automática guardadas."
+#: modules/updates/includes/html.inc.php:470
+msgid "Deployment start"
+msgstr "Despliegue iniciado"
 
-msgid "Failed to save auto-update policies."
-msgstr "Error al guardar las políticas de actualización automática."
+#: modules/updates/includes/html.inc.php:471
+msgid "Deployment Pending"
+msgstr "Despliegue pendiente"
 
-msgid "No auto-update policies found for this entity."
-msgstr "Ninguna política de actualización automática para esta entidad."
+#: modules/updates/includes/html.inc.php:472
+msgid "Deployment Delayed"
+msgstr "Despliegue aplazado"
 
-msgid "Enable automatic deployment of kernel updates for this distribution."
-msgstr "Despliega automáticamente las actualizaciones del núcleo para esta distribución."
+#: modules/updates/includes/html.inc.php:473
+msgid "Deployment Spooled"
+msgstr "Despliegue en cola"
 
-msgid "Enable automatic deployment of security updates for this distribution."
-msgstr "Despliega automáticamente las actualizaciones de seguridad para esta distribución."
+#: modules/updates/includes/html.inc.php:474
+msgid "Deployment Syncthing"
+msgstr "Despliegue por Syncthing"
 
-msgid "Enable automatic deployment of updates other than kernel and security."
-msgstr "Despliega automáticamente las actualizaciones distintas de núcleo y seguridad."
+#: modules/updates/includes/html.inc.php:475
+msgid "Deploy Task Scheduled"
+msgstr "Despliegue programado"
 
-msgid "No machine to upgrade"
-msgstr "Ninguna máquina por migrar"
+#: modules/updates/includes/html.inc.php:476
+msgid "Waiting Machine Online"
+msgstr "Esperando a que la máquina esté en línea"
 
-msgid "All machines in this entity are up to date or cannot be upgraded."
-msgstr "Todas las máquinas de esta entidad están actualizadas o no pueden migrarse."
+#: modules/updates/includes/html.inc.php:477
+msgid "Restart Deploy"
+msgstr "Despliegue reiniciado"
 
-msgid "Approve every update of this family"
-msgstr "Aprobar todas las actualizaciones de esta familia"
+#: modules/updates/includes/html.inc.php:478
+msgid "Abort On Timeout"
+msgstr "Anulación: tiempo agotado"
 
-msgid "Hostname reported by the Medulla agent."
-msgstr "Nombre de host informado por el agente Medulla."
+#: modules/updates/includes/html.inc.php:479
+msgid "Abort Missing Agent"
+msgstr "Anulación: agente ausente"
 
-msgid "Distribution and version detected on the machine."
-msgstr "Distribución y versión detectadas en la máquina."
+#: modules/updates/includes/html.inc.php:480
+msgid "Abort inconsistent GLPI Information"
+msgstr "Anulación: información de GLPI incoherente"
 
-msgid "Number of pending security updates on this machine."
-msgstr "Número de actualizaciones de seguridad pendientes en esta máquina."
+#: modules/updates/includes/html.inc.php:481
+msgid "Abort Relay Down"
+msgstr "Anulación: relé caído"
 
-msgid "Number of pending kernel updates on this machine."
-msgstr "Número de actualizaciones del núcleo pendientes en esta máquina."
+#: modules/updates/includes/html.inc.php:482
+msgid "Abort Alternative relay down"
+msgstr "Anulación: relés alternativos caídos"
 
-msgid "Number of pending updates other than security or kernel on this machine."
-msgstr "Número de actualizaciones pendientes distintas de seguridad o núcleo en esta máquina."
+#: modules/updates/includes/html.inc.php:483
+msgid "Abort Info Relay Missing"
+msgstr "Anulación: falta la información del relé"
 
-msgid "Total number of pending updates on this machine, all categories included."
-msgstr "Número total de actualizaciones pendientes en esta máquina, todas las categorías incluidas."
+#: modules/updates/includes/html.inc.php:484
+msgid "Abort Package Identifier Missing"
+msgstr "Anulación: falta el identificador del paquete"
 
-msgid "Operating system version detected on the machine."
-msgstr "Versión del sistema operativo detectada en la máquina."
+#: modules/updates/includes/html.inc.php:485
+msgid "Abort Package Name Missing"
+msgstr "Anulación: falta el nombre del paquete"
 
-msgid "Share of approved updates already installed on this machine."
-msgstr "Proporción de actualizaciones aprobadas ya instaladas en esta máquina."
+#: modules/updates/includes/html.inc.php:486
+msgid "Abort Package Version Missing"
+msgstr "Anulación: falta la versión del paquete"
 
-msgid "Number of approved updates not yet installed on this machine."
-msgstr "Número de actualizaciones aprobadas aún no instaladas en esta máquina."
+#: modules/updates/includes/html.inc.php:487
+msgid "Abort Package Workflow Error"
+msgstr "Anulación: error en el flujo del paquete"
 
-msgid "Number of updates currently being deployed on this machine."
-msgstr "Número de actualizaciones en curso de despliegue en esta máquina."
+#: modules/updates/includes/html.inc.php:488
+msgid "Abort Package Execution Error"
+msgstr "Anulación: error de ejecución del paquete"
 
-msgid "Number of approved updates already installed on this machine."
-msgstr "Número de actualizaciones aprobadas ya instaladas en esta máquina."
+#: modules/updates/includes/html.inc.php:489
+msgid "Abort Package Execution Cancelled"
+msgstr "Anulación: ejecución del paquete cancelada"
 
-msgid "Total number of approved updates targeting this machine."
-msgstr "Número total de actualizaciones aprobadas dirigidas a esta máquina."
+#: modules/updates/includes/html.inc.php:490
+msgid "Abort Descriptor Missing"
+msgstr "Anulación: falta el descriptor"
 
-msgid "Linux updates history for entity %s"
-msgstr "Historial de actualizaciones Linux para la entidad %s"
+#: modules/updates/includes/html.inc.php:491
+msgid "Abort Machine Disappeared"
+msgstr "Anulación: máquina desaparecida"
 
-msgid "%s machine to update for entity %s"
-msgstr "%s máquina por actualizar para la entidad %s"
+#: modules/updates/includes/html.inc.php:492
+msgid "Abort Deployment Cancelled By User"
+msgstr "Anulación: despliegue cancelado por el usuario"
 
-msgid "%s machines to update for entity %s"
-msgstr "%s máquinas por actualizar para la entidad %s"
+#: modules/updates/includes/html.inc.php:493
+msgid "Abort Duplicate Machines"
+msgstr "Anulación: máquinas duplicadas"
 
-msgid "%s missing updates for %s in progress updates and %s installed updates for %s in total"
-msgstr "%s actualizaciones faltantes, %s en curso y %s instaladas de %s en total"
+#: modules/updates/includes/html.inc.php:494
+msgid "Abort Hash Invalid"
+msgstr "Anulación: hash no válido"
 
-msgid "Approved Linux releases"
-msgstr "Versiones Linux aprobadas"
+#: modules/updates/includes/html.inc.php:495
+msgid "Abort Missing Dependency"
+msgstr "Anulación: falta una dependencia"
 
-msgid "Automatic approval rules"
-msgstr "Reglas de aprobación automática"
+#: modules/updates/includes/html.inc.php:496
+msgid "Error Unknown Error"
+msgstr "Error desconocido"
 
-msgid "Compliance All Linux Upgrades on Entity "
-msgstr "Conformidad de todas las actualizaciones Linux en la entidad "
+#: modules/updates/includes/html.inc.php:497
+msgid "Error Hash Missing"
+msgstr "Error: falta el hash"
 
-msgid "Create GRP update"
-msgstr "Crear un grupo de actualización"
+#: modules/updates/includes/html.inc.php:498
+msgid "Error Transfer Failed"
+msgstr "Error: transferencia fallida"
 
-msgid "Deploy Major linux Updates On entity"
-msgstr "Desplegar las actualizaciones mayores de Linux en la entidad"
+#: modules/updates/includes/html.inc.php:531
+#: modules/updates/includes/html.inc.php:1143
+msgid "Not enough free space on the machine"
+msgstr "No queda espacio en disco en el equipo"
 
-msgid "Deploy Update linux"
-msgstr "Desplegar una actualización Linux"
+#: modules/updates/includes/html.inc.php:561
+msgid "No machines found"
+msgstr "No se encontraron máquinas"
 
-msgid "Details Machine kernel update"
-msgstr "Detalle de las máquinas: actualización del núcleo"
+#: modules/updates/includes/html.inc.php:561
+msgid "No machine matches the search."
+msgstr "Ninguna máquina coincide con la búsqueda."
 
-msgid "Details Machine security update on entity"
-msgstr "Detalle de las máquinas: actualización de seguridad en la entidad"
+#: modules/updates/includes/html.inc.php:685
+msgid "No machine matches these criteria."
+msgstr "Ninguna máquina coincide con estos criterios."
 
-msgid "Details by Machines for Linux major update"
-msgstr "Detalle por máquinas de las actualizaciones mayores de Linux"
+#: modules/updates/includes/html.inc.php:717
+#: modules/updates/includes/html.inc.php:2116
+#: modules/updates/infoPackage.inc.php:55
+#: modules/updates/infoPackage.inc.php:67
+#: modules/updates/infoPackage.inc.php:99
+#: modules/updates/infoPackage.inc.php:138
+#: modules/updates/infoPackage.inc.php:149
+#: modules/updates/updates/updatesListWin.php:60
+msgid "Windows"
+msgstr "Windows"
 
-msgid "Details machines all other Update Linux packages on entity"
-msgstr "Detalle de las máquinas: otros paquetes Linux por actualizar en la entidad"
+#: modules/updates/includes/html.inc.php:719
+#: modules/updates/includes/html.inc.php:2118
+#: modules/updates/infoPackage.inc.php:58
+#: modules/updates/infoPackage.inc.php:68
+#: modules/updates/infoPackage.inc.php:102
+#: modules/updates/infoPackage.inc.php:141
+#: modules/updates/infoPackage.inc.php:152
+#: modules/updates/updates/updatesListWin.php:61
+msgid "Linux"
+msgstr "Linux"
 
-msgid "Distibution Linux on entity"
-msgstr "Distribución Linux en la entidad"
+#: modules/updates/includes/html.inc.php:764
+msgid "Machines to update"
+msgstr "Máquinas por actualizar"
 
-msgid "Distribution linux"
-msgstr "Distribución Linux"
+#: modules/updates/includes/html.inc.php:765
+msgid "to update"
+msgstr "por actualizar"
 
-msgid "Distribution linux update on entity"
-msgstr "Actualización de la distribución Linux en la entidad"
+#: modules/updates/includes/html.inc.php:766
+msgid "Critical machines"
+msgstr "Críticas"
 
-msgid "Entities Compliance Windows"
-msgstr "Conformidad de las entidades Windows"
+#: modules/updates/includes/html.inc.php:767
+msgid "with a critical update missing"
+msgstr "con una actualización crítica pendiente"
 
-msgid "Entities Compliance windows"
-msgstr "Conformidad de las entidades Windows"
+#: modules/updates/includes/html.inc.php:768
+#: modules/updates/includes/html.inc.php:969
+#: modules/updates/includes/html.inc.php:989
+#: modules/updates/includes/html.inc.php:1535
+#: modules/updates/includes/html.inc.php:2570
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:191
+msgid "Reboot pending"
+msgstr "Reinicio pendiente"
 
-msgid "Entities Compliance linux"
-msgstr "Conformidad de las entidades Linux"
+#: modules/updates/includes/html.inc.php
+msgid "Restart requested"
+msgstr "Reinicio solicitado"
 
-msgid "Entity Compliance"
-msgstr "Conformidad de la entidad"
+#: modules/updates/includes/html.inc.php
+msgid "Restart already requested"
+msgstr "Reinicio ya solicitado"
 
-msgid "Linux major deployment history"
-msgstr "Historial de despliegues mayores de Linux"
+#: modules/updates/includes/html.inc.php:769
+#: modules/updates/includes/html.inc.php:990
+msgid "waiting for a restart"
+msgstr "pendientes de reinicio"
 
-msgid "Machines Linux major update"
-msgstr "Máquinas: actualización mayor de Linux"
+#: modules/updates/includes/html.inc.php:873
+msgid "Distribution"
+msgstr "Distribución"
 
-msgid "Machines Major Compliance"
-msgstr "Conformidad de las máquinas con las actualizaciones mayores"
+#: modules/updates/includes/html.inc.php:874
+msgid "All distributions"
+msgstr "Todas"
 
-msgid "Machines — OS Upgrade to %s"
-msgstr "Máquinas — actualización del SO a %s"
+#: modules/updates/includes/html.inc.php:905
+#: modules/updates/includes/html.inc.php:1214
+#: modules/updates/includes/html.inc.php:1217
+msgid "Compliance"
+msgstr "Conformidad"
 
-msgid "Major Compliance entity"
-msgstr "Conformidad de la entidad con las actualizaciones mayores"
+#: modules/updates/includes/html.inc.php:907
+msgid "Share of evaluated machines with no missing update."
+msgstr "Proporción de máquinas evaluadas sin actualizaciones pendientes."
 
-msgid "No entity name matches your search."
-msgstr "Ningún nombre de entidad coincide con su búsqueda."
+#: modules/updates/includes/html.inc.php:912
+msgid "Machines missing at least one update."
+msgstr "Máquinas a las que les falta al menos una actualización."
 
-msgid "No machines found for this entity and distribution."
-msgstr "No se encontró ninguna máquina para esta entidad y distribución."
+#: modules/updates/includes/html.inc.php:917
+msgid "Machines missing an update rated Critical by the distribution."
+msgstr "Máquinas a las que les falta una actualización de gravedad Crítica según la distribución."
 
-msgid "OS Linux"
-msgstr "SO Linux"
+#: modules/updates/includes/html.inc.php:918
+msgid "Machines missing a critical update or one that fixes an exploited flaw."
+msgstr "Máquinas a las que les falta una actualización crítica o que corrige una vulnerabilidad explotada."
 
-msgid "Outdated"
-msgstr "Obsoleto"
+#: modules/updates/includes/html.inc.php:922
+msgid "Not evaluated"
+msgstr "No evaluadas"
 
+#: modules/updates/includes/html.inc.php:924
+msgid "Machines with no recent report."
+msgstr "Máquinas sin informe reciente."
+
+#: modules/updates/includes/html.inc.php:925
+msgid "Machines with no recent report, or whose entity tracks no product."
+msgstr "Equipos sin informe reciente, o cuya entidad no sigue ningún producto."
+
+#: modules/updates/includes/html.inc.php:931
+msgid "No report"
+msgstr "Sin informe"
+
+#: modules/updates/includes/html.inc.php:932
+msgid "Machines known to Medulla whose agent has never sent an updates report."
+msgstr "Máquinas conocidas por Medulla cuyo agente nunca ha enviado un informe de actualizaciones."
+
+#: modules/updates/includes/html.inc.php:967
+#: modules/updates/includes/html.inc.php:987
+msgid "To upgrade"
+msgstr "Por actualizar de versión"
+
+#: modules/updates/includes/html.inc.php:968
+msgid "In progress"
+msgstr "En curso"
+
+#: modules/updates/includes/html.inc.php:970
+#: modules/updates/includes/html.inc.php:1941
+msgid "Not eligible"
+msgstr "No apto"
+
+#: modules/updates/includes/html.inc.php:971
+msgid "Waiting for the report"
+msgstr "A la espera del informe"
+
+#: modules/updates/includes/html.inc.php:972
+msgid "Undetermined"
+msgstr "No determinada"
+
+#: modules/updates/includes/html.inc.php:973
+#: modules/updates/includes/html.inc.php:1550
+msgid "Up to date"
+msgstr "Al día"
+
+#: modules/updates/includes/html.inc.php:974
+msgid "Not concerned"
+msgstr "No afectada"
+
+#: modules/updates/includes/html.inc.php:988
+msgid "to upgrade"
+msgstr "por actualizar de versión"
+
+#: modules/updates/includes/html.inc.php:1082
+msgid "Processor"
+msgstr "Procesador"
+
+#: modules/updates/includes/html.inc.php:1083
+msgid "Memory"
+msgstr "Memoria"
+
+#: modules/updates/includes/html.inc.php:1084
+msgid "Storage"
+msgstr "Almacenamiento"
+
+#: modules/updates/includes/html.inc.php:1085
+#: modules/updates/includes/html.inc.php:1089
+msgid "Firmware"
+msgstr "Firmware"
+
+#: modules/updates/includes/html.inc.php:1086
+msgid "TPM 2.0"
+msgstr "TPM 2.0"
+
+#: modules/updates/includes/html.inc.php:1087
+msgid "Graphics card"
+msgstr "Tarjeta gráfica"
+
+#: modules/updates/includes/html.inc.php:1088
+msgid "Display"
+msgstr "Pantalla"
+
+#: modules/updates/includes/html.inc.php:1090
+msgid "Windows Server"
+msgstr "Windows Server"
+
+#: modules/updates/includes/html.inc.php:1091
+msgid "LTSC edition"
+msgstr "Edición LTSC"
+
+#: modules/updates/includes/html.inc.php:1092
+msgid "Backports repository to remove"
+msgstr "Repositorio backports que retirar"
+
+#: modules/updates/includes/html.inc.php:1093
+msgid "Held packages"
+msgstr "Paquetes retenidos"
+
+#: modules/updates/includes/html.inc.php:1094
+msgid "Packages to repair"
+msgstr "Paquetes que reparar"
+
+#: modules/updates/includes/html.inc.php:1095
+msgid "/boot too small or too full"
+msgstr "/boot demasiado pequeño o demasiado lleno"
+
+#: modules/updates/includes/html.inc.php:1096
+msgid "Not enough free space on /"
+msgstr "No hay suficiente espacio libre en /"
+
+#: modules/updates/includes/html.inc.php:1097
+msgid "Not enough free space on /var"
+msgstr "No hay suficiente espacio libre en /var"
+
+#: modules/updates/includes/html.inc.php:1098
+msgid "List of system versions missing"
+msgstr "Falta la lista de versiones del sistema"
+
+#: modules/updates/includes/html.inc.php:1099
+msgid "Upgrade tool missing"
+msgstr "Falta la herramienta de actualización de versión"
+
+#: modules/updates/includes/html.inc.php:1100
+msgid "Distribution not supported yet"
+msgstr "Distribución aún no compatible"
+
+#: modules/updates/includes/html.inc.php:1118
+msgid "Other reason"
+msgstr "Otro motivo"
+
+#: modules/updates/includes/html.inc.php:1139
+msgid "No update in the catalog for this step"
+msgstr "Ninguna actualización en el catálogo para esta etapa"
+
+#: modules/updates/includes/html.inc.php:1140
+msgid "No report from the machine after the step"
+msgstr "Ningún informe de la máquina tras la etapa"
+
+#: modules/updates/includes/html.inc.php:1141
+msgid "Restart still pending after the step"
+msgstr "Reinicio aún pendiente tras la etapa"
+
+#: modules/updates/includes/html.inc.php:1142
+msgid "Machine unchanged after the step"
+msgstr "Máquina sin cambios tras la etapa"
+
+#: modules/updates/includes/html.inc.php:1144
+msgid "Upgrade stopped before any change, see the deployment log"
+msgstr "Actualización de versión detenida antes de cualquier cambio, consulte el registro del despliegue"
+
+#: modules/updates/includes/html.inc.php:1146
+msgid "The last attempt failed"
+msgstr "El último intento ha fallado"
+
+#: modules/updates/includes/html.inc.php:1148
+#, php-format
+msgid "Abandoned by %s"
+msgstr "Abandonada por %s"
+
+#: modules/updates/includes/html.inc.php:1158
+#: modules/updates/includes/html.inc.php:3524
+#: modules/updates/includes/html.inc.php:3529
+#, php-format
+msgid "%s: %s"
+msgstr "%s: %s"
+
+#: modules/updates/includes/html.inc.php:1158
+#: modules/updates/includes/html.inc.php:2564
+msgid "Upgrade to resume"
+msgstr "Actualización de versión por reanudar"
+
+#: modules/updates/includes/html.inc.php:1177
+#: modules/updates/updates/ajaxMachinesListWin.php:73
+#: modules/updates/updates/detailsMachineWin.php:56
+msgid "No report received"
+msgstr "Ningún informe recibido"
+
+#: modules/updates/includes/html.inc.php:1299
+#: modules/updates/infoPackage.inc.php:164
+#: modules/updates/updates/ajaxMajorTabMachines.php:35
+msgid "Upgrade machine"
+msgstr "Actualizar versión"
+
+#: modules/updates/includes/html.inc.php:1333
+#, php-format
+msgid "Upgrade of <b>%s</b> launched."
+msgstr "Actualización de versión de <b>%s</b> iniciada."
+
+#: modules/updates/includes/html.inc.php:1337
+msgid "the machine is no longer ready to be upgraded"
+msgstr "el equipo ya no está listo para actualizar su versión"
+
+#: modules/updates/includes/html.inc.php:1339
+#, php-format
+msgid "Upgrade of <b>%s</b> refused: %s."
+msgstr "Actualización de versión de <b>%s</b> rechazada: %s."
+
+#: modules/updates/includes/html.inc.php:1351
+msgid "This machine cannot be upgraded right now."
+msgstr "Este equipo no puede actualizar su versión por ahora."
+
+#: modules/updates/includes/html.inc.php:1358
+#, php-format
+msgid "Upgrade <b>%s</b> to <b>%s</b>?"
+msgstr "¿Actualizar <b>%s</b> a <b>%s</b>?"
+
+#: modules/updates/includes/html.inc.php:1359
+#, php-format
+msgid "Upgrade <b>%s</b>?"
+msgstr "¿Actualizar la versión de <b>%s</b>?"
+
+#: modules/updates/includes/html.inc.php:1372
+#: modules/updates/infoPackage.inc.php:170
+#: modules/updates/updates/ajaxMajorTabMachines.php:37
+msgid "Abandon"
+msgstr "Abandonar"
+
+#: modules/updates/includes/html.inc.php:1398
+#, php-format
+msgid "Upgrade of <b>%s</b> abandoned."
+msgstr "Actualización de versión de <b>%s</b> abandonada."
+
+#: modules/updates/includes/html.inc.php:1406
+#, php-format
+msgid "Upgrade of <b>%s</b> not abandoned: %s."
+msgstr "Actualización de versión de <b>%s</b> no abandonada: %s."
+
+#: modules/updates/includes/html.inc.php:1418
+#, php-format
+msgid "Abandon the upgrade of <b>%s</b>?"
+msgstr "¿Abandonar la actualización de versión de <b>%s</b>?"
+
+#: modules/updates/includes/html.inc.php:1423
+msgid "This upgrade is no longer in progress."
+msgstr "Esta actualización de versión ya no está en curso."
+
+#: modules/updates/includes/html.inc.php:1528
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:224
+#: modules/updates/updates/detailsMachineWin.php:157
+msgid "Search failed"
+msgstr "Búsqueda fallida"
+
+#: modules/updates/includes/html.inc.php:1529
+msgid "The last search for updates failed."
+msgstr "La última búsqueda de actualizaciones ha fallado."
+
+#: modules/updates/includes/html.inc.php:1532
+#: modules/updates/updates/detailsMachineWin.php:90
+#: modules/updates/updates/detailsMachineWin.php:158
+msgid "No recent report"
+msgstr "Sin informe reciente"
+
+#: modules/updates/includes/html.inc.php:1536
+msgid "Updates are installed but the machine is waiting for a restart."
+msgstr "Hay actualizaciones instaladas, pero la máquina está esperando un reinicio."
+
+#: modules/updates/includes/html.inc.php:1537
+msgid "Updates are installed but Windows is waiting for a restart."
+msgstr "Hay actualizaciones instaladas, pero Windows está esperando un reinicio."
+
+#: modules/updates/includes/html.inc.php:1540
+msgid "Out of support"
+msgstr "Sin soporte"
+
+#: modules/updates/includes/html.inc.php:1541
+msgid "Windows 10 without an ESU license no longer receives security updates."
+msgstr "Windows 10 sin licencia ESU ya no recibe actualizaciones de seguridad."
+
+#: modules/updates/includes/html.inc.php:1544
+#: modules/updates/updates/detailsMachineWin.php:144
+msgid "Version not tracked"
+msgstr "Versión no seguida"
+
+#: modules/updates/includes/html.inc.php:1545
+msgid "This entity does not track this Windows version: its updates are not evaluated."
+msgstr "Esta entidad no sigue esta versión de Windows: sus actualizaciones no se evalúan."
+
+#: modules/updates/includes/html.inc.php:1548
+msgid "To update"
+msgstr "Por actualizar"
+
+#: modules/updates/includes/html.inc.php:1584
+#, php-format
+msgid "Microsoft severity: %s"
+msgstr "Gravedad Microsoft: %s"
+
+#: modules/updates/includes/html.inc.php:1586
+msgid "Exploited"
+msgstr "Explotada"
+
+#: modules/updates/includes/html.inc.php:1616
+msgid "Optional"
+msgstr "Opcional"
+
+#: modules/updates/includes/html.inc.php:1619
+#: modules/updates/includes/html.inc.php:1731
+#: modules/updates/includes/html.inc.php:2545
+#: modules/updates/includes/html.inc.php:2569
+msgid "ESU license required"
+msgstr "Licencia ESU requerida"
+
+#: modules/updates/includes/html.inc.php:1749
+msgid "disabled"
+msgstr "desactivado"
+
+#: modules/updates/includes/html.inc.php:1752
+#, php-format
+msgid "WSUS (%s)"
+msgstr "WSUS (%s)"
+
+#: modules/updates/includes/html.inc.php:1756
+#, php-format
+msgid "paused until %s"
+msgstr "en pausa hasta el %s"
+
+#: modules/updates/includes/html.inc.php:1759
+msgid "automatic"
+msgstr "automático"
+
+#: modules/updates/includes/html.inc.php:1760
+msgid "disabled by policy"
+msgstr "desactivado por directiva"
+
+#: modules/updates/includes/html.inc.php:1761
+msgid "notification only"
+msgstr "solo notificación"
+
+#: modules/updates/includes/html.inc.php:1762
+msgid "automatic download, manual installation"
+msgstr "descarga automática, instalación manual"
+
+#: modules/updates/includes/html.inc.php:1763
+msgid "scheduled installation"
+msgstr "instalación programada"
+
+#: modules/updates/includes/html.inc.php:1783
+msgid "off"
+msgstr "desactivadas"
+
+#: modules/updates/includes/html.inc.php:1788
+#, php-format
+msgid "on (%s)"
+msgstr "activadas (%s)"
+
+#: modules/updates/includes/html.inc.php:1788
+msgid "on"
+msgstr "activadas"
+
+#: modules/updates/includes/html.inc.php:1838
+#, php-format
+msgid "%s MB"
+msgstr "%s MB"
+
+#: modules/updates/includes/html.inc.php:1842
+#: modules/updates/includes/html.inc.php:1863
+#: modules/updates/includes/html.inc.php:1866
+#, php-format
+msgid "%s GB"
+msgstr "%s GB"
+
+#: modules/updates/includes/html.inc.php:1870
+msgid "Legacy BIOS"
+msgstr "BIOS heredado"
+
+#: modules/updates/includes/html.inc.php:1878
+msgid "absent"
+msgstr "ausente"
+
+#: modules/updates/includes/html.inc.php:1901
+#, php-format
+msgid "%s inches"
+msgstr "%s pulgadas"
+
+#: modules/updates/includes/html.inc.php:1939
+#: modules/updates/updates/ajaxDeployWinGroup.php:111
+msgid "Eligible"
+msgstr "Apto"
+
+#: modules/updates/includes/html.inc.php:1943
+msgid "Indeterminate"
+msgstr "Indeterminado"
+
+#: modules/updates/includes/html.inc.php:1958
+#: modules/updates/includes/html.inc.php:1967
+msgid "not measured"
+msgstr "no medido"
+
+#: modules/updates/includes/html.inc.php:1970
+msgid "not verified"
+msgstr "no verificado"
+
+#: modules/updates/includes/html.inc.php:2132
+#: modules/updates/includes/html.inc.php:3223
+msgid "Apply"
+msgstr "Aplicar"
+
+#: modules/updates/includes/html.inc.php:2208
+msgid "No product is tracked for this entity: nothing is evaluated."
+msgstr "No se sigue ningún producto en esta entidad: no se evalúa nada."
+
+#: modules/updates/includes/html.inc.php:2209
+#: modules/updates/infoPackage.inc.php:135
+#: modules/updates/updates/detailsMachineWin.php:146
+#: modules/updates/updates/localSidebar.php:43
+#: modules/updates/updates/products.php:27
+#: modules/updates/updates/products.php:31
+msgid "Tracked products"
+msgstr "Productos supervisados"
+
+#: modules/updates/includes/html.inc.php:2222
 msgid "Pending"
 msgstr "Pendiente"
 
-msgid "Total"
-msgstr "Total"
+#: modules/updates/includes/html.inc.php:2222
+msgid "Approved"
+msgstr "Aprobadas"
 
-msgid "Unknown"
-msgstr "Desconocido"
+#: modules/updates/includes/html.inc.php:2224
+msgid "Declined"
+msgstr "Rechazadas"
 
-msgid "Update %s kernel on entity [%s]"
-msgstr "Actualizar el núcleo %s en la entidad [%s]"
+#: modules/updates/includes/html.inc.php:2301
+msgid "Approved by an automatic rule"
+msgstr "Aprobada por una regla automática"
 
-msgid "Update %s other packages on entity [%s]"
-msgstr "Actualizar los demás paquetes %s en la entidad [%s]"
+#: modules/updates/includes/html.inc.php:2311
+#, php-format
+msgid "Approved by %s on %s"
+msgstr "Aprobada por %s el %s"
 
-msgid "Update %s security on entity [%s]"
-msgstr "Actualizar la seguridad %s en la entidad [%s]"
+#: modules/updates/includes/html.inc.php:2312
+#, php-format
+msgid "Approved by %s"
+msgstr "Aprobada por %s"
 
-msgid "Update complete %s \non entity [%s]"
-msgstr "Actualización completa %s \nen la entidad [%s]"
+#: modules/updates/includes/html.inc.php:2314
+#, php-format
+msgid "Declined by %s on %s"
+msgstr "Rechazada por %s el %s"
 
-msgid "Update all Linux kernel on entity"
-msgstr "Actualizar todos los núcleos Linux de la entidad"
+#: modules/updates/includes/html.inc.php:2315
+#, php-format
+msgid "Declined by %s"
+msgstr "Rechazada por %s"
 
-msgid "Update all Linux security on entity"
-msgstr "Actualizar toda la seguridad Linux de la entidad"
+#: modules/updates/includes/html.inc.php:2376
+msgid "No automatic approval rule"
+msgstr "Ninguna regla de aprobación automática"
 
-msgid "Update all other Linux packages on entity"
-msgstr "Actualizar todos los demás paquetes Linux de la entidad"
+#: modules/updates/includes/html.inc.php:2378
+#: modules/updates/includes/html.inc.php:2963
+#, php-format
+msgid "Inherited from %s"
+msgstr "Heredado de %s"
 
-msgid "Update complete all Linux on entity"
-msgstr "Actualización completa de todos los Linux de la entidad"
+#: modules/updates/includes/html.inc.php:2380
+#: modules/updates/includes/html.inc.php:2971
+msgid "Own setting"
+msgstr "Propio de la entidad"
 
-msgid "Update history by entity"
-msgstr "Historial de actualizaciones por entidad"
+#: modules/updates/includes/html.inc.php:2386
+#: modules/updates/includes/html.inc.php:3141
+#: modules/updates/infoPackage.inc.php:146
+#: modules/updates/updates/automation.php:26
+#: modules/updates/updates/automation.php:30
+#: modules/updates/updates/localSidebar.php:56
+msgid "Automatic approval"
+msgstr "Aprobación automática"
 
-msgid "compliance<br>kernel"
-msgstr "conformidad<br>núcleo"
+#: modules/updates/includes/html.inc.php:2400
+#: modules/updates/infoPackage.inc.php:107
+#: modules/updates/updates/ajaxApprovalsListWin.php:74
+msgid "Approve"
+msgstr "Aprobar"
 
-msgid "compliance<br>other"
-msgstr "conformidad<br>otros"
+#: modules/updates/includes/html.inc.php:2401
+#, php-format
+msgid "Approve <b>%s</b> for entity <b>%s</b>?"
+msgstr "¿Aprobar <b>%s</b> para la entidad <b>%s</b>?"
 
-msgid "compliance<br>security"
-msgstr "conformidad<br>seguridad"
+#: modules/updates/includes/html.inc.php:2402
+msgid "It can then be deployed to the machines of this entity."
+msgstr "Podrá desplegarse después en las máquinas de esta entidad."
 
-msgid "compliance<br>secutity"
-msgstr "conformidad<br>seguridad"
+#: modules/updates/includes/html.inc.php:2403
+#, php-format
+msgid "<b>%s</b> approved for entity <b>%s</b>."
+msgstr "<b>%s</b> aprobada para la entidad <b>%s</b>."
 
-msgid "compliance<br>total"
-msgstr "conformidad<br>total"
+#: modules/updates/includes/html.inc.php:2404
+#, php-format
+msgid "<b>%s</b> could not be approved for entity <b>%s</b>."
+msgstr "No se pudo aprobar <b>%s</b> para la entidad <b>%s</b>."
 
-msgid "kernel<br>not ok"
-msgstr "núcleo<br>no conforme"
+#: modules/updates/includes/html.inc.php:2407
+#: modules/updates/infoPackage.inc.php:122
+#: modules/updates/updates/ajaxApprovalsListWin.php:75
+msgid "Decline"
+msgstr "Rechazar"
 
-msgid "other<br>not ok"
-msgstr "otros<br>no conformes"
+#: modules/updates/includes/html.inc.php:2408
+#, php-format
+msgid "Decline <b>%s</b> for entity <b>%s</b>?"
+msgstr "¿Rechazar <b>%s</b> para la entidad <b>%s</b>?"
 
-msgid "security<br>not ok"
-msgstr "seguridad<br>no conforme"
+#: modules/updates/includes/html.inc.php:2409
+msgid "It cannot be deployed to the machines of this entity."
+msgstr "No podrá desplegarse en las máquinas de esta entidad."
 
-msgid "not<br>up to date"
-msgstr "no<br>actualizado"
+#: modules/updates/includes/html.inc.php:2410
+#, php-format
+msgid "<b>%s</b> declined for entity <b>%s</b>."
+msgstr "<b>%s</b> rechazada para la entidad <b>%s</b>."
 
-msgid "up to date"
-msgstr "actualizado"
+#: modules/updates/includes/html.inc.php:2411
+#, php-format
+msgid "<b>%s</b> could not be declined for entity <b>%s</b>."
+msgstr "No se pudo rechazar <b>%s</b> para la entidad <b>%s</b>."
 
-msgid "up to_date"
-msgstr "actualizado"
+#: modules/updates/includes/html.inc.php:2414
+#: modules/updates/infoPackage.inc.php:126
+#: modules/updates/updates/ajaxApprovalsListWin.php:76
+msgid "Back to pending"
+msgstr "Volver a pendiente"
 
-msgid "Total<br>machine"
-msgstr "Total<br>máquina"
+#: modules/updates/includes/html.inc.php:2415
+#, php-format
+msgid "Move <b>%s</b> back to pending for entity <b>%s</b>?"
+msgstr "¿Volver a poner <b>%s</b> en pendiente para la entidad <b>%s</b>?"
 
-msgid "Total<br>machines"
-msgstr "Total<br>máquinas"
+#: modules/updates/includes/html.inc.php:2417
+#, php-format
+msgid "<b>%s</b> moved back to pending for entity <b>%s</b>."
+msgstr "<b>%s</b> vuelta a pendiente para la entidad <b>%s</b>."
 
-msgid "machine security update linux"
-msgstr "Actualización de seguridad Linux de la máquina"
+#: modules/updates/includes/html.inc.php:2418
+#, php-format
+msgid "<b>%s</b> could not be moved back to pending for entity <b>%s</b>."
+msgstr "No se pudo volver a poner <b>%s</b> en pendiente para la entidad <b>%s</b>."
 
-msgid "Windows updates history for entity %s"
-msgstr "Historial de actualizaciones Windows para la entidad %s"
+#: modules/updates/includes/html.inc.php:2486
+msgid "Package being prepared"
+msgstr "Paquete en preparación"
 
-msgid "Products"
-msgstr "Productos"
+#: modules/updates/includes/html.inc.php:2488
+#, php-format
+msgid "Package failed: %s"
+msgstr "Fallo del paquete: %s"
 
-msgid "Automatic Deployment"
+#: modules/updates/includes/html.inc.php:2488
+msgid "Package failed"
+msgstr "Fallo del paquete"
+
+#: modules/updates/includes/html.inc.php:2490
+#, php-format
+msgid "Cannot be deployed automatically: %s"
+msgstr "No se puede desplegar automáticamente: %s"
+
+#: modules/updates/includes/html.inc.php:2491
+msgid "Cannot be deployed automatically"
+msgstr "No se puede desplegar automáticamente"
+
+#: modules/updates/includes/html.inc.php:2493
+msgid "No package available"
+msgstr "Ningún paquete disponible"
+
+#: modules/updates/includes/html.inc.php:2505
+#: modules/updates/includes/html.inc.php:2512
+#: modules/updates/includes/html.inc.php:2630
+#: modules/updates/includes/html.inc.php:2741
+#: modules/updates/includes/html.inc.php:3310
+#: modules/updates/includes/html.inc.php:3318
+#: modules/updates/includes/html.inc.php:3393
+#: modules/updates/infoPackage.inc.php:38
+#: modules/updates/infoPackage.inc.php:112
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:150
+msgid "Deploy"
+msgstr "Desplegar"
+
+#: modules/updates/includes/html.inc.php:2533
+#: modules/updates/includes/html.inc.php:2568
+msgid "entity not allowed"
+msgstr "entidad no autorizada"
+
+#: modules/updates/includes/html.inc.php:2534
+msgid "unknown update"
+msgstr "actualización desconocida"
+
+#: modules/updates/includes/html.inc.php:2535
+msgid "unknown group"
+msgstr "grupo desconocido"
+
+#: modules/updates/includes/html.inc.php:2536
+msgid "not approved for this entity"
+msgstr "no aprobada para esta entidad"
+
+#: modules/updates/includes/html.inc.php:2537
+msgid "no package available"
+msgstr "ningún paquete disponible"
+
+#: modules/updates/includes/html.inc.php:2538
+msgid "package not registered"
+msgstr "paquete no registrado"
+
+#: modules/updates/includes/html.inc.php:2539
+msgid "this machine does not need it"
+msgstr "esta máquina no la necesita"
+
+#: modules/updates/includes/html.inc.php:2540
+msgid "internal error"
+msgstr "error interno"
+
+#: modules/updates/includes/html.inc.php:2541
+msgid "it is no longer in progress"
+msgstr "ya no está en curso"
+
+#: modules/updates/includes/html.inc.php:2542
+msgid "not allowed"
+msgstr "acción no autorizada"
+
+#: modules/updates/includes/html.inc.php:2543
+msgid "A step is running on this machine: wait for it to finish."
+msgstr "Hay una etapa en curso en esta máquina: esperar a que termine."
+
+#: modules/updates/includes/html.inc.php:2544
+msgid "Preparation done: the upgrade will apply at the restart"
+msgstr "Preparación terminada: la actualización de versión se aplicará al reiniciar"
+
+#: modules/updates/includes/html.inc.php:2559
+msgid "unknown machine"
+msgstr "máquina desconocida"
+
+#: modules/updates/includes/html.inc.php:2560
+msgid "already being deployed"
+msgstr "ya en curso de despliegue"
+
+#: modules/updates/includes/html.inc.php:2561
+msgid "installed, waiting for the next report"
+msgstr "instalada, en espera del próximo informe"
+
+#: modules/updates/includes/html.inc.php:2562
+msgid "another deployment in progress"
+msgstr "otro despliegue en curso"
+
+#: modules/updates/includes/html.inc.php:2563
+msgid "upgrade in progress"
+msgstr "actualización de versión en curso"
+
+#: modules/updates/includes/html.inc.php:2565
+msgid "creation failed"
+msgstr "fallo de la creación"
+
+#: modules/updates/includes/html.inc.php:2566
+msgid "not approved for its entity"
+msgstr "no aprobada para su entidad"
+
+#: modules/updates/includes/html.inc.php:2567
+msgid "package not ready"
+msgstr "paquete no listo"
+
+#: modules/updates/includes/html.inc.php:2596
+msgid "Deployment created on 1 machine."
+msgstr "Despliegue creado en 1 máquina."
+
+#: modules/updates/includes/html.inc.php:2598
+#, php-format
+msgid "Deployment created on %d machines."
+msgstr "Despliegue creado en %d máquinas."
+
+#: modules/updates/includes/html.inc.php:2600
+msgid "No deployment created."
+msgstr "Ningún despliegue creado."
+
+#: modules/updates/includes/html.inc.php:2603
+#, php-format
+msgid "Skipped: %s"
+msgstr "Omitidas: %s"
+
+#: modules/updates/includes/html.inc.php:2658
+#: modules/updates/includes/html.inc.php:2774
+#: modules/updates/includes/html.inc.php:3338
+#, php-format
+msgid "<b>%s</b> could not be deployed: %s"
+msgstr "<b>%s</b> no se ha podido desplegar: %s"
+
+#: modules/updates/includes/html.inc.php:2659
+#: modules/updates/includes/html.inc.php:2775
+#: modules/updates/includes/html.inc.php:3339
+#, php-format
+msgid "<b>%s</b> could not be deployed."
+msgstr "<b>%s</b> no se ha podido desplegar."
+
+#: modules/updates/includes/html.inc.php:2670
+#: modules/updates/includes/html.inc.php:2807
+#, php-format
+msgid "Deploy <b>%s</b> on <b>%s</b>?"
+msgstr "¿Desplegar <b>%s</b> en <b>%s</b>?"
+
+#: modules/updates/includes/html.inc.php:2674
+#, php-format
+msgid "Deploy <b>%s</b> to the machine of entity <b>%s</b> that needs it?"
+msgstr "¿Desplegar <b>%s</b> en la máquina de la entidad <b>%s</b> que la necesita?"
+
+#: modules/updates/includes/html.inc.php:2676
+#, php-format
+msgid "Deploy <b>%s</b> to the %d machines of entity <b>%s</b> that need it?"
+msgstr "¿Desplegar <b>%s</b> en las %d máquinas de la entidad <b>%s</b> que la necesitan?"
+
+#: modules/updates/includes/html.inc.php:2678
+#, php-format
+msgid "Deploy <b>%s</b> to the machines of entity <b>%s</b> that need it?"
+msgstr "¿Desplegar <b>%s</b> en las máquinas de la entidad <b>%s</b> que la necesitan?"
+
+#: modules/updates/includes/html.inc.php:2727
+#: modules/updates/includes/html.inc.php:2831
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:146
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:189
+#: modules/updates/updates/ajaxMachinesListWin.php:89
+msgid "Deployment in progress"
+msgstr "Despliegue en curso"
+
+#: modules/updates/includes/html.inc.php:2731
+#, php-format
+msgid "Deploy the approved updates (%d)"
+msgstr "Desplegar las actualizaciones aprobadas (%d)"
+
+#: modules/updates/includes/html.inc.php:2781
+msgid "no package approved for this entity"
+msgstr "ningún paquete aprobado para esta entidad"
+
+#: modules/updates/includes/html.inc.php:2782
+msgid "no package missing on this machine"
+msgstr "ningún paquete pendiente en esta máquina"
+
+#: modules/updates/includes/html.inc.php:2786
+#: modules/updates/includes/html.inc.php:3408
+#, php-format
+msgid "The updates could not be deployed: %s"
+msgstr "No se pudieron desplegar las actualizaciones: %s"
+
+#: modules/updates/includes/html.inc.php:2787
+#: modules/updates/includes/html.inc.php:3409
+msgid "The updates could not be deployed."
+msgstr "No se pudieron desplegar las actualizaciones."
+
+#: modules/updates/includes/html.inc.php:2795
+msgid "Deployment launched for 1 package."
+msgstr "Despliegue lanzado para 1 paquete."
+
+#: modules/updates/includes/html.inc.php:2796
+#, php-format
+msgid "Deployment launched for %d packages."
+msgstr "Despliegue lanzado para %d paquetes."
+
+#: modules/updates/includes/html.inc.php:2809
+#, php-format
+msgid "Deploy the approved update on <b>%s</b>?"
+msgstr "¿Desplegar la actualización aprobada en <b>%s</b>?"
+
+#: modules/updates/includes/html.inc.php:2811
+#, php-format
+msgid "Deploy the %d approved updates on <b>%s</b>?"
+msgstr "¿Desplegar las %d actualizaciones aprobadas en <b>%s</b>?"
+
+#: modules/updates/includes/html.inc.php:2813
+#, php-format
+msgid "Deploy the approved updates on <b>%s</b>?"
+msgstr "¿Desplegar las actualizaciones aprobadas en <b>%s</b>?"
+
+#: modules/updates/includes/html.inc.php:2828
+#: modules/updates/includes/html.inc.php:2835
+#: modules/updates/includes/html.inc.php:2843
+#: modules/updates/infoPackage.inc.php:117
+msgid "Uninstall"
+msgstr "Desinstalar"
+
+#: modules/updates/includes/html.inc.php:2859
+msgid "This update is no longer installed on this machine."
+msgstr "Esta actualización ya no está instalada en este equipo."
+
+#: modules/updates/includes/html.inc.php:2863
+#, php-format
+msgid "<b>%s</b> could not be uninstalled: %s"
+msgstr "No se pudo desinstalar <b>%s</b>: %s"
+
+#: modules/updates/includes/html.inc.php:2864
+#, php-format
+msgid "<b>%s</b> could not be uninstalled."
+msgstr "No se pudo desinstalar <b>%s</b>."
+
+#: modules/updates/includes/html.inc.php:2871
+#, php-format
+msgid "Uninstallation of %s launched."
+msgstr "Desinstalación de %s iniciada."
+
+#: modules/updates/includes/html.inc.php:2879
+#, php-format
+msgid "Uninstall <b>%s</b> from <b>%s</b>? The machine will need a restart."
+msgstr "¿Desinstalar <b>%s</b> de <b>%s</b>? El equipo deberá reiniciarse."
+
+#: modules/updates/includes/html.inc.php:2882
+msgid "This update stays approved: it will be installed again by the next automatic deployment."
+msgstr "Esta actualización sigue aprobada: se volverá a instalar en el próximo despliegue automático."
+
+#: modules/updates/includes/html.inc.php:2973
+#: modules/updates/includes/html.inc.php:3021
+#, php-format
+msgid "Use the setting of %s"
+msgstr "Usar el ajuste de %s"
+
+#: modules/updates/includes/html.inc.php:2987
+#: modules/updates/includes/html.inc.php:3014
+#: modules/updates/includes/html.inc.php:3018
+#: modules/updates/infoPackage.inc.php:158
+msgid "Use the setting of the parent entity"
+msgstr "Usar el ajuste de la entidad padre"
+
+#: modules/updates/includes/html.inc.php:3005
+#, php-format
+msgid "Entity <b>%s</b> now uses the setting of <b>%s</b>."
+msgstr "La entidad <b>%s</b> usa ahora el ajuste de <b>%s</b>."
+
+#: modules/updates/includes/html.inc.php:3007
+#, php-format
+msgid "Entity <b>%s</b> could not take the setting of its parent again."
+msgstr "La entidad <b>%s</b> no ha podido recuperar el ajuste de su entidad padre."
+
+#: modules/updates/includes/html.inc.php:3022
+#, php-format
+msgid "The settings of %s will be replaced by those of %s."
+msgstr "Los ajustes de %s se sustituirán por los de %s."
+
+#: modules/updates/includes/html.inc.php:3124
+msgid "All severities"
+msgstr "Todas las gravedades"
+
+#: modules/updates/includes/html.inc.php:3134
+#: modules/updates/updates/ajaxApprovalsListWin.php:163
+#: modules/updates/updates/ajaxDeployWinGroup.php:108
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:217
+msgid "Update Severity"
+msgstr "Gravedad de la actualización"
+
+#: modules/updates/includes/html.inc.php:3135
+#: modules/updates/includes/html.inc.php:3137
+msgid "Update Classification"
+msgstr "Clasificación de la actualización"
+
+#: modules/updates/includes/html.inc.php:3183
+#: modules/updates/updates/products/linuxReleases.php:12
+#: modules/updates/updates/products/windowsProducts.php:12
+#: modules/updates/updates/settingsWin.php:66
+#: modules/updates/updates/updatesListWin.php:54
+msgid "No entity available for this user."
+msgstr "No hay ninguna entidad disponible para este usuario."
+
+#: modules/updates/includes/html.inc.php:3192
+msgid "Rules saved."
+msgstr "Reglas guardadas."
+
+#: modules/updates/includes/html.inc.php:3194
+#: modules/updates/updates/products/linuxReleases.php:72
+#: modules/updates/updates/products/windowsProducts.php:67
+msgid "Save failed."
+msgstr "Error al guardar."
+
+#: modules/updates/includes/html.inc.php:3210
+msgid "No rule available"
+msgstr "Ninguna regla disponible"
+
+#: modules/updates/includes/html.inc.php:3216
+msgid "Approved packages go out on their own to the Linux machines during the time range of the automatic deployment."
+msgstr "Los paquetes aprobados se envían solos a los equipos Linux durante la franja del despliegue automático."
+
+#: modules/updates/includes/html.inc.php:3217
+msgid "Updates matching a ticked line are approved automatically for this entity, unless declined."
+msgstr "Las actualizaciones que corresponden a una línea marcada se aprueban automáticamente para esta entidad, salvo si se rechazan."
+
+#: modules/updates/includes/html.inc.php:3306
+#: modules/updates/includes/html.inc.php:3372
+#: modules/updates/includes/html.inc.php:3424
+msgid "No eligible machine"
+msgstr "Ninguna máquina apta"
+
+#: modules/updates/includes/html.inc.php:3350
+#, php-format
+msgid "Deploy <b>%s</b> to the eligible machine of group <b>%s</b>?"
+msgstr "¿Desplegar <b>%s</b> en la máquina apta del grupo <b>%s</b>?"
+
+#: modules/updates/includes/html.inc.php:3352
+#, php-format
+msgid "Deploy <b>%s</b> to the %d eligible machines of group <b>%s</b>?"
+msgstr "¿Desplegar <b>%s</b> en las %d máquinas aptas del grupo <b>%s</b>?"
+
+#: modules/updates/includes/html.inc.php:3354
+#, php-format
+msgid "Deploy <b>%s</b> to the eligible machines of group <b>%s</b>?"
+msgstr "¿Desplegar <b>%s</b> en las máquinas aptas del grupo <b>%s</b>?"
+
+#: modules/updates/includes/html.inc.php:3376
+msgid "Deploy the approved packages"
+msgstr "Desplegar los paquetes aprobados"
+
+#: modules/updates/includes/html.inc.php:3383
+#: modules/updates/updates/ajaxApprovalsListWin.php:54
+#: modules/updates/updates/ajaxDeployWinGroup.php:49
+#: modules/updates/updates/ajaxMachinesListWin.php:91
+msgid "No approved package"
+msgstr "Ningún paquete aprobado"
+
+#: modules/updates/includes/html.inc.php:3430
+#, php-format
+msgid "Deploy the approved packages to 1 Linux machine of group <b>%s</b>?"
+msgstr "¿Desplegar los paquetes aprobados en 1 máquina Linux del grupo <b>%s</b>?"
+
+#: modules/updates/includes/html.inc.php:3431
+#, php-format
+msgid "Deploy the approved packages to %d Linux machines of group <b>%s</b>?"
+msgstr "¿Desplegar los paquetes aprobados en %d máquinas Linux del grupo <b>%s</b>?"
+
+#: modules/updates/includes/html.inc.php:3432
+#, php-format
+msgid "Approved packages, all machines combined: %d"
+msgstr "Paquetes aprobados, sumando todas las máquinas: %d"
+
+#: modules/updates/includes/html.inc.php:3473
+#: modules/updates/infoPackage.inc.php:43
+msgid "Upgrade this group"
+msgstr "Actualizar la versión de este grupo"
+
+#: modules/updates/includes/html.inc.php:3488
+msgid "Upgrade launched on 1 machine."
+msgstr "Actualización de versión iniciada en 1 equipo."
+
+#: modules/updates/includes/html.inc.php:3489
+#, php-format
+msgid "Upgrade launched on %s machines."
+msgstr "Actualización de versión iniciada en %s equipos."
+
+#: modules/updates/includes/html.inc.php:3493
+msgid "The upgrade could not be launched."
+msgstr "No se ha podido iniciar la actualización de versión."
+
+#: modules/updates/includes/html.inc.php:3495
+#: modules/updates/includes/html.inc.php:3535
+msgid "No machine of this group needs an upgrade."
+msgstr "Ningún equipo de este grupo necesita una actualización de versión."
+
+#: modules/updates/includes/html.inc.php:3529
+msgid "System not allowed"
+msgstr "Sistema no autorizado"
+
+#: modules/updates/includes/html.inc.php:3545
+#, php-format
+msgid "1 machine will be upgraded to %s"
+msgstr "1 equipo se actualizará a %s"
+
+#: modules/updates/includes/html.inc.php:3546
+#, php-format
+msgid "%s machines will be upgraded to %s"
+msgstr "%s equipos se actualizarán a %s"
+
+#: modules/updates/includes/html.inc.php:3551
+msgid "Left out:"
+msgstr "Excluidos:"
+
+#: modules/updates/includes/html.inc.php:3596
+msgid "catalog server unreachable"
+msgstr "servidor del catálogo inaccesible"
+
+#: modules/updates/includes/html.inc.php:3599
+msgid "server clock out of sync"
+msgstr "reloj del servidor desfasado"
+
+#: modules/updates/includes/html.inc.php:3601
+msgid "replication error"
+msgstr "error de replicación"
+
+#: modules/updates/includes/html.inc.php:3625
+msgid "First copy of the updates catalog in progress"
+msgstr "Primera copia del catálogo de actualizaciones en curso"
+
+#: modules/updates/includes/html.inc.php:3626
+msgid "The module opens once the catalog has been received."
+msgstr "El módulo se abre en cuanto se recibe el catálogo de actualizaciones."
+
+#: modules/updates/includes/html.inc.php:3629
+msgid "Updates catalog never received"
+msgstr "Catálogo de actualizaciones nunca recibido"
+
+#: modules/updates/includes/html.inc.php:3630
+#, php-format
+msgid "Last attempt: %s."
+msgstr "Último intento: %s."
+
+#: modules/updates/includes/html.inc.php:3657
+#, php-format
+msgid "Updates catalog not updated since %s: %s."
+msgstr "Catálogo de actualizaciones no actualizado desde el %s: %s."
+
+#: modules/updates/includes/html.inc.php:3658
+#, php-format
+msgid "Updates catalog not updated: %s."
+msgstr "Catálogo de actualizaciones no actualizado: %s."
+
+#: modules/updates/includes/html.inc.php:3673
+#, php-format
+msgid "%s, failing since: %s"
+msgstr "%s, con fallos desde entonces: %s"
+
+#: modules/updates/includes/html.inc.php:3679
+msgid "Updates catalog"
+msgstr "Catálogo de actualizaciones"
+
+#: modules/updates/includes/html.inc.php:3681
+msgid "Last update"
+msgstr "Última actualización"
+
+#: modules/updates/includes/html.inc.php:3738
+msgid "From"
+msgstr "De"
+
+#: modules/updates/includes/html.inc.php:3740
+msgid "to"
+msgstr "a"
+
+#: modules/updates/infoPackage.inc.php:24
+#: modules/updates/infoPackage.inc.php:81
+#: modules/updates/infoPackage.inc.php:96
+#: modules/updates/updates/EntityComplianceos.php:11
+#: modules/updates/updates/EntityComplianceos.php:15
+#: modules/updates/updates/localSidebar.php:30
+msgid "Update status"
+msgstr "Estado de las actualizaciones"
+
+#: modules/updates/infoPackage.inc.php:27
+#: modules/updates/infoPackage.inc.php:32
+msgid "Deploy an update on a group"
+msgstr "Desplegar una actualización en un grupo"
+
+#: modules/updates/infoPackage.inc.php:48
+#: modules/updates/updates/localSidebar.php:63
+#: modules/updates/updates/settingsWin.php:12
+#: modules/updates/updates/settingsWin.php:60
+msgid "Settings"
+msgstr "Ajustes"
+
+#: modules/updates/infoPackage.inc.php:63
+#: modules/updates/infoPackage.inc.php:76
+#: modules/updates/updates/localSidebar.php:49
+#: modules/updates/updates/updatesListWin.php:12
+#: modules/updates/updates/updatesListWin.php:48
+msgid "Approval"
+msgstr "Aprobación"
+
+#: modules/updates/infoPackage.inc.php:86
+#: modules/updates/infoPackage.inc.php:91
+msgid "Machine details"
+msgstr "Detalle de la máquina"
+
+#: modules/updates/infoPackage.inc.php:175
+msgid "Create GRP update"
+msgstr "Crear un grupo de actualización"
+
+#: modules/updates/updates/ajaxApprovalsListWin.php:41
+#: modules/updates/updates/ajaxDeployWinGroup.php:34
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:161
+msgid "Package"
+msgstr "Paquete"
+
+#: modules/updates/updates/ajaxApprovalsListWin.php:44
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:165
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:215
+msgid "Classification"
+msgstr "Clasificación"
+
+#: modules/updates/updates/ajaxApprovalsListWin.php:45
+#: modules/updates/updates/ajaxApprovalsListWin.php:164
+#: modules/updates/updates/ajaxDeployWinGroup.php:40
+#: modules/updates/updates/ajaxDeployWinGroup.php:109
+#: modules/updates/updates/products/linuxReleases.php:133
+msgid "Machines"
+msgstr "Máquinas"
+
+#: modules/updates/updates/ajaxApprovalsListWin.php:52
+#: modules/updates/updates/ajaxDeployWinGroup.php:47
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:168
+msgid "No package found"
+msgstr "No se encontró ningún paquete"
+
+#: modules/updates/updates/ajaxApprovalsListWin.php:52
+#: modules/updates/updates/ajaxDeployWinGroup.php:47
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:168
+msgid "No package matches the search."
+msgstr "Ningún paquete coincide con la búsqueda."
+
+#: modules/updates/updates/ajaxApprovalsListWin.php:54
+msgid "No package pending"
+msgstr "Ningún paquete pendiente"
+
+#: modules/updates/updates/ajaxApprovalsListWin.php:81
+msgid "Approve selected"
+msgstr "Aprobar la selección"
+
+#: modules/updates/updates/ajaxApprovalsListWin.php:81
+msgid "Decline selected"
+msgstr "Rechazar la selección"
+
+#: modules/updates/updates/ajaxApprovalsListWin.php:153
+msgid "Select all"
+msgstr "Seleccionar todo"
+
+#: modules/updates/updates/ajaxApprovalsListWin.php:154
+#: modules/updates/updates/ajaxApprovalsListWin.php:157
+#: modules/updates/updates/ajaxDeployWinGroup.php:104
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:212
+msgid "KB"
+msgstr "KB"
+
+#: modules/updates/updates/ajaxApprovalsListWin.php:161
+#: modules/updates/updates/ajaxDeployWinGroup.php:107
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:214
+msgid "Title"
+msgstr "Título"
+
+#: modules/updates/updates/ajaxApprovalsListWin.php:162
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:216
+msgid "Size"
+msgstr "Tamaño"
+
+#: modules/updates/updates/ajaxApprovalsListWin.php:175
+#: modules/updates/updates/ajaxDeployWinGroup.php:120
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:99
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:219
+msgid "No updates found"
+msgstr "No se encontraron actualizaciones"
+
+#: modules/updates/updates/ajaxApprovalsListWin.php:175
+#: modules/updates/updates/ajaxDeployWinGroup.php:120
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:99
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:219
+msgid "No update matches the search."
+msgstr "Ninguna actualización coincide con la búsqueda."
+
+#: modules/updates/updates/ajaxApprovalsListWin.php:178
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:224
+#: modules/updates/updates/detailsMachineWin.php:158
+msgid "No update pending"
+msgstr "Ninguna actualización pendiente"
+
+#: modules/updates/updates/ajaxApprovalsListWin.php:179
+msgid "No approved update"
+msgstr "Ninguna actualización aprobada"
+
+#: modules/updates/updates/ajaxApprovalsListWin.php:180
+msgid "No declined update"
+msgstr "Ninguna actualización rechazada"
+
+#: modules/updates/updates/ajaxApprovalsListWin.php:183
+msgid "All updates that concern the machines of this entity have been approved or declined."
+msgstr "Todas las actualizaciones que afectan a las máquinas de esta entidad han sido aprobadas o rechazadas."
+
+#: modules/updates/updates/ajaxApprovalsListWin.php:184
+msgid "Approve them from the pending updates, or automatically with an automatic approval rule."
+msgstr "Apruébelas desde las actualizaciones pendientes, o automáticamente con una regla de aprobación automática."
+
+#: modules/updates/updates/ajaxApprovalsListWin.php:185
+msgid "A declined update is never deployed on the machines of this entity."
+msgstr "Una actualización rechazada nunca se despliega en las máquinas de esta entidad."
+
+#: modules/updates/updates/ajaxApprovalsListWin.php:192
+msgid "Updates covered by an automatic approval rule are approved automatically. To remove one, decline it or change the rule."
+msgstr "Las actualizaciones cubiertas por una regla de aprobación automática se aprueban de oficio. Para retirar una, rechácela o modifique la regla."
+
+#: modules/updates/updates/ajaxDeployWinGroup.php:38
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:166
+msgid "Severity"
+msgstr "Gravedad"
+
+#: modules/updates/updates/ajaxDeployWinGroup.php:41
+#: modules/updates/updates/ajaxDeployWinGroup.php:110
+msgid "Machines of the group missing this update."
+msgstr "Máquinas del grupo a las que les falta esta actualización."
+
+#: modules/updates/updates/ajaxDeployWinGroup.php:112
+msgid "Machines that can receive it now."
+msgstr "Máquinas que pueden recibirla ahora."
+
+#: modules/updates/updates/ajaxDeployWinGroup.php:122
+msgid "No Windows machine in this group"
+msgstr "Ninguna máquina Windows en este grupo"
+
+#: modules/updates/updates/ajaxDeployWinGroup.php:124
+msgid "No update missing"
+msgstr "Ninguna actualización pendiente"
+
+#: modules/updates/updates/ajaxDeployWinGroup.php:125
+msgid "The Windows machines of this group have every update of their tracked products."
+msgstr "Las máquinas Windows de este grupo tienen todas las actualizaciones de sus productos supervisados."
+
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:22
+#: modules/updates/updates/detailsMachineWin.php:51
+msgid "Machine not found"
+msgstr "Máquina no encontrada"
+
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:73
+msgid "Workstation"
+msgstr "Equipo"
+
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:75
+msgid "Installed"
+msgstr "Instalada"
+
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:89
+msgid "Update"
+msgstr "Actualización"
+
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:91
+msgid "Date"
+msgstr "Fecha"
+
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:92
+msgid "Origin"
+msgstr "Origen"
+
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:93
+#: modules/updates/updates/ajaxMachinesListWin.php:112
+#: modules/updates/updates/ajaxMajorTabMachines.php:130
+msgid "Status"
+msgstr "Estado"
+
+# Empty state messages
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:101
+#: modules/updates/updates/detailsMachineWin.php:186
+msgid "No deployment history"
+msgstr "Sin historial de despliegue"
+
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:144
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:187
+#: modules/updates/updates/ajaxMachinesListWin.php:87
+msgid "Unknown entity"
+msgstr "Entidad desconocida"
+
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:148
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:195
+msgid "Not approved for this entity"
+msgstr "No aprobada para esta entidad"
+
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:163
+msgid "Installed version"
+msgstr "Versión instalada"
+
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:164
+msgid "Available version"
+msgstr "Versión disponible"
+
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:193
+msgid "Not in the updates catalog"
+msgstr "Ausente del catálogo de actualizaciones"
+
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php:199
+msgid "Installed, waiting for the machine report"
+msgstr "Instalada, a la espera del informe del equipo"
+
+#: modules/updates/updates/ajaxMachinesListWin.php:31
+msgid "Details"
+msgstr "Detalles"
+
+#: modules/updates/updates/ajaxMachinesListWin.php:93
+msgid "Machine offline"
+msgstr "Máquina sin conexión"
+
+#: modules/updates/updates/ajaxMachinesListWin.php:104
+#: modules/updates/updates/ajaxMajorTabMachines.php:119
+#: modules/updates/updates/detailsMachineWin.php:15
+#: modules/updates/updates/detailsMachineWin.php:27
+msgid "Machine"
+msgstr "Máquina"
+
+#: modules/updates/updates/ajaxMachinesListWin.php:106
+#: modules/updates/updates/detailsMachineWin.php:80
+#: modules/updates/updates/detailsMachineWin.php:81
+msgid "System"
+msgstr "Sistema"
+
+#: modules/updates/updates/ajaxMachinesListWin.php:107
+msgid "Missing"
+msgstr "Pendientes"
+
+#: modules/updates/updates/ajaxMachinesListWin.php:108
+msgid "Updates not installed on the machine."
+msgstr "Actualizaciones no instaladas en la máquina."
+
+#: modules/updates/updates/ajaxMachinesListWin.php:109
+msgid "Critical updates"
+msgstr "Críticas"
+
+#: modules/updates/updates/ajaxMachinesListWin.php:110
+msgid "Updates rated Critical by the distribution"
+msgstr "Actualizaciones de gravedad Crítica según la distribución"
+
+#: modules/updates/updates/ajaxMachinesListWin.php:111
+msgid "Updates rated Critical by Microsoft, or fixing an exploited vulnerability"
+msgstr "Actualizaciones de gravedad Crítica según Microsoft, o que corrigen una vulnerabilidad explotada"
+
+#: modules/updates/updates/ajaxMachinesListWin.php:113
+#: modules/updates/updates/ajaxMajorTabMachines.php:131
+#: modules/updates/updates/detailsMachineWin.php:89
+msgid "Last report"
+msgstr "Último informe"
+
+#: modules/updates/updates/ajaxMachinesListWin.php:124
+#: modules/updates/updates/ajaxMajorTabMachines.php:141
+msgid "No Linux machines"
+msgstr "Ninguna máquina Linux"
+
+#: modules/updates/updates/ajaxMachinesListWin.php:124
+#: modules/updates/updates/ajaxMajorTabMachines.php:141
+msgid "No Windows machines"
+msgstr "Ninguna máquina Windows"
+
+#: modules/updates/updates/ajaxMajorTabMachines.php:39
+msgid "Upgrade unavailable"
+msgstr "Actualización de versión no disponible"
+
+#: modules/updates/updates/ajaxMajorTabMachines.php:85
+msgid "Upgrade not finished: start it again to complete it."
+msgstr "Actualización de versión sin terminar: vuelva a lanzarla para completarla."
+
+#: modules/updates/updates/ajaxMajorTabMachines.php:123
+msgid "Current version"
+msgstr "Versión actual"
+
+#: modules/updates/updates/ajaxMajorTabMachines.php:125
+msgid "Target version"
+msgstr "Versión de destino"
+
+#: modules/updates/updates/ajaxMajorTabMachines.php:127
+msgid "Eligibility"
+msgstr "Elegibilidad"
+
+#: modules/updates/updates/ajaxUpdateCreateGroup.php:16
+msgid "Create a group"
+msgstr "Crear un grupo"
+
+#: modules/updates/updates/ajaxUpdateCreateGroup.php:22
+msgid "You are not allowed to create groups."
+msgstr "No tiene permiso para crear grupos."
+
+#: modules/updates/updates/ajaxUpdateCreateGroup.php:37
+msgid "The group could not be created."
+msgstr "No se pudo crear el grupo."
+
+#: modules/updates/updates/ajaxUpdateCreateGroup.php:42
+msgid "The machines could not be added to the group."
+msgstr "No se pudieron añadir las máquinas al grupo."
+
+#: modules/updates/updates/ajaxUpdateCreateGroup.php:45
+#, php-format
+msgid "Group \"%s\" created with 1 machine."
+msgstr "Grupo «%s» creado con 1 máquina."
+
+#: modules/updates/updates/ajaxUpdateCreateGroup.php:46
+#, php-format
+msgid "Group \"%s\" created with %d machines."
+msgstr "Grupo «%s» creado con %d máquinas."
+
+#: modules/updates/updates/ajaxUpdateCreateGroup.php:58
+msgid "1 machine"
+msgstr "1 máquina"
+
+#: modules/updates/updates/ajaxUpdateCreateGroup.php:58
+#, php-format
+msgid "%d machines"
+msgstr "%d máquinas"
+
+#: modules/updates/updates/ajaxUpdateCreateGroup.php:61
+#, php-format
+msgid "Create a group with <b>%s</b> %s from entity <b>%s</b>?"
+msgstr "¿Crear un grupo con <b>%s</b> %s de la entidad <b>%s</b>?"
+
+#: modules/updates/updates/ajaxUpdateCreateGroup.php:63
+#, php-format
+msgid "Create a group with <b>%s</b> %s?"
+msgstr "¿Crear un grupo con <b>%s</b> %s?"
+
+#: modules/updates/updates/ajaxUpdateCreateGroup.php:65
+msgid "Create"
+msgstr "Crear"
+
+#: modules/updates/updates/deployWinGroup.php:12
+#: modules/updates/updates/deployWinGroup.php:19
+msgid "Deploy an update"
+msgstr "Desplegar una actualización"
+
+#: modules/updates/updates/deployWinGroup.php:26
+#, php-format
+msgid "Deploy an update on group %s"
+msgstr "Desplegar una actualización en el grupo %s"
+
+#: modules/updates/updates/deployWinGroup.php:34
+msgid "See the group machines"
+msgstr "Ver las máquinas del grupo"
+
+#: modules/updates/updates/detailsMachineWin.php:43
+msgid "Back to machines"
+msgstr "Volver a las máquinas"
+
+#: modules/updates/updates/detailsMachineWin.php:43
+msgid "Back"
+msgstr "Volver"
+
+#: modules/updates/updates/detailsMachineWin.php:57
+msgid "The Medulla agent of this machine has not sent any updates report yet."
+msgstr "El agente Medulla de este equipo aún no ha enviado ningún informe de actualizaciones."
+
+#: modules/updates/updates/detailsMachineWin.php:80
+msgid "Kernel"
+msgstr "Núcleo"
+
+#: modules/updates/updates/detailsMachineWin.php:81
+msgid "Build"
+msgstr "Compilación"
+
+#: modules/updates/updates/detailsMachineWin.php:82
+msgid "Language"
+msgstr "Idioma"
+
+#: modules/updates/updates/detailsMachineWin.php:94
+msgid "Automatic updates"
+msgstr "Actualizaciones automáticas"
+
+#: modules/updates/updates/detailsMachineWin.php:99
+msgid "Windows Update"
+msgstr "Windows Update"
+
+#: modules/updates/updates/detailsMachineWin.php:103
+msgid "Support"
+msgstr "Soporte"
+
+#: modules/updates/updates/detailsMachineWin.php:103
+msgid "ended (no ESU)"
+msgstr "finalizado (sin ESU)"
+
+#: modules/updates/updates/detailsMachineWin.php:106
+msgid "Search for updates"
+msgstr "Búsqueda de actualizaciones"
+
+#: modules/updates/updates/detailsMachineWin.php:106
+msgid "Windows search"
+msgstr "Búsqueda de Windows"
+
+#: modules/updates/updates/detailsMachineWin.php:106
+msgid "failed"
+msgstr "con error"
+
+#: modules/updates/updates/detailsMachineWin.php:109
+msgid "Reboot"
+msgstr "Reinicio"
+
+#: modules/updates/updates/detailsMachineWin.php:109
+msgid "pending"
+msgstr "pendiente"
+
+#: modules/updates/updates/detailsMachineWin.php:142
+#, php-format
+msgid "This entity does not track **%s**: check this version in Tracked products to evaluate it."
+msgstr "Esta entidad no sigue **%s**: marque esta versión en Productos supervisados para evaluarla."
+
+#: modules/updates/updates/detailsMachineWin.php:143
+msgid "This entity does not track this Windows version: check it in Tracked products to evaluate it."
+msgstr "Esta entidad no sigue esta versión de Windows: márquela en Productos supervisados para evaluarla."
+
+#: modules/updates/updates/detailsMachineWin.php:152
+msgid "No more updates for this system"
+msgstr "Ya no hay actualizaciones para este sistema"
+
+#: modules/updates/updates/detailsMachineWin.php:153
+msgid "Windows 10 is no longer supported by Microsoft: without an **ESU** license, this machine no longer receives security updates."
+msgstr "Windows 10 ya no tiene soporte de Microsoft: sin licencia **ESU**, esta máquina ya no recibe actualizaciones de seguridad."
+
+#: modules/updates/updates/detailsMachineWin.php:155
+#: modules/updates/updates/detailsMachineWin.php:162
+msgid "Missing updates"
+msgstr "Actualizaciones pendientes"
+
+#: modules/updates/updates/detailsMachineWin.php:175
+msgid "Other available updates"
+msgstr "Otras actualizaciones disponibles"
+
+#: modules/updates/updates/detailsMachineWin.php:179
+#: modules/updates/updates/detailsMachineWin.php:181
+msgid "Updates history"
+msgstr "Historial de actualizaciones"
+
+#: modules/updates/updates/products/linuxReleases.php:68
+#: modules/updates/updates/products/windowsProducts.php:63
+#: modules/updates/updates/settingsWin.php:49
+msgid "No change: the setting stays inherited."
+msgstr "Sin cambios: el ajuste sigue heredado."
+
+#: modules/updates/updates/products/linuxReleases.php:70
+#: modules/updates/updates/products/windowsProducts.php:65
+msgid "Saved. The entity's machines are being re-evaluated."
+msgstr "Guardado. Los equipos de la entidad se están reevaluando."
+
+#: modules/updates/updates/products/linuxReleases.php:87
+msgid "No Linux version reported by the machines"
+msgstr "Ninguna versión de Linux notificada por las máquinas"
+
+#: modules/updates/updates/products/linuxReleases.php:109
+msgid "Track every version of this distribution"
+msgstr "Supervisar todas las versiones de esta distribución"
+
+#: modules/updates/updates/products/linuxReleases.php:132
+msgid "Version"
+msgstr "Versión"
+
+#: modules/updates/updates/products/linuxReleases.php:134
+#: modules/updates/updates/products/windowsProducts.php:166
+msgid "Tracked"
+msgstr "Supervisado"
+
+#: modules/updates/updates/products/windowsProducts.php:82
+msgid "No product available"
+msgstr "Ningún producto disponible"
+
+#: modules/updates/updates/products/windowsProducts.php:88
+msgid "MICROSOFT WINDOWS 11"
+msgstr "MICROSOFT WINDOWS 11"
+
+#: modules/updates/updates/products/windowsProducts.php:89
+msgid "MICROSOFT WINDOWS 10"
+msgstr "MICROSOFT WINDOWS 10"
+
+#: modules/updates/updates/products/windowsProducts.php:90
+msgid "MICROSOFT SERVER"
+msgstr "SERVIDOR MICROSOFT"
+
+#: modules/updates/updates/products/windowsProducts.php:91
+msgid "MICROSOFT OFFICE"
+msgstr "MICROSOFT OFFICE"
+
+#: modules/updates/updates/products/windowsProducts.php:92
+msgid "MICROSOFT VISUAL STUDIO"
+msgstr "MICROSOFT VISUAL STUDIO"
+
+#: modules/updates/updates/products/windowsProducts.php:93
+msgid "WINDOWS SECURITY"
+msgstr "SEGURIDAD DE WINDOWS"
+
+#: modules/updates/updates/products/windowsProducts.php:115
+msgid "Other"
+msgstr "Otras"
+
+#: modules/updates/updates/products/windowsProducts.php:129
+msgid "Track every product of this family"
+msgstr "Supervisar todos los productos de esta familia"
+
+#: modules/updates/updates/products/windowsProducts.php:140
+#: modules/updates/updates/products/windowsProducts.php:141
+msgid "No longer supported by Microsoft"
+msgstr "Sin soporte de Microsoft"
+
+#: modules/updates/updates/products/windowsProducts.php:165
+msgid "Product Microsoft"
+msgstr "Producto Microsoft"
+
+#: modules/updates/updates/settingsWin.php:32
+msgid "Times must be written HH:MM, for example 22:00."
+msgstr "Las horas se escriben HH:MM, por ejemplo 22:00."
+
+#: modules/updates/updates/settingsWin.php:34
+msgid "Give the start and end times to deploy automatically."
+msgstr "Indique las horas de inicio y de fin para desplegar automáticamente."
+
+#: modules/updates/updates/settingsWin.php:36
+msgid "The start and end times must differ."
+msgstr "Las horas de inicio y de fin deben ser distintas."
+
+#: modules/updates/updates/settingsWin.php:38
+msgid "Give both times of the upgrade range, or none."
+msgstr "Indique las dos horas de la franja de actualizaciones de versión, o ninguna."
+
+#: modules/updates/updates/settingsWin.php:40
+msgid "The start and end times of the upgrade range must differ."
+msgstr "Las horas de inicio y de fin de la franja de actualizaciones de versión deben ser distintas."
+
+#: modules/updates/updates/settingsWin.php:42
+#: modules/updates/updates/settingsWin.php:54
+msgid "The settings could not be saved."
+msgstr "No se pudieron guardar los ajustes."
+
+#: modules/updates/updates/settingsWin.php:52
+msgid "Settings saved."
+msgstr "Ajustes guardados."
+
+#: modules/updates/updates/settingsWin.php:103
+msgid "Automatic deployment"
 msgstr "Despliegue automático"
 
-# Despliegue automatico - pestana Linux
-msgid "Update type"
-msgstr "Tipo de actualización"
+#: modules/updates/updates/settingsWin.php:105
+msgid "Enable"
+msgstr "Activar"
 
-msgid "Enabled"
-msgstr "Activado"
+#: modules/updates/updates/settingsWin.php:107
+#: modules/updates/updates/settingsWin.php:115
+msgid "Time range"
+msgstr "Franja horaria"
 
-msgid "These settings apply to every Linux distribution of the selected entity."
-msgstr "Estos ajustes se aplican a todas las distribuciones Linux de la entidad seleccionada."
+#: modules/updates/updates/settingsWin.php:112
+msgid "Approved updates are sent on their own to the machines during this time range. Servers stay on manual deployment."
+msgstr "Las actualizaciones aprobadas se envían solas a los equipos durante esta franja. Los servidores siguen con despliegue manual."
 
-msgid "Updates other than kernel and security."
-msgstr "Actualizaciones distintas de núcleo y seguridad."
+#: modules/updates/updates/settingsWin.php:120
+msgid "The steps of the launched upgrades only start during this time range. Without a range, they start right away."
+msgstr "Los pasos de las actualizaciones de versión lanzadas solo empiezan durante esta franja. Sin franja, empiezan de inmediato."
 
-msgid "Kernel updates for the distribution."
-msgstr "Actualizaciones del núcleo de la distribución."
+#: modules/updates/updates/settingsWin.php:121
+msgid "Save"
+msgstr "Guardar"
 
-msgid "Security fixes published by the distribution."
-msgstr "Correcciones de seguridad publicadas por la distribución."
+#: modules/updates/updates/updatesListWin.php:32
+msgid "Selection approved."
+msgstr "Selección aprobada."
 
-msgid "All"
-msgstr "Todos"
+#: modules/updates/updates/updatesListWin.php:33
+msgid "Selection declined."
+msgstr "Selección rechazada."
 
-msgid "Windows 10 → Windows 11"
-msgstr "Windows 10 → Windows 11"
+#: modules/updates/updates/updatesListWin.php:36
+#: modules/updates/updates/updatesListWin.php:42
+msgid "The selection could not be saved."
+msgstr "No se pudo guardar la selección."
 
-msgid "Windows 11 → latest version"
-msgstr "Windows 11 → última versión"
+#: modules/updates/updates/updatesListWin.php:38
+msgid "No update selected."
+msgstr "Ninguna actualización seleccionada."
 
-msgid "No products are enabled on the Microsoft Products Approval page. Please select the products whose updates you want to manage in Medulla."
-msgstr "No hay ningún producto activado en la página de aprobación de productos Microsoft. Seleccione los productos cuyas actualizaciones desea gestionar en Medulla."
+#: modules/updates/includes/html.inc.php:1431
+#: modules/updates/includes/html.inc.php:1444
+#: modules/updates/infoPackage.inc.php:176
+#: modules/updates/updates/detailsMachineWin.php:138
+msgid "Restart"
+msgstr "Reiniciar"
+
+#: modules/updates/includes/html.inc.php:1492
+#: modules/updates/includes/html.inc.php:1498
+msgid "Restart of <b>%s</b> not sent."
+msgstr "Reinicio de <b>%s</b> no enviado."
+
+#: modules/updates/includes/html.inc.php:1494
+#: modules/updates/includes/html.inc.php:1513
+msgid "This machine is no longer waiting for a restart."
+msgstr "Esta máquina ya no espera un reinicio."
+
+#: modules/updates/includes/html.inc.php:1504
+msgid "Restart of <b>%s</b> sent."
+msgstr "Reinicio de <b>%s</b> enviado."
+
+#: modules/updates/includes/html.inc.php:1517
+msgid "Restart <b>%s</b>?"
+msgstr "¿Reiniciar <b>%s</b>?"
+
+#: modules/updates/includes/html.inc.php:1436
+msgid "No restart pending"
+msgstr "Ningún reinicio pendiente"
+
+#: modules/updates/updates/ajaxMajorTabMachines.php:42
+msgid "No upgrade launched"
+msgstr "Ninguna actualización de versión iniciada"

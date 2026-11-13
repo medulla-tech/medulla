@@ -60,8 +60,6 @@ from mmc.plugins.xmppmaster.master.agentmaster import (
     callremoteXmppMonitoring,
 )
 import inspect
-from datetime import datetime
-from datetime import datetime  # Ajoutez cette ligne en haut du fichier
 from .master.lib.manage_grafana import manage_grafana
 
 
@@ -144,112 +142,6 @@ class RpcProxy(RpcProxyI):
     """
     def getlinelogssession(self, sessionxmpp):
         return XmppMasterDatabase().getlinelogssession(sessionxmpp)
-
-    @with_optional_xmpp_context
-    def get_approve_products(self, identity, colonne=True, ctx=None):
-        infos = ctx.get_session_info()['mondict']
-        try:
-            identity = int(identity)
-        except (TypeError, ValueError):
-            msgerror = f"Invalid identity value: {identity!r}"
-            logger.error(msgerror)
-            return {"success": False, "message": msgerror}
-        if identity not in infos['liste_entities_user']:
-            msgerror = f"missing privilege for user {infos['user_name']}: Entity name:{infos['complet_entity_name_']}"
-            logger.error(msgerror)
-            return {"success": False, "message": msgerror}
-        return XmppMasterDatabase().get_approve_products(identity,
-                                                         colonne=True)
-
-    def count_enabled_products(self, entity_ids=None):
-        if not isinstance(entity_ids, (list, tuple)):
-            entity_ids = [] if entity_ids in (None, "") else [entity_ids]
-        ids = []
-        for entity_id in entity_ids:
-            if isinstance(entity_id, bool):
-                continue
-            try:
-                ids.append(int(entity_id))
-            except (TypeError, ValueError):
-                continue
-        return XmppMasterDatabase().count_enabled_products(ids)
-
-
-    @with_optional_xmpp_context
-    def get_auto_approve_rules(self, identity, colonne=True, ctx=None):
-        infos = ctx.get_session_info()['mondict']
-        try:
-            identity = int(identity)
-        except (TypeError, ValueError):
-            msgerror = f"Invalid identity value: {identity!r}"
-            logger.error(msgerror)
-            return {"success": False, "message": msgerror}
-        if identity not in infos['liste_entities_user']:
-            msgerror = f"missing privilege for user {infos['user_name']}: Entity name:{infos['complet_entity_name_']}"
-            logger.error(msgerror)
-            return {"success": False, "message": msgerror}
-        return XmppMasterDatabase().get_auto_approve_rules(identity,
-                                                         colonne=True)
-
-
-    @with_optional_xmpp_context
-    def update_approve_products(self,
-                                updatesproduct,
-                                entity_id,
-                                ctx=None):
-        infos = ctx.get_session_info()['mondict']
-        try:
-            entity_id = int(entity_id)
-        except (TypeError, ValueError):
-            msgerror = f"Invalid entity_id value: {entity_id!r}"
-            logger.error(msgerror)
-            return {"success": False, "message": msgerror}
-        # on vérifit que user peut disposer des informations
-        # de cette entite depuis son context.
-        if entity_id not in infos['liste_entities_user']:
-            msgerror = f"missing privilege for user {infos['user_name']}: Entity name:{infos['complet_entity_name_']}"
-            logger.error(msgerror)
-            return {"success": False, "message": msgerror}
-        return XmppMasterDatabase().update_approve_products(updatesproduct,
-                                                            entity_id=entity_id)
-
-    @with_optional_xmpp_context
-    def update_auto_approve_rules(self,
-                                updatesrules,
-                                entity_id,
-                                ctx=None):
-        infos = ctx.get_session_info()['mondict']
-        try:
-            entity_id = int(entity_id)
-        except (TypeError, ValueError):
-            msgerror = f"Invalid entity_id value: {entity_id!r}"
-            logger.error(msgerror)
-            return {"success": False, "message": msgerror}
-        # on vérifit que user peut disposer des informations
-        # de cette entite depuis son context.
-        if entity_id not in infos['liste_entities_user']:
-            msgerror = f"missing privilege for user {infos['user_name']}: Entity name:{infos['complet_entity_name_']}"
-            logger.error(msgerror)
-            return {"success": False, "message": msgerror}
-        return XmppMasterDatabase().update_auto_approve_rules(updatesrules,
-                                                              entity_id=entity_id)
-
-    @with_optional_xmpp_context
-    def get_linux_approved_releases(self, ctx=None):
-        return XmppMasterDatabase().get_linux_approved_releases(colonne=True)
-
-    @with_optional_xmpp_context
-    def update_linux_approved_releases(self, updatesreleases, ctx=None):
-        return XmppMasterDatabase().update_linux_approved_releases(updatesreleases)
-
-    @with_optional_xmpp_context
-    def get_linux_auto_update_policy(self, entity_ids, ctx=None):
-        return XmppMasterDatabase().get_linux_auto_update_policy(entity_ids)
-
-    @with_optional_xmpp_context
-    def update_linux_auto_update_policy(self, updates, ctx=None):
-        return XmppMasterDatabase().update_linux_auto_update_policy(updates)
-
 
     def getListPackages(self):
         resultnamepackage = []
@@ -2291,34 +2183,8 @@ def get_machines_to_unban(jid_ars, start=0, end=-1, filter=""):
     return result
 
 
-def get_conformity_update_by_machine(idmachine):
-    result = XmppMasterDatabase().get_conformity_update_by_machine(idmachine)
-    return result
-
-
-def get_conformity_update_for_group(uuidArray):
-    result = XmppMasterDatabase().get_conformity_update_for_group(uuidArray)
-    nbmachinetotal = len(uuidArray)
-    result[0]["pending_updates"] = int(result[0]["pending_updates"])
-
-    if result[0]["count_machines"] == 0 or result[0]["pending_updates"] == 0:
-        result[0]["compliance"] = 100
-    else:
-        result[0]["compliance"] = (
-            (float(nbmachinetotal) - float(result[0]["count_machines"]))
-            / float(nbmachinetotal)
-            * 100.0
-        )
-    return result
-
-
 def get_idmachine_from_name(name):
     result = XmppMasterDatabase().get_idmachine_from_name(name)
-    return result
-
-
-def get_count_updates_enable():
-    result = XmppMasterDatabase().get_count_updates_enable()
     return result
 
 
@@ -2374,26 +2240,6 @@ def reload_deploy(
     )
 
 
-def get_updates_by_entity(entity, start=0, limit=-1, filter=""):
-    return XmppMasterDatabase().get_updates_by_entity(entity, start, limit, filter)
-
-
-def get_updates_machines_by_entity(entity, pid, start=0, limit=-1, filter=""):
-    return XmppMasterDatabase().get_updates_machines_by_entity(
-        entity, pid, start, limit, filter
-    )
-
-
-def pending_entity_update_by_pid(entity, pid, startdate="", enddate="", interval=""):
-    return XmppMasterDatabase().pending_entity_update_by_pid(
-        entity, pid, startdate, enddate, interval
-    )
-
-
-def pending_group_update_by_pid(gid, pid, startdate="", enddate=""):
-    pass
-
-
 def get_machines_infos_additif(id, l_value_id, include_keys=None):
     if include_keys is None:
         return XmppMasterDatabase().get_machines_infos_additif(id, l_value_id)
@@ -2402,91 +2248,3 @@ def get_machines_infos_additif(id, l_value_id, include_keys=None):
 
 def get_machines_infos_generic(mom_keys_for_search, data_search, include_keys=None, offset=0, limit=-1, colonne=True):
     return XmppMasterDatabase().get_machines_infos_generic(mom_keys_for_search, data_search, include_keys, offset, limit, colonne)
-
-
-def pending_machine_update_by_pid(
-    machineid,
-    inventoryid,
-    updateid,
-    deployName,
-    user,
-    startdate="",
-    enddate="",
-    interval="",
-):
-    return XmppMasterDatabase().pending_machine_update_by_pid(
-        machineid, inventoryid, updateid, deployName, user, startdate, enddate, interval
-    )
-
-
-def get_updates_by_uuids(uuids, start=0, limit=-1, filter=""):
-    return XmppMasterDatabase().get_updates_by_uuids(uuids, start, limit, filter)
-
-
-def get_updates_by_machineids(
-    machineids, start=0, limit=-1, filter="", state="available"
-):
-    return XmppMasterDatabase().get_updates_by_machineids(
-        machineids, start, limit, filter, state
-    )
-
-
-def get_tagged_updates_by_machine(machineid, start=0, end=-1, filter=""):
-    return XmppMasterDatabase().get_tagged_updates_by_machine(
-        machineid, start, end, filter
-    )
-
-
-def get_audit_summary_updates_by_machine(machineid, start=0, end=-1, filter=""):
-    return XmppMasterDatabase().get_audit_summary_updates_by_machine(
-        machineid, start, end, filter
-    )
-
-
-def get_update_kb(updateid):
-    return XmppMasterDatabase().get_update_kb(updateid)
-
-
-def cancel_update(machineid, updateid):
-    return XmppMasterDatabase().cancel_update(machineid, updateid)
-
-
-def get_audit_summary_updates_by_entity(entity_uuid, start=0, limit=-1, filter="", history_type=""):
-    return XmppMasterDatabase().get_audit_summary_updates_by_entity(entity_uuid, start, limit, filter, history_type)
-
-
-def get_audit_summary_updates_by_update(updateid, start=0, limit=-1, filter=""):
-    return XmppMasterDatabase().get_audit_summary_updates_by_update(updateid, start, limit, filter)
-
-
-def get_distribution_version_compliance(
-        distributor_id,
-        entity_id,
-        start,
-        limit,
-        hostname_filter=None,
-        end=None,
-    ):
-    return XmppMasterDatabase().get_distribution_version_compliance(
-        distributor_id,
-        entity_id,
-        start,
-        limit,
-        hostname_filter,
-        end,
-    )
-
-def get_major_machines_by_entity(
-        distribution,
-        entity_id,
-        filter="",
-        start=0,
-        limit=50
-    ):
-    return XmppMasterDatabase().get_major_machines_by_entity(
-        distribution,
-        entity_id,
-        filter,
-        start,
-        limit
-    )

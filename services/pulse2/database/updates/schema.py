@@ -27,12 +27,3 @@ class UpdatesDBObj(DBObj):
     # All Updates tables have id colmun as primary key
     id = Column(Integer, primary_key=True)
 
-
-class Tests(Base, UpdatesDBObj):
-    # ====== Table name =========================
-    __tablename__ = "tests"
-    # ====== Fields =============================
-    # Here we define columns for the table version.
-    # Notice that each column is also a normal Python instance attribute.
-    name = Column(String(50))
-    message = Column(String(255))

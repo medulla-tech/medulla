@@ -315,10 +315,10 @@ if ($is_gp != 1) { // Simple group
         $n->addActionItem(new ActionItem(_T("Update on this group", "dyngroup"),
             "view_updates", "reload", "id", "base", "computers"));
     }
-    $n->addActionItem(new ActionItem(_("Updates compliance by machines"),
-        "detailsByMachines", "auditbymachine", "updates", "updates", "updates"));
     $n->addActionItem(new ActionItem(_("Deploy specific update on this group"),
-        "deploySpecificUpdate", "updateone", "updates", "updates", "updates"));
+        "deployWinGroup", "updateone", "updates", "updates", "updates"));
+    $n->addActionItem(new ActionPopupItem(_T("Upgrade this group", "dyngroup"),
+        "upgradeWinGroup", "up", "updates", "updates", "updates", null, 500));
 } else { // Imaging group
     if (in_array("inventory", $_SESSION["supportModList"] ?? [])) {
         $n->addActionItem(new ActionItem(_T("Inventory on this imaging group", "dyngroup"),
@@ -342,8 +342,6 @@ if ($is_gp != 1) { // Simple group
                 "groupimgtabs", "imaging", "computer", "imaging", "manage"));
         }
     }
-    $n->addActionItem(new ActionItem(_("Updates compliance by machines"),
-        "detailsByMachines", "auditbymachine", "updates", "updates", "updates"));
 }
 
 if (in_array("xmppmaster", $_SESSION["supportModList"] ?? [])) {

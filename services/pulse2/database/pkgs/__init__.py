@@ -326,31 +326,18 @@ class PkgsDatabase(DatabaseHelper):
             - Selects from `pkgs.packages`, only if the package is not already synchronized
             (not in `pkgs.syncthingsync`), and the associated share is enabled.
 
-        2️⃣  **Gray list rules (`xmppmaster.up_gray_list`):**
-            - If the package is **not** listed in `up_gray_list` → it's always included.
-            - If the package **is** listed in `up_gray_list` → it is included **only if**:
-                * `valided = 1`
-                * `entityid` belongs to `liste_entities_user`
-                * (optional) if `xmpp_cn_id` and `glpi_entityid` are given:
-                the machine must appear in `xmppmaster.up_machine_windows`
-                matching both:
-                    - `update_id = up_gray_list.updateid`
-                    - `id_machine = xmpp_cn_id`
-                    - `entityid = glpi_entityid`
-                    - and both `curent_deploy` and `required_deploy` are NULL.
-
-        3️⃣  **Filtering**
+        2️⃣  **Filtering**
             - Text filter (`ctx["filter"]`) on multiple textual fields.
             - OS filter (`ctx["filter1"]`).
             - Package sharing restriction (`pkgs_share_id`).
 
-        4️⃣  **Pagination**
+        3️⃣  **Pagination**
             - Uses `LIMIT` and `OFFSET`.
 
-        5️⃣  **Special rule**
+        4️⃣  **Special rule**
             - If `liste_entities_user` is empty → returns no results (empty dict).
 
-                6️⃣  **Hidden marker rule**
+                5️⃣  **Hidden marker rule**
                         - If `packages.label` contains `@@generique ne pas afficher@@`,
                             the package is excluded from this deployable list.
                         - Backward compatibility: the same marker is also checked in
@@ -368,10 +355,6 @@ class PkgsDatabase(DatabaseHelper):
         # --- Extract input parameters ---
         liste_entities_user = objsearch.get("liste_entities_user", [])
         list_sharing = objsearch.get("list_sharing", [])
-        xmpp_cn_id = objsearch.get("xmppmaster", {}).get("id") if "xmppmaster" in objsearch else None
-        if 'entity_user_id' in objsearch:
-            entity_user_id = objsearch['entity_user_id']
-        glpi_entityid = objsearch.get("xmppmaster", {}).get("entityid") if "xmppmaster" in objsearch else None
 
         # --- SECURITY GUARD ---
         # If user has no entities, no packages should be returned.
@@ -421,25 +404,6 @@ class PkgsDatabase(DatabaseHelper):
         sharing_ids = ",".join(str(int(x)) for x in list_sharing)
         where_clause = f"AND packages.pkgs_share_id IN ({sharing_ids})"
 
-        # --- Entity filtering ---
-        entity_ids = ",".join(str(int(e)) for e in liste_entities_user)
-        entity_condition = f"AND xmppmaster.up_gray_list.entityid IN ({entity_ids})"
-
-        # --- Machine-specific filtering (via EXISTS to avoid duplicates) ---
-        xmpp_machine_condition = ""
-        if xmpp_cn_id is not None and glpi_entityid is not None:
-            xmpp_machine_condition = f"""
-                AND EXISTS (
-                    SELECT 1
-                    FROM xmppmaster.up_machine_windows
-                    WHERE xmppmaster.up_machine_windows.update_id = xmppmaster.up_gray_list.updateid
-                    AND xmppmaster.up_machine_windows.id_machine = {int(xmpp_cn_id)}
-                    AND xmppmaster.up_machine_windows.entityid = {int(glpi_entityid)}
-                    AND xmppmaster.up_machine_windows.curent_deploy IS NULL
-                    AND xmppmaster.up_machine_windows.required_deploy IS NULL
-                )
-            """
-
         # --- Pagination clause ---
         limit_clause = ""
         if start >= 0 and end > 0:
@@ -457,20 +421,10 @@ class PkgsDatabase(DatabaseHelper):
                 pkgs.packages
             LEFT JOIN
                 pkgs.pkgs_shares ON pkgs_shares.id = packages.pkgs_share_id
-            LEFT JOIN
-                xmppmaster.up_gray_list ON xmppmaster.up_gray_list.updateid = packages.uuid
             WHERE
                 packages.uuid NOT IN (
                     SELECT syncthingsync.uuidpackage
                     FROM pkgs.syncthingsync
-                )
-                AND (
-                    xmppmaster.up_gray_list.updateid IS NULL
-                    OR (
-                        xmppmaster.up_gray_list.valided = 1
-                        {entity_condition}
-                        {xmpp_machine_condition}
-                    )
                 )
                 {_filter}
                 {_filter1}
@@ -2382,109 +2336,3 @@ class PkgsDatabase(DatabaseHelper):
         """), {"user": user})
         session.commit()
         return res.rowcount
-
-    @DatabaseHelper._sessionm
-    def create_winupdate_package(
-        self,
-        session,
-        label: str,
-        description: str,
-        uuid: str,
-        version: str,
-        os: str,
-        metagenerator: str,
-        entity_id: str,
-        reboot: int,
-        inventory_associateinventory: int,
-        inventory_licenses: str,
-        Qvendor: str,
-        command_command: str,
-        edition_status: int = 1,
-        conf_json: str = None,
-    ):
-        """
-        Insert a new Windows update package into the database if the UUID does not already exist.
-        First, it retrieves the ID of the "winupdates" share.
-
-        Args:
-            session: SQLAlchemy session
-            label: Package label
-            description: Package description
-            uuid: Unique identifier for the package
-            version: Package version
-            os: Target operating system
-            metagenerator: How the package was generated
-            entity_id: Entity ID
-            reboot: Whether a reboot is required
-            inventory_associateinventory: Inventory association flag
-            inventory_licenses: License information
-            Qvendor: Vendor query
-            command_command: Command to execute
-            edition_status: Edition status (default: 1)
-            conf_json: JSON configuration as a string
-
-        Returns:
-            The newly created package object, or None if the package already exists.
-        """
-
-        # Récupérer l'ID du partage "winupdates"
-        pkgs_share = session.execute(
-            text("SELECT id FROM pkgs.pkgs_shares WHERE name = 'winupdates'")
-        ).scalar_one_or_none()
-
-        if not pkgs_share:
-            raise ValueError("Le partage 'winupdates' n'existe pas en base de données.")
-
-        # Vérifier si le package existe déjà
-        existing_package = session.execute(
-            text("SELECT * FROM pkgs.packages WHERE uuid = :uuid"),
-            {"uuid": uuid}
-        ).fetchone()
-
-        if existing_package:
-            return None  # Le package existe déjà
-
-        # Insérer le nouveau package
-        session.execute(
-            text("""
-                INSERT INTO pkgs.packages (
-                    label, description, uuid, version, os, metagenerator, entity_id,
-                    sub_packages, reboot, inventory_associateinventory, inventory_licenses,
-                    Qvendor, command_command, pkgs_share_id, edition_status, conf_json
-                )
-                VALUES (
-                    :label, :description, :uuid, :version, :os, :metagenerator, :entity_id,
-                    :sub_packages, :reboot, :inventory_associateinventory, :inventory_licenses,
-                    :Qvendor, :command_command, :pkgs_share_id, :edition_status, :conf_json
-                )
-            """),
-            {
-                "label": label,
-                "description": description,
-                "uuid": uuid,
-                "version": version,
-                "os": os,
-                "metagenerator": metagenerator,
-                "entity_id": entity_id,
-                "sub_packages": "[]",
-                "reboot": reboot,
-                "inventory_associateinventory": inventory_associateinventory,
-                "inventory_licenses": inventory_licenses,
-                "Qvendor": Qvendor,
-                "command_command": command_command,
-                "pkgs_share_id": pkgs_share,
-                "edition_status": edition_status,
-                "conf_json": conf_json,
-            }
-        )
-
-        session.commit()
-
-        # Récupérer et retourner le package nouvellement créé
-        # Récupérer et retourner l'ID du package nouvellement créé
-        created_package_id = session.execute(
-            text("SELECT id FROM pkgs.packages WHERE uuid = :uuid"),
-            {"uuid": uuid}
-        ).scalar_one_or_none()
-
-        return created_package_id

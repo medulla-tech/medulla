@@ -1050,11 +1050,6 @@ msgstr "Tiempo de actividad"
 msgid "Medulla Updates"
 msgstr "Actualizaciones de la médula"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:259
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:286
-msgid "Updates compliance by machines"
-msgstr "Actualizaciones de conformidad por máquinas"
-
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:261
 msgid "Deploy specific update on this group"
 msgstr "Desplegar una actualización específica en este grupo"

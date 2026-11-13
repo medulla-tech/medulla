@@ -6,7 +6,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // file : web/modules/updates/infoPackage.inc.php
 
-
 require_once("modules/medulla_server/version.php");
 
 $mod = new Module("updates");
@@ -22,408 +21,118 @@ $submod->setImg('modules/updates/graph/navbar/updates');
 $submod->setDefaultPage("updates/updates/index");
 $submod->setPriority(500);
 
-$page = new Page("index", _T('Entities Compliance', 'updates'));
+$page = new Page("index", _T('Update status', 'updates'));
 $submod->addPage($page);
 
-$page = new Page("ajaxEntitiesList", _T("Entities Compliance Windows", "updates"));
-$page->setFile("modules/updates/updates/ajaxEntitiesList.php");
-$page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));
+$page = new Page("deployWinGroup", _T('Deploy an update on a group', 'updates'));
+$page->setFile("modules/updates/updates/deployWinGroup.php");
+$page->setOptions(array("visible" => false));
 $submod->addPage($page);
 
-//----------------------
-$page = new Page("detailsByMachines", _T('Details by Machines', 'updates'));
-$page->setFile("modules/updates/updates/detailsByMachines.php");
-$submod->addPage($page);
-
-
-$page = new Page("ajaxDetailsByMachines", _T("Details by Machines", "updates"));
-$page->setFile("modules/updates/updates/ajaxDetailsByMachines.php");
+$page = new Page("ajaxDeployWinGroup", _T('Deploy an update on a group', 'updates'));
+$page->setFile("modules/updates/updates/ajaxDeployWinGroup.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
-$page = new Page("deployAllUpdates", _T('Deploy all Updates', 'updates'));
-$page->setFile("modules/updates/updates/deployAllUpdates.php");
+// Guarded by the deployWinGroup ACL in the page itself.
+$page = new Page("deployWinGroupUpdate", _T('Deploy', 'updates'));
+$page->setFile("modules/updates/updates/deployWinGroupUpdate.php");
+$page->setOptions(array("visible" => false, "noHeader" => true, "noACL" => true));
 $submod->addPage($page);
 
-$page = new Page("ajaxDeployAllUpdates", _T("Deploy all Updates", "updates"));
-$page->setFile("modules/updates/updates/ajaxDeployAllUpdates.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$page = new Page("upgradeWinGroup", _T('Upgrade this group', 'updates'));
+$page->setFile("modules/updates/updates/upgradeWinGroup.php");
+$page->setOptions(array("visible" => false, "noHeader" => true));
 $submod->addPage($page);
 
-$page = new Page("deployUpdate", _T('Deploy Specific Updates On Entity', 'updates'));
-$page->setFile("modules/updates/updates/deployUpdate.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$page = new Page("settingsWin", _T('Settings', 'updates'));
+$page->setFile("modules/updates/updates/settingsWin.php");
 $submod->addPage($page);
 
-
-$page = new Page("deploySpecificUpdate", _T('Deploy specific update', 'updates'));
-$page->setFile("modules/updates/updates/deploySpecificUpdate.php");
-$submod->addPage($page);
-
-$page = new Page("detailsByUpdates", _T('List updates', 'updates'));
-$page->setFile("modules/updates/updates/detailsByUpdates.php");
-$submod->addPage($page);
-
-
-
-//--------------------------
-//--------------------------
-//--------------------------
-//--------------------------
-
-$page = new Page("hardwareConstraintsForMajorUpdates", _T('do not perform the update for now, as long as certain essential hardware constraints are not met', 'updates'));
-$page->setFile("modules/updates/updates/hardwareConstraintsForMajorUpdates.php");
-$submod->addPage($page);
-
-$page = new Page("detailsSpecificUpdate", _T('Machine details for specific update', 'updates'));
-$page->setFile("modules/updates/updates/detailsSpecificUpdate.php");
-$submod->addPage($page);
-
-$page = new Page("ajaxDetailsSpecificUpdate", _T("Manage machine details for specific update", "updates"));
-$page->setFile("modules/updates/updates/ajaxDetailsSpecificUpdate.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-
-$page = new Page("AjaxcreateGrouplistglpiid", 'create Group List');
-$page->setFile("modules/updates/updates/AjaxcreateGrouplistglpiid.php");
-$page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>True));
-$submod->addPage($page);
-
-$page = new Page("ajaxDetailsSpecificUpdateWithout", _T("Manage machine details for specific update", "updates"));
-$page->setFile("modules/updates/updates/ajaxDetailsSpecificUpdateWithout.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("ajaxDeploySpecificUpdate", _T("Manage deploy specific update", "updates"));
-$page->setFile("modules/updates/updates/ajaxDeploySpecificUpdate.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("ajaxDetailsByUpdates", _T("List Updates", "updates"));
-$page->setFile("modules/updates/updates/ajaxDetailsByUpdates.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("ajaxDetailsByUpdatesGray", _T("Manage Gray List Updates", "updates"));
-$page->setFile("modules/updates/updates/ajaxDetailsByUpdatesGray.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("ajaxDetailsByUpdatesWhite", _T("Manage White List Updates", "updates"));
-$page->setFile("modules/updates/updates/ajaxDetailsByUpdatesWhite.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("MajorEntitiesList", _T('os updates', 'updates'));
+$page = new Page("MajorEntitiesList", _T('Upgrades', 'updates'));
 $page->setFile("modules/updates/updates/MajorEntitiesList.php");
 
-/*
-$page = new Page("testentitylist",_T("testentitylist","updates"));
-$page->setFile("modules/updates/updates/testentitylist.php");
-*/
-
-$tab = new Tab("tabwin", _T("oswindows", "updates"));
+$tab = new Tab("tabwin", _T("Windows", "updates"));
 $page->addTab($tab);
 
-$tab = new Tab("tabwinserv", _T("osWindowsserveur", "dyngroup"));
-$page->addTab($tab);
-
-$tab = new Tab("tabdebian", _T("OS Debian", "dyngroup"));
-$page->addTab($tab);
-
-$tab = new Tab("tabubuntu", _T("OS Ubuntu", "dyngroup"));
-$page->addTab($tab);
-
-$tab = new Tab("tabzorin", _T("OS Zorin", "dyngroup"));
-$page->addTab($tab);
-
-$tab = new Tab("tabalma", _T("OS ALMA", "dyngroup"));
-$page->addTab($tab);
-
-$tab = new Tab("tabrhel", _T("OS Redhat", "dyngroup"));
-$page->addTab($tab);
-
-$tab = new Tab("tabcentosos", _T("OS CentOS", "dyngroup"));
-$page->addTab($tab);
-
-$tab = new Tab("tabsuse", _T("OS Suse", "dyngroup"));
-$page->addTab($tab);
-
-$tab = new Tab("tabfedora", _T("OS Fedora", "dyngroup"));
-$page->addTab($tab);
-
-$tab = new Tab("tabmint", _T("OS Mint", "dyngroup"));
+$tab = new Tab("tablinux", _T("Linux", "updates"));
 $page->addTab($tab);
 
 $submod->addPage($page);
 
-
-
-$page = new Page("ajaxMajorEntitiesList", _T('Entities Major Compliance', 'updates'));
-$page->setFile("modules/updates/updates/ajaxMajorEntitiesList.php");
-$submod->addPage($page);
-
-$page = new Page("ajaxMajorEntitiesListServ", _T('Entities Major Compliance', 'updates'));
-$page->setFile("modules/updates/updates/ajaxMajorEntitiesListServ.php");
-$submod->addPage($page);
-
-$page = new Page("ajaxMajorEntitiesListDebian", _T('Entities Major Compliance', 'updates'));
-$page->setFile("modules/updates/updates/ajaxMajorEntitiesListDebian.php");
-$submod->addPage($page);
-
-$page = new Page("ajaxMajorEntitiesListUbuntu", _T('Entities Major Compliance', 'updates'));
-$page->setFile("modules/updates/updates/ajaxMajorEntitiesListUbuntu.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("ajaxMajorEntitiesListZorin", _T('Entities Major Compliance', 'updates'));
-$page->setFile("modules/updates/updates/ajaxMajorEntitiesListZorin.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("ajaxMajorEntitiesListAlma", _T('Entities Major Compliance', 'updates'));
-$page->setFile("modules/updates/updates/ajaxMajorEntitiesListAlma.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("ajaxMajorEntitiesListRedhat", _T('Entities Major Compliance', 'updates'));
-$page->setFile("modules/updates/updates/ajaxMajorEntitiesListRedhat.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("ajaxMajorEntitiesListCentos", _T('Entities Major Compliance', 'updates'));
-$page->setFile("modules/updates/updates/ajaxMajorEntitiesListCentos.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("ajaxMajorEntitiesListFedora", _T('Entities Major Compliance', 'updates'));
-$page->setFile("modules/updates/updates/ajaxMajorEntitiesListFedora.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("ajaxMajorMachinesList", _T('Machines Major Compliance', 'updates'));
-$page->setFile("modules/updates/updates/ajaxMajorMachinesList.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("ajaxMajorEntitiesListSuse", _T('Entities Major Compliance', 'updates'));
-$page->setFile("modules/updates/updates/ajaxMajorEntitiesListSuse.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("ajaxMajorEntitiesListMint", _T('Entities Major Compliance', 'updates'));
-$page->setFile("modules/updates/updates/ajaxMajorEntitiesListMint.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-//---------------------------------------------------------------
-
-$page = new Page("updatesListWin", _T('Manage Updates Lists', 'updates'));
+$page = new Page("updatesListWin", _T('Approval', 'updates'));
 $page->setFile("modules/updates/updates/updatesListWin.php");
+
+// System tabs share the page ACL.
+foreach (array("tabwin" => _T("Windows", "updates"),
+               "tablinux" => _T("Linux", "updates")) as $tabId => $tabLabel) {
+    $tab = new Tab($tabId, $tabLabel);
+    $tab->setOptions(array("noACL" => true));
+    $page->addTab($tab);
+}
+
 $submod->addPage($page);
 
-$page = new Page("ajaxUpdatesListWin", _T("Manage Updates Lists for entity", "updates"));
-$page->setFile("modules/updates/updates/ajaxUpdatesListWin.php");
+$page = new Page("ajaxApprovalsListWin", _T("Approval", "updates"));
+$page->setFile("modules/updates/updates/ajaxApprovalsListWin.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
-$page = new Page("ajaxEntityCompliance", _T("Entity Compliance", "updates"));
-$page->setFile("modules/updates/updates/entity/ajaxEntityCompliance.php");
+$page = new Page("ajaxMachinesListWin", _T("Update status", "updates"));
+$page->setFile("modules/updates/updates/ajaxMachinesListWin.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
+$page = new Page("ajaxMachineUpdatesListWin", _T("Machine details", "updates"));
+$page->setFile("modules/updates/updates/ajaxMachineUpdatesListWin.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
 
-$page = new Page("EntityComplianceos", _T("Entity Compliance", "updates"));
+$page = new Page("detailsMachineWin", _T("Machine details", "updates"));
+$page->setFile("modules/updates/updates/detailsMachineWin.php");
+$page->setOptions(array("visible" => false));
+$submod->addPage($page);
+
+$page = new Page("EntityComplianceos", _T("Update status", "updates"));
 $page->setFile("modules/updates/updates/EntityComplianceos.php");
 
-$tab = new Tab("tabwin", _T("oswindows", "updates"));
+$tab = new Tab("tabwin", _T("Windows", "updates"));
 $page->addTab($tab);
 
-$tab = new Tab("tablinux", _T("OS Linux", "updates"));
+$tab = new Tab("tablinux", _T("Linux", "updates"));
 $page->addTab($tab);
 
 $submod->addPage($page);
-/*
-$page = new Page("updatesListWin", _T('Manage Updates Lists', 'updates'));
-$page->setFile("modules/updates/updates/updatesListWin.php");
-$submod->addPage($page);*/
 
-$page = new Page("ajaxUpdatesListWinWhite", _T("Manage Updates Lists", "updates"));
-$page->setFile("modules/updates/updates/ajaxUpdatesListWinWhite.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("ajaxUpdatesListWinGray", _T("Manage Updates Lists", "updates"));
-$page->setFile("modules/updates/updates/ajaxUpdatesListWinGray.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("ajaxUpdatesListWinBlack", _T("Manage Updates Lists", "updates"));
-$page->setFile("modules/updates/updates/ajaxUpdatesListWinBlack.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("enableUpdate", _T('Enable for manual update', 'updates'));
-$page->setFile("modules/updates/updates/enableUpdate.php");
-$submod->addPage($page);
-
-$page = new Page("disableUpdate", _T('Disable for manual update', 'updates'));
-$page->setFile("modules/updates/updates/disableUpdate.php", array("noHeader" => true,"visible" => false));
-$submod->addPage($page);
-
-$page = new Page("whitelistUpdate", _T('Approve for automatic update', 'updates'));
-$page->setFile("modules/updates/updates/whitelistUpdate.php", array("noHeader" => true,"visible" => false));
-$submod->addPage($page);
-
-$page = new Page("blacklistUpdate", _T('Ban update', 'updates'));
-$page->setFile("modules/updates/updates/blacklistUpdate.php", array("noHeader" => true,"visible" => false));
-$submod->addPage($page);
-
-$page = new Page("greylistUpdate", _T('Unlist update', 'updates'));
-$page->setFile("modules/updates/updates/greylistUpdate.php", array("noHeader" => true,"visible" => false));
-$submod->addPage($page);
-
-$page = new Page("deleteRule", _T('UnBan update', 'updates'));
-$page->setFile("modules/updates/updates/deleteRule.php");
-$submod->addPage($page);
-
-$page = new Page("grayEnable", _T('Gray Enable', 'updates'));
-$page->setFile("modules/updates/updates/grayEnable.php", array("noHeader" => true,"visible" => false));
-$submod->addPage($page);
-
-$page = new Page("grayDisable", _T('Grey Disable', 'updates'));
-$page->setFile("modules/updates/updates/grayDisable.php", array("noHeader" => true,"visible" => false));
-$submod->addPage($page);
-
-$page = new Page("grayApprove", _T('Grey Approve', 'updates'));
+$page = new Page("grayApprove", _T('Approve', 'updates'));
 $page->setFile("modules/updates/updates/grayApprove.php", array("noHeader" => true,"visible" => false));
 $submod->addPage($page);
 
-// Also used for whitelist
-$page = new Page("banUpdate", _T('Ban update', 'updates'));
+// Guarded by the grayApprove ACL in the page itself.
+$page = new Page("deployWinUpdate", _T('Deploy', 'updates'));
+$page->setFile("modules/updates/updates/deployWinUpdate.php");
+$page->setOptions(array("visible" => false, "noHeader" => true, "noACL" => true));
+$submod->addPage($page);
+
+$page = new Page("uninstallWinUpdate", _T('Uninstall', 'updates'));
+$page->setFile("modules/updates/updates/uninstallWinUpdate.php");
+$page->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("banUpdate", _T('Decline', 'updates'));
 $page->setFile("modules/updates/updates/banUpdate.php", array("noHeader" => true,"visible" => false));
 $submod->addPage($page);
 
-$page = new Page("whiteUnlist", _T('White Unlist', 'updates'));
+$page = new Page("whiteUnlist", _T('Back to pending', 'updates'));
 $page->setFile("modules/updates/updates/whiteUnlist.php", array("noHeader" => true,"visible" => false));
 $submod->addPage($page);
 
-
-$page = new Page("blackUnban", _T('Black Unban', 'updates'));
-$page->setFile("modules/updates/updates/blackUnban.php", array("noHeader" => true,"visible" => false));
-$submod->addPage($page);
-
-$page = new Page("pendingUpdateByMachine", _T('Pending Updates', 'updates'));
-$submod->addPage($page);
-
-$page = new Page("ajaxPendingUpdateByMachine", _T('Pending Updates', 'updates'));
-$page->setFile("modules/updates/updates/ajaxPendingUpdateByMachine.php", array("noHeader" => true,"visible" => false, "AJAX" => true));
-$submod->addPage($page);
-
-$page = new Page("auditUpdateByMachine", _T('Updates History', 'updates'));
-$submod->addPage($page);
-
-$page = new Page("ajaxAuditUpdateByMachine", _T('Updates History', 'updates'));
-$page->setFile("modules/updates/updates/ajaxAuditUpdateByMachine.php", array("noHeader" => true,"visible" => false, "AJAX" => true));
-$submod->addPage($page);
-
-$page = new Page("cancelUpdate", _T('Cancel Update', 'updates'));
-$page->setFile("modules/updates/updates/cancelUpdate.php", array("noHeader" => true,"visible" => false, "AJAX" => true));
-$submod->addPage($page);
-
-// Major update
-/*
-$page = new Page("ajaxMajorEntitiesList", _T("Entities Major Compliance", "updates"));
-$page->setFile("modules/updates/updates/ajaxMajorEntitiesList.php");
-$page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));
-$submod->addPage($page);*/
-
-/*
-
-$page = new Page("ajaxMajorEntitiesList", _T("Entities Major Compliance", "updates"));
-$page->setFile("modules/updates/updates/ajaxMajorEntitiesList.php");
-$submod->addPage($page);*/
-/*
-$page = new Page("ajaxMajorListEntity", _T('Major Compliance entity', 'updates'));
-$page->setFile("modules/updates/updates/ajaxMajorListEntity.php");
-$submod->addPage($page);*/
-
-$page = new Page("updatesListMajorWin", _T('Manage Major Updates Lists', 'updates'));
-$page->setFile("modules/updates/updates/updatesListMajorWin.php");
-$submod->addPage($page);
-
-$page = new Page("deployUpdatemajor", _T('Deploy Major Updates On Machine', 'updates'));
-$page->setFile("modules/updates/updates/deployUpdatemajor.php");
+$page = new Page("ajaxMajorTabMachines", _T("Upgrades", "updates"));
+$page->setFile("modules/updates/updates/ajaxMajorTabMachines.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
-
-$page = new Page("deployUpdateLinuxMajor", _T('Deploy Major Updates On Machine', 'updates'));
-$page->setFile("modules/updates/updates/deployUpdateLinuxMajor.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-
-$page = new Page("grpDeployUpdatemajor", _T('Deploy Major Updates On entity', 'updates'));
-$page->setFile("modules/updates/updates/grpDeployUpdatemajor.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-
-
-$page = new Page("ajaxMajorDetailsByMachines", _T("Details by Machines for major update", "updates"));
-$page->setFile("modules/updates/updates/ajaxMajorDetailsByMachines.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("majorDetailsByMachines", _T('Machines major update', 'updates'));
-$page->setFile("modules/updates/updates/majorDetailsByMachines.php");
-$submod->addPage($page);
-
-$page = new Page("ajaxMajorDetailsByMachinesLinux", _T("Details by Machines for Linux major update", "updates"));
-$page->setFile("modules/updates/updates/ajaxMajorDetailsByMachinesLinux.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("majorDetailsByMachinesLinux", _T('Machines Linux major update', 'updates'));
-$page->setFile("modules/updates/updates/majorDetailsByMachinesLinux.php");
-$submod->addPage($page);
-
-$page = new Page("ajaxMajorDeploymentHistoryLinux", _T("Linux major deployment history", "updates"));
-$page->setFile("modules/updates/updates/ajaxMajorDeploymentHistoryLinux.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("majorDeploymentHistoryLinux", _T('Linux major deployment history', 'updates'));
-$page->setFile("modules/updates/updates/majorDeploymentHistoryLinux.php");
-$submod->addPage($page);
-
-$page = new Page("ajaxMajorDeploymentHistoryWin", _T("Windows major deployment history", "updates"));
-$page->setFile("modules/updates/updates/ajaxMajorDeploymentHistoryWin.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("majorDeploymentHistoryWin", _T('Windows major deployment history', 'updates'));
-$page->setFile("modules/updates/updates/majorDeploymentHistoryWin.php");
-$submod->addPage($page);
-
-$page = new Page("ajaxgroupUpdateMajorEntity", _T("Deployment details on group entity", "updates"));
-$page->setFile("modules/updates/updates/ajaxgroupUpdateMajorEntity.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-
-$page = new Page("groupUpdateMajorEntity", _T('Machines major update', 'updates'));
-$page->setFile("modules/updates/updates/groupUpdateMajorEntity.php");
-$submod->addPage($page);
-
-$page = new Page("auditByEntity", _T('History by Entity', 'updates'));
-$page->setFile("modules/updates/updates/auditByEntity.php");
-$submod->addPage($page);
-
-// --- Page Products (onglets Windows / Linux) ---
-$page = new Page("products", _T('Products', 'updates'));
+$page = new Page("products", _T('Tracked products', 'updates'));
 $page->setFile("modules/updates/updates/products.php");
 
 $tab = new Tab("tabwin", _T("Windows", "updates"));
@@ -434,19 +143,7 @@ $page->addTab($tab);
 
 $submod->addPage($page);
 
-// --- Pages Linux Approved Releases ---
-$page = new Page("linuxApprovedReleases", _T('Approved Linux releases', 'updates'));
-$page->setFile("modules/updates/updates/linuxApprovedReleases.php");
-$page->setOptions(array("visible" => false));
-$submod->addPage($page);
-
-$page = new Page("ajaxLinuxApprovedReleases", _T("Approved Linux releases", "updates"));
-$page->setFile("modules/updates/updates/ajaxLinuxApprovedReleases.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-// --- Page Automatic Deployment (onglets Windows / Linux) ---
-$page = new Page("automation", _T('Automatic Deployment', 'updates'));
+$page = new Page("automation", _T('Automatic approval', 'updates'));
 $page->setFile("modules/updates/updates/automation.php");
 
 $tab = new Tab("tabwin", _T("Windows", "updates"));
@@ -457,51 +154,28 @@ $page->addTab($tab);
 
 $submod->addPage($page);
 
-// --- Pages Linux Auto-Update Policy ---
-$page = new Page("linuxAutoUpdatePolicy", _T('Linux Auto-Update Policy', 'updates'));
-$page->setFile("modules/updates/updates/linuxAutoUpdatePolicy.php");
-$page->setOptions(array("visible" => false));
+// Guarded by the ACL of the page whose setting is reset, in the page itself.
+$page = new Page("resetWinSetting", _T('Use the setting of the parent entity', 'updates'));
+$page->setFile("modules/updates/updates/resetWinSetting.php");
+$page->setOptions(array("visible" => false, "noHeader" => true, "noACL" => true));
 $submod->addPage($page);
 
-$page = new Page("ajaxLinuxAutoUpdatePolicy", _T("Linux Auto-Update Policy", "updates"));
-$page->setFile("modules/updates/updates/ajaxLinuxAutoUpdatePolicy.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+// Guarded by the grayApprove ACL and the MajorEntitiesList tab ACL of the system in the page itself.
+$page = new Page("launchUpgrade", _T('Upgrade machine', 'updates'));
+$page->setFile("modules/updates/updates/launchUpgrade.php");
+$page->setOptions(array("visible" => false, "noHeader" => true, "noACL" => true));
 $submod->addPage($page);
 
-$page = new Page("ajaxAuditByEntity", _T("History by Entity", "updates"));
-$page->setFile("modules/updates/updates/ajaxAuditByEntity.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+// Guarded by the grayApprove ACL and the MajorEntitiesList tab ACL of the system in the page itself.
+$page = new Page("cancelUpgrade", _T('Abandon', 'updates'));
+$page->setFile("modules/updates/updates/cancelUpgrade.php");
+$page->setOptions(array("visible" => false, "noHeader" => true, "noACL" => true));
 $submod->addPage($page);
 
-$page = new Page("auditByUpdate", _T('History by Update', 'updates'));
-$page->setFile("modules/updates/updates/auditByUpdate.php");
-$submod->addPage($page);
-
-$page = new Page("ajaxAuditByUpdate", _T("History by Update", "updates"));
-$page->setFile("modules/updates/updates/ajaxAuditByUpdate.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-// choose rule upa products
-$page = new Page("approve_rules", _T('Automatic approval rules', 'updates'));
-$page->setFile("modules/updates/updates/approve_rules.php");
-$page->setOptions(array("visible" => false));
-$submod->addPage($page);
-
-$page = new Page("ajaxApproveRules", _T("Choose update event for entity", "updates"));
-$page->setFile("modules/updates/updates/ajaxApproveRules.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-/// choose produit
-$page = new Page("approve_products", _T('Approve Microsoft products updates', 'updates'));
-$page->setFile("modules/updates/updates/approve_products.php");
-$page->setOptions(array("visible" => false));
-$submod->addPage($page);
-
-$page = new Page("ajaxApproveProduct", _T("Choose product for entity", "updates"));
-$page->setFile("modules/updates/updates/ajaxApproveProduct.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+// Guarded by the grayApprove ACL and the entity of the machine in the page itself.
+$page = new Page("restartMachine", _T('Restart', 'updates'));
+$page->setFile("modules/updates/updates/restartMachine.php");
+$page->setOptions(array("visible" => false, "noHeader" => true, "noACL" => true));
 $submod->addPage($page);
 
 $page = new Page("ajaxUpdateCreateGroup", _T("Create GRP update", "updates"));
@@ -509,101 +183,8 @@ $page->setFile("modules/updates/updates/ajaxUpdateCreateGroup.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
-
-//  linux update
-//--------------------------
-//--------------------------
-//--------------------------
-//--------------------------
-$page = new Page("action_update_kernel_all_linux_entity", _T('Update all Linux kernel on entity', 'updates'));
-$page->setFile("modules/updates/updates/action_update_kernel_all_linux_entity.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("action_update_other_all_linux_entity",
-                 _T('Update all other Linux packages on entity', 'updates'));
-$page->setFile("modules/updates/updates/action_update_other_all_linux_entity.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("action_update_security_all_linux_entity",
-                 _T('Update all Linux security on entity', 'updates'));
-$page->setFile("modules/updates/updates/action_update_security_all_linux_entity.php");
-$submod->addPage($page);
-
-$page = new Page("View_compliance_distri_linux_entity",
-                 _T('Distibution Linux on entity', 'updates'));
-$page->setFile("modules/updates/updates/View_compliance_distri_linux_entity.php");
-$submod->addPage($page);
-
-$page = new Page("View_detail_machine_kernel_linux_entity", _T('Details Machine kernel update', 'updates'));
-$page->setFile("modules/updates/updates/View_detail_machine_kernel_linux_entity.php");
-$submod->addPage($page);
-
-$page = new Page("View_detail_machine_other_linux_entity", _T('Details machines all other Update Linux packages on entity', 'updates'));
-$page->setFile("modules/updates/updates/View_detail_machine_other_linux_entity.php");
-$submod->addPage($page);
-
-$page = new Page("View_detail_machine_security_linux_entity", _T('Details Machine security update on entity', 'updates'));
-$page->setFile("modules/updates/updates/View_detail_machine_security_linux_entity.php");
-$submod->addPage($page);
-
-$page = new Page("ajaxView_compliance_distri_linux_entity",
-                 _T('Distibution Linux on entity', 'updates'));
-$page->setFile("modules/updates/updates/ajaxView_compliance_distri_linux_entity.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("ajaxView_detail_machine_kernel_linux_entity", _T('Details Machine kernel update', 'updates'));
-$page->setFile("modules/updates/updates/ajaxView_detail_machine_kernel_linux_entity.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("ajaxView_detail_machine_other_linux_entity", _T('Details machines all other Update Linux packages on entity', 'updates'));
-$page->setFile("modules/updates/updates/ajaxView_detail_machine_other_linux_entity.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("ajaxView_detail_machine_security_linux_entity", _T('Details Machine security update on entity', 'updates'));
-$page->setFile("modules/updates/updates/ajaxView_detail_machine_security_linux_entity.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-
-$page = new Page("deployUpdateLinuxType", _T('Deploy Update linux', 'updates'));
-$page->setFile("modules/updates/updates/deployUpdateLinuxType.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-$page = new Page("ajaxEntitiesListwindows", _T("Entities Compliance windows", "updates"));
-$page->setFile("modules/updates/updates/ajaxEntitiesListwindows.php");
-$page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("ajaxEntitiesListwindowsfilter", _T("Entities Compliance windows", "updates"));
-$page->setFile("modules/updates/updates/ajaxEntitiesListwindowsfilter.php");
-$page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("ajaxEntitiesListlinux", _T("Entities Compliance linux", "updates"));
-$page->setFile("modules/updates/updates/ajaxEntitiesListlinux.php");
-$page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("ajaxEntitiesListlinuxfilter", _T("Entities Compliance linux", "updates"));
-$page->setFile("modules/updates/updates/ajaxEntitiesListlinuxfilter.php");
-$page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("grpDeployUpdateLinuxMajor", _T('Deploy Major linux Updates On entity', 'updates'));
-$page->setFile("modules/updates/updates/grpDeployUpdateLinuxMajor.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-
-
 $mod->addSubmod($submod);
 
 $MMCApp = &MMCApp::getInstance();
 $MMCApp->addModule($mod);
-
 

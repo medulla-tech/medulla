@@ -66,6 +66,8 @@ from mmc.support.mmctools import (
     xmlrpcCleanup,
 )
 
+from pulse2.utils import normalize_entity
+
 _digest = hashlib.sha1
 import datetime
 import gc
@@ -273,6 +275,74 @@ class Contexte_XmlRpc_surcharge_info_Glpi:
             L'attribut correspondant dans `self.ctx`.
         """
         return getattr(self.ctx, name)
+
+
+def _requested_entity_ids(requested):
+    """Ids entiers demandes, None pour « toutes » (-1, "", None, [])."""
+    if requested is None or requested == [] or requested == () \
+            or str(requested).strip() in ("", "-1"):
+        return None
+    values = requested if isinstance(requested, (list, tuple)) else [requested]
+    ids = []
+    for value in values:
+        if isinstance(value, bool):
+            continue
+        entity_id = normalize_entity(value, defaut=None)
+        if entity_id is not None and entity_id >= 0 and entity_id not in ids:
+            ids.append(entity_id)
+    return ids
+
+
+def user_entity_ids(ctx):
+    """Ids des entites de l'utilisateur de la session, None si non restreint
+    (root, ou appel interne sans contexte de session)."""
+    if ctx is None:
+        return None
+    info = ctx.get_session_info() or {}
+    if not info:
+        return None
+    if info.get("userid") == "root":
+        return None
+    ids = []
+    for entity in (info.get("mondict") or {}).get("liste_entities_user") or []:
+        entity_id = normalize_entity(entity, defaut=None)
+        if entity_id is not None and entity_id not in ids:
+            ids.append(entity_id)
+    return ids
+
+
+def user_entity_scope(ctx, requested):
+    """Lectures : ids demandes restreints aux entites autorisees.
+
+    requested : "UUIDn", "n", int ou liste de ces formes ; -1, "", None ou []
+    valent « toutes » et donnent toutes les entites autorisees. None si non
+    restreint et « toutes ».
+    """
+    allowed = user_entity_ids(ctx)
+    requested_ids = _requested_entity_ids(requested)
+    if allowed is None:
+        return requested_ids
+    if requested_ids is None:
+        return list(allowed)
+    return [entity_id for entity_id in requested_ids if entity_id in allowed]
+
+
+def check_user_entity(ctx, entity):
+    """Ecritures : True si l'entite est autorisee (ou l'utilisateur non restreint)."""
+    allowed = user_entity_ids(ctx)
+    if allowed is None:
+        return True
+    if isinstance(entity, bool):
+        return False
+    entity_id = normalize_entity(entity, defaut=None)
+    return entity_id is not None and entity_id in allowed
+
+
+def log_entity_refusal(ctx, action, entity):
+    userid = None
+    if ctx is not None:
+        userid = (ctx.get_session_info() or {}).get("userid")
+    logger.warning(f"{action}: entity {entity!r} refused for user {userid!r}")
 
 
 def activate():

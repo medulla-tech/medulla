@@ -1,83 +1,138 @@
 <?php
-/*
- * (c) 2024-2025 Medulla, http://www.medulla-tech.io
- *
- * This file is part of MMC, http://www.medulla-tech.io
- *
- * MMC is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * any later version.
- *
- * MMC is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with MMC; If not, see <http://www.gnu.org/licenses/>.
- */
+// SPDX-FileCopyrightText: 2026 Medulla, http://www.medulla-tech.io
+// SPDX-License-Identifier: GPL-3.0-or-later
+// file : web/modules/updates/updates/products/linuxReleases.php
 
-require_once("modules/xmppmaster/includes/xmlrpc.php");
-require_once("modules/updates/includes/updates.inc.php");
+require_once("modules/medulla_server/includes/utilities.php");
+require_once("modules/updates/includes/xmlrpc.php");
+require_once("modules/updates/includes/html.inc.php");
 
-if (
-    $_SERVER['REQUEST_METHOD'] === 'POST' &&
-    isset($_POST['form_name']) &&
-    $_POST['form_name'] === 'linux_approved_releases'
-) {
-    verifyCSRFToken($_POST);
+$entity = updatesWinProductsEntity();
+if (!$entity) {
+    EmptyStateBox::show(_T("No entity available for this user.", "updates"));
+    return;
+}
+$entityId = updatesEntityId($entity);
+$pageUrl = urlStrRedirect("updates/updates/products", array('tab' => 'tablinux', 'location' => $entity['uuid']));
 
-    // $stableValues = $_POST['is_current_stable'] ?? []; // Colonne conservee pour reprise si besoin.
-    $latestMajorVersionValues = $_POST['is_latest_major_version'] ?? ($_POST['is_recommended'] ?? []);
-    $entityIdRaw = $_POST['entityid'] ?? ($_GET['entity'] ?? null);
-    $entityIdStr = is_string($entityIdRaw) ? $entityIdRaw : strval($entityIdRaw);
-    $entityIdStr = preg_replace('/^UUID/i', '', $entityIdStr);
-    $entityId = ($entityIdStr !== null && $entityIdStr !== '') ? (int) $entityIdStr : null;
-
-    if ($entityId === null) {
-        new NotifyWidgetFailure(_T("Missing entity selection.", "updates"));
-        header("Location: " . urlStrRedirect("updates/updates/products&tab=tablinux"));
-        exit;
-    }
-
-    $currentReleases = xmlrpc_get_linux_approved_releases($entityId);
-    $currentStableByReleaseId = [];
-    if (is_array($currentReleases) && isset($currentReleases['id']) && is_array($currentReleases['id'])) {
-        foreach ($currentReleases['id'] as $index => $releaseId) {
-            $currentStableByReleaseId[(int) $releaseId] = (int) ($currentReleases['is_current_stable'][$index] ?? 0);
+$result = xmlrpc_get_linux_releases($entityId);
+$releases = null;
+if (!updatesReadFailed($result) && is_array($result['rows'] ?? null)) {
+    $releases = array();
+    foreach ($result['rows'] as $row) {
+        $distribution = is_array($row) && is_scalar($row['distribution'] ?? null) ? trim((string) $row['distribution']) : '';
+        $release = is_array($row) && is_scalar($row['release'] ?? null) ? trim((string) $row['release']) : '';
+        if ($distribution !== '' && $release !== '') {
+            $releases[] = array(
+                'distribution' => $distribution,
+                'release' => $release,
+                'codename' => is_scalar($row['codename'] ?? null) ? trim((string) $row['codename']) : '',
+                'tracked' => !empty($row['tracked']),
+            );
         }
     }
+}
+$inherited = is_array($result) ? updatesWinInheritedEntity($result['inherited_from'] ?? null) : null;
 
-    $releaseIds = array_unique(array_merge(
-        // array_keys($stableValues),
-        array_keys($latestMajorVersionValues)
-    ));
-
-    $updates = [];
-    foreach ($releaseIds as $releaseId) {
-        $releaseIdInt = (int) $releaseId;
-        $updates[] = [
-            $releaseIdInt,
-            $currentStableByReleaseId[$releaseIdInt] ?? 0,
-            isset($latestMajorVersionValues[$releaseId]) ? (int) $latestMajorVersionValues[$releaseId] : 0,
-        ];
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bsavereleases'])) {
+    verifyCSRFToken($_POST);
+    $saved = false;
+    $unchanged = false;
+    if ($releases !== null) {
+        $posted = array();
+        foreach ((array) ($_POST['tracked'] ?? array()) as $distribution => $postedReleases) {
+            foreach ((array) $postedReleases as $release) {
+                if (is_scalar($release)) {
+                    $posted[$distribution][(string) $release] = true;
+                }
+            }
+        }
+        // Only the versions offered to the entity are kept.
+        $selections = array();
+        $tracked = array();
+        foreach ($releases as $row) {
+            $pair = array('distribution' => $row['distribution'], 'release' => $row['release']);
+            if ($row['tracked']) {
+                $tracked[] = $pair;
+            }
+            if (isset($posted[$row['distribution']][$row['release']])) {
+                $selections[] = $pair;
+            }
+        }
+        // Inherited and left as it is: it stays inherited, nothing is written.
+        $unchanged = $inherited !== null && $selections === $tracked;
+        $saved = !$unchanged && xmlrpc_set_linux_releases($entityId, $selections) === true;
     }
-
-    $result = xmlrpc_update_linux_approved_releases($updates, $entityId);
-    $success = ($result === true) || (is_array($result) && !empty($result['success']));
-
-    if ($success) {
-        new NotifyWidgetSuccess(_T("Linux releases updated successfully.", "updates"));
+    if ($unchanged) {
+        new NotifyWidgetSuccess(_T("No change: the setting stays inherited.", "updates"));
+    } elseif ($saved) {
+        new NotifyWidgetSuccess(_T("Saved. The entity's machines are being re-evaluated.", "updates"));
     } else {
-        new NotifyWidgetFailure(_T("Failed to update Linux releases.", "updates"));
+        new NotifyWidgetFailure(_T("Save failed.", "updates"));
+    }
+    header("Location: " . $pageUrl);
+    exit;
+}
+
+echo '<div class="updates-entity-section">';
+updatesEntitySelect($entity, false, updatesWinInheritanceLine($entity, 'linuxreleases', $result));
+echo '</div>';
+
+if ($releases === null) {
+    updatesReadFailedBox();
+    return;
+}
+if (empty($releases)) {
+    EmptyStateBox::show(_T("No Linux version reported by the machines", "updates"));
+    return;
+}
+
+$groups = array();
+foreach ($releases as $row) {
+    $groups[$row['distribution']][] = $row;
+}
+
+$names = array();
+$checks = array();
+$cssClasses = array();
+$familyIndex = 0;
+foreach ($groups as $distribution => $rows) {
+    $familyIndex++;
+    $distributionName = updatesLinuxDistributionName($distribution);
+    $names[] = htmlspecialchars($distributionName, ENT_QUOTES, 'UTF-8');
+    $checks[] = sprintf(
+        '<input type="checkbox" class="family-check-all" data-family="%d" title="%s">',
+        $familyIndex,
+        htmlspecialchars(_T("Track every version of this distribution", "updates"), ENT_QUOTES, 'UTF-8')
+    );
+    $cssClasses[] = "family-separator";
+
+    foreach ($rows as $row) {
+        $label = $distributionName . ' ' . $row['release'];
+        if ($row['codename'] !== '') {
+            $label .= ' (' . $row['codename'] . ')';
+        }
+        $names[] = htmlspecialchars($label, ENT_QUOTES, 'UTF-8');
+        $checks[] = sprintf(
+            '<input type="checkbox" class="product-check" name="tracked[%s][]" value="%s" data-family="%d"%s>',
+            htmlspecialchars($row['distribution'], ENT_QUOTES, 'UTF-8'),
+            htmlspecialchars($row['release'], ENT_QUOTES, 'UTF-8'),
+            $familyIndex,
+            $row['tracked'] ? ' checked' : ''
+        );
+        $cssClasses[] = "family-produit alternate";
     }
 }
 
-$selectedEntityIdRaw = $_POST['entityid'] ?? $_GET['entityid'] ?? null;
-$selectedEntityIdStr = is_string($selectedEntityIdRaw) ? $selectedEntityIdRaw : strval($selectedEntityIdRaw);
-$selectedEntityIdStr = preg_replace('/^UUID/i', '', $selectedEntityIdStr);
-$selectedEntityId = ($selectedEntityIdStr !== null && $selectedEntityIdStr !== '') ? (int) $selectedEntityIdStr : null;
-
-generateEntityPage("", "ajaxLinuxApprovedReleases", null, 'updates', $selectedEntityId);
+echo '<form method="post" action="' . htmlspecialchars($pageUrl, ENT_QUOTES, 'UTF-8') . '" class="approval-form">';
+$n = new ListInfos($names, _T("Version", "updates"));
+$n->addExtraInfoCenteredRaw($checks, _T("Tracked", "updates"));
+$n->setNavBar = "";
+$n->start = 0;
+$n->end = count($names) - 1;
+$n->setCssCaptionClass("table-rounded caption-style");
+$n->setCssClasses($cssClasses);
+$n->disableFirstColumnActionLink();
+$n->display(0, 0);
+updatesTrackedFormEnd('bsavereleases');
 ?>
