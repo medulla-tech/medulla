@@ -6564,9 +6564,9 @@ where pisip.fk_profile=%s""" % (
         _orders = {}
 
         # Clean all the -1 values from the postinstalls orders list
-        for id in orders:
-            if int(orders[id]) != -1:
-                _orders[id] = int(orders[id])
+        for script_id, order in orders:
+            if int(order) != -1:
+                _orders[int(script_id)] = int(order)
 
         session.query(Profile).filter(Profile.id == profileId).update(
             {"name": name, "description": description}
@@ -6590,9 +6590,9 @@ where pisip.fk_profile=%s""" % (
 
         # Clean all the -1 values from the postinstalls orders list
         _orders = {}
-        for id in orders:
-            if int(orders[id]) != -1:
-                _orders[id] = int(orders[id])
+        for script_id, order in orders:
+            if int(order) != -1:
+                _orders[int(script_id)] = int(order)
 
         query_location = (
             session.query(ImagingServer)
