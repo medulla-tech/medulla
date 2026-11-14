@@ -233,7 +233,10 @@ function get_token($login)
     $pdo = pdo_ini('admin');
     $pdo->prepare("DELETE FROM magic_link WHERE login = ? AND used_at IS NULL")->execute([$login]);
 
-    $token = $pdo->query("SELECT UUID()")->fetchColumn();
+    // Jeton imprévisible : 18 octets d'un CSPRNG -> 36 caractères hex, qui
+    // tiennent dans la colonne token CHAR(36) existante (aucune migration).
+    // Remplace SELECT UUID() (UUID v1 : MAC + horodatage prévisibles).
+    $token = bin2hex(random_bytes(18));
     $ttlMinutes = get_magic_link_ttl_minutes();
     $pdo->prepare("
         INSERT INTO magic_link (token, login, expires_at)
