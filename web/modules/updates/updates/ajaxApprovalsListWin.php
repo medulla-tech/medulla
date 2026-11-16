@@ -173,7 +173,7 @@ if ($filter !== '') {
         'declined' => _T("No declined update", "updates"),
     );
     $emptyDescriptions = array(
-        'pending'  => _T("All updates that concern the machines of this entity have been approved or declined.", "updates"),
+        'pending'  => _T("All updates have been approved or declined.", "updates"),
         'approved' => _T("Approve them from the pending updates, or automatically with an automatic approval rule.", "updates"),
         'declined' => _T("A declined update is never deployed on the machines of this entity.", "updates"),
     );

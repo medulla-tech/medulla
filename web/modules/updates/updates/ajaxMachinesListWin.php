@@ -78,7 +78,8 @@ foreach ($rows as $row) {
         $statuses[] = updatesWinMachineStatus($row['unsupported'] ?? null, $row['evaluated'] ?? null,
                                               $row['untracked_version'] ?? null, $row['reboot_pending'] ?? null,
                                               $linux ? 'linux' : 'windows', $row['missing'] ?? null, $row['search_failed'] ?? null,
-                                              $row['updating'] ?? null, $row['restart_requested'] ?? null);
+                                              $row['updating'] ?? null, $row['restart_requested'] ?? null,
+                                              $row['upgrading'] ?? null);
     }
     $reports[] = updatesWinReportDate($row['received_at'] ?? '');
     $actions[] = $details;

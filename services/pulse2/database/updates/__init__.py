@@ -9,7 +9,7 @@ from sqlalchemy import (
     text,
     bindparam,
 )
-from datetime import datetime
+from datetime import datetime, timezone
 
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
@@ -302,6 +302,9 @@ MACHINE_UPDATING_SQL = f"""({DEPLOY_TITLED_RUNNING_SQL.format(
                  WHERE d.inventoryuuid = mr.glpi_uuid
                    AND {UPDATE_DEPLOY_TITLE_SQL.format(column='d.title')}
                    AND {DEPLOY_AWAITING_REPORT_SQL}))"""
+# A version upgrade is launched on the machine mr
+MACHINE_UPGRADING_SQL = """EXISTS (SELECT 1 FROM machine_upgrades mg
+                 WHERE mg.jid = mr.jid AND mg.launched_at IS NOT NULL)"""
 
 # One row per Windows machine of :entity_ids (expanding); also binds :stale_days
 WINDOWS_MACHINES_SQL = f"""
@@ -325,6 +328,7 @@ WINDOWS_MACHINES_SQL = f"""
                AND {MACHINE_CRITICAL_UPDATE_SQL}) AS critical,
            {SEARCH_FAILED_SQL} AS search_failed,
            {MACHINE_UPDATING_SQL} AS updating,
+           {MACHINE_UPGRADING_SQL} AS upgrading,
            0 AS no_report
     FROM machine_reports mr
     {WINDOWS_MACHINE_ENTITY_JOIN}
@@ -377,7 +381,7 @@ NO_REPORT_MACHINES_TEMPLATE = """
            COALESCE(ep.tracked_products, 0) AS tracked_products,
            0 AS evaluated, 0 AS unsupported, 0 AS untracked_version,
            0 AS reboot_pending, 0 AS restart_requested, 0 AS missing, 0 AS critical,
-           0 AS search_failed, 0 AS updating,
+           0 AS search_failed, 0 AS updating, 0 AS upgrading,
            1 AS no_report
     {from_sql}
       AND lgm.entities_id IN :entity_ids
@@ -433,6 +437,9 @@ WINDOWS_SEVERITY_ORDER = ("Critical", "Important", "Moderate", "Low")
 LINUX_CLASSIFICATIONS = ("Security Updates", "Updates")
 # Label of the deployment package of a Linux family (written by the substitute)
 LINUX_PACKAGE_LABEL = "Linux updates (%s)"
+# Label of the package that makes a machine install updates by its own Windows
+# Update (written by the substitute)
+WINDOWS_UPDATE_PACKAGE_LABEL = "Installation by Windows Update"
 # entity_overrides.setting of the approval rules of each system
 RULES_SETTINGS = {"windows": "rules", "linux": "linux_rules"}
 WINDOWS_APPROVAL_STATUSES = ("pending", "approved", "declined")
@@ -440,6 +447,12 @@ WINDOWS_APPROVAL_STATUSES = ("pending", "approved", "declined")
 WINDOWS_OFFERS_SQL = ", ".join(f"'{offer}'" for offer in ("main", "optional", "esu"))
 # Rows of any other offer are ignored: FIELD would rank them first
 KNOWN_OFFER_SQL = f"mu.offer IN ({WINDOWS_OFFERS_SQL})"
+# Update Windows asks for (alias mu) whose KB the catalog does not carry: no file
+# to deploy, the machine installs it by its own Windows Update
+BY_WINDOWS_UPDATE_SQL = """(mu.update_id IS NULL AND mu.package IS NULL AND mu.kb IS NOT NULL
+                AND NOT EXISTS (SELECT 1 FROM updates u2 WHERE u2.kb = mu.kb)
+                AND EXISTS (SELECT 1 FROM machine_missing_updates mm
+                             WHERE mm.jid = mu.jid AND mm.kb = mu.kb))"""
 
 
 def windows_severity_rank_sql(column):
@@ -456,8 +469,9 @@ def windows_offer_rank_sql(column):
 # a = effective decision for :entity_id;
 # :rules_source = effective_rules.source_id of :entity_id
 UPGRADES_CLASSIFICATION = "Upgrades"
-# A rule without severity covers every update of its classification, offer main only
-APPROVAL_RULE_MATCH_SQL = """(mu.offer = 'main'
+# A rule without severity covers every update of its classification, offer main only;
+# an update no machine has carries no offer (NULL) and counts as main
+APPROVAL_RULE_MATCH_SQL = """(COALESCE(mu.offer, 'main') = 'main'
             AND EXISTS (SELECT 1 FROM approval_rules ar
                 WHERE ar.entity_id = :rules_source AND ar.os = 'windows'
                   AND ar.classification = u.classification
@@ -484,34 +498,64 @@ APPROVAL_STATUS_SQL = f"""COALESCE(a.status,
 # One row per catalog update missing on a machine of :entity_id or below, with
 # the first offer it has among them and the machines where it has that offer;
 # own_machines: those of :entity_id itself, the only ones its deployment reaches
+WINDOWS_MISSING_UPDATES_SQL = f"""
+    SELECT o.* FROM
+       (SELECT mu.update_id, mu.offer,
+               MAX(mu.kb) AS kb, COUNT(DISTINCT mu.jid) AS machines,
+               COUNT(DISTINCT CASE WHEN lgm.entities_id = :entity_id THEN mu.jid END) AS own_machines,
+               ROW_NUMBER() OVER (PARTITION BY mu.update_id
+                                  ORDER BY {windows_offer_rank_sql("mu.offer")}) AS offer_rank
+          FROM machine_reports mr
+          {WINDOWS_MACHINE_ENTITY_JOIN}
+          JOIN machine_updates mu ON mu.jid = mr.jid
+         WHERE lgm.entities_id IN {ENTITY_SUBTREE_SQL}
+           AND mu.update_id IS NOT NULL
+           AND {KNOWN_OFFER_SQL}
+         GROUP BY mu.update_id, mu.offer) o
+     WHERE o.offer_rank = 1
+"""
+
+# Current catalog updates (alias u), version upgrades left out
+CURRENT_UPDATE_SQL = "u.superseded = 0 AND u.removed = 0 AND u.classification <> :upgrades"
+# Current updates of what the entity :products_source tracks
+# (effective_products.source_id): those of a tracked version, and those without
+# version of a tracked product
+WINDOWS_TRACKED_UPDATES_SQL = f"""
+    SELECT u.id AS update_id
+      FROM updates u
+      JOIN releases r ON r.id = u.release_id
+      JOIN entity_releases er ON er.entity_id = :products_source
+       AND er.product_id = r.product_id AND er.release_name = r.name
+     WHERE {CURRENT_UPDATE_SQL}
+    UNION
+    SELECT u.id
+      FROM updates u
+      JOIN update_products upr ON upr.update_id = u.id
+      JOIN entity_products etp ON etp.entity_id = :products_source
+       AND etp.product_id = upr.product_id
+     WHERE u.release_id IS NULL AND {CURRENT_UPDATE_SQL}
+"""
+
+# One row per catalog update :entity_id follows: missing on a machine at or below
+# it, decided for it, or tracked by it. Without machine: no offer, machines = 0
 WINDOWS_APPROVAL_UPDATES_SQL = f"""
     SELECT u.id AS update_id,
            COALESCE(u.kb, mu.kb) AS kb,
-           u.title, u.classification, u.severity,
+           u.title, u.classification, u.severity, u.published_at,
            mu.offer,
            {EXPLOITED_KB_SQL} AS exploited,
            {CRITICAL_UPDATE_SQL} AS critical,
-           mu.machines, mu.own_machines,
+           COALESCE(mu.machines, 0) AS machines,
+           COALESCE(mu.own_machines, 0) AS own_machines,
            a.decided_by, a.decided_at, ea.source_id AS decided_in,
            (a.status IS NULL AND {APPROVAL_RULE_MATCH_SQL}) AS by_rule,
            {APPROVAL_STATUS_SQL} AS status
-    FROM (SELECT o.* FROM
-           (SELECT mu.update_id, mu.offer,
-                   MAX(mu.kb) AS kb, COUNT(DISTINCT mu.jid) AS machines,
-                   COUNT(DISTINCT CASE WHEN lgm.entities_id = :entity_id THEN mu.jid END) AS own_machines,
-                   ROW_NUMBER() OVER (PARTITION BY mu.update_id
-                                      ORDER BY {windows_offer_rank_sql("mu.offer")}) AS offer_rank
-              FROM machine_reports mr
-              {WINDOWS_MACHINE_ENTITY_JOIN}
-              JOIN machine_updates mu ON mu.jid = mr.jid
-             WHERE lgm.entities_id IN {ENTITY_SUBTREE_SQL}
-               AND mu.update_id IS NOT NULL
-               AND {KNOWN_OFFER_SQL}
-             GROUP BY mu.update_id, mu.offer) o
-          WHERE o.offer_rank = 1) mu
-    JOIN updates u ON u.id = mu.update_id
+    FROM updates u
+    LEFT JOIN ({WINDOWS_MISSING_UPDATES_SQL}) mu ON mu.update_id = u.id
     LEFT JOIN effective_approvals ea ON ea.entity_id = :entity_id AND ea.update_id = u.id
     LEFT JOIN approvals a ON a.entity_id = ea.source_id AND a.update_id = u.id
+    LEFT JOIN ({WINDOWS_TRACKED_UPDATES_SQL}) tu ON tu.update_id = u.id
+    WHERE mu.update_id IS NOT NULL OR ea.update_id IS NOT NULL OR tu.update_id IS NOT NULL
 """
 
 # One row per Linux package missing on a machine of :entity_id or below
@@ -579,6 +623,40 @@ def linux_label(product, release, distribution):
 
 def windows_datetime(value):
     return value.strftime("%Y-%m-%d %H:%M") if value else ""
+
+
+DEFENDER_VERSION_RE = re.compile(r"[0-9]+(\.[0-9]+){1,5}")
+DEFENDER_VERSION_MAX = 32
+
+
+def defender_state(report):
+    """Microsoft Defender definitions of a machine report, or None when the
+    report has no usable block: {"enabled": bool or None, "signature_version",
+    "signature_updated_at" (server local time, "" when unknown)}."""
+    defender = report.get("defender") if isinstance(report, dict) else None
+    if not isinstance(defender, dict):
+        return None
+    version = defender.get("signature_version")
+    if (not isinstance(version, str) or len(version) > DEFENDER_VERSION_MAX
+            or not DEFENDER_VERSION_RE.fullmatch(version)):
+        return None
+    enabled = defender.get("enabled")
+    updated_at = defender.get("signature_updated_at")
+    try:
+        if not isinstance(updated_at, str):
+            raise ValueError
+        date = datetime.fromisoformat(updated_at.strip().replace("Z", "+00:00"))
+        if date.tzinfo is None:
+            # The agent reports UTC
+            date = date.replace(tzinfo=timezone.utc)
+        updated_at = windows_datetime(date.astimezone())
+    except (ValueError, OverflowError, OSError):
+        updated_at = ""
+    return {
+        "enabled": enabled if isinstance(enabled, bool) else None,
+        "signature_version": version,
+        "signature_updated_at": updated_at,
+    }
 
 
 def upgrade_target_label(system, product, release, target):
@@ -837,6 +915,7 @@ class UpdatesDatabase(DatabaseHelper):
                        mg.state, mg.target_release, mg.reason,
                        mg.run_error, mg.launched_at,
                        (mg.launched_at IS NOT NULL AND {UPGRADE_STEP_RUNNING_SQL}) AS step_running,
+                       {MACHINE_BUSY_SQL} AS running,
                        mr.windows11_eligible, mr.windows11_blockers, mr.windows11_source,
                        JSON_EXTRACT(mr.report, '$.windows11') AS windows11_facts,
                        COALESCE(xm.enabled, 0) AS online,
@@ -868,6 +947,7 @@ class UpdatesDatabase(DatabaseHelper):
                 "run_error": row.run_error or "",
                 "launched_at": row.launched_at.strftime("%Y-%m-%d %H:%M") if row.launched_at else "",
                 "step_running": bool(row.step_running),
+                "running": bool(row.running),
                 "online": bool(row.online),
                 "reboot_pending": bool(row.reboot_pending),
                 "restart_requested": bool(row.restart_requested),
@@ -904,6 +984,7 @@ class UpdatesDatabase(DatabaseHelper):
             "run_error": "",
             "launched_at": "",
             "step_running": False,
+            "running": False,
             "online": bool(row.online),
             "reboot_pending": False,
             "restart_requested": False,
@@ -1061,6 +1142,7 @@ class UpdatesDatabase(DatabaseHelper):
                 "restart_requested": bool(row.restart_requested),
                 "search_failed": bool(row.search_failed),
                 "updating": bool(row.updating),
+                "upgrading": bool(row.upgrading),
                 "no_report": bool(row.no_report),
             })
         if not result["rows"] and page:
@@ -1169,6 +1251,9 @@ class UpdatesDatabase(DatabaseHelper):
         running: a deployment of any package holds the machine, or its command waits.
 
         updates[i].deployed_pending_report: installed by Medulla since the last report.
+
+        updates[i].by_windows_update: absent from the catalog, installed by the
+        Windows Update of the machine (install_by_windows_update).
         """
         row = session.execute(text(f"""
             SELECT mr.jid, COALESCE(xm.hostname, mr.hostname) AS hostname,
@@ -1183,6 +1268,7 @@ class UpdatesDatabase(DatabaseHelper):
                    mr.service_state, mr.report, lgm.entities_id AS entity_id,
                    mr.os, mr.distribution, mr.kernel,
                    {MACHINE_BUSY_SQL} AS running,
+                   {MACHINE_UPGRADING_SQL} AS upgrading,
                    {MACHINE_RESTART_REQUESTED_SQL} AS restart_requested
             FROM machine_reports mr
             {WINDOWS_MACHINE_ENTITY_JOIN}
@@ -1243,6 +1329,7 @@ class UpdatesDatabase(DatabaseHelper):
                        {EXPLOITED_KB_SQL} AS exploited,
                        {MACHINE_CRITICAL_UPDATE_SQL} AS critical,
                        {DEPLOYED_PENDING_REPORT_TEMPLATE.format(kb="COALESCE(u.kb, mu.kb)")} AS deployed_pending_report,
+                       {BY_WINDOWS_UPDATE_SQL} AS by_windows_update,
                        p.state AS package_state, p.error AS package_error,
                        {WINDOWS_UPDATE_SIZE_TEMPLATE.format(update_id="mu.update_id")} AS size,
                        CASE WHEN u.id IS NOT NULL
@@ -1283,6 +1370,7 @@ class UpdatesDatabase(DatabaseHelper):
                 "available_version": update.available_version or "",
                 "offer": update.offer,
                 "deployed_pending_report": bool(update.deployed_pending_report),
+                "by_windows_update": bool(update.by_windows_update),
             })
 
         return {
@@ -1300,9 +1388,11 @@ class UpdatesDatabase(DatabaseHelper):
             "tracked_products": int(row.tracked_products),
             "signals": signals,
             "windows_update": windows_update,
+            "defender": defender_state(report),
             "updates": updates,
             "no_report": False,
             "running": bool(row.running),
+            "upgrading": bool(row.upgrading),
             "reboot_pending": bool(row.reboot_pending),
             "restart_requested": bool(row.restart_requested),
             "os": row.os,
@@ -1339,9 +1429,11 @@ class UpdatesDatabase(DatabaseHelper):
             "signals": [],
             "windows_update": {"tool": None, "automatic_updates": None, "service_state": None,
                                "wsus_server": None, "paused_until": None},
+            "defender": None,
             "updates": [],
             "no_report": True,
             "running": bool(UpdatesDatabase._busy_machines(session, [row.glpi_uuid])),
+            "upgrading": False,
             "reboot_pending": False,
             "restart_requested": False,
             "os": row.os,
@@ -1650,7 +1742,8 @@ class UpdatesDatabase(DatabaseHelper):
                               limit=-1, filter="", system="windows", distribution=""):
         """Effective status per update: the entity's decision, else its nearest
         ancestor's, else its effective rules. Per row "inherited_from" when the
-        decision comes from an ancestor.
+        decision comes from an ancestor. Updates missing on a machine come first,
+        then the others the entity follows ("machines" 0, "offer" ""), newest first.
 
         Linux: the packages approved ("approved") or not ("pending") by the
         effective rules, no decision per package, of the machines of one
@@ -1666,16 +1759,21 @@ class UpdatesDatabase(DatabaseHelper):
         if system == "linux":
             return self._linux_approvals(session, entity_id, status, start, limit, filter,
                                          distribution, result)
-        rules_source = self._effective_source(session, "effective_rules", entity_id)
+        params = {
+            "entity_id": entity_id,
+            "rules_source": self._effective_source(session, "effective_rules", entity_id),
+            "products_source": self._effective_source(session, "effective_products",
+                                                      entity_id),
+            "upgrades": UPGRADES_CLASSIFICATION,
+        }
         for row in session.execute(text(f"""
                 SELECT s.status, COUNT(*) AS updates
                 FROM ({WINDOWS_APPROVAL_UPDATES_SQL}) AS s
                 GROUP BY s.status
-                """), {"entity_id": entity_id, "rules_source": rules_source}):
+                """), params):
             result["counts"][row.status] = int(row.updates)
 
-        params = {"entity_id": entity_id, "status": status,
-                  "rules_source": rules_source}
+        params["status"] = status
         where = ""
         filter = str(filter or "").strip()
         if filter:
@@ -1692,7 +1790,10 @@ class UpdatesDatabase(DatabaseHelper):
             LEFT JOIN packages p ON p.uuid = up.package_uuid
             WHERE s.status = :status
             {where}
-            ORDER BY {windows_offer_rank_sql("s.offer")}, s.exploited DESC, s.critical DESC,
+            ORDER BY s.machines = 0,
+                     CASE WHEN s.machines = 0 THEN s.published_at END DESC,
+                     CASE WHEN s.machines = 0 THEN s.title END,
+                     {windows_offer_rank_sql("s.offer")}, s.exploited DESC, s.critical DESC,
                      {windows_severity_rank_sql("s.severity")},
                      s.machines DESC, s.title, s.update_id
             {page}
@@ -1711,7 +1812,8 @@ class UpdatesDatabase(DatabaseHelper):
                 "title": row.title,
                 "classification": row.classification,
                 "severity": row.severity,
-                "offer": row.offer,
+                "offer": row.offer or "",
+                "published_at": windows_datetime(row.published_at),
                 "exploited": bool(row.exploited),
                 "critical": bool(row.critical),
                 "machines": int(row.machines),
@@ -1779,19 +1881,34 @@ class UpdatesDatabase(DatabaseHelper):
     @staticmethod
     def _windows_deploy_machines(session, update_id, package_uuid, entity_ids,
                                  glpi_uuids=None, jid=None, installed_kb=None,
-                                 linux=False):
+                                 linux=False, windows_update_kb=None):
         """Machines of entity_ids (and glpi_uuids, jid if given) missing the update,
-        reporting installed_kb when given (uninstallation), or with a Linux
-        package to upgrade (linux). "offer": of the update on the machine, empty
-        for an uninstallation or Linux; "approved": for this machine, a rule only
-        covers the offer main and esu never is."""
+        reporting installed_kb when given (uninstallation), with a Linux
+        package to upgrade (linux), or asked windows_update_kb that the catalog
+        does not carry. "offer": of the update on the machine, empty for an
+        uninstallation or Linux; "approved": for this machine, a rule only
+        covers the offer main and esu never is; an update installed by Windows
+        Update has no approval and always is."""
         params = {"update_id": update_id, "entity_ids": entity_ids,
                   "package_uuid": package_uuid or ""}
         offer = "NULL"
         deployed = "0"
+        approved = """EXISTS (SELECT 1 FROM approved_updates au
+                                WHERE au.entity_id = lgm.entities_id
+                                  AND au.update_id = :update_id
+                                  AND (au.by_rule = 0
+                                       OR COALESCE({offer}, 'main') = 'main'))"""
         if linux:
             target = ("SELECT 1 FROM machine_updates mu"
                       " WHERE mu.jid = mr.jid AND mu.package IS NOT NULL")
+        elif windows_update_kb is not None:
+            asked = ("FROM machine_updates mu WHERE mu.jid = mr.jid AND mu.kb = :kb"
+                     f" AND {KNOWN_OFFER_SQL} AND {BY_WINDOWS_UPDATE_SQL}")
+            target = f"SELECT 1 {asked}"
+            offer = f"(SELECT mu.offer {asked} LIMIT 1)"
+            deployed = DEPLOYED_PENDING_REPORT_TEMPLATE.format(kb=":kb")
+            approved = "1"
+            params["kb"] = int(windows_update_kb)
         elif installed_kb is None:
             target = ("SELECT 1 FROM machine_updates mu"
                       f" WHERE mu.jid = mr.jid AND mu.update_id = :update_id AND {KNOWN_OFFER_SQL}")
@@ -1819,11 +1936,7 @@ class UpdatesDatabase(DatabaseHelper):
                        COALESCE(xm.hostname, mr.hostname) AS hostname,
                        xm.jid AS xmpp_jid,
                        {offer} AS offer,
-                       EXISTS (SELECT 1 FROM approved_updates au
-                                WHERE au.entity_id = lgm.entities_id
-                                  AND au.update_id = :update_id
-                                  AND (au.by_rule = 0
-                                       OR COALESCE({offer}, 'main') = 'main')) AS approved,
+                       {approved.format(offer=offer)} AS approved,
                        (SELECT {DEPLOY_IN_PROGRESS_SQL}
                           FROM xmppmaster.deploy d
                          WHERE d.inventoryuuid = mr.glpi_uuid
@@ -1837,8 +1950,7 @@ class UpdatesDatabase(DatabaseHelper):
                                   AND {DEPLOY_AWAITING_REPORT_SQL}) AS awaiting_report,
                        {deployed} AS deployed_pending_report,
                        {MACHINE_BUSY_SQL} AS running,
-                       EXISTS (SELECT 1 FROM machine_upgrades mg
-                                WHERE mg.jid = mr.jid AND mg.launched_at IS NOT NULL) AS upgrading,
+                       {MACHINE_UPGRADING_SQL} AS upgrading,
                        EXISTS (SELECT 1 FROM machine_upgrades mg
                                 WHERE mg.jid = mr.jid
                                   AND {RELEASE_TO_RESUME_SQL}) AS release_to_resume
@@ -1934,8 +2046,9 @@ class UpdatesDatabase(DatabaseHelper):
         }
 
     @staticmethod
-    def _linux_family_package(session, family):
-        """uuid of the ready package of a Linux family, None without one."""
+    def _generic_package(session, label):
+        """uuid of the ready package of this pkgs label (a Linux family,
+        installation by Windows Update), None without one."""
         # updates.packages is written by the substitute only: a pkgs package of the
         # same label is not one of ours. The latest ready is the current sequence.
         return session.execute(text("""
@@ -1946,7 +2059,47 @@ class UpdatesDatabase(DatabaseHelper):
             WHERE p.state = 'ready' AND pk.label = :label
             ORDER BY p.ready_at DESC
             LIMIT 1
-            """), {"label": LINUX_PACKAGE_LABEL % family}).scalar()
+            """), {"label": label}).scalar()
+
+    @DatabaseHelper._sessionm
+    def get_windows_update_install_target(self, session, kb, jid, entity_ids):
+        """Update kb that the machine jid of entity_ids installs by its own Windows
+        Update: {"update": {"kb", "title", "package_uuid": None while the generic
+        package is not ready}, "windows_update_ids": what Windows Update names
+        for kb on the machine, "machines": the machine (fields of
+        get_windows_deploy_targets)}.
+
+        None when the machine has no such update.
+        """
+        kb = int(kb)
+        entity_ids = self._entity_id_list(entity_ids)
+        if not entity_ids:
+            return None
+        update = session.execute(text(f"""
+            SELECT mu.kb, mu.title
+            FROM machine_updates mu
+            JOIN machine_reports mr ON mr.jid = mu.jid
+            {WINDOWS_MACHINE_ENTITY_JOIN}
+            WHERE mu.jid = :jid AND mu.kb = :kb AND lgm.entities_id IN :entity_ids
+              AND {KNOWN_OFFER_SQL} AND {BY_WINDOWS_UPDATE_SQL}
+            LIMIT 1
+            """).bindparams(bindparam("entity_ids", expanding=True)),
+            {"jid": jid, "kb": kb, "entity_ids": entity_ids}).first()
+        if update is None:
+            return None
+        package_uuid = self._generic_package(session, WINDOWS_UPDATE_PACKAGE_LABEL)
+        machines = self._windows_deploy_machines(session, 0, package_uuid, entity_ids,
+                                                 jid=jid, windows_update_kb=kb)
+        return {
+            "update": {"kb": int(update.kb), "title": update.title or "",
+                       "package_uuid": package_uuid or None},
+            "windows_update_ids": [row.windows_update_id for row in session.execute(text("""
+                SELECT mm.windows_update_id FROM machine_missing_updates mm
+                WHERE mm.jid = :jid AND mm.kb = :kb
+                ORDER BY mm.windows_update_id
+                """), {"jid": jid, "kb": kb})],
+            "machines": machines,
+        }
 
     @DatabaseHelper._sessionm
     def get_linux_deploy_target(self, session, jid, entity_ids):
@@ -1970,7 +2123,8 @@ class UpdatesDatabase(DatabaseHelper):
             WHERE mu.jid = :jid AND mu.package IS NOT NULL AND {LINUX_RULE_MATCH_SQL}
             ORDER BY mu.package
             """), {"jid": jid, "linux_rules_source": rules_source})]
-        package_uuid = self._linux_family_package(session, report.family)
+        package_uuid = self._generic_package(
+            session, LINUX_PACKAGE_LABEL % report.family)
         return {
             "package_uuid": package_uuid or "",
             "packages": packages,
@@ -2002,7 +2156,8 @@ class UpdatesDatabase(DatabaseHelper):
             result["machines"] += 1
             families.setdefault(row.family, []).append(row.glpi_uuid)
         for family, uuids in families.items():
-            package_uuid = self._linux_family_package(session, family) if family else None
+            package_uuid = (self._generic_package(session, LINUX_PACKAGE_LABEL % family)
+                            if family else None)
             for machine in self._windows_deploy_machines(session, 0, package_uuid, entity_ids,
                                                          glpi_uuids=uuids, linux=True):
                 machine["package_uuid"] = package_uuid or ""

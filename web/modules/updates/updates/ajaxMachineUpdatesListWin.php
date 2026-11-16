@@ -69,7 +69,7 @@ if ($section === 'history') {
     foreach (array_slice($rows, $start, $maxperpage) as $row) {
         $fromMedulla = (($row['source'] ?? '') === 'medulla');
         $titles[] = htmlspecialchars((string) ($row['title'] ?? ''), ENT_QUOTES, 'UTF-8');
-        $dates[] = updatesWinReportDate(substr(trim((string) ($row['date'] ?? '')), 0, 16));
+        $dates[] = updatesWinReportDate((string) ($row['date'] ?? ''));
         $origins[] = htmlspecialchars($fromMedulla ? "Medulla" : _T("Workstation", "updates"), ENT_QUOTES, 'UTF-8');
         $states[] = $fromMedulla ? updatesDeployStateBadge($row['state'] ?? '', $row['failure'] ?? '')
             : htmlspecialchars(_T("Installed", "updates"), ENT_QUOTES, 'UTF-8');
@@ -176,7 +176,8 @@ if ($linux) {
     $params = array();
     foreach ($updates as $update) {
         $kb = (string) ($update['kb'] ?? '');
-        $kbs[] = updatesKbCell($kb, ($section === 'optional') ? '' : updatesWinOfferIcon($update));
+        $byWindowsUpdate = updatesWinByWindowsUpdate($update) && updatesKbNumber($kb) !== '';
+        $kbs[] = updatesKbCell($kb, ($section === 'optional' && !$byWindowsUpdate) ? '' : updatesWinOfferIcon($update));
         $titles[] = updatesTitleCell($update['title'] ?? '', $kb);
         $sizes[] = updatesSizeCell($update['size'] ?? null);
         $risks[] = updatesWinRiskCell($update['severity'] ?? '', $update['exploited'] ?? null);
@@ -189,6 +190,9 @@ if ($linux) {
             $blocker = _T("Deployment in progress", "updates");
         } elseif ($rebootPending) {
             $blocker = _T("Reboot pending", "updates");
+        } elseif ($byWindowsUpdate) {
+            $blocker = (updatesWinTriState($update['deployed_pending_report'] ?? null) === true)
+                ? _T("Installed, waiting for the machine report", "updates") : '';
         } elseif ($updateId === null) {
             $blocker = _T("Not in the updates catalog", "updates");
         } elseif (updatesWinTriState($update['approved'] ?? null) === false) {
@@ -199,8 +203,9 @@ if ($linux) {
                 $blocker = _T("Installed, waiting for the machine report", "updates");
             }
         }
-        $actions[] = (updatesWinOffer($update) === 'esu') ? updatesWinEsuAction() : updatesWinDeployAction($blocker);
-        $params[] = array(
+        $actions[] = (updatesWinOffer($update) === 'esu') ? updatesWinEsuAction()
+            : updatesWinDeployAction($blocker, $byWindowsUpdate ? _T("Install by Windows Update", "updates") : '');
+        $rowParams = array(
             'updateid' => (string) $updateId,
             'kb'       => $kb,
             'title'    => (string) ($update['title'] ?? ''),
@@ -208,6 +213,10 @@ if ($linux) {
             'jid'      => $jid,
             'hostname' => $hostname,
         );
+        if ($byWindowsUpdate) {
+            $rowParams['wu'] = '1';
+        }
+        $params[] = $rowParams;
     }
     $n = new OptimizedListInfos($kbs, _T("KB", "updates"));
     $n->disableFirstColumnActionLink();

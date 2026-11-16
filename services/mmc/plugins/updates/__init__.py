@@ -859,13 +859,66 @@ class RpcProxy(RpcProxyI):
             result["error"] = "internal_error"
         return result
 
+    @with_optional_xmpp_context
+    def install_by_windows_update(self, kb, jid, ctx=None):
+        """Make the machine jid install by its own Windows Update the update kb it
+        asks for and the catalog does not carry, with the generic package.
+
+        Returns {"created": n, "skipped": [{"jid", "hostname", "reason"}]},
+        plus "error" when nothing could be attempted.
+        """
+        result = {"created": 0, "skipped": []}
+        try:
+            jid = jid.strip() if isinstance(jid, str) else ""
+            machine = UpdatesDatabase().get_windows_machine(jid) if jid else None
+            if machine is None:
+                result["error"] = "machine_not_targeted"
+                return result
+            entity = self._writable_entity(ctx, "install_by_windows_update",
+                                           machine["entity_id"])
+            if entity is None:
+                result["error"] = "entity_refused"
+                return result
+            try:
+                kb = None if isinstance(kb, bool) else int(str(kb).upper().replace("KB", ""))
+            except (TypeError, ValueError):
+                kb = None
+            if kb is None or kb <= 0:
+                result["error"] = "unknown_update"
+                return result
+            target = UpdatesDatabase().get_windows_update_install_target(kb, jid, [entity])
+            if target is None or not target["windows_update_ids"]:
+                result["error"] = "unknown_update"
+                return result
+            update = target["update"]
+            if not update["package_uuid"]:
+                result["error"] = "package_missing"
+                return result
+            if not self._windows_package_registered(update["package_uuid"]):
+                result["error"] = "package_unregistered"
+                return result
+            if not target["machines"]:
+                result["error"] = "machine_not_targeted"
+                return result
+            login = self._ctx_login(ctx) or "root"
+            self._create_windows_deployments(
+                "install_by_windows_update", update, target["machines"], login, result,
+                parameters={"windows_update_ids": target["windows_update_ids"]})
+            logger.info(f"install_by_windows_update: KB{kb} on {jid}, "
+                        f"{result['created']} created by {login}")
+        except Exception as e:
+            logger.error(f"install_by_windows_update: {e}")
+            logger.error(traceback.format_exc())
+            result["error"] = "internal_error"
+        return result
+
     @staticmethod
     def _create_windows_deployments(action, update, machines, login, result, section="update",
                                     parameters=None):
         """Create the deployment of update's ready package on each machine (its
         section "update", or "uninstall"), or append it to result["skipped"] with
         the reason. parameters: added to the command parameters (Linux: the
-        packages to upgrade); update["deploy_title"] replaces the Windows title."""
+        packages to upgrade; Windows Update: its update ids); update["deploy_title"] replaces the Windows title."""
         package_uuid = update["package_uuid"]
         pending = MscDatabase().pending_command_targets(
             package_uuid, [m["glpi_uuid"] for m in machines])

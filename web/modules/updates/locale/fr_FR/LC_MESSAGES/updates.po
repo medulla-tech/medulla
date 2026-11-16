@@ -76,7 +76,7 @@ msgstr "Pilotes"
 #: modules/updates/updates/MajorEntitiesList.php:8
 #: modules/updates/updates/MajorEntitiesList.php:12
 #: modules/updates/updates/localSidebar.php:34
-#: modules/updates/updates/settingsWin.php:113
+#: modules/updates/updates/settingsWin.php:114
 msgid "Upgrades"
 msgstr "Mises à niveau"
 
@@ -103,7 +103,6 @@ msgstr "Vous n'êtes pas autorisé à voir cette liste."
 #: modules/updates/includes/html.inc.php:409
 #: modules/updates/updates/ajaxMachinesListWin.php:105
 #: modules/updates/updates/ajaxMajorTabMachines.php:122
-#: modules/updates/updates/detailsMachineWin.php:77
 #: modules/updates/updates/settingsWin.php:97
 msgid "Entity"
 msgstr "Entité"
@@ -443,6 +442,10 @@ msgstr "Édition LTSC"
 msgid "Backports repository to remove"
 msgstr "Dépôt backports à retirer"
 
+#: modules/updates/includes/html.inc.php:1092
+msgid "Main repository missing from the apt sources"
+msgstr "Dépôt principal absent des sources apt"
+
 #: modules/updates/includes/html.inc.php:1093
 msgid "Held packages"
 msgstr "Paquets bloqués"
@@ -496,8 +499,8 @@ msgid "Machine unchanged after the step"
 msgstr "Machine inchangée après l'étape"
 
 #: modules/updates/includes/html.inc.php:1144
-msgid "Upgrade stopped before any change, see the deployment log"
-msgstr "Mise à niveau arrêtée avant toute modification, voir le journal du déploiement"
+msgid "Upgrade stopped before any change"
+msgstr "Mise à niveau arrêtée avant toute modification"
 
 #: modules/updates/includes/html.inc.php:1146
 msgid "The last attempt failed"
@@ -1508,8 +1511,8 @@ msgid "No declined update"
 msgstr "Aucune mise à jour refusée"
 
 #: modules/updates/updates/ajaxApprovalsListWin.php:183
-msgid "All updates that concern the machines of this entity have been approved or declined."
-msgstr "Toutes les mises à jour qui concernent les machines de cette entité ont été approuvées ou refusées."
+msgid "All updates have been approved or declined."
+msgstr "Toutes les mises à jour ont été approuvées ou refusées."
 
 #: modules/updates/updates/ajaxApprovalsListWin.php:184
 msgid "Approve them from the pending updates, or automatically with an automatic approval rule."
@@ -1577,6 +1580,7 @@ msgstr "Origine"
 #: modules/updates/updates/ajaxMachineUpdatesListWin.php:93
 #: modules/updates/updates/ajaxMachinesListWin.php:112
 #: modules/updates/updates/ajaxMajorTabMachines.php:130
+#: modules/updates/updates/detailsMachineWin.php:138
 msgid "Status"
 msgstr "État"
 
@@ -1629,8 +1633,7 @@ msgid "Machine"
 msgstr "Ordinateur"
 
 #: modules/updates/updates/ajaxMachinesListWin.php:106
-#: modules/updates/updates/detailsMachineWin.php:80
-#: modules/updates/updates/detailsMachineWin.php:81
+#: modules/updates/updates/detailsMachineWin.php:137
 msgid "System"
 msgstr "Système"
 
@@ -1864,6 +1867,8 @@ msgid "Track every version of this distribution"
 msgstr "Suivre toutes les versions de cette distribution"
 
 #: modules/updates/updates/products/linuxReleases.php:132
+#: modules/updates/updates/detailsMachineWin.php:84
+#: modules/updates/updates/detailsMachineWin.php:85
 msgid "Version"
 msgstr "Version"
 
@@ -1955,7 +1960,7 @@ msgid "Enable"
 msgstr "Activer"
 
 #: modules/updates/updates/settingsWin.php:107
-#: modules/updates/updates/settingsWin.php:115
+#: modules/updates/updates/settingsWin.php:116
 msgid "Time range"
 msgstr "Plage horaire"
 
@@ -1963,11 +1968,15 @@ msgstr "Plage horaire"
 msgid "Approved updates are sent on their own to the machines during this time range. Servers stay on manual deployment."
 msgstr "Les mises à jour approuvées partent seules sur les postes pendant cette plage. Les serveurs restent en déploiement manuel."
 
-#: modules/updates/updates/settingsWin.php:120
+#: modules/updates/updates/settingsWin.php:113
+msgid "Microsoft Defender definitions are kept up to date at all times when the product is tracked and its approval rule is active."
+msgstr "Les définitions Microsoft Defender sont tenues à jour en permanence quand le produit est suivi et sa règle d'approbation active."
+
+#: modules/updates/updates/settingsWin.php:121
 msgid "The steps of the launched upgrades only start during this time range. Without a range, they start right away."
 msgstr "Les étapes des mises à niveau lancées ne démarrent que pendant cette plage. Sans plage, elles démarrent tout de suite."
 
-#: modules/updates/updates/settingsWin.php:121
+#: modules/updates/updates/settingsWin.php:122
 msgid "Save"
 msgstr "Enregistrer"
 
@@ -2020,3 +2029,55 @@ msgstr "Aucun redémarrage en attente"
 #: modules/updates/updates/ajaxMajorTabMachines.php:42
 msgid "No upgrade launched"
 msgstr "Aucune mise à niveau lancée"
+
+#: modules/updates/updates/detailsMachineWin.php:105
+msgid "Defender"
+msgstr "Defender"
+
+#: modules/updates/includes/html.inc.php:1921
+#, php-format
+msgid "%s dated %s"
+msgstr "%s du %s"
+
+#: modules/updates/includes/html.inc.php:1924
+#, php-format
+msgid "%s (inactive)"
+msgstr "%s (inactif)"
+
+#: modules/updates/updates/detailsMachineWin.php:31
+#, php-format
+msgid "%s — entity %s"
+msgstr "%s — entité %s"
+
+#: modules/updates/updates/detailsMachineWin.php:36
+msgid "Online"
+msgstr "En ligne"
+
+#: modules/updates/updates/detailsMachineWin.php:36
+msgid "Offline"
+msgstr "Hors ligne"
+
+#: modules/updates/includes/html.inc.php:1036
+msgid "The machine restarts by itself between steps when no session is open."
+msgstr "La machine redémarre d'elle-même entre les étapes quand aucune session n'est ouverte."
+
+#: modules/updates/includes/html.inc.php
+msgid "Not in the Microsoft catalog: installed by Windows Update"
+msgstr "Hors catalogue Microsoft : installée par Windows Update"
+
+#: modules/updates/includes/html.inc.php
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php
+msgid "Install by Windows Update"
+msgstr "Installer par Windows Update"
+
+#: modules/updates/includes/html.inc.php
+msgid "The Windows Update installation package is not ready on the server yet. Try again in a few minutes."
+msgstr "Le paquet d'installation par Windows Update n'est pas encore prêt sur le serveur. Réessayez dans quelques minutes."
+
+#: modules/updates/includes/html.inc.php
+msgid "This machine no longer asks for this update."
+msgstr "Ce poste ne réclame plus cette mise à jour."
+
+#: modules/updates/includes/html.inc.php
+msgid "The machine will install this update with its own Windows Update. It is not in the Microsoft catalog: Medulla provides no file."
+msgstr "Le poste installera cette mise à jour par son Windows Update. Elle n'est pas au catalogue Microsoft : Medulla ne fournit aucun fichier."
