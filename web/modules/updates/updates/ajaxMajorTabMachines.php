@@ -115,7 +115,7 @@ foreach ($rows as $row) {
                                              ($row['category'] ?? '') === 'reboot_pending' && $jid !== '',
                                              updatesWinTriState($row['online'] ?? null) === true,
                                              updatesWinTriState($row['restart_requested'] ?? null) === true);
-    // Sur l'action seule : le lancement et l'abandon gardent le nom de la machine.
+    // On the action alone: launch and abandon keep the machine name.
     $logActions[] = is_array($row['last_deployment'] ?? null)
         ? new ActionItem(_T("Detail", "xmppmaster"), "viewlogs", "display", "", "xmppmaster", "xmppmaster", null, false,
                          updatesDeployLogParams($row['last_deployment']))

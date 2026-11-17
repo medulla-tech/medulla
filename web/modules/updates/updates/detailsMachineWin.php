@@ -125,11 +125,11 @@ if (in_array('unsupported', $signals, true)) {
 if ($searchFailed) {
     $stateFields[$linux ? _T("Search for updates", "updates") : _T("Windows search", "updates")] = '<strong>' . htmlspecialchars(_T("failed", "updates"), ENT_QUOTES, 'UTF-8') . '</strong>';
 }
-if ($restartRequested) {
+if (!$linux && updatesWinTriState($machine['upgrading'] ?? null) === true) {
+    $stateFields[$rebootPending ? _T("Reboot", "updates") : _T("Upgrade", "updates")] = updatesWinBadge(
+        _T("upgrade in progress", "updates"), 'upgrade-in-progress', updatesUpgradeRestartNote());
+} elseif ($restartRequested) {
     $stateFields[_T("Reboot", "updates")] = updatesWinBadge(_T("Restart requested", "updates"), 'reboot');
-} elseif ($rebootPending && !$linux && updatesWinTriState($machine['upgrading'] ?? null) === true) {
-    $stateFields[_T("Reboot", "updates")] = updatesWinBadge(_T("upgrade in progress", "updates"), 'upgrade-in-progress',
-                                                              updatesUpgradeRestartNote());
 } elseif ($rebootPending) {
     $stateFields[_T("Reboot", "updates")] = '<strong>' . htmlspecialchars(_T("pending", "updates"), ENT_QUOTES, 'UTF-8') . '</strong>';
 }

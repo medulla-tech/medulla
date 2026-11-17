@@ -2134,3 +2134,7 @@ msgstr "en attente de fermeture"
 #: modules/updates/includes/html.inc.php
 msgid "Version %s downloaded: it applies when the Office applications are closed."
 msgstr "Version %s téléchargée : elle s'applique à la fermeture des applications Office."
+
+#: modules/updates/updates/detailsMachineWin.php
+msgid "Upgrade"
+msgstr "Mise à niveau"

@@ -317,8 +317,16 @@ if ($is_gp != 1) { // Simple group
     }
     $n->addActionItem(new ActionItem(_("Deploy specific update on this group"),
         "deployWinGroup", "updateone", "updates", "updates", "updates"));
-    $n->addActionItem(new ActionPopupItem(_T("Upgrade this group", "dyngroup"),
-        "upgradeWinGroup", "up", "updates", "updates", "updates", null, 500));
+    $upgradeGroup = new ActionPopupItem(_T("Upgrade this group", "dyngroup"),
+        "upgradeWinGroup", "up", "updates", "updates", "updates", null, 500);
+    if (in_array("updates", $_SESSION["modulesList"] ?? [])) {
+        require_once("modules/updates/includes/html.inc.php");
+        if (!updatesUpgradeGroupAllowed()) {
+            $upgradeGroup = new EmptyActionItem(_T("Upgrade this group", "dyngroup"));
+            $upgradeGroup->setClassCss("up");
+        }
+    }
+    $n->addActionItem($upgradeGroup);
 } else { // Imaging group
     if (in_array("inventory", $_SESSION["supportModList"] ?? [])) {
         $n->addActionItem(new ActionItem(_T("Inventory on this imaging group", "dyngroup"),

@@ -250,6 +250,5 @@ $n->start = 0;
 $n->end = $total;
 $n->setItemCount($total);
 $n->setNavBar(new AjaxNavBar($total, htmlspecialchars(addslashes($filter), ENT_QUOTES), $jsFunc));
-$n->setTableCssClass("updates-machine-updates");
 $n->display();
 updatesWinTooltips();

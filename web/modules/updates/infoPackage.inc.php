@@ -34,7 +34,7 @@ $page->setFile("modules/updates/updates/ajaxDeployWinGroup.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
-// Guarded by the deployWinGroup ACL in the page itself.
+// Guarded by the deployWinGroup and grayApprove ACL in the page itself.
 $page = new Page("deployWinGroupUpdate", _T('Deploy', 'updates'));
 $page->setFile("modules/updates/updates/deployWinGroupUpdate.php");
 $page->setOptions(array("visible" => false, "noHeader" => true, "noACL" => true));

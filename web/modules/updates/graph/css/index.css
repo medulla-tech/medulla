@@ -24,8 +24,8 @@
     font-size: var(--text-base);
 }
 
-/* Boutons de validation des formulaires du module : alignes a droite, fin du
-   formulaire. .form-actions vient de bootstrap-forms.css et pose un fond gris. */
+/* Submit buttons of the module forms: right-aligned, at the end of the form.
+   .form-actions comes from bootstrap-forms.css and sets a grey background. */
 .approval-form-actions {
     background: none;
     border-top: none;
@@ -97,44 +97,9 @@
     border-bottom: 1px solid var(--gray-300);
 }
 
-/* ===== Location selector ===== */
-
-#FormLocation {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 12px 0 14px 0;
-}
-
-#FormLocation #Location {
-    float: none;
-    margin: 0;
-}
-
-#FormLocation .locationtext {
-    font-weight: 600;
-    color: var(--color-primary-dark);
-    white-space: nowrap;
-}
-
-#FormLocation .searchbox {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    justify-content: flex-start;
-    width: auto;
-    margin: 0;
-    padding: 0;
-    background: transparent;
-}
-
-#FormLocation .locationfield select {
-    min-width: 220px;
-}
-
 /* ===== Entity compliance ===== */
 
-/* Selecteur d'entite a gauche de la recherche ; la liste passe dessous. */
+/* Entity selector left of the search; the list goes below. */
 .updates-entity-section {
     display: flex;
     flex-wrap: wrap;
@@ -230,13 +195,13 @@
     max-width: 100%;
 }
 
-/* En-tetes a infobulle : pas de soulignement, seul le curseur signale. */
+/* Headers with a tooltip: no underline, only the cursor tells. */
 table.listinfos thead th .column-tooltip {
     border-bottom: none;
     cursor: help;
 }
 
-/* Infobulle : registre "valeur" (blanc, casse normale), pas "libelle". */
+/* Tooltip: "value" style (white, normal case), not "label". */
 .column-tooltip__text {
     max-width: 320px;
     text-transform: none;
@@ -245,10 +210,10 @@ table.listinfos thead th .column-tooltip {
     line-height: 1.35;
 }
 
-/* ===== Largeur des listes ===== */
+/* ===== List width ===== */
 
-/* global.css interdit le retour a la ligne dans les cellules : le tableau
-   deborde et la colonne Actions sort de l'ecran. */
+/* global.css forbids line breaks in the cells: the table overflows and the
+   Actions column leaves the screen. */
 #section table.listinfos tbody td:not(.action),
 #section table.listinfos tbody td:not(.action) .cell-text {
     white-space: normal;
@@ -263,7 +228,7 @@ table.listinfos thead th .column-tooltip {
     white-space: nowrap;
 }
 
-/* ===== Compteurs nuls des listes ===== */
+/* ===== Zero counters of the lists ===== */
 
 table.listinfos .updates-count-zero {
     color: var(--color-text-muted);
@@ -468,7 +433,7 @@ table.listinfos.updates-approval-bulk td:first-child {
     margin: 8px 0 12px;
 }
 
-/* ===== Mises a niveau ===== */
+/* ===== Upgrades ===== */
 
 .updates-badge-info { background-color: var(--color-info); }
 .updates-badge-progress { background-color: var(--color-primary); }
@@ -484,7 +449,7 @@ table.listinfos.updates-approval-bulk td:first-child {
     cursor: help;
 }
 
-/* Eligibilite d'une mise a niveau : un rond par prerequis dans l'infobulle. */
+/* Eligibility of an upgrade: one dot per requirement in the tooltip. */
 .ui-tooltip .updates-req-dot {
     display: inline-block;
     width: 8px;
@@ -498,13 +463,13 @@ table.listinfos.updates-approval-bulk td:first-child {
 .ui-tooltip .updates-req-dot-ok { background-color: var(--severity-low); }
 .ui-tooltip .updates-req-dot-ko { background-color: var(--severity-critical); }
 
-/* ul.action porte line-height: 41px ; seul #container le ramene a 18px. */
+/* ul.action has line-height: 41px; only #container brings it back to 18px. */
 .updates-entity-section .listinfos td.action ul.action,
 .updates-machine-list .listinfos td.action ul.action {
     line-height: 18px;
 }
 
-/* global.css : le survol de ligne recolore les icones plus fort que .inactive. */
+/* global.css: the row hover recolours the icons more strongly than .inactive. */
 tr:hover td.action ul.action li.inactive a,
 tr:hover td.action ul.action li.inactive a:hover,
 td.action ul.action li.inactive a:hover {

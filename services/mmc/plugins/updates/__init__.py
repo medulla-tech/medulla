@@ -19,7 +19,6 @@ from mmc.plugins.base import (with_optional_xmpp_context,
 
 from mmc.plugins.updates.config import UpdatesConfig
 
-# import pour la database
 from pulse2.database.updates import UpdatesDatabase, WINDOWS_UPDATE_DEPLOY_TITLE
 
 from pulse2.database.xmppmaster import XmppMasterDatabase
@@ -162,35 +161,8 @@ def activate():
 
 
 class ContextMaker(ContextMakerI):
-    """
-    Fabrique de contextes personnalisés pour XMPP, héritée de ContextMakerI.
-    Sert à créer et initialiser un objet de type `EnhancedSecurityContext`.
-
-    appeler sur chaque module a l'initialiasation'
-
-    Méthodes
-    --------
-    getContext() :
-        Crée et retourne un contexte sécurisé enrichi contenant les informations
-        de l'utilisateur et de la requête courante.
-    """
-
     def getContext(self):
-        """
-        Crée un contexte de type `EnhancedSecurityContext` pour l'utilisateur courant.
-
-        Retourne
-        --------
-        EnhancedSecurityContext
-            Contexte initialisé avec :
-              - `userid` : l'identifiant de l'utilisateur courant
-              - `request` : la requête associée
-              - `session` : la session courante
-
-        Effets de bord
-        --------------
-        - Écrit des logs de niveau `error` lors de la création du contexte.
-        """
+        """EnhancedSecurityContext of the current user, request and session."""
         s = EnhancedSecurityContext()
         s.userid = self.userid
         s.request = self.request
@@ -199,16 +171,22 @@ class ContextMaker(ContextMakerI):
 
 
 class RpcProxy(RpcProxyI):
+    def getFunction(self, funcname):
+        # The helpers trust their arguments: only the public methods are callable
+        if funcname.startswith("_"):
+            raise AttributeError(funcname)
+        return RpcProxyI.getFunction(self, funcname)
+
     ##
     # machines
     ##
 
     @staticmethod
     def _dashboard_scope(location, ctx):
-        """Entites demandees restreintes a celles de l'utilisateur ; vide = toutes les siennes."""
+        """Requested entities restricted to those of the user; empty = all of theirs."""
         scope = user_entity_scope(ctx, location)
         if scope is None:
-            # Non restreint (root) : les entites de sa session.
+            # Not restricted (root): the entities of the session.
             session_entities = (ctx.get_session_info().get('mondict') or {}).get('liste_entities_user')
             scope = user_entity_scope(None, session_entities) if session_entities else []
         return scope
@@ -682,7 +660,8 @@ class RpcProxy(RpcProxyI):
             approvals = UpdatesDatabase().get_windows_approvals(entity_ids[0], status, start,
                                                                 limit, filter,
                                                                 self._system(system),
-                                                                str(distribution or ""))
+                                                                str(distribution or ""),
+                                                                user_entity_ids(ctx))
             _sizes_for_xmlrpc(approvals["rows"])
             return approvals
         except Exception as e:
