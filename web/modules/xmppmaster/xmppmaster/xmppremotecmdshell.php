@@ -23,7 +23,10 @@
  */
 ?>
 <?php
-    extract($_GET);
+    $uidunique = isset($_GET['uidunique']) ? $_GET['uidunique'] : '';
+    if (!preg_match('/^[A-Za-z0-9._-]+$/', $uidunique) || strpos($uidunique, '..') !== false) {
+        http_response_code(400); exit;
+    }
 
     header('Content-type: application/json');
 

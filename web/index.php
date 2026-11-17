@@ -207,7 +207,7 @@ if (isset($_POST["bConnect"]) || isset($_POST["bMagicLink"])) {
 }
 
 if (!empty($_GET["error"])) {
-    $error = urldecode($_GET["error"]) . "<br/>" . $error;
+    error = htmlspecialchars(urldecode($_GET["error"]), ENT_QUOTES, 'UTF-8') . "<br/>" . $error;
 }
 if (isset($_GET["agentsessionexpired"])) {
     $error = _("You have been logged out because the session between the MMC web interface and the MMC agent expired.");
@@ -367,7 +367,7 @@ if (isset($_GET["update"])) {
                         <div class="control-group">
                             <label class="control-label" for="username"><?php echo  _("Login"); ?></label>
                             <div class="controls">
-                                <input name="username" type="text" class="input-small" id="username" value="<?= $login ?>" />
+                                <input name="username" type="text" class="input-small" id="username" value="<?= htmlspecialchars($login, ENT_QUOTES, 'UTF-8') ?>" />
                             </div>
                         </div>
                         <?php if (!$conf['global']['magic_link']): ?>

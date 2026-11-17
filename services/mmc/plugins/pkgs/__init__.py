@@ -2143,9 +2143,10 @@ def get_xmpp_package(package_uuid):
 
     path = _path_package()
 
-    if os.path.exists(os.path.join(path, package_uuid)):
+    jsonpath = os.path.join(path, package_uuid, "xmppdeploy.json")
+    if package_uuid and os.path.isfile(jsonpath):
         # Read all the content of the package
-        json_file = open(os.path.join(path, package_uuid, "xmppdeploy.json"), "r")
+        json_file = open(jsonpath, "r")
         jsonstr = json_file.read()
         json_file.close()
         structpackage = json.loads(jsonstr)
@@ -2206,9 +2207,10 @@ def get_meta_from_xmpp_package(package_uuid):
 
     path = _path_package()
 
-    if os.path.exists(os.path.join(path, package_uuid)):
+    jsonpath = os.path.join(path, package_uuid, "xmppdeploy.json")
+    if package_uuid and os.path.isfile(jsonpath):
         # Read all the content of the package
-        json_file = open(os.path.join(path, package_uuid, "xmppdeploy.json"), "r")
+        json_file = open(jsonpath, "r")
         jsonstr = json_file.read()
         json_file.close()
         structpackage = json.loads(jsonstr)
