@@ -24,13 +24,24 @@ if ($readFailed || !is_array($machine) || empty($machine)) {
 }
 
 $hostname = $machine ? trim((string) ($machine['hostname'] ?? '')) : '';
-$p = new PageGenerator(htmlspecialchars(($hostname !== '') ? $hostname : _T("Machine", "updates"), ENT_QUOTES, 'UTF-8'));
+$entityId = $machine ? updatesWinNumber($machine['entity_id'] ?? null) : null;
+$entity = ($entityId !== null) ? updatesEntityByUuid('UUID' . $entityId) : null;
+$title = ($hostname !== '') ? $hostname : _T("Machine", "updates");
+if ($hostname !== '' && $entity) {
+    $title = sprintf(_T("%s — entity %s", "updates"), $hostname, updatesEntityName($entity));
+}
+$title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
+if ($machine) {
+    $online = updatesWinTriState($machine['online'] ?? null) === true;
+    $presenceLabel = htmlspecialchars($online ? _T("Online", "updates") : _T("Offline", "updates"), ENT_QUOTES, 'UTF-8');
+    $title = '<img class="updates-title-presence" src="img/other/' . ($online ? 'machine_up.svg' : 'machine_down.svg')
+        . '" alt="' . $presenceLabel . '" title="' . $presenceLabel . '" />' . $title;
+}
+$p = new PageGenerator($title);
 $p->setSideMenu($sidemenu);
 $p->display();
 updatesStaleNotice();
 
-$entityId = $machine ? updatesWinNumber($machine['entity_id'] ?? null) : null;
-$entity = ($entityId !== null) ? updatesEntityByUuid('UUID' . $entityId) : null;
 $linux = $machine && ($machine['os'] ?? '') === 'linux';
 $backParams = array();
 $listEntity = updatesSelectedEntity();
@@ -74,43 +85,48 @@ if (empty($missing) && $unsupported && !$noProduct && !$untracked) {
     $signals = array_values(array_diff($signals, array('unsupported')));
 }
 
-$fields = array();
-if ($entity) {
-    $fields[_T("Entity", "updates")] = htmlspecialchars(updatesEntityName($entity), ENT_QUOTES, 'UTF-8');
-}
+$systemFields = array();
+$stateFields = array();
 $machineFields = $linux
-    ? array('system' => _T("System", "updates"), 'kernel' => _T("Kernel", "updates"))
-    : array('system' => _T("System", "updates"), 'build' => _T("Build", "updates"),
+    ? array('system' => _T("Version", "updates"), 'kernel' => _T("Kernel", "updates"))
+    : array('system' => _T("Version", "updates"), 'build' => _T("Build", "updates"),
             'language' => _T("Language", "updates"));
 foreach ($machineFields as $key => $label) {
     $value = trim((string) ($machine[$key] ?? ''));
     if ($value !== '') {
-        $fields[$label] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+        $systemFields[$label] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
     }
 }
-$fields[_T("Last report", "updates")] = updatesWinReportDate($machine['received_at'] ?? '')
+$stateFields[_T("Last report", "updates")] = updatesWinReportDate($machine['received_at'] ?? '')
     . (!$evaluated ? ' ' . updatesWinBadge(_T("No recent report", "updates"), 'none') : '');
 if ($linux) {
     $autoUpdates = updatesLinuxAutoUpdatesState($machine['windows_update'] ?? null);
     if ($autoUpdates !== null) {
-        $fields[_T("Automatic updates", "updates")] = $autoUpdates;
+        $stateFields[_T("Automatic updates", "updates")] = $autoUpdates;
     }
 } else {
     $windowsUpdate = updatesWinUpdateState($machine['windows_update'] ?? null);
     if ($windowsUpdate !== null) {
-        $fields[_T("Windows Update", "updates")] = $windowsUpdate;
+        $stateFields[_T("Windows Update", "updates")] = $windowsUpdate;
+    }
+    $defender = updatesWinDefenderState($machine['defender'] ?? null);
+    if ($defender !== null) {
+        $stateFields[_T("Defender", "updates")] = $defender;
     }
 }
 if (in_array('unsupported', $signals, true)) {
-    $fields[_T("Support", "updates")] = '<strong>' . htmlspecialchars(_T("ended (no ESU)", "updates"), ENT_QUOTES, 'UTF-8') . '</strong>';
+    $systemFields[_T("Support", "updates")] = '<strong>' . htmlspecialchars(_T("ended (no ESU)", "updates"), ENT_QUOTES, 'UTF-8') . '</strong>';
 }
 if ($searchFailed) {
-    $fields[$linux ? _T("Search for updates", "updates") : _T("Windows search", "updates")] = '<strong>' . htmlspecialchars(_T("failed", "updates"), ENT_QUOTES, 'UTF-8') . '</strong>';
+    $stateFields[$linux ? _T("Search for updates", "updates") : _T("Windows search", "updates")] = '<strong>' . htmlspecialchars(_T("failed", "updates"), ENT_QUOTES, 'UTF-8') . '</strong>';
 }
 if ($restartRequested) {
-    $fields[_T("Reboot", "updates")] = updatesWinBadge(_T("Restart requested", "updates"), 'reboot');
+    $stateFields[_T("Reboot", "updates")] = updatesWinBadge(_T("Restart requested", "updates"), 'reboot');
+} elseif ($rebootPending && !$linux && updatesWinTriState($machine['upgrading'] ?? null) === true) {
+    $stateFields[_T("Reboot", "updates")] = updatesWinBadge(_T("upgrade in progress", "updates"), 'upgrade-in-progress',
+                                                              updatesUpgradeRestartNote());
 } elseif ($rebootPending) {
-    $fields[_T("Reboot", "updates")] = '<strong>' . htmlspecialchars(_T("pending", "updates"), ENT_QUOTES, 'UTF-8') . '</strong>';
+    $stateFields[_T("Reboot", "updates")] = '<strong>' . htmlspecialchars(_T("pending", "updates"), ENT_QUOTES, 'UTF-8') . '</strong>';
 }
 $history = xmlrpc_get_windows_machine_history($jid, 0, 1);
 $historyFailed = updatesReadFailed($history);
@@ -127,11 +143,23 @@ if ($hasHistory) {
 }
 
 echo '<div class="updates-machine-head">';
-echo '<dl class="updates-machine-summary">';
-foreach ($fields as $label => $html) {
-    echo '<dt>' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '</dt><dd>' . $html . '</dd>';
+echo '<div class="updates-machine-summary">';
+$columns = array('system' => array(_T("System", "updates"), $systemFields),
+                 'state' => array(_T("Status", "updates"), $stateFields));
+foreach ($columns as $key => $column) {
+    if (empty($column[1])) {
+        continue;
+    }
+    $headingId = 'updates-machine-summary-' . $key;
+    echo '<div class="updates-machine-summary-column" role="group" aria-labelledby="' . $headingId . '">';
+    echo '<div class="updates-machine-summary-heading" id="' . $headingId . '">' . htmlspecialchars($column[0], ENT_QUOTES, 'UTF-8') . '</div>';
+    echo '<dl>';
+    foreach ($column[1] as $label => $html) {
+        echo '<dt>' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '</dt><dd>' . $html . '</dd>';
+    }
+    echo '</dl></div>';
 }
-echo '</dl>';
+echo '</div>';
 if (!empty($sections)) {
     updatesMachineSearch($jid, $sections);
 }

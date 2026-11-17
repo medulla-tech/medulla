@@ -110,6 +110,7 @@ $form->add(new TrFormElement(_T("Time range", "updates"), new UpdatesTimeRangeTp
                  "placeholder" => "HH:MM"));
 $form->pop();
 $form->add(new ParaElement(htmlspecialchars(_T("Approved updates are sent on their own to the machines during this time range. Servers stay on manual deployment.", "updates"), ENT_QUOTES, 'UTF-8'), "updates-settings-note"));
+$form->add(new ParaElement(htmlspecialchars(_T("Microsoft Defender definitions are kept up to date at all times when the product is tracked and its approval rule is active.", "updates"), ENT_QUOTES, 'UTF-8'), "updates-settings-note"));
 $form->add(new SpanElement(_T("Upgrades", "updates"), "section-title"));
 $form->push(new Table());
 $form->add(new TrFormElement(_T("Time range", "updates"), new UpdatesTimeRangeTpl($upgradeStartTpl, $upgradeEndTpl)),

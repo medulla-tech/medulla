@@ -220,6 +220,17 @@ function xmlrpc_deploy_windows_update($update_id, $entity_id, $jid = "")
 }
 
 /**
+ * Ask one Windows machine to install with its own Windows Update an update
+ * it claims and that the Microsoft catalog does not carry.
+ *
+ * @return array {created, skipped: [{jid, hostname, reason}], error}
+ */
+function xmlrpc_install_by_windows_update($kb, $jid)
+{
+    return xmlCall("updates.install_by_windows_update", array((string) $kb, (string) $jid));
+}
+
+/**
  * Deploy to one Linux machine the missing packages approved by the Linux rules of its entity,
  * or only $package when given.
  *

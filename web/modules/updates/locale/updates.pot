@@ -74,7 +74,7 @@ msgstr ""
 #: modules/updates/updates/MajorEntitiesList.php:8
 #: modules/updates/updates/MajorEntitiesList.php:12
 #: modules/updates/updates/localSidebar.php:34
-#: modules/updates/updates/settingsWin.php:113
+#: modules/updates/updates/settingsWin.php:114
 msgid "Upgrades"
 msgstr ""
 
@@ -101,7 +101,6 @@ msgstr ""
 #: modules/updates/includes/html.inc.php:409
 #: modules/updates/updates/ajaxMachinesListWin.php:105
 #: modules/updates/updates/ajaxMajorTabMachines.php:122
-#: modules/updates/updates/detailsMachineWin.php:77
 #: modules/updates/updates/settingsWin.php:97
 msgid "Entity"
 msgstr ""
@@ -441,6 +440,10 @@ msgstr ""
 msgid "Backports repository to remove"
 msgstr ""
 
+#: modules/updates/includes/html.inc.php:1092
+msgid "Main repository missing from the apt sources"
+msgstr ""
+
 #: modules/updates/includes/html.inc.php:1093
 msgid "Held packages"
 msgstr ""
@@ -494,7 +497,7 @@ msgid "Machine unchanged after the step"
 msgstr ""
 
 #: modules/updates/includes/html.inc.php:1144
-msgid "Upgrade stopped before any change, see the deployment log"
+msgid "Upgrade stopped before any change"
 msgstr ""
 
 #: modules/updates/includes/html.inc.php:1146
@@ -1506,7 +1509,7 @@ msgid "No declined update"
 msgstr ""
 
 #: modules/updates/updates/ajaxApprovalsListWin.php:183
-msgid "All updates that concern the machines of this entity have been approved or declined."
+msgid "All updates have been approved or declined."
 msgstr ""
 
 #: modules/updates/updates/ajaxApprovalsListWin.php:184
@@ -1575,6 +1578,7 @@ msgstr ""
 #: modules/updates/updates/ajaxMachineUpdatesListWin.php:93
 #: modules/updates/updates/ajaxMachinesListWin.php:112
 #: modules/updates/updates/ajaxMajorTabMachines.php:130
+#: modules/updates/updates/detailsMachineWin.php:138
 msgid "Status"
 msgstr ""
 
@@ -1626,8 +1630,7 @@ msgid "Machine"
 msgstr ""
 
 #: modules/updates/updates/ajaxMachinesListWin.php:106
-#: modules/updates/updates/detailsMachineWin.php:80
-#: modules/updates/updates/detailsMachineWin.php:81
+#: modules/updates/updates/detailsMachineWin.php:137
 msgid "System"
 msgstr ""
 
@@ -1861,6 +1864,8 @@ msgid "Track every version of this distribution"
 msgstr ""
 
 #: modules/updates/updates/products/linuxReleases.php:132
+#: modules/updates/updates/detailsMachineWin.php:84
+#: modules/updates/updates/detailsMachineWin.php:85
 msgid "Version"
 msgstr ""
 
@@ -1952,7 +1957,7 @@ msgid "Enable"
 msgstr ""
 
 #: modules/updates/updates/settingsWin.php:107
-#: modules/updates/updates/settingsWin.php:115
+#: modules/updates/updates/settingsWin.php:116
 msgid "Time range"
 msgstr ""
 
@@ -1960,11 +1965,15 @@ msgstr ""
 msgid "Approved updates are sent on their own to the machines during this time range. Servers stay on manual deployment."
 msgstr ""
 
-#: modules/updates/updates/settingsWin.php:120
-msgid "The steps of the launched upgrades only start during this time range. Without a range, they start right away."
+#: modules/updates/updates/settingsWin.php:113
+msgid "Microsoft Defender definitions are kept up to date at all times when the product is tracked and its approval rule is active."
 msgstr ""
 
 #: modules/updates/updates/settingsWin.php:121
+msgid "The steps of the launched upgrades only start during this time range. Without a range, they start right away."
+msgstr ""
+
+#: modules/updates/updates/settingsWin.php:122
 msgid "Save"
 msgstr ""
 
@@ -2016,4 +2025,56 @@ msgstr ""
 
 #: modules/updates/updates/ajaxMajorTabMachines.php:42
 msgid "No upgrade launched"
+msgstr ""
+
+#: modules/updates/updates/detailsMachineWin.php:105
+msgid "Defender"
+msgstr ""
+
+#: modules/updates/includes/html.inc.php:1921
+#, php-format
+msgid "%s dated %s"
+msgstr ""
+
+#: modules/updates/includes/html.inc.php:1924
+#, php-format
+msgid "%s (inactive)"
+msgstr ""
+
+#: modules/updates/updates/detailsMachineWin.php:31
+#, php-format
+msgid "%s — entity %s"
+msgstr ""
+
+#: modules/updates/updates/detailsMachineWin.php:36
+msgid "Online"
+msgstr ""
+
+#: modules/updates/updates/detailsMachineWin.php:36
+msgid "Offline"
+msgstr ""
+
+#: modules/updates/includes/html.inc.php:1036
+msgid "The machine restarts by itself between steps when no session is open."
+msgstr ""
+
+#: modules/updates/includes/html.inc.php
+msgid "Not in the Microsoft catalog: installed by Windows Update"
+msgstr ""
+
+#: modules/updates/includes/html.inc.php
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php
+msgid "Install by Windows Update"
+msgstr ""
+
+#: modules/updates/includes/html.inc.php
+msgid "The Windows Update installation package is not ready on the server yet. Try again in a few minutes."
+msgstr ""
+
+#: modules/updates/includes/html.inc.php
+msgid "This machine no longer asks for this update."
+msgstr ""
+
+#: modules/updates/includes/html.inc.php
+msgid "The machine will install this update with its own Windows Update. It is not in the Microsoft catalog: Medulla provides no file."
 msgstr ""

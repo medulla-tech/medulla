@@ -321,6 +321,13 @@ table.listinfos .updates-count-critical {
     color: var(--color-primary);
 }
 
+.updates-title-presence {
+    width: 25px;
+    height: 25px;
+    margin: -8px 8px 0 0;
+    vertical-align: -3px;
+}
+
 .updates-machine-head {
     display: flex;
     flex-wrap: wrap;
@@ -343,14 +350,34 @@ table.listinfos .updates-count-critical {
 }
 
 .updates-machine-summary {
-    display: grid;
-    grid-template-columns: repeat(3, max-content minmax(0, max-content));
-    justify-content: start;
-    align-items: baseline;
-    gap: 6px 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px 0;
     background: var(--gray-50);
     padding: 10px 15px;
     border-radius: var(--radius-md);
+    margin: 0;
+}
+
+.updates-machine-summary-column {
+    min-width: 0;
+}
+
+.updates-machine-summary-heading {
+    margin: 0 30px 6px 0;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-text-medium);
+}
+
+.updates-machine-summary dl {
+    display: grid;
+    grid-template-columns: max-content minmax(0, max-content);
+    justify-content: start;
+    align-items: baseline;
+    gap: 6px 10px;
     margin: 0;
 }
 
@@ -365,7 +392,7 @@ table.listinfos .updates-count-critical {
 
 @media (max-width: 800px) {
     .updates-machine-summary {
-        grid-template-columns: max-content minmax(0, max-content);
+        flex-direction: column;
     }
 }
 

@@ -38,6 +38,8 @@ $cancelAction = new ActionPopupItem(htmlspecialchars(_T("Abandon", "updates"), E
                                     "cancelUpgrade", "stop", "", "updates", "updates", null, 500);
 $noLaunchAction = new EmptyActionItem(htmlspecialchars(_T("Upgrade unavailable", "updates"), ENT_QUOTES, 'UTF-8'));
 $noLaunchAction->setClassCss('up');
+$busyLaunchAction = new EmptyActionItem(htmlspecialchars(_T("Deployment in progress", "updates"), ENT_QUOTES, 'UTF-8'));
+$busyLaunchAction->setClassCss('up');
 $noCancelActions = array();
 foreach (array('not_launched'   => _T("No upgrade launched", "updates"),
                'step_running'   => updatesWinDeployErrorText('step_running', ''),
@@ -107,7 +109,7 @@ foreach ($rows as $row) {
     $launchable = $canLaunch && updatesUpgradeLaunchable((string) ($row['category'] ?? ''))
         && $glpiUuid !== '' && $entityId !== null;
     $refusal = ($jid !== '' && $entityId !== null) ? updatesUpgradeCancelRefusal($row, $system) : 'not_launched';
-    $actions[] = $launchable ? $launchAction : $noLaunchAction;
+    $actions[] = !$launchable ? $noLaunchAction : (updatesUpgradeBusy($row) ? $busyLaunchAction : $launchAction);
     $cancelActions[] = ($refusal === '') ? $cancelAction : $noCancelActions[$refusal];
     $restartActions[] = updatesRestartAction(array('from' => 'major'),
                                              ($row['category'] ?? '') === 'reboot_pending' && $jid !== '',

@@ -1016,6 +1016,27 @@ function updatesUpgradeLaunchable($category)
 }
 
 /**
+ * Un deploiement tient la machine de la ligne.
+ *
+ * @param array $row Ligne de get_upgrade_machine_list
+ * @return bool
+ */
+function updatesUpgradeBusy($row)
+{
+    return updatesWinTriState($row['running'] ?? null) === true;
+}
+
+/**
+ * Infobulle d'une mise a niveau Windows lancee dont le poste attend un redemarrage.
+ *
+ * @return string Texte non echappe
+ */
+function updatesUpgradeRestartNote()
+{
+    return _T("The machine restarts by itself between steps when no session is open.", "updates");
+}
+
+/**
  * Pourquoi la mise a niveau de la ligne ne peut pas etre abandonnee (regle de
  * updates.cancel_upgrade), vide quand elle peut l'etre.
  *
@@ -1101,6 +1122,7 @@ function updatesUpgradeReasonLabels()
         'server'        => _T("Windows Server", "updates"),
         'ltsc'          => _T("LTSC edition", "updates"),
         'backports'     => _T("Backports repository to remove", "updates"),
+        'base_repository' => _T("Main repository missing from the apt sources", "updates"),
         'held_packages' => _T("Held packages", "updates"),
         'dpkg_audit'    => _T("Packages to repair", "updates"),
         'disk_boot'     => _T("/boot too small or too full", "updates"),
@@ -1134,7 +1156,8 @@ function updatesUpgradeReasonsText($reason)
 
 /**
  * Cause de l'arret d'une mise a niveau (run_error), traduite d'apres ses codes :
- * « etape: cause », release etant l'etape Linux a reprendre.
+ * « etape: cause », release etant l'etape Linux a reprendre. La raison ecrite par le poste
+ * apres disk_full ou stopped suit le libelle, telle quelle.
  *
  * @param mixed $runError
  * @return string Texte non echappe, vide sans erreur
@@ -1152,7 +1175,7 @@ function updatesUpgradeRunErrorText($runError)
         'restart still pending'      => _T("Restart still pending after the step", "updates"),
         'machine unchanged'          => _T("Machine unchanged after the step", "updates"),
         'disk_full'                  => _T("Not enough free space on the machine", "updates"),
-        'stopped'                    => _T("Upgrade stopped before any change, see the deployment log", "updates"),
+        'stopped'                    => _T("Upgrade stopped before any change", "updates"),
     );
     $text = _T("The last attempt failed", "updates");
     if (strpos($cause, 'abandoned by ') === 0) {
@@ -1163,6 +1186,9 @@ function updatesUpgradeRunErrorText($runError)
                 $text = $label;
                 break;
             }
+        }
+        if (preg_match('/^(?:disk_full|stopped):\s*(\S.*)$/', $cause, $match)) {
+            $text = sprintf(_T("%s: %s", "updates"), $text, $match[1]);
         }
     }
     return (strpos($error, 'release:') === 0)
@@ -1186,6 +1212,11 @@ function updatesUpgradeStateCell($row)
     }
     if ($category === 'no_report' && trim((string) ($row['received_at'] ?? '')) === '') {
         return updatesWinBadge(_T("No report received", "updates"), 'none');
+    }
+    if ($category === 'reboot_pending' && ($row['os'] ?? '') === 'windows'
+        && trim((string) ($row['launched_at'] ?? '')) !== ''
+        && updatesWinTriState($row['restart_requested'] ?? null) !== true) {
+        return updatesWinBadge($categories['in_progress']['label'], 'upgrade-in-progress', '', updatesUpgradeRestartNote());
     }
     $tooltip = '';
     if ($category === 'not_eligible' || $category === 'not_concerned') {
@@ -1325,13 +1356,15 @@ function updatesUpgradePopup()
     if ($row !== null && trim((string) ($row['hostname'] ?? '')) !== '') {
         $hostname = trim((string) $row['hostname']);
     }
+    $launchable = $row !== null && updatesUpgradeLaunchable((string) ($row['category'] ?? ''));
+    $busy = $launchable && updatesUpgradeBusy($row);
 
     if (isset($_POST['bconfirm'])) {
         verifyCSRFToken($_POST);
         $name = ($hostname !== '') ? $hostname : $glpiUuid;
         $launched = 0;
         $error = $readFailed ? 'internal_error' : '';
-        if ($row !== null && updatesUpgradeLaunchable((string) ($row['category'] ?? ''))) {
+        if ($launchable && !$busy) {
             $result = xmlrpc_launch_upgrades(updatesEntityId($entity), array($glpiUuid));
             if (is_array($result)) {
                 $launched = (int) updatesWinNumber($result['launched'] ?? null);
@@ -1343,7 +1376,7 @@ function updatesUpgradePopup()
         if ($launched > 0) {
             new NotifyWidgetSuccess(updatesActionText(_T("Upgrade of <b>%s</b> launched.", "updates"), $name));
         } else {
-            $reason = updatesWinDeployErrorText($error, '');
+            $reason = $busy ? updatesWinSkipReasonText('deployment_running') : updatesWinDeployErrorText($error, '');
             if ($reason === '') {
                 $reason = _T("the machine is no longer ready to be upgraded", "updates");
             }
@@ -1358,7 +1391,7 @@ function updatesUpgradePopup()
         return;
     }
     $f = new PopupForm($title);
-    if ($row === null || !updatesUpgradeLaunchable((string) ($row['category'] ?? ''))) {
+    if (!$launchable || $busy) {
         $f->addText(_T("This machine cannot be upgraded right now.", "updates"));
         $f->addCancelButton("bback");
         $f->display();
@@ -1624,14 +1657,18 @@ function updatesWinBadge($text, $variant, $title = '', $tooltip = '')
 }
 
 /**
- * Last report date, plain text.
+ * Date cell, plain text: dd/mm/yyyy hh:mm, or dd/mm/yyyy for a day alone.
  *
- * @param mixed $receivedAt "YYYY-MM-DD HH:MM" or empty
+ * @param mixed $receivedAt "YYYY-MM-DD[ HH:MM[:SS]]" or empty; shown as received when it cannot be read
  * @return string HTML
  */
 function updatesWinReportDate($receivedAt)
 {
     $date = is_string($receivedAt) ? trim($receivedAt) : '';
+    $formatted = updatesWinDateTime($date);
+    if ($formatted !== '') {
+        $date = $formatted;
+    }
     return ($date !== '') ? '<span class="updates-nowrap">' . htmlspecialchars($date, ENT_QUOTES, 'UTF-8') . '</span>' : '<span class="cell-empty">-</span>';
 }
 
@@ -1647,9 +1684,10 @@ function updatesWinReportDate($receivedAt)
  * @param mixed $searchFailed The last search failed: the machine cannot be called up to date
  * @param mixed $updating An update deployment holds the machine or its command is waiting
  * @param mixed $restartRequested A restart was sent and no report came since
+ * @param mixed $upgrading A version upgrade is launched on the machine
  * @return string HTML
  */
-function updatesWinMachineStatus($unsupported, $evaluated, $untracked = null, $rebootPending = null, $system = 'windows', $missing = null, $searchFailed = null, $updating = null, $restartRequested = null)
+function updatesWinMachineStatus($unsupported, $evaluated, $untracked = null, $rebootPending = null, $system = 'windows', $missing = null, $searchFailed = null, $updating = null, $restartRequested = null, $upgrading = null)
 {
     if (updatesWinTriState($searchFailed) === true) {
         return updatesWinBadge(_T("Search failed", "updates"), 'untracked',
@@ -1663,6 +1701,9 @@ function updatesWinMachineStatus($unsupported, $evaluated, $untracked = null, $r
     }
     if (updatesWinTriState($rebootPending) === true && updatesWinTriState($restartRequested) === true) {
         return updatesWinBadge(_T("Restart requested", "updates"), 'reboot');
+    }
+    if (updatesWinTriState($rebootPending) === true && $system !== 'linux' && updatesWinTriState($upgrading) === true) {
+        return updatesWinBadge(_T("upgrade in progress", "updates"), 'upgrade-in-progress', updatesUpgradeRestartNote());
     }
     if (updatesWinTriState($rebootPending) === true) {
         return updatesWinBadge(_T("Reboot pending", "updates"), 'reboot', ($system === 'linux')
@@ -1737,6 +1778,18 @@ function updatesWinOffer($row)
 }
 
 /**
+ * Whether the machine installs this update line with its own Windows Update:
+ * Windows claims it and the Microsoft catalog does not carry it.
+ *
+ * @param array $row Update line
+ * @return bool
+ */
+function updatesWinByWindowsUpdate($row)
+{
+    return updatesWinTriState($row['by_windows_update'] ?? null) === true;
+}
+
+/**
  * Info icon of a Windows update line, next to its KB; empty for a main update.
  *
  * @param array $row Update line
@@ -1744,15 +1797,15 @@ function updatesWinOffer($row)
  */
 function updatesWinOfferIcon($row)
 {
-    switch (updatesWinOffer($row)) {
-        case 'optional':
-            $text = _T("Optional", "updates");
-            break;
-        case 'esu':
-            $text = _T("ESU license required", "updates");
-            break;
-        default:
-            return '';
+    $offer = updatesWinOffer($row);
+    if ($offer === 'esu') {
+        $text = _T("ESU license required", "updates");
+    } elseif (updatesWinByWindowsUpdate($row)) {
+        $text = _T("Not in the Microsoft catalog: installed by Windows Update", "updates");
+    } elseif ($offer === 'optional') {
+        $text = _T("Optional", "updates");
+    } else {
+        return '';
     }
     $safe = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
     return '<span class="updates-offer-icon" aria-label="' . $safe . '"></span>';
@@ -1865,6 +1918,45 @@ function updatesWinEsuAction()
 }
 
 /**
+ * Date sent by the backend, as dd/mm/yyyy hh:mm, or dd/mm/yyyy when it has no time.
+ * A date carrying a time zone is converted to the server time.
+ *
+ * @param mixed $value    "YYYY-MM-DD", "YYYY-MM-DD HH:MM[:SS]" or ISO 8601
+ * @param bool  $withTime False to keep the day only
+ * @return string Empty when the date cannot be read
+ */
+function updatesWinDateTime($value, $withTime = true)
+{
+    $value = is_scalar($value) ? trim((string) $value) : '';
+    if (!preg_match('/^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2})(?::\d{2})?)?(.*)$/', $value, $m)
+        || !checkdate((int) $m[2], (int) $m[3], (int) $m[1])) {
+        return '';
+    }
+    $hasTime = $m[4] !== '';
+    if ($hasTime && ((int) $m[4] > 23 || (int) $m[5] > 59)) {
+        return '';
+    }
+    $withTime = $withTime && $hasTime;
+    if ($m[6] !== '') {
+        $time = strtotime($value);
+        return ($time !== false) ? date($withTime ? 'd/m/Y H:i' : 'd/m/Y', $time) : '';
+    }
+    $day = $m[3] . '/' . $m[2] . '/' . $m[1];
+    return $withTime ? $day . ' ' . $m[4] . ':' . $m[5] : $day;
+}
+
+/**
+ * Day of a date sent by the backend, as dd/mm/yyyy.
+ *
+ * @param mixed $value Date, with or without a time
+ * @return string Empty when the date cannot be read
+ */
+function updatesWinDay($value)
+{
+    return updatesWinDateTime($value, false);
+}
+
+/**
  * Windows Update state of a machine, most telling fact first.
  *
  * @param mixed $state {automatic_updates, service_state, wsus_server, paused_until} or null
@@ -1884,9 +1976,9 @@ function updatesWinUpdateState($state)
     if ($text('wsus_server') !== '') {
         return htmlspecialchars(sprintf(_T("WSUS (%s)", "updates"), $text('wsus_server')), ENT_QUOTES, 'UTF-8');
     }
-    $paused = ($text('paused_until') !== '') ? strtotime($text('paused_until')) : false;
-    if ($paused !== false) {
-        return htmlspecialchars(sprintf(_T("paused until %s", "updates"), date('d/m/Y', $paused)), ENT_QUOTES, 'UTF-8');
+    $paused = updatesWinDay($text('paused_until'));
+    if ($paused !== '') {
+        return htmlspecialchars(sprintf(_T("paused until %s", "updates"), $paused), ENT_QUOTES, 'UTF-8');
     }
     $labels = array(
         'not_configured' => _T("automatic", "updates"),
@@ -1897,6 +1989,34 @@ function updatesWinUpdateState($state)
     );
     $mode = $text('automatic_updates');
     return isset($labels[$mode]) ? htmlspecialchars($labels[$mode], ENT_QUOTES, 'UTF-8') : null;
+}
+
+/**
+ * Microsoft Defender definitions of a machine: version, date, and whether it is inactive.
+ *
+ * @param mixed $state {enabled, signature_version, signature_updated_at} or null
+ * @return string|null HTML, null when unknown
+ */
+function updatesWinDefenderState($state)
+{
+    if (!is_array($state)) {
+        return null;
+    }
+    $text = function ($key) use ($state) {
+        return is_scalar($state[$key] ?? null) ? trim((string) $state[$key]) : '';
+    };
+    $value = $text('signature_version');
+    if ($value === '') {
+        return null;
+    }
+    $updated = updatesWinDay($text('signature_updated_at'));
+    if ($updated !== '') {
+        $value = sprintf(_T("%s dated %s", "updates"), $value, $updated);
+    }
+    if (($state['enabled'] ?? null) === false) {
+        $value = sprintf(_T("%s (inactive)", "updates"), $value);
+    }
+    return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
 }
 
 /**
@@ -2419,10 +2539,7 @@ function updatesApprovalTitleCell($title, $kb, $status, $byRule, $decidedBy, $de
     $tooltip = '';
     $author = trim((string) $decidedBy);
     if ($author !== '' && ($status === 'approved' || $status === 'declined')) {
-        $date = '';
-        if (preg_match('/^(\d{4})-(\d{2})-(\d{2}) (\d{2}:\d{2})/', trim((string) $decidedAt), $m)) {
-            $date = $m[3] . '/' . $m[2] . '/' . $m[1] . ' ' . $m[4];
-        }
+        $date = updatesWinDateTime($decidedAt);
         if ($status === 'approved') {
             $tooltip = ($date !== '') ? sprintf(_T("Approved by %s on %s", "updates"), $author, $date)
                                       : sprintf(_T("Approved by %s", "updates"), $author);
@@ -2615,9 +2732,10 @@ function updatesWinPackageBlocker($state, $error)
  * Deploy action of a list row, greyed with its reason when not possible.
  *
  * @param string $blocker Unescaped reason, empty when the update can be deployed
+ * @param string $label   Unescaped tooltip of the action, "Deploy" when empty
  * @return ActionItem
  */
-function updatesWinDeployAction($blocker)
+function updatesWinDeployAction($blocker, $label = '')
 {
     if (!updatesWinCanDeploy()) {
         $blocker = _T("Deploy", "updates");
@@ -2627,7 +2745,10 @@ function updatesWinDeployAction($blocker)
         $item->setClassCss('install');
         return $item;
     }
-    return new ActionPopupItem(htmlspecialchars(_T("Deploy", "updates")), "deployWinUpdate", "install", "", "updates", "updates");
+    if ($label === '') {
+        $label = _T("Deploy", "updates");
+    }
+    return new ActionPopupItem(htmlspecialchars($label, ENT_QUOTES, 'UTF-8'), "deployWinUpdate", "install", "", "updates", "updates");
 }
 
 /**
@@ -2797,6 +2918,51 @@ function updatesWinDeployPopup()
         }
     }
     updatesConfirmPopup($title, $question);
+}
+
+/**
+ * Popup asking one Windows machine to install an update with its own Windows Update.
+ */
+function updatesWinUpdateInstallPopup()
+{
+    $title = _T("Install by Windows Update", "updates");
+    $kb = updatesKbNumber(is_string($_GET['kb'] ?? null) ? $_GET['kb'] : '');
+    $jid = is_string($_GET['jid'] ?? null) ? trim($_GET['jid']) : '';
+    if (!updatesWinCanDeploy() || $kb === '' || strlen($kb) > 10 || !updatesJidValid($jid)) {
+        updatesUnknownEntityPopup($title);
+        return;
+    }
+    $label = 'KB' . $kb;
+    $back = urlStrRedirect("updates/updates/detailsMachineWin", array('jid' => $jid));
+
+    if (isset($_POST['bconfirm'])) {
+        verifyCSRFToken($_POST);
+        $result = xmlrpc_install_by_windows_update($kb, $jid);
+        $error = updatesResultError($result);
+        if (!is_array($result) || $error !== '') {
+            if ($error === 'package_missing') {
+                $message = htmlspecialchars(_T("The Windows Update installation package is not ready on the server yet. Try again in a few minutes.", "updates"), ENT_QUOTES, 'UTF-8');
+            } elseif ($error === 'unknown_update' || $error === 'machine_not_targeted') {
+                $message = htmlspecialchars(_T("This machine no longer asks for this update.", "updates"), ENT_QUOTES, 'UTF-8');
+            } else {
+                $reason = updatesWinDeployErrorText($error, '');
+                $message = ($reason !== '')
+                    ? updatesActionText(_T("<b>%s</b> could not be deployed: %s", "updates"), $label, $reason)
+                    : updatesActionText(_T("<b>%s</b> could not be deployed.", "updates"), $label);
+            }
+            new NotifyWidgetFailure($message);
+            header('Location: ' . $back);
+            exit;
+        }
+        updatesWinDeployNotify($result);
+        header('Location: ' . $back);
+        exit;
+    }
+
+    updatesConfirmPopup(
+        $title,
+        updatesActionText(_T("Deploy <b>%s</b> on <b>%s</b>?", "updates"), $label, updatesPopupMachine($jid)),
+        htmlspecialchars(_T("The machine will install this update with its own Windows Update. It is not in the Microsoft catalog: Medulla provides no file.", "updates"), ENT_QUOTES, 'UTF-8'));
 }
 
 /**
@@ -3720,15 +3886,6 @@ function updatesReplicationCause($cause)
 }
 
 /**
- * "YYYY-mm-dd HH:MM:SS" vers "d/m/Y H:i", chaine vide si illisible.
- */
-function updatesReplicationDate($value)
-{
-    $date = ($value !== '') ? DateTime::createFromFormat('Y-m-d H:i:s', $value) : false;
-    return $date ? $date->format('d/m/Y H:i') : '';
-}
-
-/**
  * Bloc affiche a la place d'une page quand le module est ferme.
  */
 function updatesClosedBox()
@@ -3770,7 +3927,7 @@ function updatesStaleNotice()
         return;
     }
     $cause = updatesReplicationCause($replication['cause']);
-    $date = updatesReplicationDate($replication['last_success_at']);
+    $date = updatesWinDateTime($replication['last_success_at']);
     $text = ($date !== '')
         ? sprintf(_T("Updates catalog not updated since %s: %s.", "updates"), $date, $cause)
         : sprintf(_T("Updates catalog not updated: %s.", "updates"), $cause);
@@ -3783,7 +3940,7 @@ function updatesStaleNotice()
 function updatesCatalogSection()
 {
     $replication = updatesReplicationState();
-    $date = updatesReplicationDate($replication['last_success_at']);
+    $date = updatesWinDateTime($replication['last_success_at']);
     if ($date === '') {
         return;
     }
