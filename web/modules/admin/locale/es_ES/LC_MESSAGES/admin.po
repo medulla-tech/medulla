@@ -1176,6 +1176,11 @@ msgid "ACL configuration saved successfully"
 msgstr "Configuración ACL guardada con éxito"
 
 #: modules/admin/admin/aclFeatures.php
+#, c-format
+msgid "ACL configuration could not be saved for: %s"
+msgstr "No se pudo guardar la configuración ACL para: %s"
+
+#: modules/admin/admin/aclFeatures.php
 msgid "Feature"
 msgstr "Funcionalidad"
 

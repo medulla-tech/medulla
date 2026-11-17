@@ -668,12 +668,8 @@ if (isset($_POST["bupdate"])) {
                 ?? (xmlrpc_get_profile_name($postedProfileId, $tokenuser) ?: '');
             if ($newProfileName !== '') {
                 $aclString = xmlrpc_build_acl_string_for_profile($newProfileName, getInstallType());
-                if ($aclString !== '') {
-                    $resAcl = @setAcl($uidForAttrs, $aclString);
-                    if ($resAcl === false || $resAcl === null) { $ldapOk = false; $ldapErrors[] = 'lmcACL'; }
-                } else {
-                    error_log('[editUser] empty ACL string for profile ' . $newProfileName);
-                }
+                $resAcl = @setAcl($uidForAttrs, $aclString);
+                if ($resAcl === false || $resAcl === null) { $ldapOk = false; $ldapErrors[] = 'lmcACL'; }
             }
         }
 

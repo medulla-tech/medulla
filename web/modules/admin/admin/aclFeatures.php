@@ -67,6 +67,7 @@ if (is_array($currentSelections)) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_acl'])) {
     verifyCSRFToken($_POST);
 
+    $failedProfiles = [];
     foreach ($profiles as $pIdx => $profile) {
         $featuresDict = [];
         foreach ($featureDefs as $fkey => $fdef) {
@@ -84,9 +85,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_acl'])) {
         if ($profile === 'Super-Admin') {
             $featuresDict['acl_management'] = 'rw';
         }
-        xmlrpc_set_acl_profile_features($profile, $featuresDict, $installType);
+        if (xmlrpc_set_acl_profile_features($profile, $featuresDict, $installType) !== true) {
+            $failedProfiles[] = htmlspecialchars($profile, ENT_QUOTES, 'UTF-8');
+        }
     }
-    new NotifyWidgetSuccess(_T("ACL configuration saved successfully", "admin"));
+    if ($failedProfiles) {
+        new NotifyWidgetFailure(sprintf(_T("ACL configuration could not be saved for: %s", "admin"), implode(', ', $failedProfiles)));
+    } else {
+        new NotifyWidgetSuccess(_T("ACL configuration saved successfully", "admin"));
+    }
     header("Location: " . urlStrRedirect("admin/admin/aclFeatures"));
     exit;
 }
