@@ -87,6 +87,7 @@ if (empty($missing) && $unsupported && !$noProduct && !$untracked) {
 
 $systemFields = array();
 $stateFields = array();
+$productFields = array();
 $machineFields = $linux
     ? array('system' => _T("Version", "updates"), 'kernel' => _T("Kernel", "updates"))
     : array('system' => _T("Version", "updates"), 'build' => _T("Build", "updates"),
@@ -111,7 +112,11 @@ if ($linux) {
     }
     $defender = updatesWinDefenderState($machine['defender'] ?? null);
     if ($defender !== null) {
-        $stateFields[_T("Defender", "updates")] = $defender;
+        $productFields[_T("Defender", "updates")] = $defender;
+    }
+    $office = updatesWinOfficeState($machine['office'] ?? null);
+    if ($office !== null) {
+        $productFields[_T("Office", "updates")] = $office;
     }
 }
 if (in_array('unsupported', $signals, true)) {
@@ -145,7 +150,8 @@ if ($hasHistory) {
 echo '<div class="updates-machine-head">';
 echo '<div class="updates-machine-summary">';
 $columns = array('system' => array(_T("System", "updates"), $systemFields),
-                 'state' => array(_T("Status", "updates"), $stateFields));
+                 'state' => array(_T("Status", "updates"), $stateFields),
+                 'products' => array(_T("Products", "updates"), $productFields));
 foreach ($columns as $key => $column) {
     if (empty($column[1])) {
         continue;
@@ -164,6 +170,9 @@ if (!empty($sections)) {
     updatesMachineSearch($jid, $sections);
 }
 echo '</div>';
+if (!empty($productFields)) {
+    updatesWinTooltips();
+}
 if ($restartRequested && $entity && updatesWinCanDeploy()) {
     echo '<div class="updates-machine-actions"><button type="button" class="btnPrimary" disabled title="'
         . htmlspecialchars(_T("Restart already requested", "updates"), ENT_QUOTES, 'UTF-8') . '">'

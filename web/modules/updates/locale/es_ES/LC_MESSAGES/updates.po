@@ -2079,5 +2079,58 @@ msgid "This machine no longer asks for this update."
 msgstr "Este equipo ya no solicita esta actualización."
 
 #: modules/updates/includes/html.inc.php
-msgid "The machine will install this update with its own Windows Update. It is not in the Microsoft catalog: Medulla provides no file."
-msgstr "El equipo instalará esta actualización con su Windows Update. No está en el catálogo de Microsoft: Medulla no proporciona ningún archivo."
+msgid "The machine will install this update with its own Windows Update."
+msgstr "El equipo instalará esta actualización con su Windows Update."
+
+#: modules/updates/updates/detailsMachineWin.php
+msgid "Products"
+msgstr "Productos"
+
+#: modules/updates/updates/detailsMachineWin.php
+msgid "Office"
+msgstr "Office"
+
+#: modules/updates/includes/html.inc.php
+msgid "Microsoft Office"
+msgstr "Microsoft Office"
+
+#: modules/updates/includes/html.inc.php
+msgid "Update channel: %s"
+msgstr "Canal de actualización: %s"
+
+#: modules/updates/includes/html.inc.php
+msgid "Available version: %s"
+msgstr "Versión disponible: %s"
+
+#: modules/updates/includes/html.inc.php
+msgid "behind"
+msgstr "atrasado"
+
+#: modules/updates/includes/html.inc.php
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php
+msgid "Update Office"
+msgstr "Actualizar Office"
+
+#: modules/updates/includes/html.inc.php
+msgid "Update <b>%s</b> on <b>%s</b>?"
+msgstr "¿Actualizar <b>%s</b> en <b>%s</b>?"
+
+#: modules/updates/includes/html.inc.php
+msgid "The Office update package is not ready on the server yet. Try again in a few minutes."
+msgstr "El paquete de actualización de Office aún no está listo en el servidor. Inténtelo de nuevo en unos minutos."
+
+#: modules/updates/includes/html.inc.php
+msgid "Open Office applications are not closed: the update applies when they are closed."
+msgstr "Las aplicaciones de Office abiertas no se cierran: la actualización se aplica al cerrarlas."
+
+#: modules/updates/includes/html.inc.php
+msgid "Definitions dated %s"
+msgstr "Definiciones del %s"
+
+#: modules/updates/includes/html.inc.php
+msgid "waiting for Office to close"
+msgstr "en espera del cierre de Office"
+
+#: modules/updates/includes/html.inc.php
+msgid "Version %s downloaded: it applies when the Office applications are closed."
+msgstr "Versión %s descargada: se aplica al cerrar las aplicaciones de Office."

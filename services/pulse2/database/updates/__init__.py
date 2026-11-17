@@ -440,6 +440,9 @@ LINUX_PACKAGE_LABEL = "Linux updates (%s)"
 # Label of the package that makes a machine install updates by its own Windows
 # Update (written by the substitute)
 WINDOWS_UPDATE_PACKAGE_LABEL = "Installation by Windows Update"
+# Label of the package that makes a machine update its Office Click-to-Run
+# (written by the substitute)
+OFFICE_UPDATE_PACKAGE_LABEL = "Office update"
 # entity_overrides.setting of the approval rules of each system
 RULES_SETTINGS = {"windows": "rules", "linux": "linux_rules"}
 WINDOWS_APPROVAL_STATUSES = ("pending", "approved", "declined")
@@ -453,6 +456,10 @@ BY_WINDOWS_UPDATE_SQL = """(mu.update_id IS NULL AND mu.package IS NULL AND mu.k
                 AND NOT EXISTS (SELECT 1 FROM updates u2 WHERE u2.kb = mu.kb)
                 AND EXISTS (SELECT 1 FROM machine_missing_updates mm
                              WHERE mm.jid = mu.jid AND mm.kb = mu.kb))"""
+# Update of a product of a Windows machine (alias mu) that updates itself, Office
+# Click-to-Run: no file to deploy, a version to reach
+BY_PRODUCT_SQL = """(mu.update_id IS NULL AND mu.package IS NULL
+                AND mu.available_version IS NOT NULL)"""
 
 
 def windows_severity_rank_sql(column):
@@ -656,6 +663,41 @@ def defender_state(report):
         "enabled": enabled if isinstance(enabled, bool) else None,
         "signature_version": version,
         "signature_updated_at": updated_at,
+    }
+
+
+OFFICE_VERSION_RE = re.compile(r"[0-9]+(\.[0-9]+){3}")
+OFFICE_VERSION_MAX = 32
+OFFICE_NAME_MAX = 255
+OFFICE_CHANNEL_RE = re.compile(r"[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}")
+
+
+def office_state(report):
+    """Office Click-to-Run of a machine report, or None when the report has no
+    usable block: {"name" ("" when unknown), "version", "channel": its GUID,
+    "" when unusable, "ready_version": downloaded, applied once the Office
+    applications are closed, "" without one}."""
+    office = report.get("office") if isinstance(report, dict) else None
+    if not isinstance(office, dict):
+        return None
+    version = office.get("version")
+    if (not isinstance(version, str) or len(version) > OFFICE_VERSION_MAX
+            or not OFFICE_VERSION_RE.fullmatch(version)):
+        return None
+    name = office.get("name")
+    if not isinstance(name, str) or len(name) > OFFICE_NAME_MAX:
+        name = ""
+    channel = office.get("channel")
+    channel = channel.strip().lower() if isinstance(channel, str) else ""
+    ready = office.get("ready")
+    if (not isinstance(ready, str) or len(ready) > OFFICE_VERSION_MAX
+            or not OFFICE_VERSION_RE.fullmatch(ready)):
+        ready = ""
+    return {
+        "name": name.strip(),
+        "version": version,
+        "channel": channel if OFFICE_CHANNEL_RE.fullmatch(channel) else "",
+        "ready_version": ready,
     }
 
 
@@ -1254,6 +1296,17 @@ class UpdatesDatabase(DatabaseHelper):
 
         updates[i].by_windows_update: absent from the catalog, installed by the
         Windows Update of the machine (install_by_windows_update).
+
+        updates[i].by_product: update of a product that updates itself, from
+        installed_version to available_version (update_office).
+
+        updates[i].pending_apply: by_product update already downloaded, applied
+        once the applications of the product are closed.
+
+        office: None without Office Click-to-Run, else {"name", "version",
+        "channel": name of its update channel, "" when unknown,
+        "ready_version": "" when none is downloaded,
+        "available_version": "" when up to date}.
         """
         row = session.execute(text(f"""
             SELECT mr.jid, COALESCE(xm.hostname, mr.hostname) AS hostname,
@@ -1330,6 +1383,7 @@ class UpdatesDatabase(DatabaseHelper):
                        {MACHINE_CRITICAL_UPDATE_SQL} AS critical,
                        {DEPLOYED_PENDING_REPORT_TEMPLATE.format(kb="COALESCE(u.kb, mu.kb)")} AS deployed_pending_report,
                        {BY_WINDOWS_UPDATE_SQL} AS by_windows_update,
+                       {BY_PRODUCT_SQL} AS by_product,
                        p.state AS package_state, p.error AS package_error,
                        {WINDOWS_UPDATE_SIZE_TEMPLATE.format(update_id="mu.update_id")} AS size,
                        CASE WHEN u.id IS NOT NULL
@@ -1371,7 +1425,20 @@ class UpdatesDatabase(DatabaseHelper):
                 "offer": update.offer,
                 "deployed_pending_report": bool(update.deployed_pending_report),
                 "by_windows_update": bool(update.by_windows_update),
+                "by_product": bool(update.by_product),
             })
+
+        office = office_state(report)
+        if office is not None:
+            if office["channel"]:
+                office["channel"] = session.execute(text(
+                    "SELECT name FROM office_channels WHERE channel_id = :channel_id"),
+                    {"channel_id": office["channel"]}).scalar() or ""
+            office["available_version"] = next(
+                (update["available_version"] for update in updates if update["by_product"]), "")
+        ready = bool(office and office["ready_version"])
+        for update in updates:
+            update["pending_apply"] = update["by_product"] and ready
 
         return {
             "jid": row.jid,
@@ -1389,6 +1456,7 @@ class UpdatesDatabase(DatabaseHelper):
             "signals": signals,
             "windows_update": windows_update,
             "defender": defender_state(report),
+            "office": office,
             "updates": updates,
             "no_report": False,
             "running": bool(row.running),
@@ -1881,14 +1949,15 @@ class UpdatesDatabase(DatabaseHelper):
     @staticmethod
     def _windows_deploy_machines(session, update_id, package_uuid, entity_ids,
                                  glpi_uuids=None, jid=None, installed_kb=None,
-                                 linux=False, windows_update_kb=None):
+                                 linux=False, windows_update_kb=None, by_product=False):
         """Machines of entity_ids (and glpi_uuids, jid if given) missing the update,
         reporting installed_kb when given (uninstallation), with a Linux
-        package to upgrade (linux), or asked windows_update_kb that the catalog
-        does not carry. "offer": of the update on the machine, empty for an
-        uninstallation or Linux; "approved": for this machine, a rule only
-        covers the offer main and esu never is; an update installed by Windows
-        Update has no approval and always is."""
+        package to upgrade (linux), asked windows_update_kb that the catalog
+        does not carry, or with a product to update (by_product). "offer": of
+        the update on the machine, empty for an uninstallation or Linux;
+        "approved": for this machine, a rule only covers the offer main and esu
+        never is; an update installed by Windows Update or by its product has
+        no approval and always is."""
         params = {"update_id": update_id, "entity_ids": entity_ids,
                   "package_uuid": package_uuid or ""}
         offer = "NULL"
@@ -1901,14 +1970,19 @@ class UpdatesDatabase(DatabaseHelper):
         if linux:
             target = ("SELECT 1 FROM machine_updates mu"
                       " WHERE mu.jid = mr.jid AND mu.package IS NOT NULL")
-        elif windows_update_kb is not None:
-            asked = ("FROM machine_updates mu WHERE mu.jid = mr.jid AND mu.kb = :kb"
-                     f" AND {KNOWN_OFFER_SQL} AND {BY_WINDOWS_UPDATE_SQL}")
+        elif by_product or windows_update_kb is not None:
+            asked = f"FROM machine_updates mu WHERE mu.jid = mr.jid AND {KNOWN_OFFER_SQL}"
+            if by_product:
+                asked += f" AND {BY_PRODUCT_SQL}"
+                kb = f"(SELECT mu.kb {asked} ORDER BY mu.id LIMIT 1)"
+            else:
+                asked += f" AND mu.kb = :kb AND {BY_WINDOWS_UPDATE_SQL}"
+                kb = ":kb"
+                params["kb"] = int(windows_update_kb)
             target = f"SELECT 1 {asked}"
-            offer = f"(SELECT mu.offer {asked} LIMIT 1)"
-            deployed = DEPLOYED_PENDING_REPORT_TEMPLATE.format(kb=":kb")
+            offer = f"(SELECT mu.offer {asked} ORDER BY mu.id LIMIT 1)"
+            deployed = DEPLOYED_PENDING_REPORT_TEMPLATE.format(kb=kb)
             approved = "1"
-            params["kb"] = int(windows_update_kb)
         elif installed_kb is None:
             target = ("SELECT 1 FROM machine_updates mu"
                       f" WHERE mu.jid = mr.jid AND mu.update_id = :update_id AND {KNOWN_OFFER_SQL}")
@@ -2048,7 +2122,7 @@ class UpdatesDatabase(DatabaseHelper):
     @staticmethod
     def _generic_package(session, label):
         """uuid of the ready package of this pkgs label (a Linux family,
-        installation by Windows Update), None without one."""
+        installation by Windows Update, Office update), None without one."""
         # updates.packages is written by the substitute only: a pkgs package of the
         # same label is not one of ours. The latest ready is the current sequence.
         return session.execute(text("""
@@ -2061,45 +2135,70 @@ class UpdatesDatabase(DatabaseHelper):
             LIMIT 1
             """), {"label": label}).scalar()
 
-    @DatabaseHelper._sessionm
-    def get_windows_update_install_target(self, session, kb, jid, entity_ids):
-        """Update kb that the machine jid of entity_ids installs by its own Windows
-        Update: {"update": {"kb", "title", "package_uuid": None while the generic
-        package is not ready}, "windows_update_ids": what Windows Update names
-        for kb on the machine, "machines": the machine (fields of
-        get_windows_deploy_targets)}.
+    def _self_install_target(self, session, jid, entity_ids, kb=None):
+        """Update that the machine jid of entity_ids installs itself, with a
+        generic package: kb by its own Windows Update, or without kb the one of
+        its product. {"update": {"kb", "title", "available_version",
+        "package_uuid": None while the generic package is not ready},
+        "machines": the machine (fields of get_windows_deploy_targets)}.
 
         None when the machine has no such update.
         """
-        kb = int(kb)
         entity_ids = self._entity_id_list(entity_ids)
         if not entity_ids:
             return None
+        params = {"jid": jid, "entity_ids": entity_ids}
+        if kb is None:
+            asked = BY_PRODUCT_SQL
+            label = OFFICE_UPDATE_PACKAGE_LABEL
+        else:
+            asked = f"mu.kb = :kb AND {BY_WINDOWS_UPDATE_SQL}"
+            label = WINDOWS_UPDATE_PACKAGE_LABEL
+            params["kb"] = kb
         update = session.execute(text(f"""
-            SELECT mu.kb, mu.title
+            SELECT mu.kb, mu.title, mu.available_version
             FROM machine_updates mu
             JOIN machine_reports mr ON mr.jid = mu.jid
             {WINDOWS_MACHINE_ENTITY_JOIN}
-            WHERE mu.jid = :jid AND mu.kb = :kb AND lgm.entities_id IN :entity_ids
-              AND {KNOWN_OFFER_SQL} AND {BY_WINDOWS_UPDATE_SQL}
+            WHERE mu.jid = :jid AND lgm.entities_id IN :entity_ids
+              AND {KNOWN_OFFER_SQL} AND {asked}
+            ORDER BY mu.id
             LIMIT 1
-            """).bindparams(bindparam("entity_ids", expanding=True)),
-            {"jid": jid, "kb": kb, "entity_ids": entity_ids}).first()
+            """).bindparams(bindparam("entity_ids", expanding=True)), params).first()
         if update is None:
             return None
-        package_uuid = self._generic_package(session, WINDOWS_UPDATE_PACKAGE_LABEL)
-        machines = self._windows_deploy_machines(session, 0, package_uuid, entity_ids,
-                                                 jid=jid, windows_update_kb=kb)
+        package_uuid = self._generic_package(session, label)
         return {
-            "update": {"kb": int(update.kb), "title": update.title or "",
+            "update": {"kb": None if update.kb is None else int(update.kb),
+                       "title": update.title or "",
+                       "available_version": update.available_version or "",
                        "package_uuid": package_uuid or None},
-            "windows_update_ids": [row.windows_update_id for row in session.execute(text("""
-                SELECT mm.windows_update_id FROM machine_missing_updates mm
-                WHERE mm.jid = :jid AND mm.kb = :kb
-                ORDER BY mm.windows_update_id
-                """), {"jid": jid, "kb": kb})],
-            "machines": machines,
+            "machines": self._windows_deploy_machines(session, 0, package_uuid, entity_ids,
+                                                      jid=jid, windows_update_kb=kb,
+                                                      by_product=kb is None),
         }
+
+    @DatabaseHelper._sessionm
+    def get_windows_update_install_target(self, session, kb, jid, entity_ids):
+        """_self_install_target of the update kb that the machine installs by its
+        own Windows Update, plus "windows_update_ids": what Windows Update names
+        for kb on the machine."""
+        kb = int(kb)
+        target = self._self_install_target(session, jid, entity_ids, kb)
+        if target is not None:
+            target["windows_update_ids"] = [
+                row.windows_update_id for row in session.execute(text("""
+                    SELECT mm.windows_update_id FROM machine_missing_updates mm
+                    WHERE mm.jid = :jid AND mm.kb = :kb
+                    ORDER BY mm.windows_update_id
+                    """), {"jid": jid, "kb": kb})]
+        return target
+
+    @DatabaseHelper._sessionm
+    def get_office_update_target(self, session, jid, entity_ids):
+        """_self_install_target of the Office update of the machine:
+        update["available_version"] is the version to reach."""
+        return self._self_install_target(session, jid, entity_ids)
 
     @DatabaseHelper._sessionm
     def get_linux_deploy_target(self, session, jid, entity_ids):
