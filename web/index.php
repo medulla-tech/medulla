@@ -207,7 +207,7 @@ if (isset($_POST["bConnect"]) || isset($_POST["bMagicLink"])) {
 }
 
 if (!empty($_GET["error"])) {
-    error = htmlspecialchars(urldecode($_GET["error"]), ENT_QUOTES, 'UTF-8') . "<br/>" . $error;
+    $error = htmlspecialchars(urldecode($_GET["error"]), ENT_QUOTES, 'UTF-8') . "<br/>" . $error;
 }
 if (isset($_GET["agentsessionexpired"])) {
     $error = _("You have been logged out because the session between the MMC web interface and the MMC agent expired.");
