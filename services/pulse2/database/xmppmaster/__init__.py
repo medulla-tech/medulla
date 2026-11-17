@@ -10204,6 +10204,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     relayserver.urlguacamole,
                     0,
                     relayserver.syncthing_port,
+                    0,
+                    relayserver.websocket_url,
                 ]
             }
             # search for clusters where ARS is
@@ -10243,6 +10245,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                 0,
                                 m.keysyncthing,
                                 m.syncthing_port,
+                                m.websocket_url,
                             ]
                             for m in ars
                         }
@@ -10256,6 +10259,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                 0,
                                 "",
                                 0,
+                                m.websocket_url,
                             ]
                             for m in ars
                         }
