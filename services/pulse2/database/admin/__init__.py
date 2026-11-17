@@ -1001,6 +1001,9 @@ class AdminDatabase(DatabaseHelper):
           - rows for the OTHER install_type are never touched.
         """
         try:
+            if not isinstance(features_dict, dict):
+                features_dict = {}
+
             # Enforce locked features
             locked = self.LOCKED_FEATURES.get(profile_name, {})
             for fkey, level in locked.items():

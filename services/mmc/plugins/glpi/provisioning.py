@@ -138,7 +138,8 @@ class GlpiProvisioner(ProvisionerI):
             except Exception as e:
                 self.logger.error("ACL build failed for profile %s: %s" % (selected, e))
             if not acls:
-                self.logger.info("No ACL to apply for the GLPI profile %s" % selected)
+                self.logger.info("No ACL for the GLPI profile %s, clearing MMC ACL" % selected)
+                ldapUserGroupControl().changeUserAttributes(authtoken.getLogin(), "lmcACL", "")
             else:
                 l = ldapUserGroupControl()
                 self.logger.info("Setting MMC ACL corresponding to GLPI profile %s: %s", selected, acls)
