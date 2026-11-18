@@ -8,6 +8,7 @@
 - [FEATURE] Add a warning when no product is selected in updates module
 - [FEATURE] New probe-based monitoring module
 - [FEATURE] New MDM module
+- [FEATURE] Review updates module for Linux updates
 - [BUGFIX]  Fix update counters in cases where the ITSM is external
 - [BUGFIX]  Fix Kiosk when a profile name already exists
 - [BUGFIX]  Remove date information from convergence deployments view
@@ -17,6 +18,7 @@
 - [BUGFIX]  Fix deployment of major updates when another major update is already running
 - [BUGFIX]  Fix relay list machine counters
 - [BUGFIX]  Fix rights of users to see all their entities
+- [BUGFIX]  Use a CSPRNG instead of UUID for generating magic link token (reported by kta1kri - https://github.com/kta1kri)
 
 ## [5.6.5](https://github.com/medulla-tech/medulla/releases/tag/5.6.5) (2026-09-18)
 - [FEATURE] Support for MacOS clients
