@@ -60,7 +60,6 @@ from mmc.plugins.xmppmaster.master.agentmaster import (
     callremoteXmppMonitoring,
 )
 import inspect
-from .master.lib.manage_grafana import manage_grafana
 
 
 VERSION = "1.0.0"
@@ -486,36 +485,6 @@ class RpcProxy(RpcProxyI):
         if 'liste_entities_user' in infos:
             entities = infos['liste_entities_user']
         return xmlrpcCleanup(XmppMasterDatabase().get_computer_count_for_dashboard(entities))
-
-    @with_optional_xmpp_context
-    def get_mon_events(self, start, maxperpage, filter:str="", ctx=None):
-        """Get monitoring events
-
-        Args:
-            self (RpcProxy): RpcProxy Object Instance
-            start (int): Offset to select datas (not declared as int in the prototype, because if the data cames from rpc, it could be an int casted as str)
-            maxperpage (int): Limit to select datas (not declared as int in the prototype, because if the data cames from rpc, it could be an int casted as str)
-            filter (str, optionnal): Criterion to search on result
-            ctx (Contexte_XmlRpc_surcharge_info_Glpi = None, optionnal): The user context to get his entities list
-
-        Returns:
-            dict: Dict of event found. The dict will have the shape:
-            {
-                'total': 1, # Count of event found
-                'datas' : [
-                    {dict representing the event 1}, # Event 1
-                    {dict representing the event 2}, # Event 2
-                    ...
-                ]
-            }
-            """
-        infos=ctx.get_session_info()['mondict']
-        entities = []
-        if 'liste_entities_user' in infos:
-            entities = infos['liste_entities_user']
-
-        result = XmppMasterDatabase().get_mon_events(start, maxperpage, filter, entities)
-        return result
 
     @with_optional_xmpp_context
     def get_count_success_rate_for_dashboard(self, ctx=None):
@@ -2018,22 +1987,6 @@ def get_packages_list(jid, CGIGET=""):
     return _result
 
 
-def getPanelsForMachine(hostname):
-    return manage_grafana(hostname).grafanaGetPanels()
-
-
-def getPanelImage(hostname, panel_title, from_timestamp, to_timestamp):
-    return manage_grafana(hostname).grafanaGetPanelImage(
-        panel_title, from_timestamp, to_timestamp
-    )
-
-
-def getPanelGraph(hostname, panel_title, from_timestamp, to_timestamp):
-    return manage_grafana(hostname).grafanaGetPanelGraph(
-        panel_title, from_timestamp, to_timestamp
-    )
-
-
 def getLastOnlineStatus(jid):
     result = XmppMasterDatabase().last_event_presence_xmpp(jid)
     try:
@@ -2042,14 +1995,6 @@ def getLastOnlineStatus(jid):
         return False
 
 
-def get_mon_events_history(start, maxperpage, filter):
-    result = XmppMasterDatabase().get_mon_events_history(start, maxperpage, filter)
-    return result
-
-
-def acquit_mon_event(id, user):
-    result = XmppMasterDatabase().acquit_mon_event(id, user)
-    return result
 
 
 def dir_exists(path):

@@ -74,9 +74,6 @@ $submod->addPage($page);
 $page = new Page("product_updates_dashboard", _T("Update Panel", "dashboard"));
 $submod->addPage($page);
 
-$page = new Page("alerts", _T("Alerts Panel", "dashboard"));
-$submod->addPage($page);
-
 $page = new Page("successRate_download", _T("Success Rate Panel", "dashboard"));
 $submod->addPage($page);
 

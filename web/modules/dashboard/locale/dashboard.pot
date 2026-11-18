@@ -62,45 +62,6 @@ msgstr ""
 msgid "Machines in Medulla from "
 msgstr ""
 
-#: modules/dashboard/includes/panels/alerts.inc.php:28
-msgid "Alerts"
-msgstr ""
-
-#: modules/dashboard/includes/panels/alerts.inc.php:49
-#: modules/dashboard/includes/panels/alertsentity.inc.php:50
-msgid "Detail"
-msgstr ""
-
-#: modules/dashboard/includes/panels/alerts.inc.php:50
-#: modules/dashboard/includes/panels/alertsentity.inc.php:51
-msgid "Acknowledge"
-msgstr ""
-
-#: modules/dashboard/includes/panels/alerts.inc.php:54
-#: modules/dashboard/includes/panels/alertsentity.inc.php:55
-msgid "Status"
-msgstr ""
-
-#: modules/dashboard/includes/panels/alerts.inc.php:55
-#: modules/dashboard/includes/panels/alertsentity.inc.php:56
-msgid "Date"
-msgstr ""
-
-#: modules/dashboard/includes/panels/alerts.inc.php:56
-#: modules/dashboard/includes/panels/alertsentity.inc.php:57
-msgid "Evenement"
-msgstr ""
-
-#: modules/dashboard/includes/panels/alerts.inc.php:57
-#: modules/dashboard/includes/panels/alertsentity.inc.php:58
-msgid "Machine"
-msgstr ""
-
-#: modules/dashboard/includes/panels/alerts.inc.php:70
-#: modules/dashboard/includes/panels/alertsentity.inc.php:71
-msgid "No alerts"
-msgstr ""
-
 #: modules/dashboard/includes/panels/plugins.inc.php:29
 msgid "Plugins loaded"
 msgstr ""
@@ -227,10 +188,6 @@ msgstr ""
 msgid "Deployment success rates for the past 6 weeks"
 msgstr ""
 
-#: modules/dashboard/includes/panels/alertsentity.inc.php:28
-msgid "Alerts by Entity"
-msgstr ""
-
 #: modules/dashboard/infoPackage.inc.php:38
 #: modules/dashboard/infoPackage.inc.php:42
 #: modules/dashboard/infoPackage.inc.php:48
@@ -263,10 +220,6 @@ msgstr ""
 
 #: modules/dashboard/infoPackage.inc.php:74
 msgid "Update Panel"
-msgstr ""
-
-#: modules/dashboard/infoPackage.inc.php:77
-msgid "Alerts Panel"
 msgstr ""
 
 #: modules/dashboard/infoPackage.inc.php:80

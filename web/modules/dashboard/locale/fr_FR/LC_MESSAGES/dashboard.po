@@ -59,38 +59,6 @@ msgstr "Agents"
 msgid "Machines in Medulla from "
 msgstr "Machines dans la moelle de "
 
-#: modules/dashboard/includes/panels/alerts.inc.php:28
-msgid "Alerts"
-msgstr "Alertes"
-
-#: modules/dashboard/includes/panels/alertsentity.inc.php:50
-msgid "Detail"
-msgstr "Détails"
-
-#: modules/dashboard/includes/panels/alertsentity.inc.php:51
-msgid "Acknowledge"
-msgstr "Acquitter"
-
-#: modules/dashboard/includes/panels/alertsentity.inc.php:55
-msgid "Status"
-msgstr "État"
-
-#: modules/dashboard/includes/panels/alertsentity.inc.php:56
-msgid "Date"
-msgstr "Date"
-
-#: modules/dashboard/includes/panels/alertsentity.inc.php:57
-msgid "Evenement"
-msgstr "Événement"
-
-#: modules/dashboard/includes/panels/alertsentity.inc.php:58
-msgid "Machine"
-msgstr "Ordinateur"
-
-#: modules/dashboard/includes/panels/alertsentity.inc.php:71
-msgid "No alerts"
-msgstr "Pas d'alertes"
-
 #: modules/dashboard/includes/panels/plugins.inc.php:29
 msgid "Plugins loaded"
 msgstr "Plugins chargés"
@@ -287,10 +255,6 @@ msgstr "Mise à jour disponible"
 msgid "Minor update available"
 msgstr "Mise à jour mineure disponible"
 
-#: modules/dashboard/includes/panels/alertsentity.inc.php:28
-msgid "Alerts by Entity"
-msgstr "Alertes par entité"
-
 #: modules/dashboard/infoPackage.inc.php:48
 msgid "Dashboard"
 msgstr "Dashboard"
@@ -322,10 +286,6 @@ msgstr "Widget Sauvegardes"
 #: modules/dashboard/infoPackage.inc.php:74
 msgid "Update Panel"
 msgstr "Widget Mises à jour"
-
-#: modules/dashboard/infoPackage.inc.php:77
-msgid "Alerts Panel"
-msgstr "Widget Alertes"
 
 #: modules/dashboard/infoPackage.inc.php:80
 msgid "Alerts by Entity Panel"

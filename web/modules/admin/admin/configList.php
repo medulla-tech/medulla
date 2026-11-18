@@ -95,7 +95,7 @@ $categories = [
             [
                 'label' => 'GLPI',
                 'patterns' => ['/glpi/i'],
-                'exclude' => ['grafana', 'provisioning_glpi', 'syncthing'],
+                'exclude' => ['provisioning_glpi', 'syncthing'],
             ],
             [
                 'label' => 'ITSMNG',
@@ -185,10 +185,6 @@ $categories = [
                 'patterns' => ['/guacamole/i', '/rustdesk/i', '/remote/i'],
             ],
             [
-                'label' => 'Monitoring (Grafana / autre)',
-                'patterns' => ['/grafana/i', '/monitor/i'],
-            ],
-            [
                 'label' => 'Mastering',
                 'patterns' => ['/master/i', '/package.?server/i'],
                 'exclude' => ['xmpp'],
@@ -213,7 +209,7 @@ $categories = [
             [
                 'label' => 'XMPP',
                 'patterns' => ['/xmpp/i'],
-                'exclude' => ['grafana_api', 'syncthing'],
+                'exclude' => ['syncthing'],
             ],
             [
                 'label' => 'LOG',
