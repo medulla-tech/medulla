@@ -114,6 +114,10 @@ if ($linux) {
     if ($defender !== null) {
         $productFields[_T("Defender", "updates")] = $defender;
     }
+    $office = updatesWinOfficeState($machine['office'] ?? null);
+    if ($office !== null) {
+        $productFields[_T("Office", "updates")] = $office;
+    }
 }
 if (in_array('unsupported', $signals, true)) {
     $systemFields[_T("Support", "updates")] = '<strong>' . htmlspecialchars(_T("ended (no ESU)", "updates"), ENT_QUOTES, 'UTF-8') . '</strong>';

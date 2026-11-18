@@ -13,6 +13,8 @@ if (!updatesModuleOpen()) {
 
 if (($_GET['os'] ?? '') === 'linux') {
     updatesLinuxDeployPopup();
+} elseif (($_GET['office'] ?? '') === '1') {
+    updatesWinUpdateInstallPopup(true);
 } elseif (($_GET['wu'] ?? '') === '1') {
     updatesWinUpdateInstallPopup();
 } else {

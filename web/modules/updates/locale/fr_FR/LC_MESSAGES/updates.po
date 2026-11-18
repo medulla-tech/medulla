@@ -2086,9 +2086,54 @@ msgstr "Le poste installera cette mise à jour par son Windows Update."
 msgid "Products"
 msgstr "Produits"
 
+#: modules/updates/updates/detailsMachineWin.php
+msgid "Office"
+msgstr "Office"
+
+#: modules/updates/includes/html.inc.php
+msgid "Microsoft Office"
+msgstr "Microsoft Office"
+
+#: modules/updates/includes/html.inc.php
+msgid "Update channel: %s"
+msgstr "Canal de mise à jour : %s"
+
+#: modules/updates/includes/html.inc.php
+msgid "Available version: %s"
+msgstr "Version disponible : %s"
+
+#: modules/updates/includes/html.inc.php
+msgid "behind"
+msgstr "en retard"
+
+#: modules/updates/includes/html.inc.php
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php
+msgid "Update Office"
+msgstr "Mettre à jour Office"
+
+#: modules/updates/includes/html.inc.php
+msgid "Update <b>%s</b> on <b>%s</b>?"
+msgstr "Mettre à jour <b>%s</b> sur <b>%s</b> ?"
+
+#: modules/updates/includes/html.inc.php
+msgid "The Office update package is not ready on the server yet. Try again in a few minutes."
+msgstr "Le paquet de mise à jour d'Office n'est pas encore prêt sur le serveur. Réessayez dans quelques minutes."
+
+#: modules/updates/includes/html.inc.php
+msgid "Open Office applications are not closed: the update applies when they are closed."
+msgstr "Les applications Office ouvertes ne sont pas fermées : la mise à jour s'applique à leur fermeture."
+
 #: modules/updates/includes/html.inc.php
 msgid "Definitions dated %s"
 msgstr "Définitions du %s"
+
+#: modules/updates/includes/html.inc.php
+msgid "waiting for Office to close"
+msgstr "en attente de fermeture"
+
+#: modules/updates/includes/html.inc.php
+msgid "Version %s downloaded: it applies when the Office applications are closed."
+msgstr "Version %s téléchargée : elle s'applique à la fermeture des applications Office."
 
 #: modules/updates/updates/detailsMachineWin.php
 msgid "Upgrade"
