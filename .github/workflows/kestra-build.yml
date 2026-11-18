@@ -1,0 +1,66 @@
+name: Build Debian (Kestra)
+
+on:
+  push:
+    branches: [dev, integration, master]
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Branche à construire
+        type: choice
+        options: [dev, integration, master]
+
+concurrency:
+  group: kestra-build-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: [self-hosted, kestra]
+    timeout-minutes: 60
+    env:
+      KESTRA_URL: ${{ secrets.KESTRA_URL }}
+      KESTRA_USER: ${{ secrets.KESTRA_USER }}
+      KESTRA_PASSWORD: ${{ secrets.KESTRA_PASSWORD }}
+      FLOW: medulla-build-debian
+      BRANCH: ${{ inputs.branch || github.ref_name }}
+      NAMESPACE: medulla
+      DISTRIBUTION: trixie
+    steps:
+      - name: Lancer le flow Kestra
+        id: start
+        run: |
+          set -euo pipefail
+          response=$(curl -fsS -u "${KESTRA_USER}:${KESTRA_PASSWORD}" \
+            -X POST \
+            -F "branch=${BRANCH}" \
+            -F "distribution=${DISTRIBUTION}" \
+            "${KESTRA_URL}/api/v1/main/executions/${NAMESPACE}/${FLOW}")
+          id=$(printf '%s' "${response}" | python3 -c 'import json,sys; print(json.load(sys.stdin)["id"])')
+          echo "id=${id}" >> "${GITHUB_OUTPUT}"
+          echo "Exécution ${id} : ${KESTRA_URL}/ui/main/executions/${NAMESPACE}/${FLOW}/${id}"
+          echo "Build Kestra : [${FLOW} sur ${BRANCH}](${KESTRA_URL}/ui/main/executions/${NAMESPACE}/${FLOW}/${id})" >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Attendre la fin du build
+        env:
+          EXECUTION_ID: ${{ steps.start.outputs.id }}
+        run: |
+          set -euo pipefail
+          previous=""
+          while true; do
+            state=$(curl -fsS -u "${KESTRA_USER}:${KESTRA_PASSWORD}" \
+              "${KESTRA_URL}/api/v1/main/executions/${EXECUTION_ID}" \
+              | python3 -c 'import json,sys; print(json.load(sys.stdin)["state"]["current"])')
+            if [ "${state}" != "${previous}" ]; then
+              echo "$(date +%H:%M:%S) ${state}"
+              previous="${state}"
+            fi
+            case "${state}" in
+              SUCCESS) exit 0 ;;
+              WARNING) echo "::warning::Build terminé avec des avertissements"; exit 0 ;;
+              FAILED|KILLED|CANCELLED)
+                echo "::error::Build ${state} : ${KESTRA_URL}/ui/main/executions/${NAMESPACE}/${FLOW}/${EXECUTION_ID}"
+                exit 1 ;;
+            esac
+            sleep 20
+          done
