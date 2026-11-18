@@ -182,11 +182,13 @@ SEARCH_FAILED_SQL = "COALESCE(mr.search_status IN ({}), 0)".format(
     ", ".join(f"'{status}'" for status in WINDOWS_SEARCH_FAILURES))
 
 # Last xmppmaster.machines row (xm) of each bare jid: several resources of a jid
-# must not repeat a report
+# must not repeat a report. Compared in the character set of xmppmaster: the other way
+# round every pair of rows is converted
 XM_LATEST_JOIN_SQL = """
     LEFT JOIN (SELECT SUBSTRING_INDEX(jid, '/', 1) AS bare_jid, MAX(id) AS id
                  FROM xmppmaster.machines
-                GROUP BY SUBSTRING_INDEX(jid, '/', 1)) xl ON xl.bare_jid = mr.jid
+                GROUP BY SUBSTRING_INDEX(jid, '/', 1)) xl
+           ON xl.bare_jid = CONVERT(mr.jid USING utf8mb3)
     LEFT JOIN xmppmaster.machines xm ON xm.id = xl.id
 """
 
