@@ -1207,8 +1207,9 @@ function updatesUpgradeRunErrorText($runError)
 }
 
 /**
- * Status cell: badge of the category; the reasons of non-eligibility or of non-support,
- * or the pending restart, as a tooltip.
+ * Status cell: badge of the category; the reasons of non-eligibility or of non-support
+ * as a tooltip. A launched Windows upgrade waiting for a restart keeps its in progress
+ * badge, followed by the reboot pending one.
  *
  * @param array $row Row of xmlrpc_get_upgrade_machine_list
  * @return string HTML
@@ -1226,7 +1227,9 @@ function updatesUpgradeStateCell($row)
     if ($category === 'reboot_pending' && ($row['os'] ?? '') === 'windows'
         && trim((string) ($row['launched_at'] ?? '')) !== ''
         && updatesWinTriState($row['restart_requested'] ?? null) !== true) {
-        return updatesWinBadge($categories['in_progress']['label'], 'upgrade-in-progress', '', updatesUpgradeRestartNote());
+        return updatesWinBadge($categories['in_progress']['label'], $categories['in_progress']['badge'])
+            . ' ' . updatesWinBadge($categories['reboot_pending']['label'], $categories['reboot_pending']['badge'],
+                                    '', updatesUpgradeRestartNote());
     }
     $tooltip = '';
     if ($category === 'not_eligible' || $category === 'not_concerned') {
