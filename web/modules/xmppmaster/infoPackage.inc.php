@@ -91,39 +91,6 @@ $submod->addPage($page);
 $page = new Page("topology", _T('XMPP topology Machine', 'xmppmaster'));
 $submod->addPage($page);
 
-$page = new Page("alertsdetail", _T("Alerts Detail", "xmppmaster"));
-$page->setFile("modules/xmppmaster/xmppmaster/monitoring/detail.php");
-$submod->addPage($page);
-
-// Tabs for alerts notifications
-$page = new Page("alerts", _T("Monitoring Alerts", "xmppmaster"));
-$page->setFile("modules/xmppmaster/xmppmaster/monitoring/alerts.php");
-$page->setOptions(array("visible" => true));
-
-$tab = new Tab("notificationsTab", _T("Monitoring Alerts", "xmppmaster"));
-$page->addTab($tab);
-
-//Tab2
-$tab = new Tab("notificationsHistoryTab", _T("Monitoring history", "xmppmaster"));
-$page->addTab($tab);
-$submod->addPage($page);
-
-$page = new Page("ajaxalerts");
-$page->setOptions(array("visible" => false, "AJAX" => true));
-$page->setFile("modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php");
-$submod->addPage($page);
-
-$page = new Page("ajaxalertshistory");
-$page->setOptions(array("visible" => false, "AJAX" => true));
-$page->setFile("modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php");
-$submod->addPage($page);
-
-
-$page = new Page("acquit");
-$page->setFile("modules/xmppmaster/xmppmaster/monitoring/acquit.php");
-$page->setOptions(array("visible" => false, "AJAX" => true));
-$submod->addPage($page);
-
 $page = new Page("machine_xmpp_detail", _T('XMPP Machine details', 'xmppmaster'));
 $submod->addPage($page);
 
@@ -165,9 +132,6 @@ $page = new Page("logbygrpmachine", _T('XMPP logs on group', 'xmppmaster'));
 $submod->addPage($page);
 
 $page = new Page("consolecomputerxmpp", _T('XMPP Console', 'xmppmaster'));
-$submod->addPage($page);
-
-$page = new Page("monitoringview", _T('XMPP Monitoring view', 'xmppmaster'));
 $submod->addPage($page);
 
 $page = new Page("remoteeditorconfiguration", _T('Remote edit configuration file', 'xmppmaster'));

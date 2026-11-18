@@ -1916,13 +1916,6 @@ msgstr ""
 msgid "List of Uninventoried Machines"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/localSidebar.php:38
-#: modules/xmppmaster/xmppmaster/monitoring/alerts.php:29
-#: modules/xmppmaster/infoPackage.inc.php:90
-#: modules/xmppmaster/infoPackage.inc.php:94
-msgid "Monitoring Alerts"
-msgstr ""
-
 #: modules/xmppmaster/xmppmaster/localSidebar.php:42
 #: modules/xmppmaster/infoPackage.inc.php:415
 #: modules/xmppmaster/infoPackage.inc.php:419
@@ -1951,142 +1944,12 @@ msgstr ""
 msgid "Delete this Quick Action :%s"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/monitoring/acquit.php:32
-#, php-format
-msgid "Failed acknowledging the alert : %s on device %s_%s (%s)"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/acquit.php:34
-#, php-format
-msgid "Success acknowledging the alert : %s on device %s_%s (%s)"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/acquit.php:39
-#, php-format
-msgid "Acknowledge this alert : %s on device %s_%s (%s)"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/alerts.php:36
-msgid "Alerts"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/alerts.php:37
-msgid "Alerts History"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:63
-#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:65
-msgid "Machine name"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:67
-#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:69
-msgid "Date Event"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:68
-msgid "Acknowledged by"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:69
-msgid "Acknowledged date"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:70
-#: modules/xmppmaster/xmppmaster/monitoring/detail.php:54
-#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:70
-msgid "Event Type"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:71
-#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:71
-msgid "Machine Message"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:72
-#: modules/xmppmaster/xmppmaster/monitoring/detail.php:85
-#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:72
-msgid "Device"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:73
-#: modules/xmppmaster/xmppmaster/monitoring/detail.php:89
-#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:73
-msgid "Device Status"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:74
-#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:74
-msgid "Device Message"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:75
-#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:75
-msgid "Device Serial"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:76
-#: modules/xmppmaster/xmppmaster/monitoring/detail.php:89
-#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:76
-msgid "Device Firmware"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/detail.php:28
-#: modules/xmppmaster/infoPackage.inc.php:85
-msgid "Alerts Detail"
-msgstr ""
-
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:36
 msgid "Hostname"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:36
 msgid "Date"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/detail.php:36
-msgid "Uuid"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/detail.php:50
-#: modules/xmppmaster/xmppmaster/monitoring/detail.php:89
-msgid "Event"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/detail.php:54
-msgid "Event Name"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/detail.php:54
-msgid "Event Date"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/detail.php:54
-msgid "Event Status"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/detail.php:57
-msgid "Acknowledged By"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/detail.php:61
-msgid "Acknowledged Date"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/detail.php:89
-msgid "Device Type"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/detail.php:89
-msgid "Device Doc"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:37
-msgid "Acknowledge"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/monitoring/monconfig.php:33
-msgid "Monitoring Configurator"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownloadexpert.php:45
@@ -2180,10 +2043,6 @@ msgstr ""
 msgid "XMPP topology Machine"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:98
-msgid "Monitoring history"
-msgstr ""
-
 #: modules/xmppmaster/infoPackage.inc.php:118
 msgid "XMPP Machine details"
 msgstr ""
@@ -2207,10 +2066,6 @@ msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:155
 msgid "XMPP logs on group"
-msgstr ""
-
-#: modules/xmppmaster/infoPackage.inc.php:161
-msgid "XMPP Monitoring view"
 msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:164

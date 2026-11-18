@@ -61,45 +61,6 @@ msgstr "Agentes"
 msgid "Machines in Medulla from "
 msgstr "Máquinas en médula de "
 
-#: modules/dashboard/includes/panels/alerts.inc.php:28
-msgid "Alerts"
-msgstr "Alertas"
-
-#: modules/dashboard/includes/panels/alerts.inc.php:49
-#: modules/dashboard/includes/panels/alertsentity.inc.php:50
-msgid "Detail"
-msgstr "Detalle"
-
-#: modules/dashboard/includes/panels/alerts.inc.php:50
-#: modules/dashboard/includes/panels/alertsentity.inc.php:51
-msgid "Acknowledge"
-msgstr "Acuse recibo"
-
-#: modules/dashboard/includes/panels/alerts.inc.php:54
-#: modules/dashboard/includes/panels/alertsentity.inc.php:55
-msgid "Status"
-msgstr "Estado"
-
-#: modules/dashboard/includes/panels/alerts.inc.php:55
-#: modules/dashboard/includes/panels/alertsentity.inc.php:56
-msgid "Date"
-msgstr "Fecha"
-
-#: modules/dashboard/includes/panels/alerts.inc.php:56
-#: modules/dashboard/includes/panels/alertsentity.inc.php:57
-msgid "Evenement"
-msgstr "Evento"
-
-#: modules/dashboard/includes/panels/alerts.inc.php:57
-#: modules/dashboard/includes/panels/alertsentity.inc.php:58
-msgid "Machine"
-msgstr "Máquina"
-
-#: modules/dashboard/includes/panels/alerts.inc.php:70
-#: modules/dashboard/includes/panels/alertsentity.inc.php:71
-msgid "No alerts"
-msgstr "Sin alertas"
-
 #: modules/dashboard/includes/panels/plugins.inc.php:29
 msgid "Plugins loaded"
 msgstr "Plugins cargados"
@@ -298,10 +259,6 @@ msgstr "Actualización disponible"
 msgid "Minor update available"
 msgstr "Actualización menor disponible"
 
-#: modules/dashboard/includes/panels/alertsentity.inc.php:28
-msgid "Alerts by Entity"
-msgstr "Alertas por entidad"
-
 #: modules/dashboard/infoPackage.inc.php:38
 #: modules/dashboard/infoPackage.inc.php:42
 #: modules/dashboard/infoPackage.inc.php:48
@@ -335,10 +292,6 @@ msgstr "Panel de copia de seguridad"
 #: modules/dashboard/infoPackage.inc.php:74
 msgid "Update Panel"
 msgstr "Panel de actualización"
-
-#: modules/dashboard/infoPackage.inc.php:77
-msgid "Alerts Panel"
-msgstr "Panel de alertas"
 
 #: modules/dashboard/infoPackage.inc.php:80
 msgid "Alerts by Entity Panel"
