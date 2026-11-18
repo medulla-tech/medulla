@@ -1,0 +1,60 @@
+name: Python Linting
+
+# Checks the Python files changed by a pull request with the settings of
+# .pylintrc. Errors fail the check, warnings are only shown. Files the pull
+# request does not touch are not checked, so existing code does not block it.
+on:
+  pull_request:
+    paths:
+      - '**.py'
+      - '.pylintrc'
+      - '.github/workflows/pylint.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  pylint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          # The base branch is needed to list the changed files
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Install pylint
+        run: pip install pylint==3.3.1
+
+      - name: Run pylint on the changed files
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          mapfile -t files < <(git diff --name-only --diff-filter=ACMR \
+            "origin/${BASE_REF}...HEAD" -- '*.py')
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "No Python file changed"
+            exit 0
+          fi
+          printf 'Checking %s file(s):\n' "${#files[@]}"
+          printf '  %s\n' "${files[@]}"
+
+          # Each message becomes an annotation on the pull request
+          set +e
+          pylint --msg-template='::{category} file={path},line={line},col={column}::{msg_id} {symbol}: {msg}' \
+            "${files[@]}"
+          status=$?
+          set -e
+
+          # Pylint exit status is a bit mask: 1 fatal, 2 error, 4 warning,
+          # 8 refactor, 16 convention, 32 usage error. Fail on 1, 2 and 32.
+          if [ $((status & 35)) -ne 0 ]; then
+            echo "::error::Pylint found errors in the changed files, see the annotations above"
+            exit 1
+          fi
