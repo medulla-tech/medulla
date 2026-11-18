@@ -72,6 +72,31 @@ import_w1125h2profrx64() {
     mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO MasteredOn VALUES (${id_image},1)"
 }
 
+import_w1126h2profrx64() {
+    existing_id=$(mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "SELECT id FROM Image WHERE uuid='ed55587e-e336-11f1-a3d6-bc2411d5c6d6' LIMIT 1")
+    if [[ -n "${existing_id}" ]]; then
+        echo -e "\nWindows 11 26H2 Professionnel FR x64 master already exists (id=${existing_id}). Skipping import."
+        return 0
+    fi
+
+    # Download and extract master files
+    echo "Downloading and extracting Windows 11 26H2 Professionnel FR x64 master..."
+    curl -fsSL ${DL_URL}/Win11/ed55587e-e336-11f1-a3d6-bc2411d5c6d6.tar?token=${KEYAES32} | tar -xf - -C ${DEST}
+    if [[ $? -ne 0 ]]; then
+        echo "Error: Failed to download or extract Windows 11 master. Please check your network connection and the availability of the master files."
+        exit 1
+    fi
+
+    # Insert master record in db for Windows 11 26H2 Professionnel FR x64
+    echo -e "\nInserting Windows 11 26H2 Professionnel FR x64 master into database..."
+    mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT INTO Image (\`path\`, \`name\`, \`uuid\`, \`desc\`, \`size\`, \`is_master\`, \`creation_date\`, \`fk_creator\`, \`fk_state\`) VALUES ('/var/lib/pulse2/imaging/masters/ed55587e-e336-11f1-a3d6-bc2411d5c6d6','Master Windows 11 26H2 Pro FR','ed55587e-e336-11f1-a3d6-bc2411d5c6d6','Windows 11 26H2 Professionnel FR x64',10875641962,1,'2026-11-18 10:00:47',1,1)"
+    id_image=$(mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "SELECT id FROM Image WHERE uuid='ed55587e-e336-11f1-a3d6-bc2411d5c6d6'")
+    mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO Target (id, name, uuid, raw_mode, type, is_registered_in_package_server, fk_entity, fk_menu) VALUES (1, 'Dummy', 'UUID0', 0, 1, 0, 1, 1)"
+    mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO ImagingLog VALUES (1,'2025-11-19 03:17:39','unknown',1,1,6)"
+    mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO ImageOnImagingServer VALUES (${id_image},1)"
+    mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO MasteredOn VALUES (${id_image},1)"
+}
+
 import_ubu2404biosamd64() {
     existing_id=$(mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "SELECT id FROM Image WHERE uuid='38fe12a0-59eb-11f1-8795-bc2411e4867f' LIMIT 1")
     if [[ -n "${existing_id}" ]]; then
@@ -190,26 +215,30 @@ fi
 
 echo -e "\nChoose the master to import:"
 echo "1) Windows 11 25H2 Professionnel FR x64"
-echo "2) Ubuntu 24.04 BIOS AMD64"
-echo "3) Ubuntu 26.04 BIOS AMD64"
-echo "4) Mint 22.3 BIOS AMD64"
-echo "5) Zorin OS 18.1 Core BIOS AMD64"
-read -p "Your choice (1/2/3/4/5): " MASTER_CHOICE
+echo "2) Windows 11 26H2 Professionnel FR x64"
+echo "3) Ubuntu 24.04 BIOS AMD64"
+echo "4) Ubuntu 26.04 BIOS AMD64"
+echo "5) Mint 22.3 BIOS AMD64"
+echo "6) Zorin OS 18.1 Core BIOS AMD64"
+read -p "Your choice (1/2/3/4/5/6): " MASTER_CHOICE
 
 case "$MASTER_CHOICE" in
     1)
         import_w1125h2profrx64
         ;;
     2)
-        import_ubu2404biosamd64
+        import_w1126h2profrx64
         ;;
     3)
-        import_ubu2604biosamd64
+        import_ubu2404biosamd64
         ;;
     4)
-        import_min223biosamd64
+        import_ubu2604biosamd64
         ;;
     5)
+        import_min223biosamd64
+        ;;
+    6)
         import_zorin181corebiosamd64
         ;;
     *)
