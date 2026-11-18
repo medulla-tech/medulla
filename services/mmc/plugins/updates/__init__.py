@@ -846,38 +846,6 @@ class RpcProxy(RpcProxyI):
         Returns {"created": n, "skipped": [{"jid", "hostname", "reason"}]},
         plus "error" when nothing could be attempted.
         """
-        def get_target(jid, entity):
-            try:
-                number = None if isinstance(kb, bool) else int(str(kb).upper().replace("KB", ""))
-            except (TypeError, ValueError):
-                number = None
-            if number is None or number <= 0:
-                return None, None
-            target = UpdatesDatabase().get_windows_update_install_target(number, jid, [entity])
-            if target is None or not target["windows_update_ids"]:
-                return None, None
-            return target, {"windows_update_ids": target["windows_update_ids"]}
-        return self._self_install("install_by_windows_update", jid, ctx, get_target)
-
-    @with_optional_xmpp_context
-    def update_office(self, jid, ctx=None):
-        """Make the machine jid update its Office Click-to-Run to the version its
-        channel offers, with the generic package.
-
-        Returns {"created": n, "skipped": [{"jid", "hostname", "reason"}]},
-        plus "error" when nothing could be attempted.
-        """
-        def get_target(jid, entity):
-            target = UpdatesDatabase().get_office_update_target(jid, [entity])
-            if target is None:
-                return None, None
-            return target, {"office_version": target["update"]["available_version"]}
-        return self._self_install("update_office", jid, ctx, get_target)
-
-    def _self_install(self, action, jid, ctx, get_target):
-        """Deploy on the machine jid the generic package of an update it installs
-        itself. get_target(jid, writable entity): (target of the database layer,
-        command parameters), target None when the machine has no such update."""
         result = {"created": 0, "skipped": []}
         try:
             jid = jid.strip() if isinstance(jid, str) else ""
@@ -885,12 +853,20 @@ class RpcProxy(RpcProxyI):
             if machine is None:
                 result["error"] = "machine_not_targeted"
                 return result
-            entity = self._writable_entity(ctx, action, machine["entity_id"])
+            entity = self._writable_entity(ctx, "install_by_windows_update",
+                                           machine["entity_id"])
             if entity is None:
                 result["error"] = "entity_refused"
                 return result
-            target, parameters = get_target(jid, entity)
-            if target is None:
+            try:
+                kb = None if isinstance(kb, bool) else int(str(kb).upper().replace("KB", ""))
+            except (TypeError, ValueError):
+                kb = None
+            if kb is None or kb <= 0:
+                result["error"] = "unknown_update"
+                return result
+            target = UpdatesDatabase().get_windows_update_install_target(kb, jid, [entity])
+            if target is None or not target["windows_update_ids"]:
                 result["error"] = "unknown_update"
                 return result
             update = target["update"]
@@ -904,12 +880,13 @@ class RpcProxy(RpcProxyI):
                 result["error"] = "machine_not_targeted"
                 return result
             login = self._ctx_login(ctx) or "root"
-            self._create_windows_deployments(action, update, target["machines"], login, result,
-                                             parameters=parameters)
-            logger.info(f"{action}: {'KB%s' % update['kb'] if update['kb'] else update['title']} "
-                        f"on {jid}, {result['created']} created by {login}")
+            self._create_windows_deployments(
+                "install_by_windows_update", update, target["machines"], login, result,
+                parameters={"windows_update_ids": target["windows_update_ids"]})
+            logger.info(f"install_by_windows_update: KB{kb} on {jid}, "
+                        f"{result['created']} created by {login}")
         except Exception as e:
-            logger.error(f"{action}: {e}")
+            logger.error(f"install_by_windows_update: {e}")
             logger.error(traceback.format_exc())
             result["error"] = "internal_error"
         return result
@@ -920,8 +897,7 @@ class RpcProxy(RpcProxyI):
         """Create the deployment of update's ready package on each machine (its
         section "update", or "uninstall"), or append it to result["skipped"] with
         the reason. parameters: added to the command parameters (Linux: the
-        packages to upgrade; Windows Update: its update ids; Office: the version
-        to reach); update["deploy_title"] replaces the Windows title."""
+        packages to upgrade; Windows Update: its update ids); update["deploy_title"] replaces the Windows title."""
         package_uuid = update["package_uuid"]
         pending = MscDatabase().pending_command_targets(
             package_uuid, [m["glpi_uuid"] for m in machines])

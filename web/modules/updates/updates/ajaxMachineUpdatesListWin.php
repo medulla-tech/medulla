@@ -29,7 +29,6 @@ $entity = ($entityId !== null) ? updatesEntityByUuid('UUID' . $entityId) : null;
 $linux = ($machine['os'] ?? '') === 'linux';
 $running = updatesWinTriState($machine['running'] ?? null) === true;
 $rebootPending = updatesWinTriState($machine['reboot_pending'] ?? null) === true;
-$officeReady = is_scalar($machine['office']['ready_version'] ?? null) ? trim((string) $machine['office']['ready_version']) : '';
 $updates = is_array($machine['updates'] ?? null) ? array_values(array_filter($machine['updates'], 'is_array')) : array();
 
 $section = $_GET['section'] ?? '';
@@ -177,8 +176,7 @@ if ($linux) {
     $params = array();
     foreach ($updates as $update) {
         $kb = (string) ($update['kb'] ?? '');
-        $byProduct = updatesWinByProduct($update);
-        $byWindowsUpdate = !$byProduct && updatesWinByWindowsUpdate($update) && updatesKbNumber($kb) !== '';
+        $byWindowsUpdate = updatesWinByWindowsUpdate($update) && updatesKbNumber($kb) !== '';
         $kbs[] = updatesKbCell($kb, ($section === 'optional' && !$byWindowsUpdate) ? '' : updatesWinOfferIcon($update));
         $titles[] = updatesTitleCell($update['title'] ?? '', $kb);
         $sizes[] = updatesSizeCell($update['size'] ?? null);
@@ -192,12 +190,9 @@ if ($linux) {
             $blocker = _T("Deployment in progress", "updates");
         } elseif ($rebootPending) {
             $blocker = _T("Reboot pending", "updates");
-        } elseif ($byWindowsUpdate || $byProduct) {
+        } elseif ($byWindowsUpdate) {
             $blocker = (updatesWinTriState($update['deployed_pending_report'] ?? null) === true)
                 ? _T("Installed, waiting for the machine report", "updates") : '';
-            if ($blocker === '' && $byProduct && updatesWinTriState($update['pending_apply'] ?? null) === true) {
-                $blocker = updatesWinOfficeReadyText($officeReady !== '' ? $officeReady : trim((string) ($update['available_version'] ?? '')));
-            }
         } elseif ($updateId === null) {
             $blocker = _T("Not in the updates catalog", "updates");
         } elseif (updatesWinTriState($update['approved'] ?? null) === false) {
@@ -208,13 +203,8 @@ if ($linux) {
                 $blocker = _T("Installed, waiting for the machine report", "updates");
             }
         }
-        if ($byProduct) {
-            $actionLabel = _T("Update Office", "updates");
-        } else {
-            $actionLabel = $byWindowsUpdate ? _T("Install by Windows Update", "updates") : '';
-        }
         $actions[] = (updatesWinOffer($update) === 'esu') ? updatesWinEsuAction()
-            : updatesWinDeployAction($blocker, $actionLabel);
+            : updatesWinDeployAction($blocker, $byWindowsUpdate ? _T("Install by Windows Update", "updates") : '');
         $rowParams = array(
             'updateid' => (string) $updateId,
             'kb'       => $kb,
@@ -223,9 +213,7 @@ if ($linux) {
             'jid'      => $jid,
             'hostname' => $hostname,
         );
-        if ($byProduct) {
-            $rowParams['office'] = '1';
-        } elseif ($byWindowsUpdate) {
+        if ($byWindowsUpdate) {
             $rowParams['wu'] = '1';
         }
         $params[] = $rowParams;

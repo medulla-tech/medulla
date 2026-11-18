@@ -231,16 +231,6 @@ function xmlrpc_install_by_windows_update($kb, $jid)
 }
 
 /**
- * Ask one Windows machine to update its Office Click-to-Run to the version its channel offers.
- *
- * @return array {created, skipped: [{jid, hostname, reason}], error}
- */
-function xmlrpc_update_office($jid)
-{
-    return xmlCall("updates.update_office", array((string) $jid));
-}
-
-/**
  * Deploy to one Linux machine the missing packages approved by the Linux rules of its entity,
  * or only $package when given.
  *
