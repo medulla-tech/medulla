@@ -182,17 +182,22 @@ SEARCH_FAILED_SQL = "COALESCE(mr.search_status IN ({}), 0)".format(
     ", ".join(f"'{status}'" for status in WINDOWS_SEARCH_FAILURES))
 
 # Last xmppmaster.machines row (xm) of each bare jid: several resources of a jid
-# must not repeat a report
+# must not repeat a report. Compared in the character set of xmppmaster: the other way
+# round every pair of rows is converted
 XM_LATEST_JOIN_SQL = """
     LEFT JOIN (SELECT SUBSTRING_INDEX(jid, '/', 1) AS bare_jid, MAX(id) AS id
                  FROM xmppmaster.machines
-                GROUP BY SUBSTRING_INDEX(jid, '/', 1)) xl ON xl.bare_jid = mr.jid
+                GROUP BY SUBSTRING_INDEX(jid, '/', 1)) xl
+           ON xl.bare_jid = CONVERT(mr.jid USING utf8mb3)
     LEFT JOIN xmppmaster.machines xm ON xm.id = xl.id
 """
 
 # Machines at or below :entity_id
 ENTITY_SUBTREE_SQL = """(SELECT anc.entity_id FROM entity_ancestors anc
                           WHERE anc.ancestor_id = :entity_id)"""
+
+# Machine (alias lgm) of an entity the user sees; binds of _visible_params
+VISIBLE_ENTITY_SQL = "(:all_entities OR lgm.entities_id IN :allowed_ids)"
 
 # Windows 10 out of support (since 2025-10-14) without an ESU license: Windows
 # offers it no security update any more, so an empty list does not mean up to date.
@@ -426,7 +431,8 @@ MACHINE_UP_TO_DATE_SQL = f"""({MACHINE_COUNTED_SQL} AND m.missing = 0 AND NOT m.
 # the status badges (updatesWinMachineStatus)
 WINDOWS_MACHINE_CARDS = {
     "to_update": f"""{MACHINE_COUNTED_SQL} AND m.missing > 0 AND NOT m.search_failed
-                AND NOT m.updating AND NOT m.reboot_pending AND NOT m.unsupported""",
+                AND NOT m.updating AND NOT m.upgrading AND NOT m.reboot_pending
+                AND NOT m.unsupported""",
     "critical": f"{MACHINE_COUNTED_SQL} AND m.critical > 0",
     "reboot_pending": """m.evaluated AND m.reboot_pending AND NOT m.search_failed AND NOT m.updating
                 AND NOT m.restart_requested""",
@@ -509,6 +515,7 @@ WINDOWS_MISSING_UPDATES_SQL = f"""
           {WINDOWS_MACHINE_ENTITY_JOIN}
           JOIN machine_updates mu ON mu.jid = mr.jid
          WHERE lgm.entities_id IN {ENTITY_SUBTREE_SQL}
+           AND {VISIBLE_ENTITY_SQL}
            AND mu.update_id IS NOT NULL
            AND {KNOWN_OFFER_SQL}
          GROUP BY mu.update_id, mu.offer) o
@@ -567,6 +574,7 @@ LINUX_APPROVAL_PACKAGES_SQL = f"""
     {WINDOWS_MACHINE_ENTITY_JOIN}
     JOIN machine_updates mu ON mu.jid = mr.jid
     WHERE lgm.entities_id IN {ENTITY_SUBTREE_SQL}
+      AND {VISIBLE_ENTITY_SQL}
       AND mu.package IS NOT NULL
       AND (:distribution = '' OR mr.distribution = :distribution)
     GROUP BY mu.package, mu.classification, mu.severity
@@ -782,7 +790,6 @@ class UpdatesDatabase(DatabaseHelper):
             "last_success_at": success.strftime("%Y-%m-%d %H:%M:%S") if success else "",
         }
 
-    # ######################## group update windows ########################
     @staticmethod
     def _entity_id_list(entity_ids):
         ids = []
@@ -794,6 +801,14 @@ class UpdatesDatabase(DatabaseHelper):
             if entity_id not in ids:
                 ids.append(entity_id)
         return ids
+
+    @staticmethod
+    def _visible_params(allowed_ids):
+        """Binds of VISIBLE_ENTITY_SQL; allowed_ids: entities the user sees, None
+        when not restricted."""
+        ids = [] if allowed_ids is None else [int(allowed_id) for allowed_id in allowed_ids]
+        # An expanding bind cannot be empty
+        return {"all_entities": allowed_ids is None, "allowed_ids": ids or [-1]}
 
     @staticmethod
     def _like_pattern(value):
@@ -1739,7 +1754,8 @@ class UpdatesDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_windows_approvals(self, session, entity_id, status="pending", start=0,
-                              limit=-1, filter="", system="windows", distribution=""):
+                              limit=-1, filter="", system="windows", distribution="",
+                              allowed_ids=None):
         """Effective status per update: the entity's decision, else its nearest
         ancestor's, else its effective rules. Per row "inherited_from" when the
         decision comes from an ancestor. Updates missing on a machine come first,
@@ -1748,7 +1764,10 @@ class UpdatesDatabase(DatabaseHelper):
         Linux: the packages approved ("approved") or not ("pending") by the
         effective rules, no decision per package, of the machines of one
         distribution when distribution is not empty; "rules_from" is the entity
-        whose rules apply."""
+        whose rules apply.
+
+        allowed_ids: entities the user sees, None when not restricted; the machines
+        of the others are not counted."""
         result = {"total": 0, "rows": [],
                   "counts": {status: 0 for status in WINDOWS_APPROVAL_STATUSES},
                   "parent": None}
@@ -1758,7 +1777,7 @@ class UpdatesDatabase(DatabaseHelper):
         result["parent"] = self._inheritance(session, entity_id, entity_id)["parent"]
         if system == "linux":
             return self._linux_approvals(session, entity_id, status, start, limit, filter,
-                                         distribution, result)
+                                         distribution, result, allowed_ids)
         params = {
             "entity_id": entity_id,
             "rules_source": self._effective_source(session, "effective_rules", entity_id),
@@ -1766,11 +1785,13 @@ class UpdatesDatabase(DatabaseHelper):
                                                       entity_id),
             "upgrades": UPGRADES_CLASSIFICATION,
         }
+        params.update(self._visible_params(allowed_ids))
+        visible = bindparam("allowed_ids", expanding=True)
         for row in session.execute(text(f"""
                 SELECT s.status, COUNT(*) AS updates
                 FROM ({WINDOWS_APPROVAL_UPDATES_SQL}) AS s
                 GROUP BY s.status
-                """), params):
+                """).bindparams(visible), params):
             result["counts"][row.status] = int(row.updates)
 
         params["status"] = status
@@ -1797,7 +1818,7 @@ class UpdatesDatabase(DatabaseHelper):
                      {windows_severity_rank_sql("s.severity")},
                      s.machines DESC, s.title, s.update_id
             {page}
-            """)
+            """).bindparams(visible)
         rows = session.execute(sql, params).fetchall()
         refs = self._entity_refs(session, [row.decided_in for row in rows
                                            if row.decided_in is not None
@@ -1827,21 +1848,23 @@ class UpdatesDatabase(DatabaseHelper):
             })
         if not result["rows"] and page:
             result["total"] = self.get_windows_approvals(
-                entity_id, status, 0, -1, filter)["total"]
+                entity_id, status, 0, -1, filter, allowed_ids=allowed_ids)["total"]
         return result
 
     def _linux_approvals(self, session, entity_id, status, start, limit, filter,
-                         distribution, result):
+                         distribution, result, allowed_ids=None):
         rules_source = self._effective_source(session, "effective_rules", entity_id, "linux")
         result["rules_from"] = (self._entity_refs(session, [rules_source]).get(rules_source)
                                 if rules_source is not None else None)
         params = {"entity_id": entity_id, "linux_rules_source": rules_source,
                   "distribution": str(distribution or "")}
+        params.update(self._visible_params(allowed_ids))
+        visible = bindparam("allowed_ids", expanding=True)
         for row in session.execute(text(f"""
                 SELECT s.approved, COUNT(*) AS packages
                 FROM ({LINUX_APPROVAL_PACKAGES_SQL}) AS s
                 GROUP BY s.approved
-                """), params):
+                """).bindparams(visible), params):
             result["counts"]["approved" if row.approved else "pending"] = int(row.packages)
 
         if status == "declined":
@@ -1853,15 +1876,15 @@ class UpdatesDatabase(DatabaseHelper):
             where += " AND LOWER(s.package) LIKE LOWER(:filter) ESCAPE '!'"
             params["filter"] = self._like_pattern(filter)
         result["total"] = int(session.execute(text(
-            f"SELECT COUNT(*) FROM ({LINUX_APPROVAL_PACKAGES_SQL}) AS s {where}"),
-            params).scalar())
+            f"SELECT COUNT(*) FROM ({LINUX_APPROVAL_PACKAGES_SQL}) AS s {where}"
+            ).bindparams(visible), params).scalar())
         page = self._page_sql(start, limit, params)
         for row in session.execute(text(f"""
                 SELECT s.* FROM ({LINUX_APPROVAL_PACKAGES_SQL}) AS s
                 {where}
                 ORDER BY s.machines DESC, s.package
                 {page}
-                """), params):
+                """).bindparams(visible), params):
             result["rows"].append({
                 "package": row.package,
                 "classification": row.classification or "",

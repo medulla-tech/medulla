@@ -4,7 +4,7 @@ require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
 require_once("modules/updates/includes/html.inc.php");
 
-// Page atteinte par redirection depuis "index" : force l'entree de menu active.
+// Page reached by redirection from "index": forces the active menu entry.
 $sidemenu->forceActiveItem("index");
 
 if (!updatesModuleOpen()) {

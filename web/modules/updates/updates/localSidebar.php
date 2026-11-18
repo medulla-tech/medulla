@@ -37,8 +37,8 @@ if (updatesModuleOpen()) {
                                                 "updates",
                                                 "MajorEntitiesList"));
 
-    // Configuration, dans l'ordre du flux : declarer les produits suivis,
-    // arbitrer ce qui remonte, puis automatiser.
+    // Configuration, in workflow order: declare the tracked products,
+    // decide on what comes up, then automate.
     $sidemenu->addSideMenuItem(
          new SideMenuItem(_T("Tracked products",
                              "updates"),

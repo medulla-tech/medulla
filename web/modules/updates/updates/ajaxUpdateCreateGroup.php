@@ -36,7 +36,7 @@ if (isset($_POST['bconfirm'])) {
     } elseif (!$group->create($groupName, false)) {
         new NotifyWidgetFailure(htmlspecialchars(_T("The group could not be created.", "updates")));
     } else {
-        // miniAddMembers : addmembers_to_group bute sur les ecarts de casse UUID du cache dyngroup
+        // miniAddMembers: addmembers_to_group fails on the UUID case differences of the dyngroup cache
         $added = $group->miniAddMembers($machines);
         if (!is_array($added) || empty($added[0])) {
             new NotifyWidgetFailure(htmlspecialchars(_T("The machines could not be added to the group.", "updates")));

@@ -2079,5 +2079,17 @@ msgid "This machine no longer asks for this update."
 msgstr "Este equipo ya no solicita esta actualización."
 
 #: modules/updates/includes/html.inc.php
-msgid "The machine will install this update with its own Windows Update. It is not in the Microsoft catalog: Medulla provides no file."
-msgstr "El equipo instalará esta actualización con su Windows Update. No está en el catálogo de Microsoft: Medulla no proporciona ningún archivo."
+msgid "The machine will install this update with its own Windows Update."
+msgstr "El equipo instalará esta actualización con su Windows Update."
+
+#: modules/updates/updates/detailsMachineWin.php
+msgid "Products"
+msgstr "Productos"
+
+#: modules/updates/includes/html.inc.php
+msgid "Definitions dated %s"
+msgstr "Definiciones del %s"
+
+#: modules/updates/updates/detailsMachineWin.php
+msgid "Upgrade"
+msgstr "Actualización de versión"

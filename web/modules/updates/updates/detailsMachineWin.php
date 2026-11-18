@@ -87,6 +87,7 @@ if (empty($missing) && $unsupported && !$noProduct && !$untracked) {
 
 $systemFields = array();
 $stateFields = array();
+$productFields = array();
 $machineFields = $linux
     ? array('system' => _T("Version", "updates"), 'kernel' => _T("Kernel", "updates"))
     : array('system' => _T("Version", "updates"), 'build' => _T("Build", "updates"),
@@ -111,7 +112,7 @@ if ($linux) {
     }
     $defender = updatesWinDefenderState($machine['defender'] ?? null);
     if ($defender !== null) {
-        $stateFields[_T("Defender", "updates")] = $defender;
+        $productFields[_T("Defender", "updates")] = $defender;
     }
 }
 if (in_array('unsupported', $signals, true)) {
@@ -120,11 +121,11 @@ if (in_array('unsupported', $signals, true)) {
 if ($searchFailed) {
     $stateFields[$linux ? _T("Search for updates", "updates") : _T("Windows search", "updates")] = '<strong>' . htmlspecialchars(_T("failed", "updates"), ENT_QUOTES, 'UTF-8') . '</strong>';
 }
-if ($restartRequested) {
+if (!$linux && updatesWinTriState($machine['upgrading'] ?? null) === true) {
+    $stateFields[$rebootPending ? _T("Reboot", "updates") : _T("Upgrade", "updates")] = updatesWinBadge(
+        _T("upgrade in progress", "updates"), 'upgrade-in-progress', updatesUpgradeRestartNote());
+} elseif ($restartRequested) {
     $stateFields[_T("Reboot", "updates")] = updatesWinBadge(_T("Restart requested", "updates"), 'reboot');
-} elseif ($rebootPending && !$linux && updatesWinTriState($machine['upgrading'] ?? null) === true) {
-    $stateFields[_T("Reboot", "updates")] = updatesWinBadge(_T("upgrade in progress", "updates"), 'upgrade-in-progress',
-                                                              updatesUpgradeRestartNote());
 } elseif ($rebootPending) {
     $stateFields[_T("Reboot", "updates")] = '<strong>' . htmlspecialchars(_T("pending", "updates"), ENT_QUOTES, 'UTF-8') . '</strong>';
 }
@@ -145,7 +146,8 @@ if ($hasHistory) {
 echo '<div class="updates-machine-head">';
 echo '<div class="updates-machine-summary">';
 $columns = array('system' => array(_T("System", "updates"), $systemFields),
-                 'state' => array(_T("Status", "updates"), $stateFields));
+                 'state' => array(_T("Status", "updates"), $stateFields),
+                 'products' => array(_T("Products", "updates"), $productFields));
 foreach ($columns as $key => $column) {
     if (empty($column[1])) {
         continue;
@@ -164,6 +166,9 @@ if (!empty($sections)) {
     updatesMachineSearch($jid, $sections);
 }
 echo '</div>';
+if (!empty($productFields)) {
+    updatesWinTooltips();
+}
 if ($restartRequested && $entity && updatesWinCanDeploy()) {
     echo '<div class="updates-machine-actions"><button type="button" class="btnPrimary" disabled title="'
         . htmlspecialchars(_T("Restart already requested", "updates"), ENT_QUOTES, 'UTF-8') . '">'

@@ -86,7 +86,7 @@ foreach ($rows as $row) {
     $params[] = array('jid' => $jid);
     $online = updatesWinTriState($row['online'] ?? null) === true;
     $presences[] = $online ? "machineNamepresente" : "machineName";
-    // Memes conditions que le badge Reboot pending de updatesWinMachineStatus.
+    // Same conditions as the Reboot pending badge of updatesWinMachineStatus.
     $rebootShown = updatesWinTriState($row['no_report'] ?? null) !== true && !$searchFailed && $evaluated
         && updatesWinTriState($row['updating'] ?? null) !== true
         && updatesWinTriState($row['reboot_pending'] ?? null) === true;
@@ -106,7 +106,7 @@ foreach ($rows as $row) {
             $blocker = '';
         }
         $deployAction = updatesWinDeployAction($blocker);
-        // Sur l'action seule : le lien vers la fiche garde son URL.
+        // On the action alone: the link to the machine page keeps its URL.
         $deployAction->staticParams = updatesLinuxDeployParams($jid, $hostname, $approved) + $listParams;
         $deployActions[] = $deployAction;
     }

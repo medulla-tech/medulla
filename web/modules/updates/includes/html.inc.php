@@ -9,7 +9,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/medulla_server/includes/utilities.php");
 require_once("modules/medulla_server/includes/locations_xmlrpc.inc.php");
 
-/* ===== Composants ===== */
+/* ===== Components ===== */
 
 /**
  * Filter and pagination of a list view, read from the request.
@@ -19,6 +19,15 @@ require_once("modules/medulla_server/includes/locations_xmlrpc.inc.php");
 function updatesListParams()
 {
     global $conf;
+    // AjaxNavBar prints start, end and divID of the request as they come.
+    $range = array($_GET['start'] ?? null, $_GET['end'] ?? null);
+    foreach ($range as $value) {
+        if (!is_string($value) || !preg_match('/^-?\d+$/', $value)) {
+            unset($_GET['start'], $_GET['end']);
+            break;
+        }
+    }
+    unset($_GET['divID']);
     $filter = isset($_GET['filter']) ? trim((string) $_GET['filter']) : "";
     $start = (isset($_GET['start']) && is_numeric($_GET['start'])) ? max(0, (int) $_GET['start']) : 0;
     $maxperpage = (isset($_GET['maxperpage']) && is_numeric($_GET['maxperpage']) && (int) $_GET['maxperpage'] > 0)
@@ -118,9 +127,9 @@ function updatesConfirmPopup($title, ...$texts)
 }
 
 /**
- * Popup d'une lecture impossible.
+ * Popup of a failed read.
  *
- * @param string $title Titre de la popup
+ * @param string $title Popup title
  */
 function updatesReadFailedPopup($title)
 {
@@ -128,9 +137,9 @@ function updatesReadFailedPopup($title)
 }
 
 /**
- * Popup d'une action impossible sur une entite que l'utilisateur ne voit pas.
+ * Popup of an action refused on an entity the user does not see.
  *
- * @param string $title Titre de la popup
+ * @param string $title Popup title
  */
 function updatesUnknownEntityPopup($title)
 {
@@ -150,7 +159,7 @@ function updatesUnknownGroupPopup($title)
 /* ===== Module ===== */
 
 /**
- * Numero du KB (chiffres seuls) ou chaine vide si la valeur n'est pas un KB.
+ * KB number (digits only), or an empty string when the value is not a KB.
  */
 function updatesKbNumber($value)
 {
@@ -162,7 +171,7 @@ function updatesKbNumber($value)
 }
 
 /**
- * Cellule KB : lien vers l'article Microsoft, ou tiret.
+ * KB cell: link to the Microsoft article, or a dash.
  */
 function updatesKbCell($value, $icon = '')
 {
@@ -181,7 +190,7 @@ function updatesKbCell($value, $icon = '')
 }
 
 /**
- * Cellule titre echappee, sans le "(KBnnnn)" de la ligne.
+ * Escaped title cell, without the "(KBnnnn)" of the row.
  */
 function updatesTitleCell($title, $kb, $tooltip = '')
 {
@@ -197,10 +206,10 @@ function updatesTitleCell($title, $kb, $tooltip = '')
 }
 
 /**
- * Nom court d'une mise a jour pour les popups et les messages : KBnnnn, sinon
- * le titre sans "(KBnnnn)" ni numero de build final entre parentheses.
+ * Short name of an update for popups and messages: KBnnnn, else the title
+ * without "(KBnnnn)" or a trailing build number in parentheses.
  *
- * @return string Texte non echappe
+ * @return string Unescaped text
  */
 function updatesUpdateLabel($title, $kb)
 {
@@ -225,10 +234,10 @@ function updatesUpdateLabel($title, $kb)
 }
 
 /**
- * Phrase de popup ou de message : les valeurs sont echappees, le gras vient
- * de la chaine traduite.
+ * Sentence of a popup or a message: the values are escaped, the bold comes
+ * from the translated string.
  *
- * @param string $format Chaine traduite
+ * @param string $format Translated string
  * @return string HTML
  */
 function updatesActionText($format, ...$values)
@@ -240,7 +249,7 @@ function updatesActionText($format, ...$values)
 }
 
 /**
- * Libelle traduit d'une classification ou d'une severite du catalogue Microsoft, echappe.
+ * Translated label of a classification or a severity of the Microsoft catalog, escaped.
  */
 function updatesCatalogLabel($value)
 {
@@ -248,7 +257,7 @@ function updatesCatalogLabel($value)
 }
 
 /**
- * Libelle traduit d'une classification ou d'une severite du catalogue Microsoft, non echappe.
+ * Translated label of a classification or a severity of the Microsoft catalog, unescaped.
  */
 function updatesCatalogText($value)
 {
@@ -276,9 +285,9 @@ function updatesCatalogText($value)
 }
 
 /**
- * Entite demandee par le parametre location, si l'utilisateur la voit.
+ * Entity requested by the location parameter, if the user sees it.
  *
- * @return array|null Entree de getUserLocations(), null pour toutes les entites
+ * @return array|null Entry of getUserLocations(), null for all entities
  */
 function updatesSelectedEntity()
 {
@@ -286,9 +295,9 @@ function updatesSelectedEntity()
 }
 
 /**
- * Retient l'entite choisie, relue par les pages a entite unique
- * (updatesWinProductsEntity). « Toutes mes entites » (switch sans location) est
- * retenu aussi. Le choix ne vaut que tant que la page precedente etait dans le
+ * Remembers the chosen entity, read back by the single-entity pages
+ * (updatesWinProductsEntity). "All my entities" (switch without location) is
+ * remembered too. The choice only holds while the previous page was in the
  * module.
  */
 function updatesRememberEntity()
@@ -314,7 +323,7 @@ function updatesRememberEntity()
 }
 
 /**
- * Entree de getUserLocations() d'un UUID, si l'utilisateur voit l'entite.
+ * Entry of getUserLocations() for a UUID, if the user sees the entity.
  *
  * @param mixed $uuid UUIDn
  * @return array|null
@@ -333,7 +342,7 @@ function updatesEntityByUuid($uuid)
 }
 
 /**
- * Identifiant GLPI d'une entree de getUserLocations().
+ * GLPI id of an entry of getUserLocations().
  *
  * @param array $entity
  * @return int
@@ -344,7 +353,7 @@ function updatesEntityId($entity)
 }
 
 /**
- * Nom affiche d'une entree de getUserLocations().
+ * Display name of an entry of getUserLocations().
  *
  * @param array $entity
  * @return string
@@ -355,9 +364,9 @@ function updatesEntityName($entity)
 }
 
 /**
- * Reponse de lecture inexploitable : le backend a intercepte une erreur.
+ * Unusable read answer: the backend caught an error.
  *
- * @param mixed $result Reponse XML-RPC
+ * @param mixed $result XML-RPC answer
  * @return bool
  */
 function updatesReadFailed($result)
@@ -366,7 +375,7 @@ function updatesReadFailed($result)
 }
 
 /**
- * Etat d'une lecture impossible : ni vide ni a jour, on ne sait pas.
+ * State of a failed read: neither empty nor up to date, unknown.
  */
 function updatesReadFailedBox()
 {
@@ -374,11 +383,11 @@ function updatesReadFailedBox()
 }
 
 /**
- * Vue AJAX refusee sans l'ACL de sa page (les vues AJAX n'ont pas d'ACL propre) ;
- * affiche alors l'etat de refus.
+ * AJAX view refused without the ACL of its page (AJAX views have no ACL of their own);
+ * the refusal state is then displayed.
  *
- * @param string $page  Page qui porte la vue
- * @param string $tabId Onglet de la page, "" sans ACL d'onglet
+ * @param string $page  Page that carries the view
+ * @param string $tabId Tab of the page, "" without a tab ACL
  * @return bool
  */
 function updatesAjaxDenied($page, $tabId = '')
@@ -392,9 +401,9 @@ function updatesAjaxDenied($page, $tabId = '')
 }
 
 /**
- * Selecteur d'entite ; le choix recharge la page avec le parametre location.
+ * Entity selector; the choice reloads the page with the location parameter.
  *
- * @param array|null $entity   Entite choisie (updatesSelectedEntity)
+ * @param array|null $entity   Chosen entity (updatesSelectedEntity)
  * @param bool       $allowAll Offer the "All my entities" choice
  * @param string     $aside    HTML shown right of the list (updatesWinInheritanceLine)
  */
@@ -407,10 +416,10 @@ function updatesEntitySelect($entity, $allowAll = true, $aside = '')
 }
 
 /**
- * Liste deroulante d'entite seule, sans libelle ; sans attribut name, elle
- * n'est jamais soumise avec un formulaire englobant.
+ * Entity drop-down alone, without a label; having no name attribute, it is
+ * never submitted with an enclosing form.
  *
- * @param array|null $entity   Entite choisie (updatesSelectedEntity)
+ * @param array|null $entity   Chosen entity (updatesSelectedEntity)
  * @param bool       $allowAll Offer the "All my entities" choice
  * @param string     $aside    HTML shown right of the list (updatesWinInheritanceLine)
  */
@@ -448,10 +457,10 @@ function updatesEntitySelectField($entity, $allowAll = true, $aside = '')
 }
 
 /**
- * Libelle traduit d'un etat de deploiement, echappe ; un etat inconnu
- * s'affiche tel quel.
+ * Translated label of a deployment state, escaped; an unknown state is
+ * shown as it is.
  *
- * @param string $state Etat brut (ex. ABORT ON TIMEOUT)
+ * @param string $state Raw state (e.g. ABORT ON TIMEOUT)
  * @return string HTML
  */
 function updatesDeployStateLabel($state)
@@ -499,10 +508,10 @@ function updatesDeployStateLabel($state)
 }
 
 /**
- * Badge d'etat d'un deploiement.
+ * Badge of a deployment state.
  *
  * @param string $state
- * @param mixed  $failure Cause de l'echec, disk_full seul est connu
+ * @param mixed  $failure Cause of the failure, only disk_full is known
  * @return string HTML
  */
 function updatesDeployStateBadge($state, $failure = '')
@@ -529,8 +538,8 @@ function updatesDeployStateBadge($state, $failure = '')
 }
 
 /**
- * Parametres de la page de journal d'un deploiement : ses valeurs scalaires ou
- * nulles, sous leurs noms (viewlogs fait un extract de $_GET).
+ * Parameters of the log page of a deployment: its scalar or null values,
+ * under their names (viewlogs extracts $_GET).
  *
  * @param array $deployment
  * @return array
@@ -543,12 +552,12 @@ function updatesDeployLogParams($deployment)
 }
 
 /**
- * Etat vide d'une liste de machines, neutre quand une recherche est active.
+ * Empty state of a machines list, neutral when a search is active.
  *
  * @param OptimizedListInfos $list
- * @param string             $search      Recherche de la liste
- * @param string             $title       Titre sans recherche
- * @param string             $description Description sans recherche
+ * @param string             $search      Search of the list
+ * @param string             $title       Title without a search
+ * @param string             $description Description without a search
  */
 function updatesMachinesEmptyState($list, $search, $title, $description = '')
 {
@@ -560,17 +569,17 @@ function updatesMachinesEmptyState($list, $search, $title, $description = '')
 }
 
 /**
- * Fait du compteur d'une carte le lien qui cree, apres confirmation, un groupe
- * des machines qu'elle compte. Sans machine ou sans le droit de creer un groupe,
- * le compteur reste un simple chiffre.
+ * Turns the counter of a card into the link that creates, after confirmation, a
+ * group of the machines it counts. Without a machine or the right to create a
+ * group, the counter stays a plain number.
  *
- * @param array      $options      Options de StatCards::addCard, completees
- * @param string     $screen       Ecran (updatesGroupScreens)
- * @param string     $tabId        Onglet de l'ecran
- * @param string     $category     Carte de l'ecran
- * @param array|null $entity       Entite de l'onglet, null pour toutes
- * @param int        $count        Valeur de la carte
- * @param string     $distribution Distribution Linux de l'ecran, "" pour toutes
+ * @param array      $options      Options of StatCards::addCard, completed
+ * @param string     $screen       Screen (updatesGroupScreens)
+ * @param string     $tabId        Tab of the screen
+ * @param string     $category     Card of the screen
+ * @param array|null $entity       Entity of the tab, null for all
+ * @param int        $count        Value of the card
+ * @param string     $distribution Linux distribution of the screen, "" for all
  */
 function updatesGroupCardLink(&$options, $screen, $tabId, $category, $entity, $count, $distribution = '')
 {
@@ -594,9 +603,9 @@ function updatesGroupCardLink(&$options, $screen, $tabId, $category, $entity, $c
 }
 
 /**
- * Ecrans dont les cartes proposent de creer un groupe.
+ * Screens whose cards offer to create a group.
  *
- * @return array ecran => array(page : page et ACL d'onglet, tabs, categories)
+ * @return array screen => array(page: page and tab ACL, tabs, categories)
  */
 function updatesGroupScreens()
 {
@@ -609,8 +618,8 @@ function updatesGroupScreens()
 }
 
 /**
- * Carte demandee pour creer un groupe : ecran, onglet visible par l'utilisateur,
- * categorie et distribution Linux, tous sur liste fermee.
+ * Card requested to create a group: screen, tab visible by the user,
+ * category and Linux distribution, all from a closed list.
  *
  * @return array|null array(screen, system, category, distribution, what, tabLabel, categoryLabel, back)
  */
@@ -627,6 +636,7 @@ function updatesGroupRequest()
     $categories = $screens[$screenId]['categories'];
     $page = $screens[$screenId]['page'];
     if (!isset($tabs[$tabId], $categories[$category])
+        || !hasCorrectAcl("updates", "updates", $page)
         || !hasCorrectTabAcl("updates", "updates", $page, $tabId)) {
         return null;
     }
@@ -652,10 +662,10 @@ function updatesGroupRequest()
 }
 
 /**
- * Machines de la carte demandee, lues comme son compteur.
+ * Machines of the requested card, read like its counter.
  *
- * @param array|null $entity Entite de la carte, null pour toutes
- * @return array array(machines {uuid: {hostname, uuid}}, message d'erreur ou null)
+ * @param array|null $entity Entity of the card, null for all
+ * @return array array(machines {uuid: {hostname, uuid}}, error message or null)
  */
 function updatesGroupMachines($entity)
 {
@@ -683,11 +693,11 @@ function updatesGroupMachines($entity)
 }
 
 /**
- * Lien vers la page de detail Windows d'une machine.
+ * Link to the details page of a machine.
  *
- * @param string $name Nom affiche
- * @param mixed  $jid  JID de la machine ; vide = sans lien
- * @param array|null $entity Entite de la liste d'origine, pour le retour de la fiche
+ * @param string $name Display name
+ * @param mixed  $jid  Machine JID; empty = no link
+ * @param array|null $entity Entity of the originating list, for the way back from the machine page
  * @return string HTML
  */
 function updatesMachineLink($name, $jid, $entity = null)
@@ -705,11 +715,11 @@ function updatesMachineLink($name, $jid, $entity = null)
 }
 
 /**
- * Onglets d'une page par systeme, dans l'ordre d'affichage.
- * Les identifiants servent aux ACL d'onglet : ne pas les renommer.
+ * Tabs of a page per system, in display order.
+ * The ids are used by the tab ACLs: do not rename them.
  *
- * @param string $folder Dossier de la page sous modules/updates/updates
- * @return array id d'onglet => array(label, file, system)
+ * @param string $folder Folder of the page under modules/updates/updates
+ * @return array tab id => array(label, file, system)
  */
 function updatesSystemTabs($folder)
 {
@@ -722,9 +732,9 @@ function updatesSystemTabs($folder)
 }
 
 /**
- * Onglets de la page des mises a niveau.
+ * Tabs of the upgrades page.
  *
- * @return array id d'onglet => array(label, file, system)
+ * @return array tab id => array(label, file, system)
  */
 function updatesUpgradeTabs()
 {
@@ -732,9 +742,9 @@ function updatesUpgradeTabs()
 }
 
 /**
- * Onglet de mise a niveau demande par le parametre tab, Windows par defaut.
+ * Upgrade tab requested by the tab parameter, Windows by default.
  *
- * @return string Identifiant d'onglet (updatesUpgradeTabs)
+ * @return string Tab id (updatesUpgradeTabs)
  */
 function updatesUpgradeRequestTab()
 {
@@ -743,9 +753,9 @@ function updatesUpgradeRequestTab()
 }
 
 /**
- * Onglets de la page de l'etat des mises a jour.
+ * Tabs of the Update status page.
  *
- * @return array id d'onglet => array(label, file, system)
+ * @return array tab id => array(label, file, system)
  */
 function updatesStatusTabs()
 {
@@ -753,10 +763,10 @@ function updatesStatusTabs()
 }
 
 /**
- * Cartes de l'etat des mises a jour qui proposent de creer un groupe : la cle
- * est un filtre de get_windows_machines.
+ * Cards of the Update status page that offer to create a group: the key
+ * is a filter of get_windows_machines.
  *
- * @return array cle => array(label de la carte, what : ce qui suit « N machines »)
+ * @return array key => array(label of the card, what: what follows "N machines")
  */
 function updatesStatusGroupCategories()
 {
@@ -970,9 +980,9 @@ function updatesStatusTab($system)
 }
 
 /**
- * Categories de mise a niveau, dans l'ordre d'affichage.
+ * Upgrade categories, in display order.
  *
- * @return array cle backend => array(label, badge : variante updatesWinBadge)
+ * @return array backend key => array(label, badge: updatesWinBadge variant)
  */
 function updatesUpgradeCategories()
 {
@@ -989,10 +999,10 @@ function updatesUpgradeCategories()
 }
 
 /**
- * Cartes de mise a niveau qui proposent de creer un groupe : la cle est un
- * filtre de get_upgrade_machine_list.
+ * Upgrade cards that offer to create a group: the key is a
+ * filter of get_upgrade_machine_list.
  *
- * @return array cle => array(label de la carte, what : ce qui suit « N machines »)
+ * @return array key => array(label of the card, what: what follows "N machines")
  */
 function updatesUpgradeGroupCategories()
 {
@@ -1005,7 +1015,7 @@ function updatesUpgradeGroupCategories()
 }
 
 /**
- * Une mise a niveau peut etre lancee depuis cette categorie.
+ * Whether an upgrade can be launched from this category.
  *
  * @param string $category
  * @return bool
@@ -1016,9 +1026,9 @@ function updatesUpgradeLaunchable($category)
 }
 
 /**
- * Un deploiement tient la machine de la ligne.
+ * Whether a deployment holds the machine of the row.
  *
- * @param array $row Ligne de get_upgrade_machine_list
+ * @param array $row Row of get_upgrade_machine_list
  * @return bool
  */
 function updatesUpgradeBusy($row)
@@ -1027,9 +1037,9 @@ function updatesUpgradeBusy($row)
 }
 
 /**
- * Infobulle d'une mise a niveau Windows lancee dont le poste attend un redemarrage.
+ * Tooltip of a launched Windows upgrade whose machine waits for a restart.
  *
- * @return string Texte non echappe
+ * @return string Unescaped text
  */
 function updatesUpgradeRestartNote()
 {
@@ -1037,12 +1047,12 @@ function updatesUpgradeRestartNote()
 }
 
 /**
- * Pourquoi la mise a niveau de la ligne ne peut pas etre abandonnee (regle de
- * updates.cancel_upgrade), vide quand elle peut l'etre.
+ * Why the upgrade of the row cannot be abandoned (rule of
+ * updates.cancel_upgrade), empty when it can.
  *
- * @param array  $row    Ligne de get_upgrade_machine_list
+ * @param array  $row    Row of get_upgrade_machine_list
  * @param string $system "windows" or "linux"
- * @return string '', not_launched, step_running ou reboot_pending
+ * @return string '', not_launched, step_running or reboot_pending
  */
 function updatesUpgradeCancelRefusal($row, $system)
 {
@@ -1059,11 +1069,11 @@ function updatesUpgradeCancelRefusal($row, $system)
 }
 
 /**
- * Compteurs de mise a niveau, lus une seule fois par requete et par entite.
+ * Upgrade counters, fetched once per request and per entity.
  *
- * @param array|null $entity Entite choisie, null pour toutes
- * @param string     $tabId  Onglet (updatesUpgradeTabs)
- * @return array|null {total, categories: {cle: nombre}, reboot_pending}, null si la reponse est inexploitable
+ * @param array|null $entity Chosen entity, null for all
+ * @param string     $tabId  Tab (updatesUpgradeTabs)
+ * @return array|null {total, categories: {key: count}, reboot_pending}, null when the answer is unusable
  */
 function updatesUpgradeSummary($entity, $tabId = 'tabwin')
 {
@@ -1088,11 +1098,11 @@ function updatesUpgradeSummary($entity, $tabId = 'tabwin')
 }
 
 /**
- * URL de la page des mises a niveau.
+ * URL of the upgrades page.
  *
- * @param array|null $entity Entite choisie, null pour toutes
- * @param string     $tabId  Onglet (updatesUpgradeTabs)
- * @return string URL non echappee
+ * @param array|null $entity Chosen entity, null for all
+ * @param string     $tabId  Tab (updatesUpgradeTabs)
+ * @return string Unescaped URL
  */
 function updatesUpgradeUrl($entity, $tabId = 'tabwin')
 {
@@ -1104,9 +1114,9 @@ function updatesUpgradeUrl($entity, $tabId = 'tabwin')
 }
 
 /**
- * Libelles des prerequis et des raisons d'une mise a niveau, table unique.
+ * Labels of the requirements and reasons of an upgrade, single table.
  *
- * @return array code => libelle
+ * @return array code => label
  */
 function updatesUpgradeReasonLabels()
 {
@@ -1135,11 +1145,11 @@ function updatesUpgradeReasonLabels()
 }
 
 /**
- * Raisons de non-eligibilite, separees par des virgules, traduites ; un code
- * inconnu n'est jamais affiche tel quel.
+ * Reasons of non-eligibility, comma-separated, translated; an unknown
+ * code is never shown as it is.
  *
  * @param mixed $reason
- * @return string Texte non echappe
+ * @return string Unescaped text
  */
 function updatesUpgradeReasonsText($reason)
 {
@@ -1155,12 +1165,12 @@ function updatesUpgradeReasonsText($reason)
 }
 
 /**
- * Cause de l'arret d'une mise a niveau (run_error), traduite d'apres ses codes :
- * « etape: cause », release etant l'etape Linux a reprendre. La raison ecrite par le poste
- * apres disk_full ou stopped suit le libelle, telle quelle.
+ * Cause of a stopped upgrade (run_error), translated from its codes:
+ * "step: cause", release being the Linux step to resume. The reason written by the machine
+ * after disk_full or stopped follows the label, as it is.
  *
  * @param mixed $runError
- * @return string Texte non echappe, vide sans erreur
+ * @return string Unescaped text, empty without an error
  */
 function updatesUpgradeRunErrorText($runError)
 {
@@ -1197,10 +1207,10 @@ function updatesUpgradeRunErrorText($runError)
 }
 
 /**
- * Cellule Etat : badge de la categorie ; les raisons de non-eligibilite ou de non-prise en charge,
- * ou l'attente du redemarrage, en infobulle.
+ * Status cell: badge of the category; the reasons of non-eligibility or of non-support,
+ * or the pending restart, as a tooltip.
  *
- * @param array $row Ligne de xmlrpc_get_upgrade_machine_list
+ * @param array $row Row of xmlrpc_get_upgrade_machine_list
  * @return string HTML
  */
 function updatesUpgradeStateCell($row)
@@ -1235,11 +1245,11 @@ function updatesUpgradeStateCell($row)
 }
 
 /**
- * Cartes de la page des mises a niveau, sur le modele de la page d'etat des
- * mises a jour : conformite, a mettre a niveau, redemarrage en attente.
+ * Cards of the upgrades page, modelled on the Update status page:
+ * compliance, to upgrade, reboot pending.
  *
- * @param array|null $entity Entite choisie, null pour toutes
- * @param string     $tabId  Onglet (updatesUpgradeTabs)
+ * @param array|null $entity Chosen entity, null for all
+ * @param string     $tabId  Tab (updatesUpgradeTabs)
  */
 function updatesUpgradeCards($entity, $tabId = 'tabwin')
 {
@@ -1268,10 +1278,10 @@ function updatesUpgradeCards($entity, $tabId = 'tabwin')
 }
 
 /**
- * Contenu d'un onglet de la page des mises a niveau : cartes, selecteur
- * d'entite, puis liste des machines avec recherche et pagination.
+ * Body of a tab of the upgrades page: cards, entity selector,
+ * then the machines list with search and pagination.
  *
- * @param string $tabId Identifiant d'onglet (updatesUpgradeTabs)
+ * @param string $tabId Tab id (updatesUpgradeTabs)
  */
 function updatesUpgradeTab($tabId)
 {
@@ -1293,10 +1303,10 @@ function updatesUpgradeTab($tabId)
 }
 
 /**
- * Droit de lancer une mise a niveau : voir l'onglet du systeme sur la page et
- * deployer des mises a jour.
+ * Right to launch an upgrade: seeing the tab of the system on the page and
+ * deploying updates.
  *
- * @param string $tabId Onglet (updatesUpgradeTabs)
+ * @param string $tabId Tab (updatesUpgradeTabs)
  * @return bool
  */
 function updatesUpgradeCanLaunch($tabId = 'tabwin')
@@ -1308,14 +1318,14 @@ function updatesUpgradeCanLaunch($tabId = 'tabwin')
 }
 
 /**
- * Ligne de mise a niveau d'une machine, relue cote serveur.
+ * Upgrade row of a machine, read again on the server side.
  *
- * @param array  $entity   Entite de la machine
- * @param string $tabId    Onglet (updatesUpgradeTabs)
- * @param string $hostname Nom de la machine, restreint la lecture
- * @param string $field    Champ identifiant : glpi_uuid ou jid
- * @param string $value    Valeur attendue
- * @param bool   $failed   Rempli : la lecture a echoue
+ * @param array  $entity   Entity of the machine
+ * @param string $tabId    Tab (updatesUpgradeTabs)
+ * @param string $hostname Machine name, narrows the read
+ * @param string $field    Identifying field: glpi_uuid or jid
+ * @param string $value    Expected value
+ * @param bool   $failed   Filled: the read failed
  * @return array|null
  */
 function updatesUpgradeRow($entity, $tabId, $hostname, $field, $value, &$failed = null)
@@ -1332,9 +1342,9 @@ function updatesUpgradeRow($entity, $tabId, $hostname, $field, $value, &$failed 
 }
 
 /**
- * Popup qui lance la mise a niveau d'une machine apres confirmation.
- * Parametres : entity (UUIDn, entite du lancement), uuid (machine GLPI),
- * hostname, tab (onglet d'origine) ; location pour revenir a la liste.
+ * Popup that launches the upgrade of a machine after confirmation.
+ * Parameters: entity (UUIDn, entity of the launch), uuid (GLPI machine),
+ * hostname, tab (originating tab); location to come back to the list.
  */
 function updatesUpgradePopup()
 {
@@ -1407,9 +1417,9 @@ function updatesUpgradePopup()
 }
 
 /**
- * Popup qui abandonne la mise a niveau en cours d'une machine apres confirmation.
- * Parametres : entity (UUIDn), jid, hostname, tab (onglet d'origine) ; location
- * pour revenir a la liste.
+ * Popup that abandons the running upgrade of a machine after confirmation.
+ * Parameters: entity (UUIDn), jid, hostname, tab (originating tab); location
+ * to come back to the list.
  */
 function updatesUpgradeCancelPopup()
 {
@@ -1471,7 +1481,7 @@ function updatesUpgradeCancelPopup()
 /**
  * Restart action of a list row, greyed with its reason when not possible.
  *
- * @param array $params from (major ou list) et parametres de retour
+ * @param array $params from (major or list) and return parameters
  * @param bool  $waiting The machine waits for a restart
  * @param bool  $online
  * @param bool  $requested A restart was already sent and no report came since
@@ -1499,9 +1509,9 @@ function updatesRestartAction($params, $waiting, $online, $requested = false)
 }
 
 /**
- * Popup qui redemarre une machine en attente de redemarrage apres confirmation,
- * comme l'action rapide de xmppmaster. Parametres : jid, from (major, list ou
- * details), tab, location, distribution pour revenir a la page d'origine.
+ * Popup that restarts a machine waiting for a restart after confirmation,
+ * like the quick action of xmppmaster. Parameters: jid, from (major, list or
+ * details), tab, location, distribution to come back to the originating page.
  */
 function updatesRestartPopup()
 {
@@ -1699,11 +1709,11 @@ function updatesWinMachineStatus($unsupported, $evaluated, $untracked = null, $r
     if (updatesWinTriState($updating) === true) {
         return updatesWinBadge(_T("In progress", "updates"), 'progress');
     }
+    if ($system !== 'linux' && updatesWinTriState($upgrading) === true) {
+        return updatesWinBadge(_T("upgrade in progress", "updates"), 'upgrade-in-progress', updatesUpgradeRestartNote());
+    }
     if (updatesWinTriState($rebootPending) === true && updatesWinTriState($restartRequested) === true) {
         return updatesWinBadge(_T("Restart requested", "updates"), 'reboot');
-    }
-    if (updatesWinTriState($rebootPending) === true && $system !== 'linux' && updatesWinTriState($upgrading) === true) {
-        return updatesWinBadge(_T("upgrade in progress", "updates"), 'upgrade-in-progress', updatesUpgradeRestartNote());
     }
     if (updatesWinTriState($rebootPending) === true) {
         return updatesWinBadge(_T("Reboot pending", "updates"), 'reboot', ($system === 'linux')
@@ -1779,7 +1789,7 @@ function updatesWinOffer($row)
 
 /**
  * Whether the machine installs this update line with its own Windows Update:
- * Windows claims it and the Microsoft catalog does not carry it.
+ * Windows asks for it and it is tied to no catalog update.
  *
  * @param array $row Update line
  * @return bool
@@ -1992,7 +2002,7 @@ function updatesWinUpdateState($state)
 }
 
 /**
- * Microsoft Defender definitions of a machine: version, date, and whether it is inactive.
+ * Microsoft Defender definitions of a machine: version, its date as a tooltip; version, date and "inactive" when it is inactive.
  *
  * @param mixed $state {enabled, signature_version, signature_updated_at} or null
  * @return string|null HTML, null when unknown
@@ -2010,13 +2020,18 @@ function updatesWinDefenderState($state)
         return null;
     }
     $updated = updatesWinDay($text('signature_updated_at'));
-    if ($updated !== '') {
-        $value = sprintf(_T("%s dated %s", "updates"), $value, $updated);
-    }
     if (($state['enabled'] ?? null) === false) {
-        $value = sprintf(_T("%s (inactive)", "updates"), $value);
+        if ($updated !== '') {
+            $value = sprintf(_T("%s dated %s", "updates"), $value, $updated);
+        }
+        return htmlspecialchars(sprintf(_T("%s (inactive)", "updates"), $value), ENT_QUOTES, 'UTF-8');
     }
-    return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+    if ($updated === '') {
+        return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+    }
+    return '<span class="updates-tooltip" aria-label="'
+        . htmlspecialchars(sprintf(_T("Definitions dated %s", "updates"), $updated), ENT_QUOTES, 'UTF-8')
+        . '">' . htmlspecialchars($value, ENT_QUOTES, 'UTF-8') . '</span>';
 }
 
 /**
@@ -2232,7 +2247,7 @@ function updatesUpgradeEligibilityCell($row)
     if ($lines === '') {
         return '<span class="cell-text">' . htmlspecialchars($verdict, ENT_QUOTES, 'UTF-8') . '</span>';
     }
-    $tooltip = '<table class="ttable updates-req-tt">' . $lines . '</table>';
+    $tooltip = '<table class="ttable">' . $lines . '</table>';
     return '<span class="cell-text updates-cell-help updates-eligibility" mydata="' . htmlspecialchars($tooltip, ENT_QUOTES, 'UTF-8') . '">'
         . htmlspecialchars($verdict, ENT_QUOTES, 'UTF-8') . '</span>';
 }
@@ -2657,7 +2672,8 @@ function updatesApprovalPopup($status)
         return;
     }
     $text = $texts[$status];
-    $entity = updatesEntityByUuid($_GET['location'] ?? '');
+    $entity = hasCorrectAcl("updates", "updates", updatesApprovalActionPage($status))
+        ? updatesEntityByUuid($_GET['location'] ?? '') : null;
     $updateId = updatesApprovalId($_GET['updateid'] ?? null);
     if (!$entity || $updateId === null) {
         updatesUnknownEntityPopup($text['title']);
@@ -2962,7 +2978,7 @@ function updatesWinUpdateInstallPopup()
     updatesConfirmPopup(
         $title,
         updatesActionText(_T("Deploy <b>%s</b> on <b>%s</b>?", "updates"), $label, updatesPopupMachine($jid)),
-        htmlspecialchars(_T("The machine will install this update with its own Windows Update. It is not in the Microsoft catalog: Medulla provides no file.", "updates"), ENT_QUOTES, 'UTF-8'));
+        htmlspecialchars(_T("The machine will install this update with its own Windows Update.", "updates"), ENT_QUOTES, 'UTF-8'));
 }
 
 /**
@@ -3127,7 +3143,7 @@ function updatesWinUninstallPopup()
     $title = _T("Uninstall", "updates");
     $kb = updatesWinNumber($_GET['kb'] ?? null);
     $jid = is_string($_GET['jid'] ?? null) ? trim($_GET['jid']) : '';
-    if (!$kb || !updatesJidValid($jid)) {
+    if (!hasCorrectAcl("updates", "updates", "uninstallWinUpdate") || !$kb || !updatesJidValid($jid)) {
         updatesUnknownEntityPopup($title);
         return;
     }
@@ -3433,9 +3449,9 @@ function updatesApprovalRulesGrid($rules, $severity)
 }
 
 /**
- * Onglets de la page d'approbation automatique.
+ * Tabs of the automatic approval page.
  *
- * @return array id d'onglet => array(label, file, system)
+ * @return array tab id => array(label, file, system)
  */
 function updatesAutomationTabs()
 {
@@ -3495,7 +3511,7 @@ function updatesAutomationTab($system)
         return;
     }
 
-    echo '<form method="post" action="' . htmlspecialchars($pageUrl, ENT_QUOTES, 'UTF-8') . '" class="approval-form approval-rules">';
+    echo '<form method="post" action="' . htmlspecialchars($pageUrl, ENT_QUOTES, 'UTF-8') . '" class="approval-form">';
     $noteText = ($system === 'linux')
         ? _T("Approved packages go out on their own to the Linux machines during the time range of the automatic deployment.", "updates")
         : _T("Updates matching a ticked line are approved automatically for this entity, unless declined.", "updates");
@@ -3586,6 +3602,9 @@ function updatesWinGroupUrl($gid)
  */
 function updatesWinGroupDeployAction($eligible)
 {
+    if (!updatesWinCanDeploy()) {
+        return updatesWinDeployAction('');
+    }
     if ($eligible === null || $eligible === 0) {
         $item = new EmptyActionItem(htmlspecialchars(_T("No eligible machine", "updates"), ENT_QUOTES, 'UTF-8'));
         $item->setClassCss('install');
@@ -3600,7 +3619,7 @@ function updatesWinGroupDeployAction($eligible)
 function updatesWinGroupDeployPopup()
 {
     $title = _T("Deploy", "updates");
-    $group = hasCorrectAcl("updates", "updates", "deployWinGroup") ? updatesWinRequestGroup() : null;
+    $group = (hasCorrectAcl("updates", "updates", "deployWinGroup") && updatesWinCanDeploy()) ? updatesWinRequestGroup() : null;
     $updateId = updatesApprovalId($_GET['updateid'] ?? null);
     if (!$group || $updateId === null) {
         updatesUnknownGroupPopup($title);
@@ -3733,7 +3752,7 @@ function updatesUpgradeGroupBackUrl()
 }
 
 /**
- * Systems whose upgrade tab the user may see.
+ * Systems the user may upgrade, as on a single machine.
  *
  * @return string[] "windows", "linux"
  */
@@ -3741,11 +3760,22 @@ function updatesUpgradeGroupSystems()
 {
     $systems = array();
     foreach (updatesUpgradeTabs() as $tabId => $tab) {
-        if (hasCorrectTabAcl("updates", "updates", "MajorEntitiesList", $tabId)) {
+        if (updatesUpgradeCanLaunch($tabId)) {
             $systems[] = $tab['system'];
         }
     }
     return $systems;
+}
+
+/**
+ * Right to upgrade a group: its own entry and the right to upgrade a machine
+ * of at least one system.
+ *
+ * @return bool
+ */
+function updatesUpgradeGroupAllowed()
+{
+    return hasCorrectAcl("updates", "updates", "upgradeWinGroup") && !empty(updatesUpgradeGroupSystems());
 }
 
 /**
@@ -3755,7 +3785,7 @@ function updatesUpgradeGroupSystems()
 function updatesUpgradeGroupPopup()
 {
     $title = _T("Upgrade this group", "updates");
-    $group = hasCorrectAcl("updates", "updates", "upgradeWinGroup") ? updatesWinRequestGroup() : null;
+    $group = updatesUpgradeGroupAllowed() ? updatesWinRequestGroup() : null;
     if (!$group) {
         updatesUnknownGroupPopup($title);
         return;
@@ -3844,7 +3874,7 @@ function updatesUpgradeGroupPopup()
 }
 
 /**
- * Etat de la copie du catalogue des mises a jour, lu une seule fois par requete.
+ * State of the copy of the updates catalog, fetched once per request.
  *
  * @return array "state", "cause", "last_success_at"
  */
@@ -3864,7 +3894,7 @@ function updatesReplicationState()
 }
 
 /**
- * Module ouvert : le catalogue a ete recu (a jour ou non).
+ * Module open: the catalog has been received (up to date or not).
  */
 function updatesModuleOpen()
 {
@@ -3872,7 +3902,7 @@ function updatesModuleOpen()
 }
 
 /**
- * Cause d'echec en clair, jamais le texte brut du backend.
+ * Failure cause in plain words, never the raw text of the backend.
  */
 function updatesReplicationCause($cause)
 {
@@ -3886,7 +3916,7 @@ function updatesReplicationCause($cause)
 }
 
 /**
- * Bloc affiche a la place d'une page quand le module est ferme.
+ * Box shown instead of a page when the module is closed.
  */
 function updatesClosedBox()
 {
@@ -3907,7 +3937,7 @@ function updatesClosedBox()
 }
 
 /**
- * Page complete du module ferme : titre, menu, bloc.
+ * Full page of the closed module: title, menu, box.
  */
 function updatesClosedPage($title, $sidemenu)
 {
@@ -3918,7 +3948,7 @@ function updatesClosedPage($title, $sidemenu)
 }
 
 /**
- * Paragraphe "catalogue non actualise" quand la derniere actualisation a echoue.
+ * "Catalog not updated" paragraph when the last update failed.
  */
 function updatesStaleNotice()
 {
@@ -3935,7 +3965,7 @@ function updatesStaleNotice()
 }
 
 /**
- * Section "Catalogue des mises a jour" en lecture seule, hors de tout formulaire.
+ * Read-only "Updates catalog" section, outside any form.
  */
 function updatesCatalogSection()
 {
@@ -3960,7 +3990,7 @@ function updatesCatalogSection()
 }
 
 /**
- * Valeur affichee telle quelle (deja echappee), sans champ de formulaire.
+ * Value shown as it is (already escaped), without a form field.
  */
 class UpdatesTextTpl extends AbstractTpl
 {
@@ -3981,8 +4011,8 @@ class UpdatesTextTpl extends AbstractTpl
 }
 
 /**
- * Selecteur d'entite en ligne de formulaire (TrFormElement).
- * $arrParam : "entity" (updatesSelectedEntity), "allowAll", "aside" (HTML).
+ * Entity selector as a form row (TrFormElement).
+ * $arrParam: "entity" (updatesSelectedEntity), "allowAll", "aside" (HTML).
  */
 class UpdatesEntitySelectTpl extends AbstractTpl
 {
@@ -3993,8 +4023,8 @@ class UpdatesEntitySelectTpl extends AbstractTpl
 }
 
 /**
- * Plage horaire sur une ligne : deux InputTpl separes par « De » / « à ».
- * $arrParam : "start", "end" (deja echappes), "placeholder".
+ * Time range on one line: two InputTpl separated by "From" / "to".
+ * $arrParam: "start", "end" (already escaped), "placeholder".
  */
 class UpdatesTimeRangeTpl extends AbstractTpl
 {
