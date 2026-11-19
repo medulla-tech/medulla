@@ -217,8 +217,9 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
             $_tmpParam['version'] = $_packages['conf_json'][$i]['inventory']['queries']['Qversion'];
             $_tmpParam['count'] = $_licensescount;
             $_tmpParam['licencemax'] = $_packages['conf_json'][$i]['inventory']['licenses'];
-            $_params[0]['auth_token'] = $_SESSION['auth_token'] ?? '';
-            $_urlRedirect = urlStrRedirect("pkgs/pkgs/createGroupLicence", $_params[0]);
+            $_licenceParams = $_tmpParam;
+            $_licenceParams['auth_token'] = $_SESSION['auth_token'] ?? '';
+            $_urlRedirect = urlStrRedirect("pkgs/pkgs/createGroupLicence", $_licenceParams);
 
             $_tmp_licenses = '<span class="pkg-licenses">' .
                 '<a href="' .
