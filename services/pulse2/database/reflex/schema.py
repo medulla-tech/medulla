@@ -195,12 +195,12 @@ class ProbeExclusion(Base, ReflexDBObj):
     """Exception to a widely placed probe, machine by machine."""
     __tablename__ = 'probe_exclusions'
     __table_args__ = (
-        UniqueConstraint('probe_id', 'machines_id', name='uk_probe_machine'),
+        UniqueConstraint('probe_id', 'jiduser', name='uk_probe_machine'),
     )
     id = Column(Integer, primary_key=True, autoincrement=True)
     probe_id = Column(Integer, ForeignKey('probes.id', ondelete='CASCADE'),
                       nullable=False)
-    machines_id = Column(Integer, nullable=False)
+    jiduser = Column(String(255), nullable=False)
     hostname = Column(String(255), nullable=False)
     reason = Column(String(255))
     created_by = Column(String(255), nullable=False)
@@ -213,10 +213,10 @@ class ProbeAgentConfig(Base, ReflexDBObj):
     """Probe configuration distributed to an agent."""
     __tablename__ = 'probe_agent_config'
     __table_args__ = (
-        UniqueConstraint('machines_id', name='uk_machine'),
+        UniqueConstraint('jiduser', name='uk_machine'),
     )
     id = Column(Integer, primary_key=True, autoincrement=True)
-    machines_id = Column(Integer, nullable=False)
+    jiduser = Column(String(255), nullable=False)
     hostname = Column(String(255), nullable=False)
     sent_version = Column(String(64))
     sent_at = Column(DateTime)
@@ -236,7 +236,7 @@ class ProbeConfigChange(Base, ReflexDBObj):
     __tablename__ = 'probe_config_changes'
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     scope_type = Column(Enum(*CONFIG_CHANGE_SCOPES), nullable=False)
-    scope_id = Column(Integer)
+    scope_id = Column(String(255))
     created_at = Column(DateTime, nullable=False,
                         default=datetime.datetime.now)
 
@@ -245,7 +245,7 @@ class ProbeMeasure(Base, ReflexDBObj):
     """Measures reported by the agents."""
     __tablename__ = 'probe_measures'
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    machines_id = Column(Integer, nullable=False)
+    jiduser = Column(String(255), nullable=False)
     uuid_inventorymachine = Column(String(45))
     hostname = Column(String(255), nullable=False)
     probe_id = Column(Integer, nullable=False)
@@ -268,7 +268,7 @@ class Alert(Base, ReflexDBObj):
     probe_id = Column(Integer, ForeignKey('probes.id', ondelete='CASCADE'),
                       nullable=False)
     condition_id = Column(Integer)
-    machines_id = Column(Integer, nullable=False)
+    jiduser = Column(String(255), nullable=False)
     uuid_inventorymachine = Column(String(45))
     hostname = Column(String(255), nullable=False)
     severity = Column(Enum(*SEVERITIES), nullable=False)

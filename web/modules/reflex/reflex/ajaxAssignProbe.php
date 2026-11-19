@@ -107,30 +107,25 @@ if (isset($_POST['bconfirm'])) {
         if (!is_array($submitted)) {
             $submitted = array($submitted);
         }
+        // The picker only preloads a window of the estate and the search reaches
+        // past it: the backend decides which of these machines may be targeted.
         $wanted = array();
         foreach ($submitted as $raw) {
-            $machineId = intval(trim((string) $raw));
-            if ($machineId > 0) {
-                // Keyed, so the same machine sent twice is placed once.
-                $wanted[$machineId] = $machineId;
+            if (trim((string) $raw) === '') {
+                continue;
             }
+            $jiduser = ReflexHtml::jiduser($raw);
+            if ($jiduser === '') {
+                $error = _T("Please pick a target in the list", "reflex");
+                break;
+            }
+            // Keyed, so the same machine sent twice is placed once.
+            $wanted[$jiduser] = $jiduser;
         }
-        if (empty($wanted)) {
+        if ($error === '' && empty($wanted)) {
             $error = _T("Choose at least one machine", "reflex");
-        } else {
-            // One registry round trip for the whole batch.
-            ReflexTargets::preloadMachineNames($wanted);
-            foreach ($wanted as $machineId) {
-                // The picker only preloads a window of the estate and the search reaches
-                // past it: each identifier is confirmed against the backend, which reapplies
-                // the restrictions of the session. A single stranger fails the whole form.
-                if (ReflexTargets::assignableMachineName($machineId) === '') {
-                    $error = _T("Please pick a target in the list", "reflex");
-                    $targetIds = array();
-                    break;
-                }
-                $targetIds[] = (string) $machineId;
-            }
+        } elseif ($error === '') {
+            $targetIds = array_map('strval', array_values($wanted));
         }
     } elseif ($targetType !== 'all') {
         // The root entity is offered under the identifier 0: intval() could not tell
@@ -244,7 +239,8 @@ foreach ($targetFields as $type => $field) {
     // SelectItem prints labels and values verbatim.
     $select->setElements(array_map(
         array('ReflexDynamicForm', 'escapeForWidget'), array_values($choices)));
-    $select->setElementsVal(array_keys($choices));
+    $select->setElementsVal(array_map(
+        array('ReflexDynamicForm', 'escapeForWidget'), array_keys($choices)));
     $select->setSelected('');
     $f->add(new TrFormElement($targetTypeOptions[$type], $select));
 }

@@ -26,10 +26,10 @@ require_once("modules/reflex/includes/xmlrpc.php");
 require_once("modules/reflex/includes/html.inc.php");
 require_once("modules/reflex/includes/tips.inc.php");
 
-$machinesId = isset($_GET['machines_id']) ? intval($_GET['machines_id']) : 0;
+$jiduser = ReflexHtml::jiduser($_GET['jiduser'] ?? '');
 $login = reflex_current_login();
 
-if ($machinesId <= 0) {
+if ($jiduser === '') {
     $p = new PageGenerator(_T("Machine Supervision", 'reflex'));
     $p->setSideMenu($sidemenu);
     $p->display();
@@ -40,7 +40,7 @@ if ($machinesId <= 0) {
     return;
 }
 
-$detail = xmlrpc_reflex_get_machine_detail($login, $machinesId);
+$detail = xmlrpc_reflex_get_machine_detail($login, $jiduser);
 if (!is_array($detail)) {
     $detail = array();
 }
@@ -60,6 +60,7 @@ foreach ($probes as $probeRow) {
 // figures of one machine would show under the name of another.
 $machineName = '';
 foreach (array(
+    $detail['hostname'] ?? '',
     $detail['agent_config']['hostname'] ?? '',
     $lastMeasures[0]['hostname'] ?? '',
     $openAlerts[0]['hostname'] ?? ''
@@ -69,9 +70,6 @@ foreach (array(
         $machineName = $candidate;
         break;
     }
-}
-if ($machineName === '') {
-    $machineName = trim((string) ReflexTargets::assignableMachineName($machinesId));
 }
 
 // An unknown identifier and a machine of another estate answer alike.
@@ -362,7 +360,7 @@ if ($chartCatalog === false) {
 
 <div class="reflex-charts"
      id="reflex-charts"
-     data-machines-id="<?php echo intval($machinesId); ?>"
+     data-jiduser="<?php echo htmlspecialchars($jiduser, ENT_QUOTES, 'UTF-8'); ?>"
      data-url="<?php echo htmlspecialchars(urlStrRedirect("reflex/reflex/ajaxProbeChart")); ?>">
     <!-- Presence first and never folded: it names no probe, it is what the
          curves beside it are read against, and it is the one card that is
@@ -581,7 +579,7 @@ if (empty($probes)) {
         $rowParams[] = array(
             'probe_id' => $probeId,
             'assignment_id' => intval($probe['assignment_id'] ?? 0),
-            'machines_id' => $machinesId,
+            'jiduser' => $jiduser,
             'hostname' => $machineName,
             // The stored name travels to the popups: it must not change with the language.
             'probe_label' => (string) ($probe['label'] ?? '')

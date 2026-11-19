@@ -187,15 +187,15 @@ function xmlrpc_reflex_unassign_probes_bulk($login, $assignment_ids)
 // =============================================================================
 // The hostname is stored with the exception so the console can name the
 // machine without joining xmppmaster.
-function xmlrpc_reflex_exclude_probe_on_machine($login, $probe_id, $machines_id, $hostname, $reason = '')
+function xmlrpc_reflex_exclude_probe_on_machine($login, $probe_id, $jiduser, $hostname, $reason = '')
 {
     return xmlCall("reflex.exclude_probe_on_machine",
-        array($login, $probe_id, $machines_id, $hostname, $reason));
+        array($login, $probe_id, $jiduser, $hostname, $reason));
 }
 
-function xmlrpc_reflex_include_probe_on_machine($login, $probe_id, $machines_id)
+function xmlrpc_reflex_include_probe_on_machine($login, $probe_id, $jiduser)
 {
-    return xmlCall("reflex.include_probe_on_machine", array($login, $probe_id, $machines_id));
+    return xmlCall("reflex.include_probe_on_machine", array($login, $probe_id, $jiduser));
 }
 
 function xmlrpc_reflex_get_probe_exclusions($login, $probe_id)
@@ -242,19 +242,19 @@ function xmlrpc_reflex_get_machines_status($login, $start = 0, $limit = 20, $fil
     return xmlCall("reflex.get_machines_status", array($login, $start, $limit, $filter));
 }
 
-function xmlrpc_reflex_get_machine_detail($login, $machines_id)
+function xmlrpc_reflex_get_machine_detail($login, $jiduser)
 {
-    return xmlCall("reflex.get_machine_detail", array($login, $machines_id));
+    return xmlCall("reflex.get_machine_detail", array($login, $jiduser));
 }
 
 // Trailing arguments are only appended when they carry something, so a backend
 // without them keeps answering the day periods. max_points travels after
 // hours, which is then sent as 0 on a period counted in days.
-function xmlrpc_reflex_get_measures_timeseries($login, $machines_id, $probe_id,
+function xmlrpc_reflex_get_measures_timeseries($login, $jiduser, $probe_id,
                                                $days = 7, $hours = null,
                                                $max_points = null)
 {
-    $args = array($login, $machines_id, $probe_id, $days);
+    $args = array($login, $jiduser, $probe_id, $days);
     $window = ($hours !== null && intval($hours) > 0) ? intval($hours) : 0;
     if ($max_points !== null && intval($max_points) > 0) {
         $args[] = $window;
@@ -265,20 +265,20 @@ function xmlrpc_reflex_get_measures_timeseries($login, $machines_id, $probe_id,
     return xmlCall("reflex.get_measures_timeseries", $args);
 }
 
-function xmlrpc_reflex_get_agent_presence($login, $machines_id, $days = 7,
+function xmlrpc_reflex_get_agent_presence($login, $jiduser, $days = 7,
                                           $hours = null)
 {
-    $args = array($login, $machines_id, $days);
+    $args = array($login, $jiduser, $days);
     if ($hours !== null && intval($hours) > 0) {
         $args[] = intval($hours);
     }
     return xmlCall("reflex.get_agent_presence", $args);
 }
 
-function xmlrpc_reflex_get_agent_config($machines_id, $login = null)
+function xmlrpc_reflex_get_agent_config($jiduser, $login = null)
 {
     return xmlCall("reflex.get_agent_config",
-                   array($machines_id, reflex_call_login($login)));
+                   array($jiduser, reflex_call_login($login)));
 }
 
 // =============================================================================

@@ -28,10 +28,10 @@ require_once("modules/reflex/includes/html.inc.php");
 $term = isset($_GET['term']) ? (string) $_GET['term'] : '';
 
 $suggestions = array();
-foreach (ReflexTargets::searchMachineOptions($term) as $machineId => $hostname) {
+foreach (ReflexTargets::searchMachineOptions($term) as $jiduser => $hostname) {
     $suggestions[] = array(
         'label' => (string) $hostname,
-        'value' => (string) $machineId
+        'value' => (string) $jiduser
     );
 }
 

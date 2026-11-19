@@ -31,7 +31,7 @@ $login = reflex_current_login();
 
 // Machine sheet this page was opened from, when it was: this sheet describes
 // the probe on the whole estate and would otherwise offer no way back.
-$fromMachineId = isset($_GET['machines_id']) ? intval($_GET['machines_id']) : 0;
+$fromJiduser = ReflexHtml::jiduser($_GET['jiduser'] ?? '');
 // Reported by an agent: escaped wherever it is rendered.
 $fromHostname = isset($_GET['hostname']) ? trim((string) $_GET['hostname']) : '';
 
@@ -148,9 +148,9 @@ $requirements = array_values(array_unique($requirements));
 ?>
 
 <div class="reflex-back-links">
-    <?php if ($fromMachineId > 0): ?>
+    <?php if ($fromJiduser !== ''): ?>
     <a href="<?php echo htmlspecialchars(urlStrRedirect('reflex/reflex/machineDetail', array(
-            'machines_id' => $fromMachineId,
+            'jiduser' => $fromJiduser,
             'hostname' => $fromHostname
         )), ENT_QUOTES, 'UTF-8'); ?>" class="back-link">
         &larr; <?php echo ($fromHostname !== '')
@@ -456,14 +456,7 @@ if (empty($assignments)) {
         )
     );
 
-    // Resolved in one call for the whole list rather than one lookup per row.
-    $machineTargets = array();
-    foreach ($assignments as $assignment) {
-        if (($assignment['target_type'] ?? '') === 'machine') {
-            $machineTargets[] = $assignment['target_id'] ?? 0;
-        }
-    }
-    ReflexTargets::preloadMachineNames($machineTargets);
+    ReflexTargets::preloadMachineNames($assignments);
 
     // The gesture on the whole park is stored as one placement per entity, and
     // gathered back into a single row. Below that count the rows stay one per
@@ -650,7 +643,7 @@ if (!empty($exclusions)) {
         $exclusionDates[] = ReflexHelper::formatDate($exclusion['created_at'] ?? '');
         $exclusionParams[] = array(
             'probe_id' => $probeId,
-            'machines_id' => intval($exclusion['machines_id'] ?? 0),
+            'jiduser' => ReflexHtml::jiduser($exclusion['jiduser'] ?? ''),
             'hostname' => $exclusionHostname,
             'probe_label' => (string) ($probe['label'] ?? ''),
             'back' => 'probe'
