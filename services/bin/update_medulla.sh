@@ -1293,6 +1293,13 @@ EOF
 
     ## Setup new MMC module: mobile
     setup_new_mmc_module "mobile"
+    crudini --set /etc/mmc/plugins/mobile.ini.local hmdm password ${HMDM_ADMINPASSWD}
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring HMDM password in mobile MMC module."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
     # mmc-agent will be restarted in final_operations
     str="[v] Medulla MMC module 'mobile' setup and configuration applied successfully."
     echo "$str"
