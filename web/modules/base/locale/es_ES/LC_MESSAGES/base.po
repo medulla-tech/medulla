@@ -689,7 +689,7 @@ msgstr "Editar archivos de configuración"
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:282
 #: modules/base/includes/computers_list.inc.php:134
 msgid "Imaging management"
-msgstr "Gestión de imagenes"
+msgstr "Gestión de Imaging"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:189
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:92
@@ -1076,7 +1076,7 @@ msgstr "Lista de equipos"
 
 #: modules/base/computers/delete.php:44
 msgid "You have to check the box <b>\"I am aware that all related images (non-master) will be deleted\"</b> if you want to remove this computer."
-msgstr "Tienes que marcar la casilla <b>\"Soy consciente de que todas las imágenes relacionadas (no maestras) serán eliminadas\"</b> si quieres eliminar este ordenador."
+msgstr "Debe marcar la casilla <b>\"Soy consciente de que todas las imágenes relacionadas (no Master) serán eliminadas\"</b> si desea eliminar esta máquina."
 
 #: modules/base/computers/delete.php:78
 msgid "GLPI base is readonly: The computer has been deleted in xmpp not in GLPI"
@@ -1100,7 +1100,7 @@ msgstr "Desea realizar la copia de seguridad?"
 
 #: modules/base/computers/delete.php:105
 msgid "I am aware that <b>all related images (non-master)</b> will be <b>DELETED</b>.<br />Check this box if it is what you want."
-msgstr "Soy consciente de que <b>todas las imágenes relacionadas (no maestras)</b> serán <b>ELIMINADAS</b>.<br />Marque esta casilla si es lo que desea."
+msgstr "Soy consciente de que <b>todas las imágenes relacionadas (no Master)</b> serán <b>ELIMINADAS</b>.<br />Marque esta casilla si es lo que desea."
 
 #: modules/base/computers/edit.php:36
 msgid "Computer successfully added"
@@ -1825,7 +1825,7 @@ msgstr "Ver detalles de la acción"
 
 #: modules/base/infoPackage.inc.php:123
 msgid "History"
-msgstr "Historia"
+msgstr "Historial"
 
 #: modules/base/infoPackage.inc.php:130
 msgid "logs of all the modules"
@@ -1902,7 +1902,7 @@ msgstr "Editar un grupo"
 
 #: modules/base/infoPackage.inc.php:343
 msgid "Computers"
-msgstr "Computadoras"
+msgstr "Máquinas"
 
 #: modules/base/infoPackage.inc.php:357
 msgid "Edit computer"
@@ -2350,7 +2350,7 @@ msgstr "Despliegue"
 
 #: logview/index.php
 msgid "Imaging"
-msgstr "Imagen"
+msgstr "Imaging"
 
 #: logview/index.php
 msgid "Packaging"
@@ -2450,7 +2450,7 @@ msgid "Inventory Machine"
 msgstr "Inventario máquina"
 
 msgid "Inventory Master"
-msgstr "Inventario master"
+msgstr "Inventario Master"
 
 msgid "Inventory New machine"
 msgstr "Inventario nueva máquina"
@@ -2474,16 +2474,16 @@ msgid "Manual"
 msgstr "Manual"
 
 msgid "Master Creation"
-msgstr "Creación de master"
+msgstr "Creación de Master"
 
 msgid "Master Deletion"
-msgstr "Eliminación de master"
+msgstr "Eliminación de Master"
 
 msgid "Master Deployment Multicast"
-msgstr "Despliegue master multicast"
+msgstr "Despliegue de Master en multidifusión"
 
 msgid "Master Edition"
-msgstr "Edición de master"
+msgstr "Edición de Master"
 
 msgid "Menu change"
 msgstr "Cambio de menú"

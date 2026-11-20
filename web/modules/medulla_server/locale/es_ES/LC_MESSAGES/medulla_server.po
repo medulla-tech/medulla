@@ -74,7 +74,7 @@ msgstr "Urbackup"
 #: modules/medulla_server/includes/menu_group_action.php:76
 #: modules/medulla_server/includes/menu_action.php:64
 msgid "Imaging management"
-msgstr "Gestión de imagenes"
+msgstr "Gestión de Imaging"
 
 #: modules/medulla_server/includes/menu_actionaudit.php:77
 #: modules/medulla_server/includes/menu_action.php:75
@@ -138,19 +138,19 @@ msgstr "Inventario de este perfil"
 
 #: modules/medulla_server/includes/menu_group_action.php:67
 msgid "Display this imaging group's content"
-msgstr "Mostrar el contenido de este grupo de imágenes"
+msgstr "Mostrar el contenido de este grupo de Imaging"
 
 #: modules/medulla_server/includes/menu_group_action.php:69
 msgid "Edit this imaging group"
-msgstr "Editar este grupo de imágenes"
+msgstr "Editar este grupo de Imaging"
 
 #: modules/medulla_server/includes/menu_group_action.php:70
 msgid "Share this imaging group"
-msgstr "Compartir este grupo de imágenes"
+msgstr "Compartir este grupo de Imaging"
 
 #: modules/medulla_server/includes/menu_group_action.php:72
 msgid "Software deployment on this imaging group"
-msgstr "Implantación de software en este grupo de imágenes"
+msgstr "Despliegue de software en este grupo de Imaging"
 
 #: modules/medulla_server/includes/menu_group_action.php:82
 msgid "Group Quick action"

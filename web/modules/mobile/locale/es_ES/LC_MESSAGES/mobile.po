@@ -643,7 +643,7 @@ msgstr "Editar archivos de configuración"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:110
 msgid "Imaging management"
-msgstr "Gestión de imágenes"
+msgstr "Gestión de Imaging"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:111
 msgid "extTicket issue"
