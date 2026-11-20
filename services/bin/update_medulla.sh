@@ -1202,7 +1202,7 @@ update_565_to_566() {
                 --turn-host "${HMDM_TURNHOST}" \
                 --turn-port "${HMDM_TURNPORT}" \
                 --turn-user "${HMDM_TURNUSER}" \
-                --turn-pass "${HMDM_TURNPASSWD}"
+                --turn-pass "${HMDM_TURNPASSWD}" > /dev/null 2>&1
         ); then
             HMDM_INSTALL_RC=0
         else
