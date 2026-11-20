@@ -38,6 +38,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 // Get parameters (from GET on initial load, from POST on form submission)
 $software_name = isset($_POST['software_name']) ? $_POST['software_name'] : (isset($_GET['software_name']) ? $_GET['software_name'] : '');
 $software_version = isset($_POST['software_version']) ? $_POST['software_version'] : (isset($_GET['software_version']) ? $_GET['software_version'] : '');
+$store_name = isset($_POST['store_name']) ? $_POST['store_name'] : (isset($_GET['store_name']) ? $_GET['store_name'] : '');
 $store_version = isset($_POST['store_version']) ? $_POST['store_version'] : (isset($_GET['store_version']) ? $_GET['store_version'] : '');
 $store_package_uuid = isset($_POST['store_package_uuid']) ? $_POST['store_package_uuid'] : (isset($_GET['store_package_uuid']) ? $_GET['store_package_uuid'] : '');
 
@@ -67,7 +68,7 @@ if (isset($_POST['bconfirm'])) {
             new NotifyWidgetFailure(_T("Invalid machine data", "security"));
         } else {
             // Build deployment title
-            $deployTitle = $software_name;
+            $deployTitle = $store_name ?: $software_name;
             if ($store_version) {
                 $deployTitle .= ' (' . $store_version . ')';
             }
@@ -299,6 +300,7 @@ $machines = xmlrpc_get_machines_for_vulnerable_software($software_name, $softwar
     <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
     <input type="hidden" name="software_name" value="<?php echo htmlspecialchars($software_name); ?>" />
     <input type="hidden" name="software_version" value="<?php echo htmlspecialchars($software_version); ?>" />
+    <input type="hidden" name="store_name" value="<?php echo htmlspecialchars($store_name); ?>" />
     <input type="hidden" name="store_version" value="<?php echo htmlspecialchars($store_version); ?>" />
     <input type="hidden" name="store_package_uuid" value="<?php echo htmlspecialchars($store_package_uuid); ?>" />
 
