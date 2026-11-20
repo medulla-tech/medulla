@@ -147,6 +147,11 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     if (isset($_GET['tab'])) {
         $formRouteParams['tab'] = $_GET['tab'];
     }
+    if (!empty($_GET['uuid'])) {
+        $formRouteParams['uuid'] = $_GET['uuid'];
+    } elseif (!empty($_GET['gid'])) {
+        $formRouteParams['gid'] = $_GET['gid'];
+    }
     $f->options['action'] = urlStrRedirect($formRoute, $formRouteParams);
 
     // display top label
