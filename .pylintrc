@@ -1,0 +1,45 @@
+# Pylint configuration for Medulla, used by .github/workflows/pylint.yml.
+# Only real errors and a few useful warnings are reported: no style checks.
+#
+# Run it locally on some files:
+#   pip install pylint==3.3.1
+#   pylint path/to/file.py
+
+[MAIN]
+# Debian 12 ships Python 3.11, debian/control requires >= 3.9
+py-version=3.9
+jobs=0
+# Builtin on Windows only, used by the Windows agent code
+additional-builtins=WindowsError
+
+[MESSAGES CONTROL]
+# Keep errors (E) and fatal messages (F), drop every style category, and drop
+# these false positives for this code base:
+# - no-member: SQLAlchemy mapped classes and the GLPI plugins create their
+#   attributes at run time (Machine, Entities, Glpi100...)
+# - no-value-for-parameter: decorators inject arguments such as session or jid
+# - import-error, no-name-in-module: the dependencies (Twisted, SQLAlchemy,
+#   slixmpp...) are not installed where pylint runs
+disable=
+    C,
+    R,
+    W,
+    I,
+    no-member,
+    no-value-for-parameter,
+    import-error,
+    no-name-in-module,
+
+# Warnings worth fixing in the lines you touch. They are shown on pull
+# requests but do not fail them: only errors do.
+enable=
+    unused-import,
+    unused-variable,
+    unreachable,
+    dangerous-default-value,
+    duplicate-key,
+    self-assigning-variable,
+    bare-except,
+
+[REPORTS]
+score=no
