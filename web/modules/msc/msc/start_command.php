@@ -123,6 +123,15 @@ $cible = array($uuid);
 $login = $_SESSION['login'];
 $id_command = add_command_api($pid, $cible, $params, $mode, $gid, '', 0, $login);
 
+if (isXMLRPCError() || !is_numeric($id_command) || $id_command <= 0) {
+    if (!isXMLRPCError()) {
+        notifyNoTargetMachine();
+    }
+    $back = $gid ? array('tab' => 'grouptablaunch', 'gid' => $gid) : array('tab' => 'tablaunch', 'uuid' => $uuid, 'hostname' => $hostname);
+    header("Location: " . urlStrRedirect("$module/$submod/$page", $back));
+    exit;
+}
+
 if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
     if (!isXMLRPCError()) {
         scheduler_start_these_commands('', array($id_command));

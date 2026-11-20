@@ -4795,6 +4795,8 @@ class XmppMasterDatabase(DatabaseHelper):
             INT: The identifier of the inserted command or update in the database.
         """
 
+        existing_logincommand = None
+        new_logincommand = None
         try:
             # Check if an entry with the same commandid already exists
             existing_logincommand = (
@@ -4867,11 +4869,9 @@ class XmppMasterDatabase(DatabaseHelper):
             session.flush()
         except Exception as e:
             logger.error(str(e))
-        return (
-            new_logincommand.id
-            if existing_logincommand
-            else new_logincommand.id if new_logincommand else None
-        )
+        if existing_logincommand:
+            return existing_logincommand.id
+        return new_logincommand.id if new_logincommand else None
 
     @DatabaseHelper._sessionm
     def update_login_command(

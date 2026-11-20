@@ -2008,3 +2008,8 @@ msgstr "Nombre del fichero"
 msgid "Length"
 msgstr "Tamao"
 
+
+#: modules/msc/msc/start_command.php
+#: modules/msc/includes/launch_functions.php
+msgid "No target machine: the deployment was not launched."
+msgstr "Ninguna máquina de destino: el despliegue no se ha iniciado."

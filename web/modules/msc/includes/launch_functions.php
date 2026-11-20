@@ -191,6 +191,13 @@ function start_a_command($proxy = array(), $activate = true) {
         /* record new command */
 
         $id = add_command_api($pid, $target, $params, $mode, NULL);
+        if (isXMLRPCError() || !is_numeric($id) || $id <= 0) {
+            if (!isXMLRPCError()) {
+                notifyNoTargetMachine();
+            }
+            header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab' => 'tablaunch', 'uuid' => $uuid, 'hostname' => $hostname)));
+            exit;
+        }
         if(in_array("xmppmaster", $_SESSION["modulesList"])) {
             $parameterspacquage = (quick_get('parameterspacquage')) ? quick_get('parameterspacquage') : '';
             $rebootrequired = (quick_get('rebootrequired')) ? quick_get('rebootrequired') : 0;
@@ -375,6 +382,13 @@ function start_a_command($proxy = array(), $activate = true) {
         else {
             // deploy on group
             $id = add_command_api($pid, NULL, $params, $mode, $gid, $ordered_proxies);
+            if (isXMLRPCError() || !is_numeric($id) || $id <= 0) {
+                if (!isXMLRPCError()) {
+                    notifyNoTargetMachine();
+                }
+                header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab' => 'grouptablaunch', 'gid' => $gid)));
+                exit;
+            }
             if(in_array("xmppmaster", $_SESSION["modulesList"])) {
                 $syncthing = (isset($post['syncthing']) && $post['syncthing']) ? 1: 0;
                 $countmachine = getRestrictedComputersListLen( array('gid' => $gid));
