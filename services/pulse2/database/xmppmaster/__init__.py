@@ -240,7 +240,7 @@ class XmppMasterDatabase(DatabaseHelper):
             if ret:
                 break
         if not ret:
-            raise "Database connection error"
+            raise "Database connection error"  # pylint: disable=raising-bad-type
         return ret
 
     # ---------------------- function dict from dataset -------------------------
@@ -2582,7 +2582,7 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         result = {}
-        if machine:
+        if machine:  # pylint: disable=possibly-used-before-assignment
             result = {
                 "id": machine.id,
                 "jid": machine.jid,
@@ -2643,7 +2643,7 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         result = {}
-        if machine:
+        if machine:  # pylint: disable=possibly-used-before-assignment
             result = {
                 "id": machine.id,
                 "jid": machine.jid,
@@ -5517,7 +5517,7 @@ class XmppMasterDatabase(DatabaseHelper):
         nb = self.get_count(deploylog)
         if minimum and maximum:
             deploylog = deploylog.offset(int(minimum)).limit(
-                int(maximim) - int(minimum)
+                int(maximim) - int(minimum)  # pylint: disable=undefined-variable
             )
 
         result = deploylog.all()
@@ -5616,7 +5616,7 @@ class XmppMasterDatabase(DatabaseHelper):
         deploylog = deploylog.order_by(desc(Deploy.id))
 
         nb = self.get_count(deploylog)
-        if minium and maximum:
+        if minium and maximum:  # pylint: disable=undefined-variable
             deploylog = deploylog.offset(int(minimum)).limit(
                 int(maximum) - int(minimum)
             )
@@ -8199,7 +8199,7 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def getPresenceuuidenabled(self, session, uuid, enabled=0):
         return session.query(
-            exists().where(
+            exists().where(  # pylint: disable=undefined-variable
                 and_(
                     Machines.uuid_inventorymachine == uuid, Machines.enabled == enabled
                 )
@@ -9501,7 +9501,7 @@ class XmppMasterDatabase(DatabaseHelper):
             return 0
 
     @DatabaseHelper._sessionm
-    def getPresencejiduser(self, session, userjid):
+    def getPresencejiduser(self, session, userjid):  # pylint: disable=function-redefined
         user = str(userjid).split("@")[0]
         sql = """SELECT COUNT(jid) AS nb
             FROM
@@ -11715,7 +11715,7 @@ where agenttype="machine" and groupdeploy in (
         def is_integer_string():
             if is_number_string():
                 try:
-                    int(s)
+                    int(s)  # pylint: disable=undefined-variable
                     return True
                 except ValueError:
                     return False
@@ -11725,7 +11725,7 @@ where agenttype="machine" and groupdeploy in (
         def is_float_string():
             if is_number_string():
                 try:
-                    int(s)
+                    int(s)  # pylint: disable=undefined-variable
                     return False
                 except ValueError:
                     return True
@@ -11885,7 +11885,7 @@ where agenttype="machine" and groupdeploy in (
         for t in python_dict:
             valor = python_dict[t]
             if isinstance(valor, str):
-                if is_number_string(valor):
+                if is_number_string(valor):  # pylint: disable=undefined-variable
                     python_string = python_string + "%s = %s \n" % (t, valor)
                 else:
                     valor = python_dict[t].replace('"', '\\"')
@@ -12140,7 +12140,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 namescript = "%s_%s_%s_%s" % (
                     id_device,
                     z["type_event"],
-                    getRandomName(
+                    getRandomName(  # pylint: disable=undefined-variable
                         5, pref=datetime.now().strftime("%a_%d%b%Y_%Hh%M")),
                     bindingcmd,
                 )
@@ -12185,7 +12185,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                             "@@@@@binding@@@@@",
                             str(bindingcmd),
                         )
-                        pid = subprocess.Popen(
+                        pid = subprocess.Popen(  # pylint: disable=undefined-variable
                             ["python", dest_script],
                             stdin=None,
                             stdout=None,
@@ -12234,7 +12234,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                             str(bindingcmd),
                         )
                         # pid =subprocess.Popen(["python", dest_script]).pid
-                        pid = subprocess.Popen(
+                        pid = subprocess.Popen(  # pylint: disable=undefined-variable
                             ["python", dest_script],
                             stdin=None,
                             stdout=None,
@@ -12267,8 +12267,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                             "@@@@@binding@@@@@",
                             str(bindingcmd),
                         )
-                        os.chmod(dest_script, stat.S_IEXEC)
-                        pid = subprocess.Popen(
+                        os.chmod(dest_script, stat.S_IEXEC)  # pylint: disable=undefined-variable
+                        pid = subprocess.Popen(  # pylint: disable=undefined-variable
                             dest_script, stdin=None, stdout=None, stderr=None
                         ).pid
                         self.logger.debug(
@@ -12290,7 +12290,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                             serializeinformation = self.get_info_event(
                                 idevent, outformat="pickle_string"
                             )
-                            datal = pickle.loads(serializeinformation)
+                            datal = pickle.loads(serializeinformation)  # pylint: disable=undefined-variable
                             datal["mon_rules_comment"] = ""
                             serializeinformation_json = json.dumps(
                                 datal, indent=4)
@@ -13668,7 +13668,7 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
             if listidcluster:
                 setsearch = ("%s" % listidcluster)[1:-1]
             else:
-                raise
+                raise  # pylint: disable=misplaced-bare-raise
         searchclusterars = "(%s)" % setsearch
 
         sql = """SELECT
@@ -14108,7 +14108,7 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
             session.commit()
             session.flush()
             return self.__updatemachine(new_Update_machine)
-        except IntegrityError as e:
+        except IntegrityError as e:  # pylint: disable=undefined-variable
             reason = e.message
             # self.logger.error("\n%s" % (traceback.format_exc()))
             if "Duplicate entry" in reason:
@@ -14146,7 +14146,7 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                             status LIKE '%s'
                         LIMIT %s) AS dt;""" % (
             status,
-            nblimit,
+            nblimit,  # pylint: disable=undefined-variable
         )
 
         machines_jid_for_updating = []
