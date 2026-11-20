@@ -245,7 +245,7 @@ class SendPackageCommand:
             cmd_type=self.cmd_type,
         )
 
-        if self.login:
+        if self.login and isinstance(addCmd, int) and addCmd > 0:
             XmppMasterDatabase().addlogincommand(
                 self.login, addCmd, self.gid, "", "", "", "", 0, 0, 0, 0, {}
             )

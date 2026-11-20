@@ -38,4 +38,10 @@ function prettyOctetDisplay($num, $base = 1024, $unit = '') {
     }
 }
 
+function notifyNoTargetMachine() {
+    $n = new NotifyWidget(false);
+    $n->setLevel(4);
+    $n->add('<div class="alert alert-info">' . _T("No target machine: the deployment was not launched.", "msc") . '</div>');
+}
+
 ?>

@@ -2073,3 +2073,8 @@ msgstr "Activer"
 #: modules/msc/msc/launch.php
 msgid "Hide Windows Updates"
 msgstr "Masquer les MAJ Windows"
+
+#: modules/msc/msc/start_command.php
+#: modules/msc/includes/launch_functions.php
+msgid "No target machine: the deployment was not launched."
+msgstr "Aucune machine cible : le déploiement n'a pas été lancé."
