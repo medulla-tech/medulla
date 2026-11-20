@@ -1800,6 +1800,17 @@ function updatesWinByWindowsUpdate($row)
 }
 
 /**
+ * Whether this update line is the one of a product that updates itself (Office).
+ *
+ * @param array $row Update line
+ * @return bool
+ */
+function updatesWinByProduct($row)
+{
+    return updatesWinTriState($row['by_product'] ?? null) === true;
+}
+
+/**
  * Info icon of a Windows update line, next to its KB; empty for a main update.
  *
  * @param array $row Update line
@@ -2032,6 +2043,54 @@ function updatesWinDefenderState($state)
     return '<span class="updates-tooltip" aria-label="'
         . htmlspecialchars(sprintf(_T("Definitions dated %s", "updates"), $updated), ENT_QUOTES, 'UTF-8')
         . '">' . htmlspecialchars($value, ENT_QUOTES, 'UTF-8') . '</span>';
+}
+
+/**
+ * Sentence of an Office version downloaded and waiting for the applications to close.
+ *
+ * @param string $version
+ * @return string Unescaped sentence
+ */
+function updatesWinOfficeReadyText($version)
+{
+    return sprintf(_T("Version %s downloaded: it applies when the Office applications are closed.", "updates"), $version);
+}
+
+/**
+ * Office Click-to-Run of a machine: version, then in bold "waiting for Office to close"
+ * when one is downloaded, else "behind" when a newer one is offered.
+ *
+ * @param mixed $state {name, version, channel, available_version, ready_version} or null
+ * @return string|null HTML, null without Office
+ */
+function updatesWinOfficeState($state)
+{
+    if (!is_array($state)) {
+        return null;
+    }
+    $text = function ($key) use ($state) {
+        return is_scalar($state[$key] ?? null) ? trim((string) $state[$key]) : '';
+    };
+    $version = $text('version');
+    if ($version === '') {
+        return null;
+    }
+    $tooltip = ($text('name') !== '') ? $text('name') : _T("Microsoft Office", "updates");
+    if ($text('channel') !== '') {
+        $tooltip .= ' — ' . sprintf(_T("Update channel: %s", "updates"), $text('channel'));
+    }
+    $html = '<span class="updates-tooltip" aria-label="' . htmlspecialchars($tooltip, ENT_QUOTES, 'UTF-8') . '">'
+        . htmlspecialchars($version, ENT_QUOTES, 'UTF-8') . '</span>';
+    if ($text('ready_version') !== '') {
+        $html .= ' <strong class="updates-tooltip" aria-label="'
+            . htmlspecialchars(updatesWinOfficeReadyText($text('ready_version')), ENT_QUOTES, 'UTF-8')
+            . '">' . htmlspecialchars(_T("waiting for Office to close", "updates"), ENT_QUOTES, 'UTF-8') . '</strong>';
+    } elseif ($text('available_version') !== '') {
+        $html .= ' <strong class="updates-tooltip" aria-label="'
+            . htmlspecialchars(sprintf(_T("Available version: %s", "updates"), $text('available_version')), ENT_QUOTES, 'UTF-8')
+            . '">' . htmlspecialchars(_T("behind", "updates"), ENT_QUOTES, 'UTF-8') . '</strong>';
+    }
+    return $html;
 }
 
 /**
@@ -2937,27 +2996,32 @@ function updatesWinDeployPopup()
 }
 
 /**
- * Popup asking one Windows machine to install an update with its own Windows Update.
+ * Popup asking one Windows machine to install an update by itself: a KB with
+ * its own Windows Update, or Office from the Microsoft servers.
+ *
+ * @param bool $office True for the Office update
  */
-function updatesWinUpdateInstallPopup()
+function updatesWinUpdateInstallPopup($office = false)
 {
-    $title = _T("Install by Windows Update", "updates");
-    $kb = updatesKbNumber(is_string($_GET['kb'] ?? null) ? $_GET['kb'] : '');
+    $title = $office ? _T("Update Office", "updates") : _T("Install by Windows Update", "updates");
+    $kb = $office ? '' : updatesKbNumber(is_string($_GET['kb'] ?? null) ? $_GET['kb'] : '');
     $jid = is_string($_GET['jid'] ?? null) ? trim($_GET['jid']) : '';
-    if (!updatesWinCanDeploy() || $kb === '' || strlen($kb) > 10 || !updatesJidValid($jid)) {
+    if (!updatesWinCanDeploy() || (!$office && ($kb === '' || strlen($kb) > 10)) || !updatesJidValid($jid)) {
         updatesUnknownEntityPopup($title);
         return;
     }
-    $label = 'KB' . $kb;
+    $label = $office ? _T("Microsoft Office", "updates") : 'KB' . $kb;
     $back = urlStrRedirect("updates/updates/detailsMachineWin", array('jid' => $jid));
 
     if (isset($_POST['bconfirm'])) {
         verifyCSRFToken($_POST);
-        $result = xmlrpc_install_by_windows_update($kb, $jid);
+        $result = $office ? xmlrpc_update_office($jid) : xmlrpc_install_by_windows_update($kb, $jid);
         $error = updatesResultError($result);
         if (!is_array($result) || $error !== '') {
             if ($error === 'package_missing') {
-                $message = htmlspecialchars(_T("The Windows Update installation package is not ready on the server yet. Try again in a few minutes.", "updates"), ENT_QUOTES, 'UTF-8');
+                $message = htmlspecialchars($office
+                    ? _T("The Office update package is not ready on the server yet. Try again in a few minutes.", "updates")
+                    : _T("The Windows Update installation package is not ready on the server yet. Try again in a few minutes.", "updates"), ENT_QUOTES, 'UTF-8');
             } elseif ($error === 'unknown_update' || $error === 'machine_not_targeted') {
                 $message = htmlspecialchars(_T("This machine no longer asks for this update.", "updates"), ENT_QUOTES, 'UTF-8');
             } else {
@@ -2975,10 +3039,14 @@ function updatesWinUpdateInstallPopup()
         exit;
     }
 
-    updatesConfirmPopup(
-        $title,
-        updatesActionText(_T("Deploy <b>%s</b> on <b>%s</b>?", "updates"), $label, updatesPopupMachine($jid)),
-        htmlspecialchars(_T("The machine will install this update with its own Windows Update.", "updates"), ENT_QUOTES, 'UTF-8'));
+    if ($office) {
+        $question = updatesActionText(_T("Update <b>%s</b> on <b>%s</b>?", "updates"), $label, updatesPopupMachine($jid));
+        $note = _T("Open Office applications are not closed: the update applies when they are closed.", "updates");
+    } else {
+        $question = updatesActionText(_T("Deploy <b>%s</b> on <b>%s</b>?", "updates"), $label, updatesPopupMachine($jid));
+        $note = _T("The machine will install this update with its own Windows Update.", "updates");
+    }
+    updatesConfirmPopup($title, $question, htmlspecialchars($note, ENT_QUOTES, 'UTF-8'));
 }
 
 /**

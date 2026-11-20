@@ -2083,8 +2083,53 @@ msgstr ""
 msgid "Products"
 msgstr ""
 
+#: modules/updates/updates/detailsMachineWin.php
+msgid "Office"
+msgstr ""
+
+#: modules/updates/includes/html.inc.php
+msgid "Microsoft Office"
+msgstr ""
+
+#: modules/updates/includes/html.inc.php
+msgid "Update channel: %s"
+msgstr ""
+
+#: modules/updates/includes/html.inc.php
+msgid "Available version: %s"
+msgstr ""
+
+#: modules/updates/includes/html.inc.php
+msgid "behind"
+msgstr ""
+
+#: modules/updates/includes/html.inc.php
+#: modules/updates/updates/ajaxMachineUpdatesListWin.php
+msgid "Update Office"
+msgstr ""
+
+#: modules/updates/includes/html.inc.php
+msgid "Update <b>%s</b> on <b>%s</b>?"
+msgstr ""
+
+#: modules/updates/includes/html.inc.php
+msgid "The Office update package is not ready on the server yet. Try again in a few minutes."
+msgstr ""
+
+#: modules/updates/includes/html.inc.php
+msgid "Open Office applications are not closed: the update applies when they are closed."
+msgstr ""
+
 #: modules/updates/includes/html.inc.php
 msgid "Definitions dated %s"
+msgstr ""
+
+#: modules/updates/includes/html.inc.php
+msgid "waiting for Office to close"
+msgstr ""
+
+#: modules/updates/includes/html.inc.php
+msgid "Version %s downloaded: it applies when the Office applications are closed."
 msgstr ""
 
 #: modules/updates/updates/detailsMachineWin.php
