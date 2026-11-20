@@ -35,9 +35,5 @@ $sidemenu->addSideMenuItem(
 );
 
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Monitoring Alerts", "xmppmaster"), "xmppmaster", "xmppmaster", "alerts")
-);
-
-$sidemenu->addSideMenuItem(
     new SideMenuItem(_T("Custom Quick Actions", "xmppmaster"), "xmppmaster", "xmppmaster", "customQA")
 );

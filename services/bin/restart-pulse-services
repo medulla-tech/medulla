@@ -301,7 +301,6 @@ declare -a Serviceexclude=("pulse-xmpp-agent-log.service")
 declare -a Serviceeinclude=(
     "ejabberd.service"
     "mariadb.service"
-    "grafana-server.service"
     "guacd.service"
     "php8.2-fpm.service"
     "apache-htcacheclean.service"

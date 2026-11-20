@@ -115,7 +115,6 @@ $glpiAction = new ActionItem(_("GLPI Inventory"), "glpitabs", "inventory", "inve
 
 
 if (in_array("xmppmaster", $_SESSION["supportModList"])) {
-    $monitoring = new ActionItem(_("Monitoring"), "monitoringview", "monit", "computers", "xmppmaster", "xmppmaster");
     $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "guaca", "computer", "base", "computers");
 
 
@@ -143,7 +142,6 @@ $DeployQuickxmpp->setWidth(600);
 // with check presence xmpp
 $vncClientActiongriser = new EmptyActionItem1(_("Remote control"), "vnc_client", "guacag", "computer", "base", "computers");
 
-$actionMonitoring = array();
 $actionInventory = array();
 $actionConsole = array();
 $action_deploy_msc = array();
@@ -297,7 +295,6 @@ foreach($datas['enabled'] as $valeue) {
         $action_deploy_msc[] = $mscAction; //deployement
     }
     $actionxmppquickdeoloy[] = $DeployQuickxmpp; //Quick action presence ou non presence.
-    $actionMonitoring[] = $monitoring;
     if ($valeue == 1) {
         $presencesClass[] = "machineNamepresente";
         if (isExpertMode()) {
@@ -395,7 +392,6 @@ foreach($machines1['list_reg_columns_name'] as $columnamekey) {
 
 if (in_array("xmppmaster", $_SESSION["supportModList"])) {
     $n->addActionItemArray($actionInventory);
-    $n->addActionItemArray($actionMonitoring);
 }
 
 if (in_array("extticket", $_SESSION["supportModList"])) {
