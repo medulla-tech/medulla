@@ -1335,7 +1335,7 @@ msgstr "Método de transferencia"
 
 #: modules/pkgs/pkgs/detail.php:224 modules/pkgs/pkgs/detail.php:247
 msgid "Size"
-msgstr "Talla"
+msgstr "Tamaño"
 
 #: modules/pkgs/pkgs/detail.php:225
 msgid "Transferfile"

@@ -572,7 +572,7 @@ msgstr "Detalle Acciones"
 
 #: modules/xmppmaster/xmppmaster/wakeonlan.php:35
 msgid "Wake On Lan"
-msgstr "Despertar en Lan"
+msgstr "Wake on LAN"
 
 #: modules/xmppmaster/xmppmaster/wakeonlan.php:41
 msgid "Mac address"
@@ -934,7 +934,7 @@ msgstr "Último valor"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:138
 msgid "History"
-msgstr "Historia"
+msgstr "Historial"
 
 #: modules/xmppmaster/xmppmaster/customQA.php:38
 #, php-format
@@ -990,7 +990,7 @@ msgstr "Mostrar"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:190
 msgid "Wake on Lan"
-msgstr "Despertar en Lan"
+msgstr "Wake on LAN"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:196
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:591
@@ -1541,7 +1541,7 @@ msgstr "Inventario asociado"
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:659
 msgid "Size"
-msgstr "Talla"
+msgstr "Tamaño"
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:712
 msgid "OFFLINE"
@@ -1905,7 +1905,7 @@ msgstr "Resultados de la acción rápida"
 #: modules/xmppmaster/xmppmaster/localSidebar.php:27
 #: modules/xmppmaster/infoPackage.inc.php:182
 msgid "Wake on LAN"
-msgstr "Despertar en LAN"
+msgstr "Wake on LAN"
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:34
 msgid "List of Uninventoried Machines"

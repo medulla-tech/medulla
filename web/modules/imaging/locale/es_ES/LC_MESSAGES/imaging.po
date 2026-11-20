@@ -921,7 +921,7 @@ msgstr "Restauración"
 #: modules/imaging/includes/logs.inc.php:34
 #: modules/imaging/manage/ajaxLogs.php:57
 msgid "Post-imaging"
-msgstr "Post-imagen"
+msgstr "Post-imaging"
 
 #: modules/imaging/includes/logs.inc.php:35
 #: modules/imaging/manage/ajaxLogs.php:58
@@ -1116,7 +1116,7 @@ msgstr "Error al enviar un UUID de ordenador"
 #: modules/imaging/includes/ajaxcommon_bottom.inc.php:24
 #, php-format
 msgid "Available imaging servers for entity %s"
-msgstr "Servidores de imágenes disponibles para la entidad %s"
+msgstr "Servidores de Imaging disponibles para la entidad %s"
 
 #: modules/imaging/includes/xmlrpc.inc.php:305
 #, php-format
@@ -1126,7 +1126,7 @@ msgstr "Generación del menú de arranque Para la máquina %s"
 #: modules/imaging/includes/xmlrpc.inc.php:331
 #, php-format
 msgid "Boot menu generation For Imaging Group %s"
-msgstr "Generación del menú de arranque para el grupo de imágenes %s"
+msgstr "Generación del menú de arranque para el grupo de Imaging %s"
 
 #: modules/imaging/includes/xmlrpc.inc.php:356
 #, php-format
@@ -1195,7 +1195,7 @@ msgstr "Falta la nomenclatura."
 
 #: modules/imaging/includes/includes.php:39
 msgid "This imaging server doesn't exist."
-msgstr "Este servidor de imágenes no existe."
+msgstr "Este servidor de Imaging no existe."
 
 #: modules/imaging/includes/includes.php:40
 msgid "This entity already exists."
@@ -1223,7 +1223,7 @@ msgstr "Este ordenador ya existe."
 
 #: modules/imaging/includes/includes.php:46
 msgid "You need to register this computer's imaging server to be able to use imaging."
-msgstr "Debe registrar el servidor de imágenes de este ordenador para poder utilizar las imágenes."
+msgstr "Debe registrar el servidor de Imaging de esta máquina para poder utilizar Imaging."
 
 #: modules/imaging/includes/includes.php:258
 msgid "Uptime: "
@@ -1279,7 +1279,7 @@ msgstr "raíz"
 #: modules/imaging/includes/ajaxcommon.inc.php:88
 #, php-format
 msgid "Imaging server of entity %s"
-msgstr "Servidor de imágenes de la entidad %s"
+msgstr "Servidor de Imaging de la entidad %s"
 
 #: modules/imaging/includes/ajaxcommon.inc.php:107
 msgid "the entity itself"
@@ -1287,7 +1287,7 @@ msgstr "la propia entidad"
 
 #: modules/imaging/includes/ajaxcommon.inc.php:123
 msgid "The registering in the imaging server has failed."
-msgstr "El registro en el servidor de imágenes ha fallado."
+msgstr "El registro en el servidor de Imaging ha fallado."
 
 #: modules/imaging/imaging/tabs.php:58 modules/imaging/imaging/tabs.php:66
 msgid "Default menu has been successfully restored."
@@ -1313,21 +1313,21 @@ msgstr "Error en la generación del menú de arranque para : %s"
 #: modules/imaging/imaging/tabs.php:152 modules/imaging/imaging/tabs.php:182
 #, php-format
 msgid "%s's computer imaging"
-msgstr "imágenes por ordenador de %s"
+msgstr "Imaging de la máquina de %s"
 
 #: modules/imaging/imaging/tabs.php:158
 msgid "This computer can't be declared in the imaging module: it's already part of a broken imaging group."
-msgstr "Este ordenador no puede declararse en el módulo de imágenes: ya forma parte de un grupo de imágenes roto."
+msgstr "Esta máquina no puede declararse en el módulo Imaging: ya forma parte de un grupo de Imaging dañado."
 
 #: modules/imaging/imaging/tabs.php:166
 #, php-format
 msgid "Please declare the imaging group first %shere%s."
-msgstr "Por favor, declare primero el grupo de imagen %shere%s."
+msgstr "Declare primero el grupo de Imaging %saquí%s."
 
 #: modules/imaging/imaging/tabs.php:178
 #, php-format
 msgid "%s's computer imaging (in group)"
-msgstr "imágenes por ordenador de %s (en grupo)"
+msgstr "Imaging de la máquina de %s (en grupo)"
 
 #: modules/imaging/imaging/tabs.php:186 modules/imaging/imaging/tabs.php:220
 #: modules/imaging/infoPackage.inc.php:304
@@ -1356,7 +1356,7 @@ msgstr "Servicios disponibles en el menú de arranque"
 
 #: modules/imaging/imaging/tabs.php:191 modules/imaging/imaging/tabs.php:223
 msgid "Imaging log"
-msgstr "Registro de imágenes"
+msgstr "Registro de Imaging"
 
 #: modules/imaging/imaging/tabs.php:192 modules/imaging/imaging/tabs.php:224
 #: modules/imaging/infoPackage.inc.php:312
@@ -1367,11 +1367,11 @@ msgstr "Menú de configuración"
 #: modules/imaging/imaging/tabs.php:219
 #, php-format
 msgid "%s's imaging group"
-msgstr "grupo de imágenes de %s"
+msgstr "Grupo de Imaging de %s"
 
 #: modules/imaging/imaging/tabs.php:221
 msgid "Masters"
-msgstr "Másters"
+msgstr "Masters"
 
 #: modules/imaging/imaging/tabs.php:231
 msgid "Not enough information"
@@ -1413,7 +1413,7 @@ msgstr "Cancelar"
 #: modules/imaging/imaging/showtarget.php:72
 #: modules/imaging/imaging/showtarget.php:84
 msgid "Removal of master failed"
-msgstr "Falló la extracción del maestro"
+msgstr "No se ha podido quitar el Master"
 
 #: modules/imaging/imaging/showtarget.php:78
 #: modules/imaging/imaging/addimage.php:102
@@ -1438,7 +1438,7 @@ msgstr "Mostrar todos los objetivos que utilizan esa imagen en su menú de arran
 
 #: modules/imaging/imaging/showtarget.php:125
 msgid "If you want to remove this master from one or more targets, check these targets and click on the remove button"
-msgstr "Si desea eliminar este maestro de uno o más objetivos, marque estos objetivos y haga clic en el botón eliminar"
+msgstr "Si desea quitar este Master de uno o varios destinos, marque estos destinos y haga clic en el botón Quitar"
 
 #: modules/imaging/imaging/showtarget.php:127
 #: modules/imaging/manage/service_show_used.php:196
@@ -1453,23 +1453,23 @@ msgstr "Deseleccionar todos"
 #: modules/imaging/imaging/showtarget.php:149
 #, php-format
 msgid "Remove this master from imaging server %s"
-msgstr "Eliminar este master del servidor de imágenes %s"
+msgstr "Eliminar este Master del servidor de Imaging %s"
 
 #: modules/imaging/imaging/showtarget.php:150
 #: modules/imaging/manage/service_show_used.php:171
 msgid "Imaging server"
-msgstr "Servidor de imágenes"
+msgstr "Servidor de Imaging"
 
 #: modules/imaging/imaging/showtarget.php:157
 #: modules/imaging/manage/service_show_used.php:178
 #, php-format
 msgid "Remove this master from computer %s"
-msgstr "Eliminar este master del ordenador %s"
+msgstr "Eliminar este Master de la máquina %s"
 
 #: modules/imaging/imaging/showtarget.php:158
 #: modules/imaging/manage/service_show_used.php:179
 msgid "Imaging group"
-msgstr "Grupo de diagnóstico por imagen"
+msgstr "Grupo de Imaging"
 
 #: modules/imaging/imaging/showtarget.php:158
 #: modules/imaging/imaging/configure.php:40
@@ -1685,7 +1685,7 @@ msgstr "Error al generar el menú : %s"
 
 #: modules/imaging/imaging/configure.php:374
 msgid "You are going to unregister this computer from the imaging module, are you sure you want to do that?"
-msgstr "Vas a anular el registro de este ordenador en el módulo de imágenes, ¿estás seguro de que quieres hacerlo?"
+msgstr "Va a anular el registro de esta máquina en el módulo Imaging. ¿Está seguro de que desea hacerlo?"
 
 #: modules/imaging/imaging/configure.php:380
 msgid "Do you want a backup to be done ?"
@@ -1714,23 +1714,23 @@ msgstr "Registrar ordenador '%s'"
 #: modules/imaging/imaging/configure.php:458
 #, php-format
 msgid "Imaging activation for group '%s'"
-msgstr "Activación de imágenes para el grupo \"%s\""
+msgstr "Activación de Imaging para el grupo \"%s\""
 
 #: modules/imaging/imaging/configure.php:490
 msgid "To register, you must first set a default menu to the imaging server that manages the entity of this computer."
-msgstr "Para registrarse, primero debe establecer un menú predeterminado en el servidor de imágenes que gestiona la entidad de este ordenador."
+msgstr "Para registrarla, primero debe establecer un menú predeterminado en el servidor de Imaging que gestiona la entidad de esta máquina."
 
 #: modules/imaging/imaging/configure.php:492
 msgid "To register, you must first set a default menu to the imaging server that manages the entities of the computers that belongs to this profile."
-msgstr "Para registrarse, primero debe establecer un menú predeterminado en el servidor de imágenes que gestiona las entidades de los ordenadores que pertenecen a este perfil."
+msgstr "Para registrarlo, primero debe establecer un menú predeterminado en el servidor de Imaging que gestiona las entidades de las máquinas que pertenecen a este perfil."
 
 #: modules/imaging/imaging/configure.php:497
 msgid "The computer either doesn't have a MAC address, either has more than one MAC address or the only NIC doesn't have any network mask. It can't be registered into the imaging module."
-msgstr "El ordenador o no tiene dirección MAC, o tiene más de una dirección MAC o el único NIC no tiene máscara de red. No se puede registrar en el módulo de imagen."
+msgstr "La máquina no tiene dirección MAC, tiene más de una dirección MAC o su única tarjeta de red no tiene máscara de red. No se puede registrar en el módulo Imaging."
 
 #: modules/imaging/imaging/configure.php:502
 msgid "The profile can't be registered into the imaging module."
-msgstr "El perfil no puede registrarse en el módulo de imágenes."
+msgstr "El perfil no puede registrarse en el módulo Imaging."
 
 #: modules/imaging/imaging/configure.php:560
 msgid "Computer:"
@@ -1753,11 +1753,11 @@ msgstr "Ahora puedes cambiar al modo estándar si quieres menos parámetros."
 
 #: modules/imaging/imaging/configure.php:595
 msgid "The default values for the imaging parameters will be inherited from the imaging server that manages the entity that owns this computer."
-msgstr "Los valores por defecto de los parámetros de imagen se heredarán del servidor de imagen que gestiona la entidad propietaria de este ordenador."
+msgstr "Los valores por defecto de los parámetros de Imaging se heredarán del servidor de Imaging que gestiona la entidad propietaria de esta máquina."
 
 #: modules/imaging/imaging/configure.php:597
 msgid "The default values for the imaging parameters will be inherited from the imaging server that manages the entities of the computers that belongs to this profile."
-msgstr "Los valores por defecto para los parámetros de imagen serán heredados del servidor de imagen que gestiona las entidades de los ordenadores que pertenecen a este perfil."
+msgstr "Los valores por defecto de los parámetros de Imaging se heredarán del servidor de Imaging que gestiona las entidades de las máquinas que pertenecen a este perfil."
 
 #: modules/imaging/imaging/configure.php:608
 #, php-format
@@ -1948,11 +1948,11 @@ msgstr "Editar"
 
 #: modules/imaging/imaging/bootmenu.php:458
 msgid "master from the profile"
-msgstr "maestro del perfil"
+msgstr "Master del perfil"
 
 #: modules/imaging/imaging/bootmenu.php:460
 msgid "master"
-msgstr "maestro"
+msgstr "Master"
 
 #: modules/imaging/imaging/bootmenu.php:467
 msgid "boot service from profile"
@@ -1989,20 +1989,20 @@ msgstr "Especifique un título para el archivo de imagen ISO."
 
 #: modules/imaging/imaging/images_iso.php:54
 msgid "Create ISO image from master"
-msgstr "Crear imagen ISO a partir de master"
+msgstr "Crear imagen ISO a partir del Master"
 
 #: modules/imaging/imaging/images_iso.php:56
 #, php-format
 msgid "The ISO image generation of master <strong>%s</strong> has been launched in background."
-msgstr "La generación de la imagen ISO del máster <strong>%s</strong> se ha iniciado en segundo plano."
+msgstr "La generación de la imagen ISO del Master <strong>%s</strong> se ha iniciado en segundo plano."
 
 #: modules/imaging/imaging/images_iso.php:58
 msgid "The ISO image file will be stored into the imaging server at the end of the backup."
-msgstr "El archivo de imagen ISO se almacenará en el servidor de imágenes al final de la copia de seguridad."
+msgstr "El archivo de imagen ISO se almacenará en el servidor de Imaging al final de la copia de seguridad."
 
 #: modules/imaging/imaging/images_iso.php:65
 msgid "This operation will last according to the master size."
-msgstr "Esta operación durará según el tamaño del máster."
+msgstr "Esta operación durará según el tamaño del Master."
 
 #: modules/imaging/imaging/images_iso.php:90
 #, php-format
@@ -2072,7 +2072,7 @@ msgstr "No se ha creado el menú multidifusión : falta el número de ordenadore
 #: modules/imaging/imaging/multicast.php:136
 #, php-format
 msgid "Multicast menu has not been created : the imaging group contains %d computers and you have entered %d"
-msgstr "No se ha creado el menú multidifusión : el grupo de imágenes contiene %d ordenadores y ha introducido %d"
+msgstr "No se ha creado el menú multidifusión: el grupo de Imaging contiene %d máquinas y ha introducido %d"
 
 #: modules/imaging/imaging/multicast.php:197
 msgid "computers have a [IPV6] interfaces address exclusively in the group"
@@ -2088,7 +2088,7 @@ msgstr "No se ha creado el menú multidifusión : --max-time-to-wait &lt; 60"
 
 #: modules/imaging/imaging/multicast.php:269
 msgid "Multicast menu has not been created : the selected master is missing on disk"
-msgstr "No se ha creado el menú multidifusión : el maestro seleccionado no está en el disco"
+msgstr "No se ha creado el menú multidifusión: el Master seleccionado no está en el disco"
 
 #: modules/imaging/imaging/multicast.php:309
 msgid "Multicast menu has been successfully created."
@@ -2096,12 +2096,12 @@ msgstr "El menú multidifusión se ha creado correctamente."
 
 #: modules/imaging/imaging/multicast.php:328
 msgid "Multicast menu has not been created : check that the imaging server is running"
-msgstr "No se ha creado el menú multidifusión : compruebe que el servidor de imágenes está en funcionamiento"
+msgstr "No se ha creado el menú multidifusión: compruebe que el servidor de Imaging está en funcionamiento"
 
 #: modules/imaging/imaging/multicast.php:367
 #, php-format
 msgid "deploy the master <strong>%s</strong> to this group <strong>%s</strong> in multicast"
-msgstr "desplegar el maestro <strong>%s</strong> a este grupo <strong>%s</strong> en multidifusión"
+msgstr "desplegar el Master <strong>%s</strong> en este grupo <strong>%s</strong> en multidifusión"
 
 #: modules/imaging/imaging/multicast.php:374
 msgid "Number of machines to wait for"
@@ -2131,7 +2131,7 @@ msgstr "Edición de la imagen"
 
 #: modules/imaging/imaging/images.php:99
 msgid "Edition of master"
-msgstr "Edición de máster"
+msgstr "Edición de Master"
 
 #: modules/imaging/imaging/images.php:124
 #: modules/imaging/imaging/images.php:151
@@ -2144,7 +2144,7 @@ msgstr "Guardar (convertir en imagen)"
 
 #: modules/imaging/imaging/images.php:128
 msgid "Convert to master"
-msgstr "Convertir a maestro"
+msgstr "Convertir en Master"
 
 #: modules/imaging/imaging/images.php:195
 msgid "Image backup logs"
@@ -2152,11 +2152,11 @@ msgstr "Registros de copias de seguridad de imágenes"
 
 #: modules/imaging/infoPackage.inc.php:34
 msgid "Imaging service"
-msgstr "Servicio de imágenes"
+msgstr "Servicio de Imaging"
 
 #: modules/imaging/infoPackage.inc.php:39
 msgid "Imaging"
-msgstr "Imágenes"
+msgstr "Imaging"
 
 #: modules/imaging/infoPackage.inc.php:44
 msgid "System Image Manager"
@@ -2164,7 +2164,7 @@ msgstr "Gestor de imágenes del sistema"
 
 #: modules/imaging/infoPackage.inc.php:49
 msgid "Imaging Unattended"
-msgstr "Creación de imágenes sin supervisión"
+msgstr "Imaging desatendido"
 
 #: modules/imaging/infoPackage.inc.php:52
 msgid "Sysprep List"
@@ -2172,7 +2172,7 @@ msgstr "Lista Sysprep"
 
 #: modules/imaging/infoPackage.inc.php:57
 msgid "Imaging sysprepView"
-msgstr "Visualización de imágenes sysprepView"
+msgstr "Imaging sysprepView"
 
 #: modules/imaging/infoPackage.inc.php:87
 msgid "List Post Install Profile"
@@ -2203,30 +2203,30 @@ msgstr "Estado del servidor"
 #: modules/imaging/infoPackage.inc.php:132
 #: modules/imaging/manage/localSidebar.php:32
 msgid "Manage masters"
-msgstr "Gestionar maestros"
+msgstr "Gestionar Masters"
 
 #: modules/imaging/infoPackage.inc.php:134
 #: modules/imaging/manage/master_remove.php:89
 msgid "Remove master"
-msgstr "Quitar maestro"
+msgstr "Quitar Master"
 
 #: modules/imaging/infoPackage.inc.php:137
 #: modules/imaging/manage/master_delete.php:76
 msgid "Delete master"
-msgstr "Borrar maestro"
+msgstr "Borrar Master"
 
 #: modules/imaging/infoPackage.inc.php:140
 msgid "Edit master"
-msgstr "Editar maestro"
+msgstr "Editar Master"
 
 #: modules/imaging/infoPackage.inc.php:144
 #: modules/imaging/infoPackage.inc.php:147
 msgid "master clone"
-msgstr "clon maestro"
+msgstr "Clon de Master"
 
 #: modules/imaging/infoPackage.inc.php:151
 msgid "Add master"
-msgstr "Añadir maestro"
+msgstr "Añadir Master"
 
 #: modules/imaging/infoPackage.inc.php:155
 #: modules/imaging/manage/localSidebar.php:35
@@ -2267,12 +2267,12 @@ msgstr "Servicio Down"
 #: modules/imaging/infoPackage.inc.php:185
 #: modules/imaging/manage/localSidebar.php:41
 msgid "Post-imaging scripts"
-msgstr "Guiones posteriores a la toma de imágenes"
+msgstr "Scripts de post-imaging"
 
 #: modules/imaging/infoPackage.inc.php:187
 #: modules/imaging/infoPackage.inc.php:190
 msgid "Edit post-imaging script"
-msgstr "Editar script post-imagen"
+msgstr "Editar script de post-imaging"
 
 #: modules/imaging/infoPackage.inc.php:193
 msgid "Create boot service from postinstall script"
@@ -2285,23 +2285,23 @@ msgstr "Redirigir a la página de Servicios de arranque"
 #: modules/imaging/infoPackage.inc.php:199
 #: modules/imaging/manage/postinstall_delete.php:97
 msgid "Delete post-imaging script"
-msgstr "Borrar script post-imagen"
+msgstr "Borrar script de post-imaging"
 
 #: modules/imaging/infoPackage.inc.php:203
 msgid "Imaging configuration"
-msgstr "Configuración de imágenes"
+msgstr "Configuración de Imaging"
 
 #: modules/imaging/infoPackage.inc.php:205
 msgid "Save an Imaging Server configuration"
-msgstr "Guardar la configuración de un servidor de imágenes"
+msgstr "Guardar la configuración de un servidor de Imaging"
 
 #: modules/imaging/infoPackage.inc.php:209
 msgid "Available Imaging Server"
-msgstr "Servidor de imágenes disponible"
+msgstr "Servidor de Imaging disponible"
 
 #: modules/imaging/infoPackage.inc.php:212
 msgid "Link an Imaging Server"
-msgstr "Vincular un servidor de imágenes"
+msgstr "Vincular un servidor de Imaging"
 
 #: modules/imaging/infoPackage.inc.php:220
 #: modules/imaging/infoPackage.inc.php:280
@@ -2354,16 +2354,16 @@ msgstr "Lista de todos los perfiles de ordenadores"
 
 #: modules/imaging/infoPackage.inc.php:295
 msgid "Register a profile in the imaging module"
-msgstr "Registrar un perfil en el módulo de imágenes"
+msgstr "Registrar un perfil en el módulo Imaging"
 
 #: modules/imaging/infoPackage.inc.php:301
 msgid "Imaging on group"
-msgstr "Imagen en grupo"
+msgstr "Imaging en grupo"
 
 #: modules/imaging/infoPackage.inc.php:310
 #: modules/imaging/infoPackage.inc.php:389
 msgid "Imaging Log"
-msgstr "Registro de imágenes"
+msgstr "Registro de Imaging"
 
 #: modules/imaging/infoPackage.inc.php:319
 msgid "Display computers group content"
@@ -2403,15 +2403,15 @@ msgstr "Ficha Historial MSC de un grupo"
 
 #: modules/imaging/infoPackage.inc.php:370
 msgid "Register a computer in the imaging module"
-msgstr "Registrar un ordenador en el módulo de imagen"
+msgstr "Registrar una máquina en el módulo Imaging"
 
 #: modules/imaging/infoPackage.inc.php:375
 msgid "Create a static group containing computers with custom imaging menu"
-msgstr "Crear un grupo estático que contenga ordenadores con menú de imágenes personalizado"
+msgstr "Crear un grupo estático que contenga máquinas con un menú de Imaging personalizado"
 
 #: modules/imaging/infoPackage.inc.php:380
 msgid "Imaging on computer"
-msgstr "Imágenes en el ordenador"
+msgstr "Imaging en la máquina"
 
 #: modules/imaging/infoPackage.inc.php:400
 msgid "Show target that use that image"
@@ -2457,7 +2457,7 @@ msgstr "Notificar el éxito : eliminado del menú de arranque por defecto."
 #: modules/imaging/manage/master_remove.php:91
 #, php-format
 msgid "Are you sure you want to remove <b>%s</b> master ?"
-msgstr "¿Estás seguro de que quieres eliminar <b>%s</b> master ?"
+msgstr "¿Está seguro de que desea quitar el Master <b>%s</b>?"
 
 #: modules/imaging/manage/service_add.php:49
 #, php-format
@@ -2490,17 +2490,17 @@ msgstr "Lista Sysprep"
 #: modules/imaging/manage/master_delete.php:38
 #, php-format
 msgid "Image <strong>%s</strong> deleted from the imaging server."
-msgstr "Imagen <strong>%s</strong> eliminada del servidor de imágenes."
+msgstr "Imagen <strong>%s</strong> eliminada del servidor de Imaging."
 
 #: modules/imaging/manage/master_delete.php:57
 #, php-format
 msgid "Error : Image %s deleted from the imaging server."
-msgstr "Error : Imagen %s borrada del servidor de imágenes."
+msgstr "Error: imagen %s borrada del servidor de Imaging."
 
 #: modules/imaging/manage/master_delete.php:78
 #, php-format
 msgid "Are you sure you want to delete <b>%s</b> master ?"
-msgstr "¿Estás seguro de que quieres borrar <b>%s</b> master ?"
+msgstr "¿Está seguro de que desea borrar el Master <b>%s</b>?"
 
 #: modules/imaging/manage/service_remove.php:44
 #, php-format
@@ -3144,11 +3144,11 @@ msgstr "los clientes tienen imágenes de rescate"
 
 #: modules/imaging/manage/ajaxStatus.php:240
 msgid "masters are available"
-msgstr "másters disponibles"
+msgstr "Masters disponibles"
 
 #: modules/imaging/manage/ajaxStatus.php:263
 msgid "Reset all menu imaging from this entity"
-msgstr "Restablecer todas las imágenes de menú de esta entidad"
+msgstr "Restablecer todos los menús de Imaging de esta entidad"
 
 #: modules/imaging/manage/ajaxStatus.php:466
 #: modules/imaging/manage/ajaxStatus.php:485
@@ -3169,20 +3169,20 @@ msgstr "Actividad reciente"
 
 #: modules/imaging/manage/ajaxStatus.php:555
 msgid "Can't connect to the imaging server linked to the selected entity."
-msgstr "No se puede conectar con el servidor de imágenes vinculado a la entidad seleccionada."
+msgstr "No se puede conectar con el servidor de Imaging vinculado a la entidad seleccionada."
 
 #: modules/imaging/manage/synchromaster.php:47
 #, php-format
 msgid "Master copy: %s ( %s )"
-msgstr "Copia maestra: %s ( %s )"
+msgstr "Copia del Master: %s ( %s )"
 
 #: modules/imaging/manage/synchromaster.php:60
 msgid "Copy of master Not Started"
-msgstr "Copia del máster No iniciada"
+msgstr "Copia del Master no iniciada"
 
 #: modules/imaging/manage/synchromaster.php:66
 msgid "Copy of master"
-msgstr "Copia del máster"
+msgstr "Copia del Master"
 
 #: modules/imaging/manage/synchromaster.php:119
 msgid "Complete"
@@ -3194,11 +3194,11 @@ msgstr "En curso"
 
 #: modules/imaging/manage/synchromaster.php:135
 msgid "Copy of master complete"
-msgstr "Copia del máster completa"
+msgstr "Copia del Master completada"
 
 #: modules/imaging/manage/synchromaster.php:139
 msgid "Copy of master In progress"
-msgstr "Copia del máster En curso"
+msgstr "Copia del Master en curso"
 
 #: modules/imaging/manage/sysprepView.php:33
 msgid "View "
@@ -3206,11 +3206,11 @@ msgstr "Ver "
 
 #: modules/imaging/manage/master_clone.php:75
 msgid "There is no imaging server available to clone the master"
-msgstr "No hay ningún servidor de imágenes disponible para clonar el maestro"
+msgstr "No hay ningún servidor de Imaging disponible para clonar el Master"
 
 #: modules/imaging/manage/master_clone.php:93
 msgid "Clone master : "
-msgstr "Clonar maestro : "
+msgstr "Clonar Master : "
 
 #: modules/imaging/manage/master_clone.php:106
 msgid "Master"
@@ -3218,7 +3218,7 @@ msgstr "Maestro"
 
 #: modules/imaging/manage/master_clone.php:116
 msgid "Imaging Server"
-msgstr "Servidor de imágenes"
+msgstr "Servidor de Imaging"
 
 #: modules/imaging/manage/service_edit.php:48
 msgid "Edit service : "
@@ -3271,7 +3271,7 @@ msgstr "Error en la generación del menú de arranque para el servidor de paquet
 #: modules/imaging/manage/service_show_used.php:170
 #, php-format
 msgid "Remove this boot service from imaging server %s"
-msgstr "Eliminar este servicio de arranque del servidor de imágenes %s"
+msgstr "Eliminar este servicio de arranque del servidor de Imaging %s"
 
 #: modules/imaging/manage/service_show_used.php:194
 msgid "If you want to remove this boot service from one or more targets, check these targets and click on the remove button"
@@ -3328,7 +3328,7 @@ msgstr "Mostrar dónde se utiliza el servicio"
 
 #: modules/imaging/manage/ajaxConfiguration.php:29
 msgid "Imaging server configuration"
-msgstr "Configuración del servidor de imágenes"
+msgstr "Configuración del servidor de Imaging"
 
 #: modules/imaging/manage/ajaxConfiguration.php:60
 msgid "Menu language"
@@ -3422,7 +3422,7 @@ msgstr "No hay registro disponible."
 
 #: modules/imaging/manage/master_edit.php:45
 msgid "Edit master : "
-msgstr "Editar maestro : "
+msgstr "Editar Master : "
 
 #: modules/imaging/manage/master_edit.php:92
 #, php-format
@@ -3436,16 +3436,16 @@ msgstr "Maestro %s modificado con error"
 
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:39
 msgid "No imaging server available for association."
-msgstr "No hay ningún servidor de imágenes disponible para la asociación."
+msgstr "No hay ningún servidor de Imaging disponible para la asociación."
 
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:46
 #, php-format
 msgid "Link this Imaging Server to the '%s' entity."
-msgstr "Vincule este servidor de imágenes a la entidad '%s'."
+msgstr "Vincule este servidor de Imaging a la entidad '%s'."
 
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:69
 msgid "Associate an entity to an imaging server"
-msgstr "Asociar una entidad a un servidor de imágenes"
+msgstr "Asociar una entidad a un servidor de Imaging"
 
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:76
 msgid "Identifier"
@@ -3480,7 +3480,7 @@ msgstr "Enlace entre el servidor de paquetes <strong>%s</strong> y la entidad <s
 #: modules/imaging/manage/imaging_server_link.php:106
 #, php-format
 msgid "Do you really want to link the Imaging Server '<b>%s</b>' to the entity '<b>%s</b>'"
-msgstr "¿Realmente desea vincular el servidor de imágenes<b>'%s</b>' a la entidad<b>'%s</b>'?"
+msgstr "¿Realmente desea vincular el servidor de Imaging '<b>%s</b>' a la entidad '<b>%s</b>'?"
 
 #: modules/imaging/manage/unattended.php:90
 msgid "form not found"
@@ -3535,7 +3535,7 @@ msgstr "Etiqueta predeterminada del elemento de menú"
 #: modules/imaging/manage/sysprepList.php:38
 #, php-format
 msgid "The sysprep answer file %s has been removed from the imaging system."
-msgstr "El archivo de respuesta sysprep %s se ha eliminado del sistema de imágenes."
+msgstr "El archivo de respuesta sysprep %s se ha eliminado del sistema de Imaging."
 
 #: modules/imaging/manage/sysprepList.php:78
 msgid "All Windows Answer Files"
@@ -3572,7 +3572,7 @@ msgstr "Eliminar el servicio de arranque <b>%s</b> del menú de arranque por def
 
 #: modules/imaging/manage/profilescript.php:110
 msgid "Available Post-Imaging Profiles"
-msgstr "Perfiles Post-Imagen disponibles"
+msgstr "Perfiles de post-imaging disponibles"
 
 #: modules/imaging/manage/postinstall_edit.php:90
 #, php-format
@@ -3633,7 +3633,7 @@ msgstr "Notificar Advertencia : el script no fue borrado"
 
 #: modules/imaging/manage/postinstall_delete.php:93
 msgid "Can't delete this post-imaging script, it's a global script."
-msgstr "No se puede borrar este script de post-imagen, es un script global."
+msgstr "No se puede borrar este script de post-imaging: es un script global."
 
 #: modules/imaging/manage/postinstall_delete.php:99
 #, php-format
@@ -3642,7 +3642,7 @@ msgstr "¿Estás seguro de que quieres borrar el script <b>%s</b>?"
 
 #: modules/imaging/manage/ajaxPostInstall.php:27
 msgid "Available post-imaging scripts"
-msgstr "Guiones de post-imagen disponibles"
+msgstr "Scripts de post-imaging disponibles"
 
 #: modules/imaging/manage/postinstall_create_boot_service.php:38
 msgid "Boot service successfully created"
@@ -3667,7 +3667,7 @@ msgstr "Añadir <b>%s</b> a los servicios de arranque disponibles ?"
 
 #: modules/imaging/manage/localSidebar.php:29
 msgid "Imaging server status"
-msgstr "Estado del servidor de imágenes"
+msgstr "Estado del servidor de Imaging"
 
 #: modules/imaging/manage/localSidebar.php:45
 msgid "List Profile scripts"
@@ -3679,7 +3679,7 @@ msgstr "Añadir guiones de perfil"
 
 #: modules/imaging/manage/localSidebar.php:53
 msgid "Imaging Configuration"
-msgstr "Configuración de imágenes"
+msgstr "Configuración de Imaging"
 
 #: modules/imaging/manage/localSidebar.php:56
 msgid "Windows System Image Manager"
@@ -3691,11 +3691,11 @@ msgstr "Gestionar servicios"
 
 #: modules/imaging/manage/ajaxMasterLevel2.php:44
 msgid "No master available."
-msgstr "No hay maestro disponible."
+msgstr "No hay ningún Master disponible."
 
 #: modules/imaging/manage/ajaxMasterLevel2.php:46
 msgid "To define a master, browse to the computers module click on the imaging icon for the computer you wish to make a master from, then choose &quot;Images and Masters&quot;, followed by clicking the edit button on a backup image to convert it to a master."
-msgstr "Para definir un máster, navegue hasta el módulo de ordenadores, haga clic en el icono de imagen del ordenador del que desea hacer un máster y, a continuación, seleccione &quot;Imágenes y másters&quot;, y haga clic en el botón de edición de una imagen de copia de seguridad para convertirla en máster."
+msgstr "Para definir un Master, vaya al módulo de máquinas, haga clic en el icono de Imaging de la máquina a partir de la cual desea crear un Master y, a continuación, seleccione &quot;Imágenes y Masters&quot;; después, haga clic en el botón de edición de una imagen de copia de seguridad para convertirla en Master."
 
 #: modules/imaging/manage/ajaxMasterLevel2.php:52
 msgid "Add image to default boot menu"
@@ -3707,20 +3707,20 @@ msgstr "En el menú de arranque por defecto"
 
 #: modules/imaging/manage/ajaxMasterLevel2.php:109
 msgid "copy master In progress"
-msgstr "copia maestra En curso"
+msgstr "Copia del Master en curso"
 
 #: modules/imaging/manage/ajaxMasterLevel2.php:115
 msgid "Master Clone"
-msgstr "Clon maestro"
+msgstr "Clon de Master"
 
 #: modules/imaging/manage/master_iso.php:44
 msgid "Create iso from master"
-msgstr "Crear iso a partir de master"
+msgstr "Crear ISO a partir del Master"
 
 #: modules/imaging/manage/master_iso.php:46
 #, php-format
 msgid "Iso of master <strong>%s</strong> has been launched in background."
-msgstr "La iso del maestro <strong>%s</strong> ha sido lanzada en segundo plano."
+msgstr "La ISO del Master <strong>%s</strong> se ha iniciado en segundo plano."
 
 #: modules/imaging/manage/master_iso.php:48
 #, php-format
@@ -3733,7 +3733,7 @@ msgstr "Vaya a la página de estado para comprobar el estado de creación de la 
 
 #: modules/imaging/manage/master_iso.php:52
 msgid "This operation will last according to the amount of data of the master."
-msgstr "Esta operación durará en función de la cantidad de datos del maestro."
+msgstr "Esta operación durará en función de la cantidad de datos del Master."
 
 #: modules/imaging/manage/master_iso.php:88
 #, php-format
@@ -3757,7 +3757,7 @@ msgstr "El perfil %s no ha sido creado correctamente : %s"
 #: modules/imaging/manage/save_configuration.php:79
 #, php-format
 msgid "Imaging server <strong>%s</strong> configuration saved."
-msgstr "Configuración del servidor de imágenes <strong>%s</strong> guardada."
+msgstr "Configuración del servidor de Imaging <strong>%s</strong> guardada."
 
 #: modules/imaging/manage/ajaxBootmenu.php:94
 msgid "Default boot menu configuration"

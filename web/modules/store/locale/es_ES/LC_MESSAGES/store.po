@@ -128,7 +128,7 @@ msgstr "Detalles del paquete"
 
 #: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:153
 msgid "Deploy"
-msgstr "Despliegue"
+msgstr "Desplegar"
 
 #: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:201
 #: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:210

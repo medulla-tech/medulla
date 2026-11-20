@@ -9,7 +9,7 @@ msgstr ""
 
 #: modules/kiosk/infoPackage.inc.php:30 modules/kiosk/infoPackage.inc.php:35
 msgid "Kiosk"
-msgstr "Quiosco"
+msgstr "Kiosk"
 
 #: modules/kiosk/infoPackage.inc.php:43 modules/kiosk/infoPackage.inc.php:47
 #: modules/kiosk/kiosk/localSidebar.php:26
