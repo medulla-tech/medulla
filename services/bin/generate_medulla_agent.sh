@@ -22,6 +22,7 @@
 # PARAMETERS TO BE SET
 
 DEST=/var/lib/pulse2/medulla_agent
+LOGFILE=/var/log/mmc/medulla-agent-generation-lastexecutiondetails.log
 TAGNAME=$1
 FORCED=$2 # If set to "force", will force regeneration even if agent exists
 
@@ -30,6 +31,12 @@ DBPORT=$(crudini --get /etc/mmc/plugins/xmppmaster.ini.local database dbport 2> 
 DBUSER=$(crudini --get /etc/mmc/plugins/xmppmaster.ini.local database dbuser 2> /dev/null || echo mmc)
 DBPASS=$(crudini --get /etc/mmc/plugins/xmppmaster.ini.local database dbpasswd)
 DBNAME='admin'
+
+# Truncate log file
+> "${LOGFILE}"
+
+# Print date
+echo "## Date: $(date)"
 
 # Get list of agents to be generated
 # If TAGNAME is provided, only generate for this tag
@@ -52,6 +59,7 @@ else
 fi
 
 for tag_name in ${agents}; do
+    echo "# Processing tag: ${tag_name}"
     # Remove old files if still present
     rm -f /var/lib/pulse2/clients/win/Medulla-Agent-windows-*.exe
     rm -f /var/lib/pulse2/clients/lin/Medulla-Agent-linux-*.sh
@@ -63,10 +71,13 @@ for tag_name in ${agents}; do
         mkdir -p "${DEST}/${dl_tag}"
         chmod 755 "${DEST}/${dl_tag}"
     fi
-    # Generate Full agent if it does not exist or is forced to be regenerated
+    # Generate Full agent if 
+    # 1. it does not exist or 
+    # 2. is forced to be regenerated or 
+    # 3. Medulla-Agent-windows-FULL-latest.exe is older than the last change in /var/lib/pulse2/xmpp_baseremoteagent/agentversion
     generated=0
-    if [[ "${FORCED}" == "force" ]] || [[ ! -f "${DEST}/${dl_tag}/Medulla-Agent-windows-FULL-latest.exe" ]] || [[ ! -f "${DEST}/${dl_tag}/Medulla-Agent-linux-MINIMAL-latest.sh" ]]; then
-        /var/lib/pulse2/clients/generate-pulse-agent.sh --inventory-tag="${tag_name}"
+    if [[ "${FORCED}" == "force" ]] || [[ ! -f "${DEST}/${dl_tag}/Medulla-Agent-windows-FULL-latest.exe" ]] || [[ ! -f "${DEST}/${dl_tag}/Medulla-Agent-linux-MINIMAL-latest.sh" ]] || [[ "${DEST}/${dl_tag}/Medulla-Agent-windows-FULL-latest.exe" -ot /var/lib/pulse2/xmpp_baseremoteagent/agentversion ]]; then
+        /var/lib/pulse2/clients/generate-pulse-agent.sh --inventory-tag="${tag_name}" >> "${LOGFILE}" 2>&1
         generated=1
         gen_status=$?
     fi

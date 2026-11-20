@@ -1497,6 +1497,19 @@ temp_updates() {
     str="[v] Running temporary updates if any."
     echo "$str"
     write_to_log "$str"
+
+    # Create cron to generate tagged agents
+    str="[=] Setting up cron for Medulla agent generation..."
+    echo "$str"
+    write_to_log "$str"
+    echo "0 */6 * * * root /usr/sbin/generate_medulla_agent.sh all &> /var/log/mmc/medulla-agent-generation.log" > /etc/cron.d/agent_generation
+    # Restart cron service to apply changes
+    systemctl restart cron
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error setting up cron for Medulla agent generation. Aborting."
+        echo "$str"
+        write_to_log "$str"
+    fi
 }
 
 
