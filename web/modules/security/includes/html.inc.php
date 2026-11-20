@@ -364,6 +364,7 @@ class SecurityLists
             $params[] = array(
                 'software_name' => $row['software_name'],
                 'software_version' => $row['software_version'],
+                'store_name' => $row['store_name'] ?? '',
                 'store_version' => $row['store_version'] ?? '',
                 'store_package_uuid' => $row['store_package_uuid'] ?? '',
                 'back' => $back ?? SecurityFilter::back()
