@@ -20,6 +20,7 @@ Medulla est la solution RMM open source qui vous redonne la maîtrise complète 
 * Sauvegarde et restauration
 * Gestion des mises à jour
 * Kiosque applicatif
+* Gestion des terminaux mobiles Android (MDM)
 
 ## Installation
 
@@ -38,8 +39,9 @@ Notre équipe est à votre disposition pour toute question ou demande de démons
 - Ubuntu
 - Zorin OS
 - macOS 26.2 ou version ultérieure
+- Smartphones et tablettes Android (via le module MDM)
 
-**Prise en charge à venir :** Debian 13 et agents Android.
+**Prise en charge à venir :** Debian 13.
 
 ## Documentation
 
