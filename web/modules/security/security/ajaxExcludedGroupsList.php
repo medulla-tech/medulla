@@ -37,10 +37,7 @@ $excludedGroups = $policies['exclusions']['groups_ids'] ?? array();
 
 // Display message if no exclusions
 if (empty($excludedGroups)) {
-    EmptyStateBox::show(
-        _T("No excluded groups", "security"),
-        _T("Use the form above to add groups to the exclusion list.", "security")
-    );
+    EmptyStateBox::show(_T("No excluded groups", "security"));
 } else {
     // Build group data with info from dyngroup
     $groupData = array();
@@ -115,10 +112,7 @@ if (empty($excludedGroups)) {
     $removeAction->setWidth(400);
 
     if ($count == 0) {
-        EmptyStateBox::show(
-            _T("No groups match your search", "security"),
-            _T("Try a different search term.", "security")
-        );
+        EmptyStateBox::show(_T("No groups match your search", "security"));
     } else {
         // Create and display list
         $list = new OptimizedListInfos($groupNames, _T("Group", "security"));

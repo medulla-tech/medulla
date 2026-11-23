@@ -46,22 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['badd_vendor'])) {
 }
 ?>
 
-<h3><?php echo _T("Excluded Vendors", "security"); ?></h3>
-<p style="color:#666; font-size:0.9em; margin-bottom:15px;">
-    <?php echo _T("All software from these vendors will be excluded from CVE reports.", "security"); ?>
-</p>
-
-<?php
-AddItemForm::show(
-    'new_vendor_name',
-    'badd_vendor',
-    _T("e.g. Microsoft Corporation", "security"),
-    _T("Add", "security"),
-    _T("Add vendor to exclusions:", "security")
-);
-?>
-
-<!-- Excluded vendors list -->
 <?php
 $ajax = new AjaxFilter(
     urlStrRedirect("security/security/ajaxExcludedVendorsList"),
@@ -69,6 +53,22 @@ $ajax = new AjaxFilter(
     array(),
     "searchVendor"
 );
-$ajax->display();
+?>
+<div class="filters-row">
+    <?php
+    AddItemForm::show(
+        'new_vendor_name',
+        'badd_vendor',
+        _T("e.g. Microsoft Corporation", "security"),
+        _T("Add", "security"),
+        _T("Vendor name", "security")
+    );
+    ?>
+    <div class="search-wrapper">
+    <?php $ajax->display(); ?>
+    </div>
+</div>
+
+<?php
 $ajax->displayDivToUpdate();
 ?>

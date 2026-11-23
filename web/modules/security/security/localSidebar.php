@@ -29,9 +29,9 @@ $sidemenu->setClass("security");
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Dashboard", 'security'), "security", "security", "index"));
 if ($hasContract) {
     $sidemenu->addSideMenuItem(new SideMenuItem(_T("Software list", 'security'), "security", "security", "softwares"));
-    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Machines", 'security'), "security", "security", "machines"));
-    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Entities", 'security'), "security", "security", "entities"));
-    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Groups", 'security'), "security", "security", "groups"));
     $sidemenu->addSideMenuItem(new SideMenuItem(_T("CVEs", 'security'), "security", "security", "allcves"));
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Machines", 'security'), "security", "security", "machines"));
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Groups", 'security'), "security", "security", "groups"));
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Entities", 'security'), "security", "security", "entities"));
     $sidemenu->addSideMenuItem(new SideMenuItem(_T("Settings", 'security'), "security", "security", "settings"));
 }

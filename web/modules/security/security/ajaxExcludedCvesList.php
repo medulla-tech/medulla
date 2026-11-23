@@ -107,10 +107,7 @@ $removeAction->setWidth(400);
 
 // Display message if no exclusions
 if ($count == 0) {
-    EmptyStateBox::show(
-        _T("No excluded CVEs", "security"),
-        _T("Use the form above to add CVEs to the exclusion list.", "security")
-    );
+    EmptyStateBox::show(_T("No excluded CVEs", "security"));
 } else {
     // Create and display list
     $list = new OptimizedListInfos($cveIds, _T("CVE ID", "security"));

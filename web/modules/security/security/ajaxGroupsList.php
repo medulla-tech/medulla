@@ -38,7 +38,6 @@ $types = array();
 $machines = array();
 $params = array();
 foreach ($data as $row) {
-    $names[] = htmlspecialchars($row['group_name']);
     $types[] = htmlspecialchars(_T($row['group_type'], 'security'));
     $machines[] = intval($row['machines_count']);
     $params[] = array(
@@ -46,6 +45,7 @@ foreach ($data as $row) {
         'group_name' => $row['group_name'],
         'back' => SecurityFilter::back()
     );
+    $names[] = SecurityLists::detailLink('groupDetail', end($params), htmlspecialchars($row['group_name']));
 }
 
 $excludeAction = new ActionPopupItem(_T("Exclude from reports", "security"), "ajaxAddExclusion", "delete", "", "security", "security");

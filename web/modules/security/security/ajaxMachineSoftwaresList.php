@@ -42,12 +42,12 @@ $count = $result['total'] ?? 0;
 $names = array();
 $params = array();
 foreach ($data as $row) {
-    $names[] = SecurityColumns::software($row);
     $params[] = array(
         'software_name' => $row['software_name'],
         'software_version' => $row['software_version'],
         'back' => SecurityFilter::back()
     );
+    $names[] = SecurityColumns::software($row, end($params));
 }
 
 if ($count > 0) {

@@ -26,23 +26,41 @@ require_once("modules/dyngroup/includes/dyngroup.php");
 
 $severity = SecurityFilter::severity();
 $location = SecurityFilter::location();
+$platform = SecurityFilter::platform();
+$exploitedOnly = SecurityFilter::exploitedOnly();
+$filter = $_GET['filter'] ?? '';
+$filter = is_string($filter) ? trim($filter) : '';
 
 if ($severity === null) {
     new NotifyWidgetFailure(_T("Invalid severity level", "security"));
     exit;
 }
 
+$severityLabels = array(
+    'Critical' => _T("Critical", "security"),
+    'High' => _T("High", "security"),
+    'Medium' => _T("Medium", "security"),
+    'Low' => _T("Low", "security")
+);
+$severityLabel = isset($severityLabels[$severity]) ? $severityLabels[$severity] : $severity;
+
 // Handle confirmation
 if (isset($_POST['bconfirm'])) {
     verifyCSRFToken($_POST);
+    $redirect = urlStrRedirect("security/security/index", []);
     // Get machines affected by this severity
-    $machinesData = xmlrpc_get_machines_by_severity($severity, $location);
+    $machinesData = xmlrpc_get_machines_by_severity($severity, $location, $platform, $exploitedOnly, $filter);
 
     if (empty($machinesData)) {
         new NotifyWidgetFailure(_T("No machines found with this severity level", "security"));
     } else {
-        // Generate automatic group name: CVE <Severity> - YYYY-MM-DD HH:MM
-        $groupName = sprintf("CVE %s - %s", $severity, date('Y-m-d H:i'));
+        $nameParts = array_filter(array(
+            $severityLabel,
+            SecurityFilter::platformLabel($platform),
+            $exploitedOnly ? mb_strtolower(_T("Exploited", "security")) : '',
+            $filter !== '' ? '"' . mb_substr($filter, 0, 30) . '"' : ''
+        ), 'strlen');
+        $groupName = sprintf("CVE %s - %s", implode(' ', $nameParts), date('Y-m-d H:i'));
 
         // Create static group (type = 0)
         $group = new Group();
@@ -55,11 +73,20 @@ if (isset($_POST['bconfirm'])) {
 
             if ($result && $result[0]) {
                 $msg = sprintf(
-                    _T("Group '%s' created with %d machines", "security"),
-                    $groupName,
+                    count($machinesData) == 1
+                        ? _T("Group '%s' created with %d machine", "security")
+                        : _T("Group '%s' created with %d machines", "security"),
+                    htmlspecialchars($groupName, ENT_QUOTES, 'UTF-8'),
                     count($machinesData)
                 );
                 new NotifyWidgetSuccess($msg);
+                if (hasCorrectAcl("security", "security", "groupDetail")) {
+                    $redirect = urlStrRedirect("security/security/groupDetail", array(
+                        'group_id' => intval($groupId),
+                        'group_name' => $groupName,
+                        'back' => SecurityFilter::back()
+                    ));
+                }
             } else {
                 new NotifyWidgetFailure(_T("Group created but failed to add machines", "security"));
             }
@@ -68,23 +95,13 @@ if (isset($_POST['bconfirm'])) {
         }
     }
 
-    // Redirect to security index
-    header("Location: " . urlStrRedirect("security/security/index", []));
+    header("Location: " . $redirect);
     exit;
 }
 
 // Get machine count for this severity
-$machinesData = xmlrpc_get_machines_by_severity($severity, $location);
+$machinesData = xmlrpc_get_machines_by_severity($severity, $location, $platform, $exploitedOnly, $filter);
 $machineCount = count($machinesData);
-
-// Severity labels for display
-$severityLabels = array(
-    'Critical' => _T("Critical", "security"),
-    'High' => _T("High", "security"),
-    'Medium' => _T("Medium", "security"),
-    'Low' => _T("Low", "security")
-);
-$severityLabel = isset($severityLabels[$severity]) ? $severityLabels[$severity] : $severity;
 
 // Show confirmation popup
 $title = _T("Create Group from CVE Severity", "security");
@@ -92,7 +109,9 @@ $f = new PopupForm($title);
 
 if ($machineCount > 0) {
     $f->addText("<p>" . sprintf(
-        _T("Create a static group with <strong>%d machines</strong> affected by <strong>%s</strong> severity CVEs?", "security"),
+        $machineCount == 1
+            ? _T("Create a static group with <strong>%d machine</strong> affected by <strong>%s</strong> severity CVEs?", "security")
+            : _T("Create a static group with <strong>%d machines</strong> affected by <strong>%s</strong> severity CVEs?", "security"),
         $machineCount,
         $severityLabel
     ) . "</p>");

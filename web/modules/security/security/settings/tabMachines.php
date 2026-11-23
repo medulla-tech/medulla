@@ -24,14 +24,6 @@ require_once("modules/security/includes/xmlrpc.php");
 require_once("modules/security/includes/html.inc.php");
 ?>
 
-<h3><?php echo _T("Excluded Machines", "security"); ?></h3>
-<p style="color:#666; font-size:0.9em; margin-bottom:15px;">
-    <?php echo _T("Machines listed here will be excluded from CVE reports and dashboard counts.", "security"); ?>
-    <br/>
-    <?php echo _T("To exclude a machine, use the 'Exclude from reports' action on the Machines page.", "security"); ?>
-</p>
-
-<!-- Excluded machines list -->
 <?php
 $ajax = new AjaxFilter(
     urlStrRedirect("security/security/ajaxExcludedMachinesList"),
@@ -39,6 +31,13 @@ $ajax = new AjaxFilter(
     array(),
     "searchMachine"
 );
-$ajax->display();
+?>
+<div class="filters-row">
+    <div class="search-wrapper">
+    <?php $ajax->display(); ?>
+    </div>
+</div>
+
+<?php
 $ajax->displayDivToUpdate();
 ?>

@@ -28,7 +28,7 @@ require_once("modules/security/includes/html.inc.php");
 $cve_id = strtoupper(trim($_GET['cve_id'] ?? ''));
 $validId = preg_match('/^CVE-\d{4}-\d{4,}$/', $cve_id) === 1;
 
-$p = new PageGenerator(sprintf(_T("CVE Details: %s", 'security'), $validId ? $cve_id : ''));
+$p = new PageGenerator($validId ? $cve_id : _T("CVEs", 'security'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -86,7 +86,6 @@ foreach ($cve['machines'] ?? array() as $machine) {
 <?php SecurityFilter::backLink('allcves', _T("Back to CVE list", "security")); ?>
 
 <div class="cve-header severity-<?php echo $severityClass; ?>">
-    <div class="cve-title"><?php echo htmlspecialchars($cve['cve_id']); ?></div>
     <div class="cve-meta">
         <div class="cve-meta-item">
             <strong><?php echo _T("Risk", "security"); ?>:</strong>
@@ -127,19 +126,6 @@ foreach ($cve['machines'] ?? array() as $machine) {
     <?php echo nl2br(htmlspecialchars(($cve['description'] ?? '') ?: _T("No description available", "security"))); ?>
 </div>
 
-<?php if (!empty($cve['softwares'])): ?>
-<h3 class="section-title"><?php echo _T("Affected Software", "security"); ?></h3>
-<ul class="software-list">
-    <?php foreach ($cve['softwares'] as $sw): ?>
-    <li>
-        <strong><?php echo htmlspecialchars($sw['name']); ?></strong>
-        <span class="software-version">v<?php echo htmlspecialchars($sw['version']); ?></span>
-        <?php echo SecurityBadge::fix($sw['fix_available'] ?? null); ?>
-    </li>
-    <?php endforeach; ?>
-</ul>
-<?php endif; ?>
-
 <h3 class="section-title">
     <?php echo _T("Affected Machines", "security"); ?>
     <span class="section-count">(<?php echo count($machinesByHost); ?>)</span>
@@ -147,11 +133,9 @@ foreach ($cve['machines'] ?? array() as $machine) {
 
 <?php
 if (!empty($machinesByHost)) {
-    $hostnames = array();
     $softwares = array();
     $params = array();
     foreach ($machinesByHost as $machine) {
-        $hostnames[] = htmlspecialchars($machine['hostname']);
         $lines = array();
         foreach ($machine['softwares'] as $sw) {
             $lines[] = htmlspecialchars($sw['name']) . ' <span class="cell-sub">' . htmlspecialchars($sw['version']) . '</span>';
@@ -159,11 +143,13 @@ if (!empty($machinesByHost)) {
         $softwares[] = implode('<br/>', $lines);
         $params[] = array('id_glpi' => $machine['id_glpi'], 'hostname' => $machine['hostname'], 'back' => SecurityFilter::here());
     }
+    list($hostnames, $presences) = SecurityLists::machineNames($params);
     $n = new OptimizedListInfos($hostnames, _T("Machine", "security"));
     $n->setTableCssClass("security-table");
     $n->disableFirstColumnActionLink();
     $n->addExtraInfoRaw($softwares, _T("Affected Software", "security"));
     $n->setParamInfo($params);
+    $n->setMainActionClasses($presences);
     $n->addActionItem(new ActionItem(_T("View CVEs", "security"), "machineDetail", "display", "", "security", "security"));
     $n->setItemCount(count($hostnames));
     $n->start = 0;

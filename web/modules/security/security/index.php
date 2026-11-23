@@ -17,14 +17,22 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
  *
- * Security Module - CVE Summary Dashboard (one tab per platform)
+ * Security Module - Pages with one tab per platform
  */
 
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/security/includes/html.inc.php");
 
-$p = new PageGenerator(_T("Dashboard", 'security'));
+$pages = array(
+    'index' => array(_T("Dashboard", 'security'), 'dashboard.php'),
+    'softwares' => array(_T("Software list", 'security'), 'softwares.php'),
+    'allcves' => array(_T("CVEs", 'security'), 'allcves.php'),
+    'machines' => array(_T("Machines", 'security'), 'machines.php'),
+);
+list($title, $file) = $pages[$_GET['action'] ?? ''] ?? $pages['index'];
+
+$p = new PageGenerator($title);
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -37,13 +45,5 @@ if (!$hasContract) {
     return;
 }
 
-// Tabs keep the current entity
-$params = isset($_GET['location']) ? array('location' => SecurityFilter::location()) : array();
-
-
-$tabs = new TabbedPageGenerator();
-$tabs->addTab("taball", _T("All", "security"), "", "modules/security/security/dashboard.php", $params);
-$tabs->addTab("tabwindows", "Windows", "", "modules/security/security/dashboard.php", $params);
-$tabs->addTab("tablinux", "Linux", "", "modules/security/security/dashboard.php", $params);
-$tabs->display();
+SecurityFilter::platformTabs("modules/security/security/" . $file);
 ?>

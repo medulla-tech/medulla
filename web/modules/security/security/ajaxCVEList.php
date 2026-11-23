@@ -44,6 +44,9 @@ $result = xmlrpc_get_cves(
 );
 $count = $result['total'] ?? 0;
 
+// Search text applied to the list on screen, read by the export and the group creation
+echo '<div id="cve-applied-filter" data-filter="' . htmlspecialchars(is_string($filter) ? $filter : '', ENT_QUOTES, 'UTF-8') . '" hidden></div>';
+
 if ($count > 0) {
     SecurityLists::cves($result['data'] ?? array(), $count, $filter, true);
 } elseif ($filter !== '' || $severity || $exploitedOnly) {

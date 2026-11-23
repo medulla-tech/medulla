@@ -24,6 +24,7 @@ require_once("modules/security/includes/xmlrpc.php");
 require_once("modules/security/includes/html.inc.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['badd_group'])) {
+    verifyCSRFToken($_POST);
     $groupId = intval($_POST['new_group_id'] ?? 0);
     if ($groupId > 0 && ExclusionHelper::addExclusion('groups_ids', $groupId, $_SESSION['login'] ?? 'unknown')) {
         new NotifyWidgetSuccess(_T("Group added to exclusions", "security"));
@@ -36,42 +37,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['badd_group'])) {
 
 $policies = xmlrpc_get_policies();
 $excluded = array_map('intval', $policies['exclusions']['groups_ids'] ?? array());
-$values = array();
-$labels = array();
+$options = array();
 foreach (xmlrpc_get_groups_list() ?: array() as $group) {
     if (!in_array(intval($group['id']), $excluded, true)) {
-        $values[] = intval($group['id']);
-        $labels[] = htmlspecialchars($group['name']);
+        $options[intval($group['id'])] = $group['name'];
     }
 }
 ?>
 
-<h3><?php echo _T("Excluded Groups", "security"); ?></h3>
-<p style="color:#666; font-size:0.9em; margin-bottom:15px;">
-    <?php echo _T("All machines in these groups will be excluded from CVE reports and dashboard counts.", "security"); ?>
-    <br/>
-    <?php echo _T("You can also exclude a group from the Groups page.", "security"); ?>
-</p>
-
 <?php
-if (!empty($values)) {
-    $groupSelect = new SelectItem("new_group_id");
-    $groupSelect->setElements($labels);
-    $groupSelect->setElementsVal($values);
-    $f = new ValidatingForm(array('method' => 'POST'));
-    $f->push(new Table());
-    $f->add(new TrFormElement(_T("Add group to exclusions:", "security"), $groupSelect));
-    $f->pop();
-    $f->addValidateButtonWithValue('badd_group', _T("Add", "security"));
-    $f->display();
-}
-
 $ajax = new AjaxFilter(
     urlStrRedirect("security/security/ajaxExcludedGroupsList"),
     "containerExcludedGroups",
     array(),
     "searchGroup"
 );
-$ajax->display();
+?>
+<div class="filters-row">
+    <?php
+    if (!empty($options)) {
+        AddItemForm::show('new_group_id', 'badd_group', '', _T("Add", "security"), _T("Group", "security"), $options);
+    }
+    ?>
+    <div class="search-wrapper">
+    <?php $ajax->display(); ?>
+    </div>
+</div>
+
+<?php
 $ajax->displayDivToUpdate();
 ?>

@@ -40,16 +40,14 @@ $result = xmlrpc_get_machines_summary(
     $filter,
     $location,
     SecurityFilter::platform(),
-    false,
+    SecurityFilter::exploitedOnly(),
     SecurityFilter::group()
 );
 $data = $result['data'] ?? array();
 $count = $result['total'] ?? 0;
 
-$hostnames = array();
 $params = array();
 foreach ($data as $row) {
-    $hostnames[] = htmlspecialchars($row['hostname']);
     $params[] = array(
         'id_glpi' => $row['id_glpi'],
         'hostname' => $row['hostname'],
@@ -70,6 +68,7 @@ $excludeAction = new ActionPopupItem(_T("Exclude from reports", "security"), "aj
 $excludeAction->setWidth(450);
 
 if ($count > 0) {
+    list($hostnames, $presences) = SecurityLists::machineNames($params);
     $n = new OptimizedListInfos($hostnames, _T("Machine", "security"));
     $n->setResizable();
     $n->setTableCssClass("security-table");
@@ -78,6 +77,7 @@ if ($count > 0) {
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $filter));
     $n->setParamInfo($params);
+    $n->setMainActionClasses($presences);
     $n->addActionItem($detailAction);
     $n->addActionItem($scanAction);
     $n->addActionItem($excludeAction);

@@ -37,9 +37,9 @@ $names = array();
 $machines = array();
 $params = array();
 foreach ($data as $row) {
-    $names[] = htmlspecialchars($row['entity_fullname']);
     $machines[] = intval($row['machines_count']);
     $params[] = array('location' => 'UUID' . intval($row['entity_id']));
+    $names[] = SecurityLists::detailLink('machines', end($params), htmlspecialchars($row['entity_fullname']));
 }
 
 if ($count > 0) {

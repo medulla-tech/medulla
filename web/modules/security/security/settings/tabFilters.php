@@ -61,9 +61,6 @@ document.addEventListener('DOMContentLoaded', function() {
 <?php
 $f = new ValidatingForm(array('method' => 'POST'));
 
-$f->add(new TitleElement(_T("Display Filters", "security")));
-$f->add(new SpanElement('<p>' . _T("Control which CVEs are shown in the interface", "security") . '</p>', "security"));
-
 $f->push(new Table());
 
 // La sévérité est une tranche de score CVSS : la correspondance est donnée dans chaque option

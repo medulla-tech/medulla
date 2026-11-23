@@ -66,11 +66,6 @@ function xmlrpc_get_machines_summary($start = 0, $limit = 50, $filter = '', $loc
     return xmlCall("security.get_machines_summary", array($start, $limit, $filter, $location, $platform, $exploited_only, $group_id));
 }
 
-function xmlrpc_get_machine_cves($id_glpi, $start = 0, $limit = 50, $filter = '', $severity = null)
-{
-    return xmlCall("security.get_machine_cves", array($id_glpi, $start, $limit, $filter, $severity));
-}
-
 function xmlrpc_get_machine_softwares_summary($id_glpi, $start = 0, $limit = 50, $filter = '', $category = '')
 {
     return xmlCall("security.get_machine_softwares_summary", array($id_glpi, $start, $limit, $filter, $category));
@@ -163,9 +158,9 @@ function xmlrpc_get_group_machines($group_id, $start = 0, $limit = 50, $filter =
 // =============================================================================
 // Group creation helpers
 // =============================================================================
-function xmlrpc_get_machines_by_severity($severity, $location = '')
+function xmlrpc_get_machines_by_severity($severity, $location = '', $platform = '', $exploited_only = false, $filter = '')
 {
-    return xmlCall("security.get_machines_by_severity", array($severity, $location));
+    return xmlCall("security.get_machines_by_severity", array($severity, $location, $platform, $exploited_only, $filter));
 }
 
 // =============================================================================

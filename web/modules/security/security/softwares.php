@@ -20,18 +20,13 @@
  * Security Module - Vulnerable software, sorted by priority
  */
 
-require("graph/navbar.inc.php");
-require("localSidebar.php");
 require_once("modules/security/includes/xmlrpc.php");
 require_once("modules/security/includes/html.inc.php");
-
-$p = new PageGenerator(_T("Vulnerable Software", 'security'));
-$p->setSideMenu($sidemenu);
-$p->display();
 
 $location = SecurityFilter::location();
 $category = SecurityFilter::category();
 $platform = SecurityFilter::platform();
+$exploitedOnly = SecurityFilter::exploitedOnly();
 
 SecurityFilter::script();
 ?>
@@ -40,7 +35,7 @@ SecurityFilter::script();
     <div class="filters-left">
         <?php SecurityFilter::entitySelect($location); ?>
         <?php SecurityFilter::categorySelect($category); ?>
-        <?php SecurityFilter::platformSelect($platform); ?>
+        <?php SecurityFilter::exploitedCheckbox($exploitedOnly); ?>
     </div>
     <div class="search-wrapper">
     <?php
@@ -48,6 +43,7 @@ SecurityFilter::script();
         'location' => $location,
         'category' => $category,
         'platform' => $platform,
+        'exploited_only' => $exploitedOnly ? '1' : '',
         'back' => SecurityFilter::here(),
     )));
     $ajax->display();

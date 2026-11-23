@@ -146,6 +146,11 @@ msgstr "No se encontraron máquinas con este nivel de severidad"
 
 #: modules/security/security/ajaxCreateGroupFromSeverity.php:58
 #, php-format
+msgid "Group '%s' created with %d machine"
+msgstr "Grupo '%s' creado con %d máquina"
+
+#: modules/security/security/ajaxCreateGroupFromSeverity.php:58
+#, php-format
 msgid "Group '%s' created with %d machines"
 msgstr "Grupo '%s' creado con %d máquinas"
 
@@ -212,6 +217,15 @@ msgstr "Bajo"
 #: modules/security/security/ajaxCreateGroupFromSeverity.php:90
 msgid "Create Group from CVE Severity"
 msgstr "Crear grupo por severidad CVE"
+
+#: modules/security/security/ajaxCreateGroupFromSeverity.php:95
+#, php-format
+msgid ""
+"Create a static group with <strong>%d machine</strong> affected by "
+"<strong>%s</strong> severity CVEs?"
+msgstr ""
+"¿Crear un grupo estático con <strong>%d máquina</strong> afectada por CVE "
+"de severidad <strong>%s</strong>?"
 
 #: modules/security/security/ajaxCreateGroupFromSeverity.php:95
 #, php-format
@@ -312,13 +326,6 @@ msgstr "Entidad"
 msgid "Max CVSS"
 msgstr "CVSS máximo"
 
-#: modules/security/security/ajaxEntitiesList.php:115
-#: modules/security/security/ajaxGroupsList.php:117
-#: modules/security/security/machineDetail.php:57
-#: modules/security/security/softwareDetail.php:65
-msgid "Total CVEs"
-msgstr "Total CVE"
-
 #: modules/security/security/ajaxEntitiesList.php:126
 msgid "No entities found"
 msgstr "No se encontraron entidades"
@@ -380,13 +387,6 @@ msgstr "No se encontraron grupos"
 #: modules/security/security/machineDetail.php:35
 msgid "Invalid machine ID"
 msgstr "ID de máquina inválido"
-
-#: modules/security/security/ajaxMachineCVEList.php:97
-#: modules/security/security/ajaxMachineSoftwaresList.php:104
-#: modules/security/security/ajaxSoftwaresList.php:100
-#: modules/security/security/softwareDetail.php:64
-msgid "Version"
-msgstr "Versión"
 
 #: modules/security/security/ajaxMachineCVEList.php:109
 #: modules/security/security/ajaxSoftwareCVEList.php:111
@@ -537,11 +537,6 @@ msgstr "Todas mis entidades"
 msgid "All"
 msgstr "Todos"
 
-#: modules/security/security/cveDetail.php:29
-#, php-format
-msgid "CVE Details: %s"
-msgstr "Detalles CVE: %s"
-
 #: modules/security/security/cveDetail.php:34
 msgid "Invalid CVE ID"
 msgstr "ID CVE inválido"
@@ -600,18 +595,9 @@ msgstr "Ver todas las CVE"
 msgid "No machines currently affected by this CVE"
 msgstr "Ninguna máquina actualmente afectada por esta CVE"
 
-#: modules/security/security/groupDetail.php:30
-#, php-format
-msgid "Machines in group: %s"
-msgstr "Máquinas en el grupo: %s"
-
 #: modules/security/security/groupDetail.php:47
 msgid "Back to groups list"
 msgstr "Volver a la lista de grupos"
-
-#: modules/security/security/groupDetail.php:52
-msgid "Total Machines"
-msgstr "Total máquinas"
 
 #: modules/security/security/index.php:60
 msgid "Click to view all CVEs"
@@ -650,16 +636,6 @@ msgstr ""
 msgid "No scan has been performed yet"
 msgstr "Aún no se ha realizado ningún escaneo"
 
-#: modules/security/security/index.php:119
-#: modules/security/security/machineDetail.php:56
-msgid "Vulnerable Software"
-msgstr "Software vulnerable"
-
-#: modules/security/security/machineDetail.php:30
-#, php-format
-msgid "Vulnerable Software on %s"
-msgstr "Software vulnerable en %s"
-
 #: modules/security/security/machineDetail.php:51
 msgid "Back to machines list"
 msgstr "Volver a la lista de máquinas"
@@ -679,14 +655,6 @@ msgstr "Políticas restablecidas a valores predeterminados"
 #: modules/security/security/settings.php:65
 msgid "Failed to reset policies"
 msgstr "Error al restablecer las políticas"
-
-#: modules/security/security/settings.php:111
-msgid "Display Filters"
-msgstr "Filtros de visualización"
-
-#: modules/security/security/settings.php:112
-msgid "Control which CVEs are shown in the interface"
-msgstr "Controle qué CVE se muestran en la interfaz"
 
 #: modules/security/security/settings.php:118
 msgid "Minimum CVSS"
@@ -731,10 +699,6 @@ msgstr ""
 "línea)"
 
 #: modules/security/security/settings.php:169
-msgid "Vendors"
-msgstr "Proveedores"
-
-#: modules/security/security/settings.php:169
 msgid "e.g. Microsoft Corporation"
 msgstr "ej. Microsoft Corporation"
 
@@ -762,11 +726,6 @@ msgstr "Guardar"
 msgid "Reset to Defaults"
 msgstr "Restablecer valores predeterminados"
 
-#: modules/security/security/softwareDetail.php:30
-#, php-format
-msgid "CVEs for %s %s"
-msgstr "CVE para %s %s"
-
 #: modules/security/security/softwareDetail.php:59
 msgid "Back to software list"
 msgstr "Volver a la lista de software"
@@ -791,10 +750,6 @@ msgstr "Software excluido"
 #: modules/security/security/settings/tabSoftware.php
 msgid "Software listed here will not appear in CVE reports. You can also exclude software directly from the CVE Summary page."
 msgstr "El software listado aquí no aparecerá en los informes de CVE. También puede excluir software directamente desde la página Resumen de CVE."
-
-#: modules/security/security/settings/tabSoftware.php
-msgid "Add software to exclusions:"
-msgstr "Agregar software a las exclusiones:"
 
 #: modules/security/security/settings/tabSoftware.php
 msgid "e.g. Mozilla Firefox"
@@ -831,10 +786,6 @@ msgid "CVEs listed here will not appear in reports. You can also exclude CVEs di
 msgstr "Los CVE listados aquí no aparecerán en los informes. También puede excluir CVE directamente desde la página Todos los CVE."
 
 #: modules/security/security/settings/tabCves.php
-msgid "Add CVE to exclusions:"
-msgstr "Agregar CVE a las exclusiones:"
-
-#: modules/security/security/settings/tabCves.php
 msgid "e.g. CVE-2024-12345"
 msgstr "ej. CVE-2024-12345"
 
@@ -854,14 +805,6 @@ msgstr "Por favor ingrese un identificador CVE válido (ej. CVE-2024-12345)"
 #: modules/security/security/settings/tabVendors.php
 msgid "Excluded Vendors"
 msgstr "Proveedores excluidos"
-
-#: modules/security/security/settings/tabVendors.php
-msgid "All software from these vendors will be excluded from CVE reports."
-msgstr "Todo el software de estos proveedores será excluido de los informes de CVE."
-
-#: modules/security/security/settings/tabVendors.php
-msgid "Add vendor to exclusions:"
-msgstr "Agregar proveedor a las exclusiones:"
 
 #: modules/security/security/settings/tabVendors.php
 #, php-format
@@ -960,18 +903,6 @@ msgstr "Quitar"
 msgid "CVEs"
 msgstr "CVE"
 
-#: modules/security/security/ajaxExcludedSoftwaresList.php
-msgid "Use the form above to add software to the exclusion list."
-msgstr "Utilice el formulario anterior para agregar software a la lista de exclusiones."
-
-#: modules/security/security/ajaxExcludedCvesList.php
-msgid "Use the form above to add CVEs to the exclusion list."
-msgstr "Utilice el formulario anterior para agregar CVE a la lista de exclusiones."
-
-#: modules/security/security/ajaxExcludedVendorsList.php
-msgid "Use the form above to add vendors to the exclusion list."
-msgstr "Utilice el formulario anterior para agregar proveedores a la lista de exclusiones."
-
 #: modules/security/security/ajaxExcludedCvesList.php
 msgid "Unknown"
 msgstr "Desconocido"
@@ -979,10 +910,6 @@ msgstr "Desconocido"
 #: modules/security/security/settings/tabMachines.php
 msgid "Excluded Machines"
 msgstr "Máquinas excluidas"
-
-#: modules/security/security/settings/tabMachines.php
-msgid "Machines listed here will be excluded from CVE reports and dashboard counts."
-msgstr "Las máquinas listadas aquí serán excluidas de los informes de CVE y los contadores del panel."
 
 #: modules/security/security/settings/tabMachines.php
 msgid "Add machine ID to exclusions:"
@@ -1013,10 +940,6 @@ msgstr "Por favor ingrese un ID de máquina válido"
 #: modules/security/security/settings/tabGroups.php
 msgid "Excluded Groups"
 msgstr "Grupos excluidos"
-
-#: modules/security/security/settings/tabGroups.php
-msgid "All machines in these groups will be excluded from CVE reports and dashboard counts."
-msgstr "Todas las máquinas de estos grupos serán excluidas de los informes de CVE y los contadores del panel."
 
 #: modules/security/security/settings/tabGroups.php
 msgid "Add group ID to exclusions:"
@@ -1067,10 +990,6 @@ msgstr "Nombre del grupo"
 #: modules/security/security/ajaxExcludedGroupsList.php
 msgid "No excluded groups"
 msgstr "No hay grupos excluidos"
-
-#: modules/security/security/ajaxExcludedGroupsList.php
-msgid "Use the form above to add groups to the exclusion list."
-msgstr "Utilice el formulario anterior para agregar grupos a la lista de exclusiones."
 
 #: modules/security/security/ajaxRemoveExclusion.php
 msgid "Remove Machine Exclusion"
@@ -1144,10 +1063,6 @@ msgstr "Sistema operativo"
 #: modules/security/security/ajaxExcludedMachinesList.php
 msgid "No machines match your search"
 msgstr "Ninguna máquina coincide con su búsqueda"
-
-#: modules/security/security/ajaxExcludedMachinesList.php
-msgid "Try a different search term."
-msgstr "Intente con otro término de búsqueda."
 
 #: modules/security/security/ajaxExcludedGroupsList.php
 msgid "Groups can be excluded directly from the 'Results by Group' view using the exclude action."
@@ -1289,7 +1204,7 @@ msgid "Exploited"
 msgstr "Explotadas"
 
 msgid "Exploited only"
-msgstr "Solo explotadas"
+msgstr "Solo vulnerabilidades explotadas"
 
 msgid "Exploited since"
 msgstr "Explotada desde"
@@ -1417,26 +1332,20 @@ msgstr "seleccionada(s)"
 msgid "Exploited CVEs"
 msgstr "CVE explotadas"
 
-msgid "Platform"
-msgstr "Plataforma"
-
 msgid "Available in Store, subscription required"
 msgstr "Disponible en la Store, suscripción necesaria"
 
 msgid "%d CVE(s) known to be actively exploited"
 msgstr "%d CVE explotada(s) activamente"
 
-msgid "Add group to exclusions:"
-msgstr "Añadir un grupo a las exclusiones:"
-
-msgid "CVEs listed here will not appear in reports. You can also exclude CVEs directly from the CVEs page."
-msgstr "Las CVE de esta lista no aparecerán en los informes. También puede excluir CVE directamente desde la página CVE."
-
 msgid "Click to view critical CVEs"
 msgstr "Haga clic para ver las CVE críticas"
 
 msgid "Create a group with the affected machines"
 msgstr "Crear un grupo con las máquinas afectadas"
+
+msgid "Create a group"
+msgstr "Crear un grupo"
 
 msgid "Dashboard"
 msgstr "Panel de control"
@@ -1450,17 +1359,8 @@ msgstr "Puntuación CVSS más alta y su gravedad"
 msgid "Hover a number for the breakdown by severity"
 msgstr "Pase el ratón sobre un número para ver el detalle por gravedad"
 
-msgid "Machines can be excluded from the Machines page using the exclude action."
-msgstr "Las máquinas pueden excluirse desde la página Máquinas con la acción de exclusión."
-
 msgid "Risk"
 msgstr "Riesgo"
-
-msgid "Software listed here will not appear in CVE reports. You can also exclude software directly from the Software page."
-msgstr "El software de esta lista no aparecerá en los informes de CVE. También puede excluir software directamente desde la página Software."
-
-msgid "To exclude a machine, use the 'Exclude from reports' action on the Machines page."
-msgstr "Para excluir una máquina, utilice la acción «Excluir de los informes» de la página Máquinas."
 
 msgid "To fix first"
 msgstr "Prioridades"
@@ -1470,9 +1370,6 @@ msgstr "Ver todo el software"
 
 msgid "Entities"
 msgstr "Entidades"
-
-msgid "You can also exclude a group from the Groups page."
-msgstr "También puede excluir un grupo desde la página Grupos."
 
 msgid "%d of %d machines shown"
 msgstr "%d de %d máquinas mostradas"
@@ -1549,3 +1446,15 @@ msgstr "%s (CVSS %s o más)"
 
 msgid "All severities"
 msgstr "Todas las severidades"
+
+#: modules/security/includes/html.inc.php
+msgid "Status"
+msgstr "Estado"
+
+#: modules/security/includes/html.inc.php
+msgid "Online"
+msgstr "En línea"
+
+#: modules/security/includes/html.inc.php
+msgid "Offline"
+msgstr "Fuera de línea"
