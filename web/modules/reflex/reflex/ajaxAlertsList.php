@@ -126,7 +126,7 @@ foreach ($data as $row) {
     $params[] = array(
         'alert_id' => intval($row['id'] ?? 0),
         'probe_id' => intval($row['probe_id'] ?? 0),
-        'machines_id' => intval($row['machines_id'] ?? 0),
+        'jiduser' => ReflexHtml::jiduser($row['jiduser'] ?? ''),
         'hostname' => $row['hostname'] ?? ''
     );
 

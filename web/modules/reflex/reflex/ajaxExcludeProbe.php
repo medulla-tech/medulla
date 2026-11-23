@@ -27,9 +27,7 @@ require_once("modules/reflex/includes/xmlrpc.php");
 require_once("modules/reflex/includes/html.inc.php");
 
 $probeId = isset($_GET['probe_id']) ? intval($_GET['probe_id']) : intval($_POST['probe_id'] ?? 0);
-$machinesId = isset($_GET['machines_id'])
-    ? intval($_GET['machines_id'])
-    : intval($_POST['machines_id'] ?? 0);
+$jiduser = ReflexHtml::jiduser($_GET['jiduser'] ?? ($_POST['jiduser'] ?? ''));
 // Hostname and label come from the agent and from the catalog: escaped on
 // display, sent raw to the backend, which stores the hostname.
 $hostname = isset($_GET['hostname']) ? (string) $_GET['hostname'] : (string) ($_POST['hostname'] ?? '');
@@ -42,14 +40,14 @@ if (isset($_POST['bconfirm'])) {
     verifyCSRFToken($_POST);
 
     // No reason asked: who excluded and when is what the history needs.
-    $result = xmlrpc_reflex_exclude_probe_on_machine($login, $probeId, $machinesId, $hostname, '');
+    $result = xmlrpc_reflex_exclude_probe_on_machine($login, $probeId, $jiduser, $hostname, '');
 
     ReflexHelper::notifyOutcome($result,
         sprintf(_T("Probe no longer measured on '%s'", "reflex"), htmlspecialchars($hostname)),
         _T("Failed to remove the probe from this machine", "reflex"));
 
     header("Location: " . urlStrRedirect("reflex/reflex/machineDetail", array(
-        "machines_id" => $machinesId,
+        "jiduser" => $jiduser,
         "hostname" => $hostname
     )));
     exit;
@@ -66,7 +64,8 @@ $f->addText(htmlspecialchars(_T("The alerts open on this probe and this machine 
 $f->addText('<em>' . htmlspecialchars(_T("This machine stops being measured by this probe. The other machines of the same assignment keep it.", "reflex")) . '</em>');
 $f->push(new Table());
 $f->add(new HiddenTpl("probe_id"), array("value" => $probeId, "hide" => True));
-$f->add(new HiddenTpl("machines_id"), array("value" => $machinesId, "hide" => True));
+$f->add(new HiddenTpl("jiduser"),
+        array("value" => htmlspecialchars($jiduser, ENT_QUOTES, 'UTF-8'), "hide" => True));
 $f->add(new HiddenTpl("hostname"), array("value" => htmlspecialchars($hostname), "hide" => True));
 $f->add(new HiddenTpl("probe_label"), array("value" => htmlspecialchars($probeLabel), "hide" => True));
 $f->pop();

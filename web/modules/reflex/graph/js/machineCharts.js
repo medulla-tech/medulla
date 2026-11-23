@@ -309,7 +309,7 @@
     note(card, text("loading"));
 
     var query = {
-      "machines_id": grid.getAttribute("data-machines-id"),
+      "jiduser": grid.getAttribute("data-jiduser"),
       "period": period,
       /* What this card holds: empty for the measures of a probe, presence
          for the band the server states, which names no probe. */

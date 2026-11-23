@@ -175,7 +175,7 @@ function reflex_presence_stamp($value)
 // What is dropped is the oldest end of the window, never the recent one.
 define('REFLEX_PRESENCE_MAX_SPANS', 600);
 
-$machinesId = isset($_GET['machines_id']) ? intval($_GET['machines_id']) : 0;
+$jiduser = ReflexHtml::jiduser($_GET['jiduser'] ?? '');
 $probeId = isset($_GET['probe_id']) ? intval($_GET['probe_id']) : 0;
 $kind = isset($_GET['kind']) ? (string) $_GET['kind'] : '';
 // Closed list of periods offered by the machine sheet.
@@ -193,7 +193,7 @@ if (!array_key_exists($period, $periods)) {
 $days = $periods[$period]['days'];
 $hours = $periods[$period]['hours'];
 
-if ($machinesId <= 0 || ($kind !== 'presence' && $probeId <= 0)) {
+if ($jiduser === '' || ($kind !== 'presence' && $probeId <= 0)) {
     reflex_chart_answer(array(
         'ok' => false,
         'message' => _T("Invalid request.", "reflex")
@@ -203,7 +203,7 @@ if ($machinesId <= 0 || ($kind !== 'presence' && $probeId <= 0)) {
 if ($kind === 'presence') {
     ob_start();
     $presence = xmlrpc_reflex_get_agent_presence(
-        reflex_current_login(), $machinesId, $days, $hours);
+        reflex_current_login(), $jiduser, $days, $hours);
     ob_end_clean();
 
     if (isXMLRPCError() || !is_array($presence)) {
@@ -290,7 +290,7 @@ $budget = ($kind === 'state')
 // The buffer keeps the notification xmlCall() may emit out of the JSON.
 ob_start();
 $series = xmlrpc_reflex_get_measures_timeseries(
-    reflex_current_login(), $machinesId, $probeId, $days, $hours, $budget);
+    reflex_current_login(), $jiduser, $probeId, $days, $hours, $budget);
 ob_end_clean();
 
 if (isXMLRPCError() || !is_array($series)) {

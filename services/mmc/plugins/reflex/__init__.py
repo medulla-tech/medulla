@@ -249,17 +249,17 @@ def unassign_probes_bulk(login, assignment_ids):
 # =============================================================================
 # Probe exclusions
 # =============================================================================
-def exclude_probe_on_machine(login, probe_id, machines_id, hostname='',
+def exclude_probe_on_machine(login, probe_id, jiduser, hostname='',
                              reason=''):
     """Take a probe off one machine without touching its assignments."""
     return ReflexDatabase().exclude_probe_on_machine(
-        _login(login), probe_id, machines_id, hostname=hostname, reason=reason)
+        _login(login), probe_id, jiduser, hostname=hostname, reason=reason)
 
 
-def include_probe_on_machine(login, probe_id, machines_id):
+def include_probe_on_machine(login, probe_id, jiduser):
     """Lift the exception of a probe on one machine."""
     return ReflexDatabase().include_probe_on_machine(
-        _login(login), probe_id, machines_id)
+        _login(login), probe_id, jiduser)
 
 
 def get_probe_exclusions(login, probe_id):
@@ -304,17 +304,17 @@ def get_machines_status(login, start=0, limit=20, filter_str=''):
         _login(login), start=start, limit=limit, filter_str=filter_str)
 
 
-def get_machine_detail(login, machines_id):
+def get_machine_detail(login, jiduser):
     """Probes, last measures and open alerts of one machine."""
-    return ReflexDatabase().get_machine_detail(_login(login), machines_id)
+    return ReflexDatabase().get_machine_detail(_login(login), jiduser)
 
 
-def get_agent_config(machines_id, login=''):
+def get_agent_config(jiduser, login=''):
     """Probe configuration distributed to the agent of a machine."""
-    return ReflexDatabase().get_agent_config(machines_id, login=_login(login))
+    return ReflexDatabase().get_agent_config(jiduser, login=_login(login))
 
 
-def get_measures_timeseries(login, machines_id, probe_id, days=7, hours=None,
+def get_measures_timeseries(login, jiduser, probe_id, days=7, hours=None,
                             max_points=None):
     """Measures of one probe on one machine over a period."""
     # A max_points left out keeps the default of the data layer; a zero sent
@@ -325,13 +325,13 @@ def get_measures_timeseries(login, machines_id, probe_id, days=7, hours=None,
         points = 0
     extra = {'max_points': points} if points > 0 else {}
     return ReflexDatabase().get_measures_timeseries(
-        _login(login), machines_id, probe_id, days=days, hours=hours, **extra)
+        _login(login), jiduser, probe_id, days=days, hours=hours, **extra)
 
 
-def get_agent_presence(login, machines_id, days=7, hours=None):
+def get_agent_presence(login, jiduser, days=7, hours=None):
     """When the agent of one machine was connected over a period."""
     return ReflexDatabase().get_agent_presence(
-        _login(login), machines_id, days=days, hours=hours)
+        _login(login), jiduser, days=days, hours=hours)
 
 
 # =============================================================================

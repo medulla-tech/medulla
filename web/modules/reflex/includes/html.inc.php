@@ -2042,6 +2042,25 @@ JS;
     }
 }
 
+// Identity of a machine as it travels in addresses and forms.
+class ReflexHtml
+{
+    // Agent name of a machine, the user part of its jid in lower case, or ''
+    // when the value cannot be one.
+    public static function jiduser($raw)
+    {
+        if (!is_scalar($raw)) {
+            return '';
+        }
+        $value = strtolower(trim(explode('@', (string) $raw, 2)[0]));
+        if ($value === '' || strlen($value) > 255
+            || preg_match('/[\/\s\x00-\x1f\x7f]/', $value)) {
+            return '';
+        }
+        return $value;
+    }
+}
+
 // Targets a probe can be placed on, read from the modules that own them.
 class ReflexTargets
 {
@@ -2059,7 +2078,6 @@ class ReflexTargets
     private static $entityLabels = null;
     private static $ruleFilterLabels = null;
     private static $resolvedMachines = array();
-    private static $resolvedInventoryUuids = array();
 
     // Load a module helper file once, and tell whether it delivered.
     private static function helper($path, $probe)
@@ -2085,7 +2103,7 @@ class ReflexTargets
         return intval($raw);
     }
 
-    // Turn an inventory answer into machines_id => hostname.
+    // Turn an inventory answer into jiduser => hostname.
     private static function toMachineOptions($computers)
     {
         $labels = array();
@@ -2099,14 +2117,17 @@ class ReflexTargets
 
         $answer = xmlrpc_get_machines_infos_generic(
             'uuid_inventorymachine', array(array_keys($computers)),
-            array('id', 'hostname', 'uuid_inventorymachine'), 0, -1, false);
+            array('id', 'jid', 'hostname', 'uuid_inventorymachine', 'agenttype'), 0, -1, false);
         if (!is_array($answer) || !isset($answer['result']) || !is_array($answer['result'])) {
             return $labels;
         }
 
         foreach ($answer['result'] as $row) {
-            $machineId = intval($row['id'] ?? 0);
-            if ($machineId <= 0) {
+            if ((string) ($row['agenttype'] ?? '') !== 'machine') {
+                continue;
+            }
+            $jiduser = ReflexHtml::jiduser($row['jid'] ?? '');
+            if ($jiduser === '') {
                 continue;
             }
             // The inventory name is preferred: it is the one shown everywhere
@@ -2122,14 +2143,14 @@ class ReflexTargets
             if ($name === '') {
                 continue;
             }
-            $labels[$machineId] = $name;
+            $labels[$jiduser] = $name;
         }
 
         natcasesort($labels);
         return $labels;
     }
 
-    // Machines the user may see, as machines_id => hostname.
+    // Machines the user may see, as jiduser => hostname.
     public static function machineOptions()
     {
         if (self::$machineLabels !== null) {
@@ -2148,7 +2169,7 @@ class ReflexTargets
         return self::$machineLabels;
     }
 
-    // Machines whose name matches a term, as machines_id => hostname.
+    // Machines whose name matches a term, as jiduser => hostname.
     public static function searchMachineOptions($term, $limit = self::SEARCH_LIMIT)
     {
         $term = trim((string) $term);
@@ -2169,64 +2190,32 @@ class ReflexTargets
         return self::toMachineOptions($computers);
     }
 
-    // Hostname of a machine the session may target, empty when it may not.
-    public static function assignableMachineName($machineId)
+    // Hostname the backend gave for an agent name, empty when it gave none.
+    public static function assignableMachineName($jiduser)
     {
-        $machineId = intval($machineId);
-        if ($machineId <= 0) {
+        $jiduser = ReflexHtml::jiduser($jiduser);
+        if ($jiduser === '') {
             return '';
         }
-
-        self::preloadMachineNames(array($machineId));
-        $name = (string) (self::$resolvedMachines[$machineId] ?? '');
-        $uuid = (string) (self::$resolvedInventoryUuids[$machineId] ?? '');
-        if ($name === '' || $uuid === '') {
-            return '';
-        }
-
-        if (!self::helper("modules/base/includes/computers.inc.php",
-                          "getRestrictedComputersList")) {
-            return '';
-        }
-        $computers = getRestrictedComputersList(0, 1, array('uuid' => $uuid), False);
-        if (!is_array($computers) || empty($computers)) {
-            return '';
-        }
-        return $name;
+        return (string) (self::$resolvedMachines[$jiduser] ?? '');
     }
 
-    // Resolve a known set of machine identifiers to their hostname.
-    public static function preloadMachineNames($ids)
+    // Keep the hostname the backend sent with each row naming a machine: a
+    // row keyed by jiduser, or an assignment whose target is a machine.
+    public static function preloadMachineNames($rows)
     {
-        $wanted = array();
-        foreach ((array) $ids as $id) {
-            $id = intval($id);
-            if ($id > 0 && !isset(self::$resolvedMachines[$id])) {
-                $wanted[$id] = $id;
+        foreach ((array) $rows as $row) {
+            if (!is_array($row)) {
+                continue;
             }
-        }
-        if (empty($wanted)) {
-            return;
-        }
-        if (!self::helper("modules/xmppmaster/includes/xmlrpc.php",
-                          "xmlrpc_get_machines_infos_generic")) {
-            return;
-        }
-
-        $answer = xmlrpc_get_machines_infos_generic(
-            'id', array(array_values($wanted)),
-            array('id', 'hostname', 'uuid_inventorymachine'), 0, -1, false);
-        if (!is_array($answer) || !isset($answer['result']) || !is_array($answer['result'])) {
-            return;
-        }
-        foreach ($answer['result'] as $row) {
-            $id = intval($row['id'] ?? 0);
-            $name = (string) ($row['hostname'] ?? '');
-            if ($id > 0 && $name !== '') {
-                self::$resolvedMachines[$id] = $name;
-                // Kept aside so a target can be checked against the inventory
-                // scope without a second round trip.
-                self::$resolvedInventoryUuids[$id] = (string) ($row['uuid_inventorymachine'] ?? '');
+            $raw = $row['jiduser'] ?? '';
+            if ($raw === '' && (string) ($row['target_type'] ?? '') === 'machine') {
+                $raw = $row['target_id'] ?? '';
+            }
+            $jiduser = ReflexHtml::jiduser($raw);
+            $name = trim((string) ($row['hostname'] ?? ''));
+            if ($jiduser !== '' && $name !== '') {
+                self::$resolvedMachines[$jiduser] = $name;
             }
         }
     }
@@ -2416,19 +2405,18 @@ class ReflexTargets
             return ReflexHelper::targetTypeLabel('all');
         }
 
+        if ($targetType === 'machine') {
+            $name = self::assignableMachineName($targetId);
+            return ($name !== '')
+                ? $name
+                : _T("Target not visible from your scope", "reflex");
+        }
+
         // 'entity' with an empty identifier is not the root entity, it is an
         // assignment carrying nothing: without this the two would read alike,
         // since intval('') is the identifier of the root entity.
         $key = self::identifier($targetId);
         if ($key === null) {
-            return _T("Target not visible from your scope", "reflex");
-        }
-        if ($targetType === 'machine') {
-            // Resolved on demand rather than through the bounded picker.
-            self::preloadMachineNames(array($key));
-            if (isset(self::$resolvedMachines[$key])) {
-                return (string) self::$resolvedMachines[$key];
-            }
             return _T("Target not visible from your scope", "reflex");
         }
 

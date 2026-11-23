@@ -97,7 +97,7 @@ foreach ($data as $row) {
                 : _T("Gap seen on the last measure received.", "reflex")
         ));
     $params[] = array(
-        'machines_id' => intval($row['machines_id'] ?? 0),
+        'jiduser' => ReflexHtml::jiduser($row['jiduser'] ?? ''),
         'hostname' => $row['hostname'] ?? ''
     );
 }

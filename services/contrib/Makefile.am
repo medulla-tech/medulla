@@ -340,6 +340,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	mastering/sql/schema-002.sql \
 	mobile/sql/schema-001.sql \
 	reflex/sql/schema-001.sql \
+	reflex/sql/schema-002.sql \
 	security/sql/schema-001.sql \
 	security/sql/schema-002.sql \
 	security/sql/schema-003.sql \

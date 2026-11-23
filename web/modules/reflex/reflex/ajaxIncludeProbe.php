@@ -27,9 +27,7 @@ require_once("modules/reflex/includes/xmlrpc.php");
 require_once("modules/reflex/includes/html.inc.php");
 
 $probeId = isset($_GET['probe_id']) ? intval($_GET['probe_id']) : intval($_POST['probe_id'] ?? 0);
-$machinesId = isset($_GET['machines_id'])
-    ? intval($_GET['machines_id'])
-    : intval($_POST['machines_id'] ?? 0);
+$jiduser = ReflexHtml::jiduser($_GET['jiduser'] ?? ($_POST['jiduser'] ?? ''));
 $hostname = isset($_GET['hostname']) ? (string) $_GET['hostname'] : (string) ($_POST['hostname'] ?? '');
 $probeLabel = isset($_GET['probe_label'])
     ? (string) $_GET['probe_label']
@@ -42,7 +40,7 @@ $login = reflex_current_login();
 if (isset($_POST['bconfirm'])) {
     verifyCSRFToken($_POST);
 
-    $result = xmlrpc_reflex_include_probe_on_machine($login, $probeId, $machinesId);
+    $result = xmlrpc_reflex_include_probe_on_machine($login, $probeId, $jiduser);
 
     ReflexHelper::notifyOutcome($result,
         sprintf(_T("Probe measured again on '%s'", "reflex"), htmlspecialchars($hostname)),
@@ -52,7 +50,7 @@ if (isset($_POST['bconfirm'])) {
         header("Location: " . urlStrRedirect("reflex/reflex/probeDetail", array("probe_id" => $probeId)));
     } else {
         header("Location: " . urlStrRedirect("reflex/reflex/machineDetail", array(
-            "machines_id" => $machinesId,
+            "jiduser" => $jiduser,
             "hostname" => $hostname
         )));
     }
@@ -61,7 +59,8 @@ if (isset($_POST['bconfirm'])) {
 
 $f = new PopupForm(_T("Put Probe Back On This Machine", "reflex"));
 $f->add(new HiddenTpl("probe_id"), array("value" => $probeId, "hide" => True));
-$f->add(new HiddenTpl("machines_id"), array("value" => $machinesId, "hide" => True));
+$f->add(new HiddenTpl("jiduser"),
+        array("value" => htmlspecialchars($jiduser, ENT_QUOTES, 'UTF-8'), "hide" => True));
 $f->add(new HiddenTpl("hostname"), array("value" => htmlspecialchars($hostname), "hide" => True));
 $f->add(new HiddenTpl("probe_label"), array("value" => htmlspecialchars($probeLabel), "hide" => True));
 $f->add(new HiddenTpl("back"), array("value" => $back, "hide" => True));

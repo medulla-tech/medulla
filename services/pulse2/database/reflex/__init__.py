@@ -174,6 +174,26 @@ ALERT_FREEZE_FIELDS = (('operator_at_trigger', 'operator'),
 AES_KEY_LENGTH = 32
 
 
+# A machine is named by its agent name: what stands before the first @ of the
+# jid of its agent, in lower case.
+JIDUSER_MAX_LENGTH = 255
+
+# Agent name of a row of xmppmaster.machines, {xm} being its alias.
+XM_JIDUSER_SQL = "CAST(LOWER(SUBSTRING_INDEX({xm}.jid, '@', 1)) AS CHAR)"
+
+# Last row of xmppmaster.machines for each agent name.
+XM_AGENTS_SQL = ("SELECT " + XM_JIDUSER_SQL.format(xm='xmppmaster.machines') +
+                 " AS jiduser, MAX(id) AS id "
+                 "  FROM xmppmaster.machines "
+                 " WHERE agenttype = 'machine' AND jid <> '' "
+                 " GROUP BY 1")
+
+# One agent name looked up in xmppmaster.machines, {xm} being its alias; the
+# pattern bound to :jid_pattern is built by jiduser_like.
+XM_AGENT_LOOKUP_SQL = ("{xm}.jid LIKE :jid_pattern ESCAPE '|' "
+                       "AND {xm}.agenttype = 'machine'")
+
+
 # From the narrowest target to the widest, used to break a tie between two
 # assignments that reach the same machine at the same cadence.
 TARGET_SPECIFICITY = {'machine': 0, 'group': 1, 'entity': 2}
@@ -373,7 +393,7 @@ class RefusalReason(object):
     FIELD_REQUIRED = 'field_required'
     FIELD_TOO_LONG = 'field_too_long'
     # The value does not have the shape the field accepts: a probe key with a
-    # capital in it, a machine target that is not a machines_id.
+    # capital in it, a machine target that is not an agent name.
     FIELD_FORMAT_INVALID = 'field_format_invalid'
     # A count of seconds or of minutes that has to be strictly above zero.
     VALUE_NOT_POSITIVE = 'value_not_positive'
@@ -636,6 +656,56 @@ def _clean_str(value, maxlen, field, required=False):
     return value
 
 
+def normalise_jiduser(value, field='jiduser'):
+    """Validate an agent name received from outside, in lower case."""
+    if value is None or value == '':
+        raise ReflexValidationError("Field %s is required" % field, field,
+                                    RefusalReason.FIELD_REQUIRED)
+    # A number is the identifier a machine used to be named by, never a name.
+    if not isinstance(value, str):
+        raise ReflexValidationError(
+            "Field %s is not an agent name" % field, field,
+            RefusalReason.FIELD_FORMAT_INVALID)
+    if len(value) > JIDUSER_MAX_LENGTH:
+        raise ReflexValidationError(
+            "Field %s is longer than %d characters"
+            % (field, JIDUSER_MAX_LENGTH), field,
+            RefusalReason.FIELD_TOO_LONG)
+    for char in value:
+        if (char in '@/' or char.isspace()
+                or unicodedata.category(char).startswith('C')):
+            raise ReflexValidationError(
+                "Field %s is not an agent name" % field, field,
+                RefusalReason.FIELD_FORMAT_INVALID)
+    return value.lower()
+
+
+def jiduser_of(jid):
+    """Agent name carried by a jid, '' when it carries none."""
+    if jid is None:
+        return ''
+    try:
+        return normalise_jiduser(str(jid).split('@', 1)[0].strip())
+    except ReflexValidationError:
+        return ''
+
+
+def jiduser_like(jiduser):
+    """LIKE pattern matching the jids of an agent name, for ESCAPE '|'."""
+    escaped = str(jiduser)
+    for char in ('|', '%', '_'):
+        escaped = escaped.replace(char, '|' + char)
+    return escaped + '@%'
+
+
+def _jiduser_or_none(value):
+    """Agent name of a value, None when it names no machine."""
+    try:
+        return normalise_jiduser(value)
+    except ReflexValidationError:
+        return None
+
+
 def _clean_command(value, field):
     """Normalise the command of a scripted probe, '' when there is none."""
     if value is None:
@@ -820,8 +890,12 @@ def _mark_config_change(session, scope_type, scope_ids=None):
             scope_ids = [scope_ids]
         ids = []
         for raw in scope_ids:
-            value = _to_int(raw, -1)
-            if value >= 0 and value not in ids:
+            if scope_type == 'machine':
+                value = _jiduser_or_none(raw)
+            else:
+                number = _to_int(raw, -1)
+                value = str(number) if number >= 0 else None
+            if value is not None and value not in ids:
                 ids.append(value)
     if not ids:
         return 0
@@ -985,6 +1059,8 @@ def normalise_target_type(target_type):
 
 def normalise_target_id(target_type, target_id):
     """Normalise one target identifier, for an already normalised type."""
+    if target_type == 'machine':
+        return normalise_jiduser(target_id, 'target_id')
     value = _clean_str(target_id, 255, 'target_id', required=True)
     number = _to_int(value, -1) if value.isdigit() else -1
     if number < 0:
@@ -1017,33 +1093,47 @@ def channel_visible_sql(entity_ids=None):
     return "(c.entity_id IN (%s))" % fragment, params
 
 
+def target_number_sql(alias, target_type):
+    """Numeric identifier of a placement of one type, NULL on the others.
+
+    The target of a placement on a machine is a name: cast to a number, it
+    fails the statement that writes.
+    """
+    return ("CAST(CASE WHEN %(pa)s.target_type = '%(type)s' "
+            "THEN %(pa)s.target_id END AS UNSIGNED) "
+            % {'pa': alias, 'type': normalise_target_type(target_type)})
+
+
 def membership_reach_sql(readable=True):
     """Placements on a group or an entity, resolved to the machines they
     reach.
     """
     if not readable:
         return ("SELECT CAST(NULL AS UNSIGNED) AS assignment_id, "
-                "       CAST(NULL AS UNSIGNED) AS machines_id FROM DUAL WHERE 0")
-    return ("SELECT rpa.id AS assignment_id, rxm.id AS machines_id "
+                "       CAST(NULL AS CHAR) AS jiduser FROM DUAL WHERE 0")
+    member = XM_JIDUSER_SQL.format(xm='rxm')
+    return ("SELECT rpa.id AS assignment_id, " + member + " AS jiduser "
             "  FROM probe_assignments rpa "
             "  JOIN dyngroup.Results rr "
-            "    ON rr.FK_groups = CAST(rpa.target_id AS UNSIGNED) "
+            "    ON rr.FK_groups = " + target_number_sql('rpa', 'group') +
             "  JOIN dyngroup.Machines rdm ON rdm.id = rr.FK_machines "
             "  JOIN xmppmaster.machines rxm "
             "    ON rxm.uuid_inventorymachine = rdm.uuid "
             " WHERE rpa.target_type = 'group' "
             "   AND rr.FK_groups > 0 "
             "   AND rpa.target_id = CAST(rr.FK_groups AS CHAR) "
+            "   AND rxm.agenttype = 'machine' AND rxm.jid <> '' "
             "UNION "
-            "SELECT rpa.id, rxm.id "
+            "SELECT rpa.id, " + member + " "
             "  FROM probe_assignments rpa "
             "  JOIN xmppmaster.glpi_entity re "
-            "    ON re.glpi_id = CAST(rpa.target_id AS UNSIGNED) "
+            "    ON re.glpi_id = " + target_number_sql('rpa', 'entity') +
             "  JOIN xmppmaster.machines rxm ON rxm.glpi_entity_id = re.id "
             " WHERE rpa.target_type = 'entity' "
             # No lower bound on glpi_id: 0 is the root entity, not an absence.
             "   AND rpa.target_id <> '' "
-            "   AND rpa.target_id = CAST(re.glpi_id AS CHAR)")
+            "   AND rpa.target_id = CAST(re.glpi_id AS CHAR) "
+            "   AND rxm.agenttype = 'machine' AND rxm.jid <> ''")
 
 
 def machine_scope_sql(entity_ids, machine_ref, readable=True, prefix='mscope'):
@@ -1055,14 +1145,15 @@ def machine_scope_sql(entity_ids, machine_ref, readable=True, prefix='mscope'):
     # probes.entity_id and probe_assignments.target_id store, and the column
     # compared here is the integer glpi_entity.glpi_id.
     fragment, params = _placeholders(prefix, [int(value) for value in ids])
-    return ("EXISTS (SELECT 1 FROM xmppmaster.machines sm "
+    return ("EXISTS (SELECT 1 FROM (" + XM_AGENTS_SQL + ") sa "
+            "          JOIN xmppmaster.machines sm ON sm.id = sa.id "
             "          JOIN xmppmaster.glpi_entity se "
             "            ON se.id = sm.glpi_entity_id "
-            "         WHERE sm.id = " + machine_ref +
+            "         WHERE sa.jiduser = " + machine_ref +
             "           AND se.glpi_id IN (" + fragment + "))"), params
 
 
-def machine_target_clauses(machines_id, group_ids=None, entity_ids=None,
+def machine_target_clauses(jiduser, group_ids=None, entity_ids=None,
                            machine_column=None, reach_sql=None):
     """SQL selecting the assignments that reach one machine."""
     if machine_column is not None:
@@ -1070,16 +1161,16 @@ def machine_target_clauses(machines_id, group_ids=None, entity_ids=None,
             raise ValueError("memberships belong to one machine")
         params = {}
         fragment = ("((pa.target_type = 'machine' "
-                    "AND pa.target_id = CAST(%s AS CHAR))" % machine_column)
+                    "AND pa.target_id = %s)" % machine_column)
         if reach_sql:
             fragment += (" OR (pa.target_type IN ('group', 'entity') "
                          "AND EXISTS (SELECT 1 FROM (" + reach_sql + ") rc "
                          "WHERE rc.assignment_id = pa.id "
-                         "AND rc.machines_id = " + machine_column + "))")
+                         "AND rc.jiduser = " + machine_column + "))")
         return fragment + ")", params
-    machines_id = _to_int(machines_id, 0)
-    params = {'machines_id': machines_id, 'machines_text': str(machines_id)}
-    clauses = ["(pa.target_type = 'machine' AND pa.target_id = :machines_text)"]
+    # No placement names an empty target: an invalid name reaches nothing.
+    params = {'jiduser': _jiduser_or_none(jiduser) or ''}
+    clauses = ["(pa.target_type = 'machine' AND pa.target_id = :jiduser)"]
 
     # The two target types below are literals of ours, never caller input; the
     # identifiers they are compared to stay bound placeholders.
@@ -1119,8 +1210,7 @@ def assignment_visible_sql(entity_ids, readable=True, groups_readable=True,
                            prefix='avis'):
     """WHERE fragment keeping the placements a login may read."""
     machine_sql, params = machine_scope_sql(
-        entity_ids, "CAST(pa.target_id AS UNSIGNED)", readable=readable,
-        prefix=prefix + 'm')
+        entity_ids, "pa.target_id", readable=readable, prefix=prefix + 'm')
 
     clauses = [
         "(pa.created_by IS NOT NULL AND pa.created_by = :login)",
@@ -1139,7 +1229,7 @@ def assignment_visible_sql(entity_ids, readable=True, groups_readable=True,
         # dyngroup.Groups.id, an integer column.
         clauses.append(
             "(pa.target_type = 'group' AND "
-            + group_shared_sql("CAST(pa.target_id AS UNSIGNED)") + ")")
+            + group_shared_sql(target_number_sql('pa', 'group')) + ")")
 
     return "(" + " OR ".join(clauses) + ")", params
 
@@ -1157,10 +1247,10 @@ def assignment_reaches_estate_sql(entity_ids):
         return (scope_sql +
                 " AND NOT EXISTS (SELECT 1 FROM probe_exclusions rpx "
                 "                  WHERE rpx.probe_id = pa.probe_id "
-                "                    AND rpx.machines_id = " + machine_ref + ")")
+                "                    AND rpx.jiduser = " + machine_ref + ")")
 
-    machine_sql = reached("CAST(pa.target_id AS UNSIGNED)", 'm')
-    member_sql = reached('rrc.machines_id', 'g')
+    machine_sql = reached("pa.target_id", 'm')
+    member_sql = reached('rrc.jiduser', 'g')
     return ("((pa.target_type = 'machine' AND " + machine_sql + ") "
             " OR (pa.target_type IN ('group', 'entity') "
             "     AND EXISTS (SELECT 1 FROM (" + membership_reach_sql() + ") rrc "
@@ -1174,19 +1264,27 @@ def probe_measured_sql():
             "         WHERE pcol.probe_id = p.id)")
 
 
+def platform_os_sql(alias):
+    """Operating system told by the platform of a row of xmppmaster.machines,
+    spelled as probe_collectors.os does.
+    """
+    return ("CASE "
+            "  WHEN LOCATE('windows', LOWER(%(xm)s.platform)) > 0 "
+            "       THEN 'windows' "
+            "  WHEN LOCATE('darwin', LOWER(%(xm)s.platform)) > 0 "
+            "       OR LOCATE('mac', LOWER(%(xm)s.platform)) > 0 "
+            "       THEN 'darwin' "
+            "  WHEN LOCATE('linux', LOWER(%(xm)s.platform)) > 0 "
+            "       THEN 'linux' "
+            "  ELSE NULL END" % {'xm': alias})
+
+
 def machine_os_sql(machine_ref):
-    """Operating system of a machine, spelled as probe_collectors.os does."""
-    return ("(SELECT CASE "
-            "          WHEN LOCATE('windows', LOWER(xos.platform)) > 0 "
-            "               THEN 'windows' "
-            "          WHEN LOCATE('darwin', LOWER(xos.platform)) > 0 "
-            "               OR LOCATE('mac', LOWER(xos.platform)) > 0 "
-            "               THEN 'darwin' "
-            "          WHEN LOCATE('linux', LOWER(xos.platform)) > 0 "
-            "               THEN 'linux' "
-            "          ELSE NULL END "
-            "   FROM xmppmaster.machines xos "
-            "  WHERE xos.id = " + machine_ref + ")")
+    """Operating system of a machine named by an agent name expression."""
+    return ("(SELECT " + platform_os_sql('xos') +
+            "   FROM (" + XM_AGENTS_SQL + ") xoa "
+            "   JOIN xmppmaster.machines xos ON xos.id = xoa.id "
+            "  WHERE xoa.jiduser = " + machine_ref + ")")
 
 
 def probe_distributable_sql(os_expr, alias='p'):
@@ -1205,7 +1303,7 @@ def machine_placements_sql(target_fragment, visible_sql, machine_ref):
     return ("  FROM probe_assignments pa "
             "  JOIN probes p ON p.id = pa.probe_id "
             "  LEFT JOIN probe_exclusions px ON px.probe_id = p.id "
-            "        AND px.machines_id = " + machine_ref +
+            "        AND px.jiduser = " + machine_ref +
             " WHERE " + target_fragment +
             "   AND " + visible_sql)
 
@@ -1233,7 +1331,7 @@ def probe_last_received_sql(machine_ref):
     history of the probe in the index.
     """
     return ("(SELECT lm.received_at FROM probe_measures lm "
-            "  WHERE lm.machines_id = " + machine_ref +
+            "  WHERE lm.jiduser = " + machine_ref +
             "    AND lm.probe_id = p.id"
             "  ORDER BY lm.received_at DESC LIMIT 1)")
 
@@ -1251,7 +1349,7 @@ def config_stale_sql(target_fragment, machine_ref, os_readable=True):
     """1 when a change reaching a machine is not distributed to it yet."""
     machine_os = machine_os_sql(machine_ref) if os_readable else 'NULL'
     sent_at = ("(SELECT pac.sent_at FROM probe_agent_config pac "
-               "  WHERE pac.machines_id = " + machine_ref + ")")
+               "  WHERE pac.jiduser = " + machine_ref + ")")
     effective = ("(SELECT COUNT(DISTINCT pa.probe_id) "
                  "   FROM probe_assignments pa "
                  "   JOIN probes ap ON ap.id = pa.probe_id "
@@ -1260,7 +1358,7 @@ def config_stale_sql(target_fragment, machine_ref, os_readable=True):
                  "    AND " + target_fragment +
                  "    AND NOT EXISTS (SELECT 1 FROM probe_exclusions px2 "
                  "                     WHERE px2.probe_id = pa.probe_id "
-                 "                       AND px2.machines_id = "
+                 "                       AND px2.jiduser = "
                  + machine_ref + "))")
     return ("(CASE WHEN " + sent_at + " IS NULL "
             "      THEN CASE WHEN " + effective + " > 0 THEN 1 ELSE 0 END "
@@ -1268,12 +1366,12 @@ def config_stale_sql(target_fragment, machine_ref, os_readable=True):
             "             WHERE " + target_fragment + ") > " + sent_at +
             "      THEN 1 "
             "      WHEN (SELECT MAX(px.created_at) FROM probe_exclusions px "
-            "             WHERE px.machines_id = " + machine_ref + ") > "
+            "             WHERE px.jiduser = " + machine_ref + ") > "
             + sent_at +
             "      THEN 1 "
             "      WHEN " + effective + " <> COALESCE("
             "           (SELECT pac.probe_count FROM probe_agent_config pac "
-            "             WHERE pac.machines_id = " + machine_ref + "), 0) "
+            "             WHERE pac.jiduser = " + machine_ref + "), 0) "
             "      THEN 1 "
             "      ELSE 0 END)")
 
@@ -2448,7 +2546,7 @@ class ReflexDatabase(DatabaseHelper):
             return cached[1]
         try:
             entities = parse_entity_list(
-                ReflexDatabase._entity_resolver(login))
+                ReflexDatabase._entity_resolver(login))  # pylint: disable=not-callable
         except Exception as e:
             logger.error("Reflex: the entities of login '%s' cannot be "
                          "resolved (%s); only the shipped probes and his own "
@@ -2475,12 +2573,13 @@ class ReflexDatabase(DatabaseHelper):
     def _machines_by_entity_sql(self, login, readable=True, extra_column=''):
         """The machines a login reaches, counted by estate, in one statement.
         """
-        scope_sql, params = self._machine_scope_clause(login, 'm.id',
+        scope_sql, params = self._machine_scope_clause(login, 'xa.jiduser',
                                                        readable=readable)
         return ("SELECT e.glpi_id AS entity_id, "
                 "       COUNT(*) AS machines_count"
                 + ((", " + extra_column) if extra_column else " ") +
-                "  FROM xmppmaster.machines m "
+                "  FROM (" + XM_AGENTS_SQL + ") xa "
+                "  JOIN xmppmaster.machines m ON m.id = xa.id "
                 "  JOIN xmppmaster.glpi_entity e "
                 "    ON e.id = m.glpi_entity_id "
                 " WHERE " + scope_sql +
@@ -2545,28 +2644,36 @@ class ReflexDatabase(DatabaseHelper):
                 row['created_by'] = ''
         return rows
 
-    def _machine_target_states(self, session, login, machine_ids,
-                               readable=True):
-        """State of each machine a placement names, in one statement."""
+    def _machine_target_states(self, session, login, jidusers,
+                               readable=True, hostnames=None):
+        """State of each machine a placement names, in one statement.
+
+        `hostnames`, when given, receives the name of the machines in reach.
+        """
         states = {}
         if not readable:
             return states
-        ids = sorted(set(machine_ids))
-        if not ids:
+        names = sorted(set(jidusers))
+        if not names:
             return states
-        fragment, params = _placeholders('tsm', ids)
+        fragment, params = _placeholders('tsm', names)
         scope_sql, scope_params = self._machine_scope_clause(
-            login, 'mx.id', readable=readable, prefix='tsms')
+            login, 'xa.jiduser', readable=readable, prefix='tsms')
         params.update(scope_params)
         for row in _rows(session.execute(text(
-                "SELECT mx.id AS id, (" + scope_sql + ") AS in_scope "
-                "  FROM xmppmaster.machines mx "
-                " WHERE mx.id IN (" + fragment + ")"), params)):
-            states[_to_int(row.get('id'), 0)] = (
-                TARGET_STATE_OK if _to_int(row.get('in_scope'), 0)
-                else TARGET_STATE_OUT_OF_SCOPE)
-        for machine_id in ids:
-            states.setdefault(machine_id, TARGET_STATE_DELETED)
+                "SELECT xa.jiduser AS jiduser, mx.hostname AS hostname, "
+                "       (" + scope_sql + ") AS in_scope "
+                "  FROM (" + XM_AGENTS_SQL + ") xa "
+                "  JOIN xmppmaster.machines mx ON mx.id = xa.id "
+                " WHERE xa.jiduser IN (" + fragment + ")"), params)):
+            jiduser = str(row.get('jiduser') or '')
+            in_scope = bool(_to_int(row.get('in_scope'), 0))
+            states[jiduser] = (TARGET_STATE_OK if in_scope
+                               else TARGET_STATE_OUT_OF_SCOPE)
+            if in_scope and hostnames is not None:
+                hostnames[jiduser] = str(row.get('hostname') or '')
+        for jiduser in names:
+            states.setdefault(jiduser, TARGET_STATE_DELETED)
         return states
 
     def _group_target_states(self, session, login, group_ids,
@@ -2625,8 +2732,13 @@ class ReflexDatabase(DatabaseHelper):
         return states
 
     def _mark_target_states(self, session, login, rows,
-                            readable=None, groups_readable=None, known=None):
-        """Tell what became of the target of every placement of a list."""
+                            readable=None, groups_readable=None, known=None,
+                            hostnames=None):
+        """Tell what became of the target of every placement of a list.
+
+        `known` and `hostnames` carry what the caller already read about a
+        machine: its state, and its name.
+        """
         rows = rows or []
         if readable is None:
             readable = self._memberships_readable(session)
@@ -2634,6 +2746,7 @@ class ReflexDatabase(DatabaseHelper):
             groups_readable = self._group_sharing_readable(session)
         settled = dict(known or {})
         wanted = {'machine': set(), 'group': set(), 'entity': set()}
+        hostnames = dict(hostnames or {})
         keys = []
         for row in rows:
             target_type = str(row.get('target_type') or '')
@@ -2641,12 +2754,24 @@ class ReflexDatabase(DatabaseHelper):
                 keys.append(None)
                 continue
             key = (target_type, str(row.get('target_id') or ''))
+            if target_type == 'machine':
+                # A machine is named by its agent name, never by a number.
+                jiduser = _jiduser_or_none(key[1])
+                if jiduser is None:
+                    settled[key] = TARGET_STATE_DELETED
+                    keys.append(key)
+                    continue
+                key = (target_type, jiduser)
+                keys.append(key)
+                if key not in settled:
+                    wanted[target_type].add(jiduser)
+                continue
             if key in settled:
                 keys.append(key)
                 continue
             # An identifier no row can carry is settled without asking: a
-            # machine and a group are numbered from one, an entity from zero,
-            # the root one of GLPI.
+            # group is numbered from one, an entity from zero, the root one
+            # of GLPI.
             floor = 0 if target_type == 'entity' else 1
             value = _to_int(key[1], floor - 1)
             if value < floor:
@@ -2659,7 +2784,8 @@ class ReflexDatabase(DatabaseHelper):
             wanted[target_type].add(value)
         for target_type, states in (
                 ('machine', self._machine_target_states(
-                    session, login, wanted['machine'], readable=readable)),
+                    session, login, wanted['machine'], readable=readable,
+                    hostnames=hostnames)),
                 ('group', self._group_target_states(
                     session, login, wanted['group'],
                     groups_readable=groups_readable)),
@@ -2674,20 +2800,57 @@ class ReflexDatabase(DatabaseHelper):
             row['target_state'] = (
                 TARGET_STATE_OK if key is None
                 else settled.get(key, TARGET_STATE_OUT_OF_SCOPE))
+            # A placement on a machine names it: its agent name, and its host
+            # name when the reader reaches the machine.
+            on_machine = key is not None and key[0] == 'machine'
+            row['jiduser'] = key[1] if on_machine else ''
+            row['hostname'] = hostnames.get(key[1], '') if on_machine else ''
         return rows
 
-    def _machine_in_scope(self, session, login, machines_id, readable=None):
+    def _agent_row(self, session, jiduser, columns):
+        """Last row of xmppmaster.machines of one agent name, None if none.
+
+        `columns` is a select list of ours on the alias xm, never caller
+        input.
+        """
+        jiduser = _jiduser_or_none(jiduser)
+        if jiduser is None:
+            return None
+        return _one(session.execute(text(
+            "SELECT " + columns + " FROM xmppmaster.machines xm "
+            " WHERE " + XM_AGENT_LOOKUP_SQL.format(xm='xm') +
+            " ORDER BY xm.id DESC LIMIT 1"),
+            {'jid_pattern': jiduser_like(jiduser)}))
+
+    def _machine_in_scope(self, session, login, jiduser, readable=None):
         """Whether one machine stands in the estate a login reaches."""
-        machines_id = _to_int(machines_id, 0)
-        if machines_id <= 0:
+        jiduser = _jiduser_or_none(jiduser)
+        if jiduser is None:
             return False
         if readable is None:
             readable = self._memberships_readable(session)
-        scope_sql, params = self._machine_scope_clause(
-            login, ':machines_id', readable=readable)
-        params['machines_id'] = machines_id
-        return bool(_to_int(session.execute(
-            text("SELECT " + scope_sql), params).scalar(), 0))
+        if not readable:
+            return False
+        return self._agent_row_in_scope(session, login, jiduser,
+                                        "xm.id AS id") is not None
+
+    def _agent_row_in_scope(self, session, login, jiduser, columns):
+        """Last row of xmppmaster.machines of one agent name, None when the
+        machine is unknown or stands outside the estate a login reaches.
+        """
+        entities = parse_entity_list(self.entities_for_login(str(login or '')))
+        if not entities:
+            return None
+        row = self._agent_row(
+            session, jiduser,
+            columns + ", (SELECT se.glpi_id FROM xmppmaster.glpi_entity se "
+            "              WHERE se.id = xm.glpi_entity_id) AS scope_entity")
+        if row is None:
+            return None
+        entity = row.pop('scope_entity', None)
+        if entity is None or str(_to_int(entity, -1)) not in entities:
+            return None
+        return row
 
     def _group_in_scope(self, session, login, group_id, groups_readable=None):
         """Whether dyngroup gives one group to a login."""
@@ -2775,23 +2938,28 @@ class ReflexDatabase(DatabaseHelper):
                 return wanted
         return None
 
-    def _machine_entity(self, session, machines_id):
+    def _machine_hostname(self, session, jiduser):
+        """Host name xmppmaster gives one machine, '' when it has none."""
+        row = self._agent_row(session, jiduser, "xm.hostname AS hostname")
+        return str((row or {}).get('hostname') or '')
+
+    def _machine_entity(self, session, jiduser):
         """Estate one machine belongs to, as GLPI spells it, None if unknown.
         """
-        machines_id = _to_int(machines_id, 0)
-        if machines_id <= 0:
+        jiduser = _jiduser_or_none(jiduser)
+        if jiduser is None:
             return None
         try:
-            entity = session.execute(text(
-                "SELECT e.glpi_id FROM xmppmaster.machines m "
-                "  JOIN xmppmaster.glpi_entity e ON e.id = m.glpi_entity_id "
-                " WHERE m.id = :machines_id"),
-                {'machines_id': machines_id}).scalar()
+            row = self._agent_row(
+                session, jiduser,
+                "(SELECT e.glpi_id FROM xmppmaster.glpi_entity e "
+                "  WHERE e.id = xm.glpi_entity_id) AS entity_id")
+            entity = None if row is None else row.get('entity_id')
         except Exception as e:
             session.rollback()
             logger.error("Reflex: the entity of machine %s cannot be read "
                          "(%s); its conditions are read on the shipped values"
-                         % (machines_id, e))
+                         % (jiduser, e))
             return None
         # Zero is the root entity of GLPI, not an absence.
         return None if entity is None else str(_to_int(entity, 0))
@@ -2846,19 +3014,19 @@ class ReflexDatabase(DatabaseHelper):
         ReflexDatabase._group_sharing_unreadable_logged = False
         return True
 
-    def _machine_memberships(self, session, machines_id, readable):
+    def _machine_memberships(self, session, jiduser, readable):
         """Groups and entities of one machine that carry a placement."""
         group_ids = []
         entity_ids = []
-        if not readable:
+        jiduser = _jiduser_or_none(jiduser)
+        if not readable or jiduser is None:
             return group_ids, entity_ids
         rows = _rows(session.execute(text(
             "SELECT DISTINCT pa.target_type, pa.target_id "
             "  FROM probe_assignments pa "
             "  JOIN (" + membership_reach_sql() + ") rc "
             "    ON rc.assignment_id = pa.id "
-            " WHERE rc.machines_id = :machines_id"),
-            {'machines_id': _to_int(machines_id, 0)}))
+            " WHERE rc.jiduser = :jiduser"), {'jiduser': jiduser}))
         for row in rows:
             if row.get('target_type') == 'group':
                 group_ids.append(row.get('target_id'))
@@ -2868,17 +3036,22 @@ class ReflexDatabase(DatabaseHelper):
 
     _presence_unreadable_logged = False
 
-    def _machines_presence(self, session, machines_ids):
-        """Whether the agent of each machine is connected, by machines_id."""
-        ids = [_to_int(machines_id, 0) for machines_id in (machines_ids or [])]
-        ids = [machines_id for machines_id in ids if machines_id > 0]
-        if not ids:
+    def _machines_presence(self, session, jidusers):
+        """Whether the agent of each machine is connected, by jiduser."""
+        names = []
+        for raw in jidusers or []:
+            jiduser = _jiduser_or_none(raw)
+            if jiduser is not None and jiduser not in names:
+                names.append(jiduser)
+        if not names:
             return {}
-        fragment, params = _placeholders('presence', ids)
+        fragment, params = _placeholders('presence', names)
         try:
             rows = _rows(session.execute(text(
-                "SELECT id, enabled FROM xmppmaster.machines "
-                " WHERE id IN (" + fragment + ")"), params))
+                "SELECT xa.jiduser AS jiduser, xm.enabled AS enabled "
+                "  FROM (" + XM_AGENTS_SQL + ") xa "
+                "  JOIN xmppmaster.machines xm ON xm.id = xa.id "
+                " WHERE xa.jiduser IN (" + fragment + ")"), params))
         except Exception as e:
             session.rollback()
             if not ReflexDatabase._presence_unreadable_logged:
@@ -2888,23 +3061,23 @@ class ReflexDatabase(DatabaseHelper):
                 ReflexDatabase._presence_unreadable_logged = True
             return None
         ReflexDatabase._presence_unreadable_logged = False
-        presence = dict((machines_id, 0) for machines_id in ids)
+        presence = dict((jiduser, 0) for jiduser in names)
         for row in rows:
-            presence[_to_int(row.get('id'), 0)] = (
+            presence[str(row.get('jiduser') or '')] = (
                 1 if _to_int(row.get('enabled'), 0) == 1 else 0)
         return presence
 
     _machine_os_unreadable_logged = False
 
-    def _machine_os(self, session, machines_id):
+    def _machine_os(self, session, jiduser):
         """System of one machine, '' when it cannot be told."""
-        machines_id = _to_int(machines_id, 0)
-        if machines_id <= 0:
+        jiduser = _jiduser_or_none(jiduser)
+        if jiduser is None:
             return ''
         try:
-            value = session.execute(text(
-                "SELECT " + machine_os_sql(':machines_id') + " AS machine_os"),
-                {'machines_id': machines_id}).scalar()
+            row = self._agent_row(session, jiduser,
+                                  platform_os_sql('xm') + " AS machine_os")
+            value = None if row is None else row.get('machine_os')
         except Exception as e:
             session.rollback()
             if not ReflexDatabase._machine_os_unreadable_logged:
@@ -3243,7 +3416,7 @@ class ReflexDatabase(DatabaseHelper):
             # reader is shown: this figure answers what his own park measures,
             # which is a fact about his machines and not a gesture of somebody.
             target_sql, params = machine_target_clauses(
-                None, machine_column='m.id',
+                None, machine_column='xa.jiduser',
                 reach_sql=membership_reach_sql(readable))
             params['probe_id'] = probe_id
             measured_sql = ("SUM(CASE WHEN EXISTS ("
@@ -3253,7 +3426,7 @@ class ReflexDatabase(DatabaseHelper):
                             "     AND NOT EXISTS ("
                             "      SELECT 1 FROM probe_exclusions px "
                             "       WHERE px.probe_id = :probe_id "
-                            "         AND px.machines_id = m.id) "
+                            "         AND px.jiduser = xa.jiduser) "
                             "    THEN 1 ELSE 0 END) AS measured_count ")
             count_sql, scope_params = self._machines_by_entity_sql(
                 login, readable=readable, extra_column=measured_sql)
@@ -4395,12 +4568,13 @@ class ReflexDatabase(DatabaseHelper):
             params.update({'condition_id': condition_id,
                            'entity': str(entity)})
             alerts = _rows(session.execute(text(
-                "SELECT a.id, a.machines_id, a.probe_id, pc.operator, "
+                "SELECT a.id, a.jiduser, a.probe_id, pc.operator, "
                 + condition_effective_sql('pc', alias) +
                 "  FROM alerts a "
                 "  JOIN probe_conditions pc ON pc.id = a.condition_id "
                 "  JOIN probes p ON p.id = a.probe_id AND p.enabled <> 0 "
-                "  JOIN xmppmaster.machines xm ON xm.id = a.machines_id "
+                "  JOIN (" + XM_AGENTS_SQL + ") xa ON xa.jiduser = a.jiduser "
+                "  JOIN xmppmaster.machines xm ON xm.id = xa.id "
                 "  JOIN xmppmaster.glpi_entity xe "
                 "    ON xe.id = xm.glpi_entity_id "
                 + scope['join'] +
@@ -4431,7 +4605,7 @@ class ReflexDatabase(DatabaseHelper):
                 if now is None:
                     raise ValueError("the clock of the database cannot be read")
                 since = now - timedelta(seconds=span + 1)
-                machines = sorted(set(_to_int(row['machines_id'], 0)
+                machines = sorted(set(str(row['jiduser'])
                                       for row in alerts))
                 measures = {}
                 for start in range(0, len(machines), IDS_PER_STATEMENT):
@@ -4440,21 +4614,19 @@ class ReflexDatabase(DatabaseHelper):
                     measure_params.update({'probe_id': probe_id,
                                            'since': since})
                     for measure in _rows(session.execute(text(
-                            "SELECT machines_id, value_num, value_text, status "
+                            "SELECT jiduser, value_num, value_text, status "
                             "  FROM probe_measures "
                             " WHERE probe_id = :probe_id "
                             "   AND received_at >= :since "
-                            "   AND machines_id IN (" + fragment + ") "
-                            " ORDER BY machines_id ASC, received_at DESC"),
+                            "   AND jiduser IN (" + fragment + ") "
+                            " ORDER BY jiduser ASC, received_at DESC"),
                             measure_params)):
                         measures.setdefault(
-                            _to_int(measure['machines_id'], 0),
-                            []).append(measure)
+                            str(measure['jiduser']), []).append(measure)
                 for row in alerts:
                     decided = False
                     stands = False
-                    for measure in measures.get(
-                            _to_int(row['machines_id'], 0), []):
+                    for measure in measures.get(str(row['jiduser']), []):
                         if str(measure.get('status') or 'ok') == 'unavailable':
                             continue
                         holds = condition_holds_now(
@@ -4761,31 +4933,30 @@ class ReflexDatabase(DatabaseHelper):
     # Alerts left without measures
     # =========================================================================
     # An alert closes when a measure comes back under the threshold.
-    def _resolve_alerts_on_machine(self, session, probe_id, machines_id,
+    def _resolve_alerts_on_machine(self, session, probe_id, jiduser,
                                    reason):
         """Close the still open alerts of one probe on one machine."""
         probe_id = _to_int(probe_id, 0)
-        machines_id = _to_int(machines_id, 0)
-        if probe_id <= 0 or machines_id <= 0:
+        jiduser = _jiduser_or_none(jiduser)
+        if probe_id <= 0 or jiduser is None:
             return 0
         result = session.execute(text(
             "UPDATE alerts SET status = 'resolved', resolved_at = NOW(), "
             "       resolved_reason = :reason "
-            " WHERE probe_id = :probe_id AND machines_id = :machines_id "
+            " WHERE probe_id = :probe_id AND jiduser = :jiduser "
             "   AND " + alert_active_sql('')),
-            {'probe_id': probe_id, 'machines_id': machines_id,
-             'reason': reason})
+            {'probe_id': probe_id, 'jiduser': jiduser, 'reason': reason})
         return _to_int(result.rowcount, 0)
 
-    def _resolve_alerts_off_coverage(self, session, machines_id, probe_ids):
+    def _resolve_alerts_off_coverage(self, session, jiduser, probe_ids):
         """Close the alerts of one machine on probes that no longer reach it.
         """
-        machines_id = _to_int(machines_id, 0)
-        if machines_id <= 0:
+        jiduser = _jiduser_or_none(jiduser)
+        if jiduser is None:
             return 0
-        params = {'machines_id': machines_id,
+        params = {'jiduser': jiduser,
                   'reason': ALERT_RESOLVED_BY_SCOPE}
-        clauses = ["machines_id = :machines_id", alert_active_sql('')]
+        clauses = ["jiduser = :jiduser", alert_active_sql('')]
         kept = [_to_int(value, 0) for value in probe_ids or []]
         kept = [value for value in kept if value > 0]
         if kept:
@@ -4835,7 +5006,7 @@ class ReflexDatabase(DatabaseHelper):
             return 0
 
         target_sql, target_params = machine_target_clauses(
-            None, machine_column='alerts.machines_id', reach_sql=reach_sql)
+            None, machine_column='alerts.jiduser', reach_sql=reach_sql)
         removed_fragment, params = _placeholders('removed', removed)
         params.update(target_params)
         params['probe_id'] = probe_id
@@ -4850,7 +5021,7 @@ class ReflexDatabase(DatabaseHelper):
             "                  AND " + target_sql + ") "
             "   AND (EXISTS (SELECT 1 FROM probe_exclusions px "
             "                 WHERE px.probe_id = :probe_id "
-            "                   AND px.machines_id = alerts.machines_id) "
+            "                   AND px.jiduser = alerts.jiduser) "
             "        OR NOT EXISTS (SELECT 1 FROM probe_assignments pa "
             "                WHERE pa.probe_id = :probe_id "
             "                  AND pa.id NOT IN (" + removed_fragment + ") "
@@ -5057,32 +5228,32 @@ class ReflexDatabase(DatabaseHelper):
     # row per machine: that link is computed when the configuration of an agent
     # is built.
     @DatabaseHelper._sessionm
-    def exclude_probe_on_machine(self, session, login, probe_id, machines_id,
+    def exclude_probe_on_machine(self, session, login, probe_id, jiduser,
                                  hostname='', reason=''):
         """Take a probe off one machine without touching its assignments.
 
         Returns True, or the structure built by `refused`.
         """
         login = _login(login)
-        machines_id = _to_int(machines_id, 0)
         if not login:
             return refused(REFUSAL_FORBIDDEN,
                            "An exception is recorded against somebody: no "
                            "login was sent", 'login',
                            reason=RefusalReason.LOGIN_REQUIRED)
-        if machines_id <= 0:
+        try:
+            jiduser = normalise_jiduser(jiduser)
+        except ReflexValidationError as e:
             return refused(REFUSAL_INVALID, "No machine was named",
-                           'machines_id',
-                           reason=RefusalReason.FIELD_REQUIRED)
+                           'jiduser', reason=e.reason)
         access = self._probe_access(session, login, probe_id)
         if not _reachable(access):
             logger.warning("Reflex: login '%s' cannot except probe %s on "
-                           "machine %s" % (login, probe_id, machines_id))
+                           "machine %s" % (login, probe_id, jiduser))
             return refused(REFUSAL_MISSING, PROBE_OUT_OF_REACH)
-        if not self._machine_in_scope(session, login, machines_id):
+        if not self._machine_in_scope(session, login, jiduser):
             logger.warning("Reflex: login '%s' cannot except probe %s on "
                            "machine %s, which is outside his estate"
-                           % (login, probe_id, machines_id))
+                           % (login, probe_id, jiduser))
             return refused(REFUSAL_MISSING,
                            "This machine does not exist, or it is not visible "
                            "to you")
@@ -5090,8 +5261,9 @@ class ReflexDatabase(DatabaseHelper):
         try:
             params = {
                 'probe_id': _to_int(probe_id, 0),
-                'machines_id': machines_id,
-                'hostname': _clean_str(hostname, 255, 'hostname') or '',
+                'jiduser': jiduser,
+                'hostname': (_clean_str(hostname, 255, 'hostname')
+                             or self._machine_hostname(session, jiduser)),
                 'reason': _clean_str(reason, 255, 'reason'),
                 'created_by': login,
             }
@@ -5102,21 +5274,21 @@ class ReflexDatabase(DatabaseHelper):
         try:
             already = session.execute(text(
                 "SELECT 1 FROM probe_exclusions "
-                " WHERE probe_id = :probe_id AND machines_id = :machines_id"),
+                " WHERE probe_id = :probe_id AND jiduser = :jiduser"),
                 params).first() is not None
             session.execute(text(
-                "INSERT INTO probe_exclusions (probe_id, machines_id, "
+                "INSERT INTO probe_exclusions (probe_id, jiduser, "
                 "  hostname, reason, created_by, created_at) "
-                "VALUES (:probe_id, :machines_id, :hostname, :reason, "
+                "VALUES (:probe_id, :jiduser, :hostname, :reason, "
                 "  :created_by, NOW()) "
                 "ON DUPLICATE KEY UPDATE hostname = VALUES(hostname), "
                 "  reason = VALUES(reason), created_by = VALUES(created_by), "
                 "  created_at = NOW()"), params)
             resolved = self._resolve_alerts_on_machine(
-                session, params['probe_id'], machines_id,
+                session, params['probe_id'], jiduser,
                 ALERT_RESOLVED_BY_EXCLUSION)
             if not already:
-                _mark_config_change(session, 'machine', machines_id)
+                _mark_config_change(session, 'machine', jiduser)
             session.commit()
         except Exception as e:
             session.rollback()
@@ -5125,35 +5297,35 @@ class ReflexDatabase(DatabaseHelper):
                            "The probe could not be excepted on this machine")
         logger.info("Reflex: probe %s excepted on machine %s by '%s', "
                     "%d alert(s) resolved"
-                    % (params['probe_id'], machines_id, login, resolved))
+                    % (params['probe_id'], jiduser, login, resolved))
         return True
 
     @DatabaseHelper._sessionm
-    def include_probe_on_machine(self, session, login, probe_id, machines_id):
+    def include_probe_on_machine(self, session, login, probe_id, jiduser):
         """Lift the exception of a probe on one machine."""
         login = _login(login)
-        machines_id = _to_int(machines_id, 0)
         if not login:
             return refused(REFUSAL_FORBIDDEN,
                            "An exception is lifted by somebody: no login was "
                            "sent", 'login',
                            reason=RefusalReason.LOGIN_REQUIRED)
-        if machines_id <= 0:
+        try:
+            jiduser = normalise_jiduser(jiduser)
+        except ReflexValidationError as e:
             return refused(REFUSAL_INVALID, "No machine was named",
-                           'machines_id',
-                           reason=RefusalReason.FIELD_REQUIRED)
+                           'jiduser', reason=e.reason)
         access = self._probe_access(session, login, probe_id)
         if not _reachable(access):
             logger.warning("Reflex: login '%s' cannot lift the exception of "
                            "probe %s on machine %s"
-                           % (login, probe_id, machines_id))
+                           % (login, probe_id, jiduser))
             return refused(REFUSAL_MISSING, PROBE_OUT_OF_REACH)
         # Same estate rule as the gesture this one undoes: lifting an
         # exception puts a machine back under measurement.
-        if not self._machine_in_scope(session, login, machines_id):
+        if not self._machine_in_scope(session, login, jiduser):
             logger.warning("Reflex: login '%s' cannot lift the exception of "
                            "probe %s on machine %s, which is outside his "
-                           "estate" % (login, probe_id, machines_id))
+                           "estate" % (login, probe_id, jiduser))
             return refused(REFUSAL_MISSING,
                            "This machine does not exist, or it is not visible "
                            "to you")
@@ -5161,10 +5333,10 @@ class ReflexDatabase(DatabaseHelper):
         try:
             result = session.execute(text(
                 "DELETE FROM probe_exclusions "
-                " WHERE probe_id = :probe_id AND machines_id = :machines_id"),
-                {'probe_id': _to_int(probe_id, 0), 'machines_id': machines_id})
+                " WHERE probe_id = :probe_id AND jiduser = :jiduser"),
+                {'probe_id': _to_int(probe_id, 0), 'jiduser': jiduser})
             if _to_int(result.rowcount, 0) > 0:
-                _mark_config_change(session, 'machine', machines_id)
+                _mark_config_change(session, 'machine', jiduser)
             session.commit()
         except Exception as e:
             session.rollback()
@@ -5184,15 +5356,15 @@ class ReflexDatabase(DatabaseHelper):
         if not _reachable(access):
             return []
         scope_sql, params = self._machine_scope_clause(
-            login, 'px.machines_id',
+            login, 'px.jiduser',
             readable=self._memberships_readable(session))
         params['probe_id'] = _to_int(probe_id, 0)
         return _rows(session.execute(text(
-            "SELECT px.id, px.probe_id, px.machines_id, px.hostname, "
+            "SELECT px.id, px.probe_id, px.jiduser, px.hostname, "
             "       px.reason, px.created_by, px.created_at "
             "  FROM probe_exclusions px WHERE px.probe_id = :probe_id "
             "   AND " + scope_sql +
-            " ORDER BY px.hostname ASC, px.machines_id ASC"), params))
+            " ORDER BY px.hostname ASC, px.jiduser ASC"), params))
 
     # =========================================================================
     # Alerts
@@ -5215,7 +5387,7 @@ class ReflexDatabase(DatabaseHelper):
         # Correlated EXISTS posed in the WHERE: one pass, no statement per row,
         # and the pagination still cuts the filtered result.
         scope_sql, scope_params = self._machine_scope_clause(
-            login, 'a.machines_id', readable=readable)
+            login, 'a.jiduser', readable=readable)
         params.update(scope_params)
         clauses = [visible_sql, scope_sql]
 
@@ -5266,8 +5438,10 @@ class ReflexDatabase(DatabaseHelper):
         joined = source + where
         if readable:
             entity_column = "ae.glpi_id AS entity_id"
-            entity_join = (" LEFT JOIN xmppmaster.machines am "
-                           "   ON am.id = a.machines_id "
+            entity_join = (" LEFT JOIN (" + XM_AGENTS_SQL + ") aa "
+                           "   ON aa.jiduser = a.jiduser "
+                           " LEFT JOIN xmppmaster.machines am "
+                           "   ON am.id = aa.id "
                            " LEFT JOIN xmppmaster.glpi_entity ae "
                            "   ON ae.id = am.glpi_entity_id")
         else:
@@ -5285,7 +5459,7 @@ class ReflexDatabase(DatabaseHelper):
         params['limit'] = limit
         params['start'] = start
         rows = _rows(session.execute(text(
-            "SELECT a.id, a.probe_id, a.condition_id, a.machines_id, "
+            "SELECT a.id, a.probe_id, a.condition_id, a.jiduser, "
             "       a.uuid_inventorymachine, a.hostname, a.severity, a.status, "
             "       a.value_at_trigger, a.value_text_at_trigger, "
             "       a.detail_at_trigger, a.message, "
@@ -5368,12 +5542,12 @@ class ReflexDatabase(DatabaseHelper):
 
         visible_sql, params = self._visible_clause(login)
         scope_sql, scope_params = self._machine_scope_clause(
-            login, 'a.machines_id',
+            login, 'a.jiduser',
             readable=self._memberships_readable(session))
         params.update(scope_params)
         params['alert_id'] = alert_id
         alert = _one(session.execute(text(
-            "SELECT a.id, a.probe_id, a.condition_id, a.machines_id, "
+            "SELECT a.id, a.probe_id, a.condition_id, a.jiduser, "
             "       a.uuid_inventorymachine, a.hostname, a.severity, a.status, "
             "       a.value_at_trigger, a.value_text_at_trigger, "
             # What the measure that triggered carried, frozen with it: the
@@ -5425,7 +5599,7 @@ class ReflexDatabase(DatabaseHelper):
             # reader: what is compared with the frozen condition, and shown as
             # the condition of today, is the one that actually decides here.
             scope = self._condition_scope(
-                self._machine_entity(session, alert.get('machines_id')))
+                self._machine_entity(session, alert.get('jiduser')))
             condition = _one(session.execute(text(
                 "SELECT pc.id, pc.probe_id, pc.operator, pc.display_order, "
                 "       " + condition_effective_sql('pc', scope['alias']) + ", "
@@ -5518,7 +5692,7 @@ class ReflexDatabase(DatabaseHelper):
             return refused_from(e)
         visible_sql, params = self._visible_clause(login)
         scope_sql, scope_params = self._machine_scope_clause(
-            login, 'a.machines_id',
+            login, 'a.jiduser',
             readable=self._memberships_readable(session))
         params.update(scope_params)
         params.update({'comment': comment, 'alert_id': alert_id})
@@ -5569,7 +5743,7 @@ class ReflexDatabase(DatabaseHelper):
         # Same estate rule as the single acknowledgement: a selection cannot
         # reach further than what a click reaches.
         scope_sql, scope_params = self._machine_scope_clause(
-            login, 'a.machines_id',
+            login, 'a.jiduser',
             readable=self._memberships_readable(session))
         params.update(scope_params)
         params['comment'] = comment
@@ -5617,48 +5791,49 @@ class ReflexDatabase(DatabaseHelper):
         reached_sql = ""
         if memberships_readable:
             reached_target_sql, reached_params = machine_target_clauses(
-                None, machine_column='nm.id', reach_sql=reach_sql)
+                None, machine_column='na.jiduser', reach_sql=reach_sql)
             params.update(reached_params)
             reached_scope_sql, reached_scope_params = (
-                self._machine_scope_clause(login, 'nm.id', prefix='rscope'))
+                self._machine_scope_clause(login, 'na.jiduser',
+                                           prefix='rscope'))
             params.update(reached_scope_params)
             reached_sql = (
                 "        UNION "
-                "        SELECT nm.id FROM xmppmaster.machines nm "
-                "         WHERE nm.agenttype = 'machine' "
-                "           AND " + reached_scope_sql +
+                "        SELECT na.jiduser FROM (" + XM_AGENTS_SQL + ") na "
+                "         WHERE " + reached_scope_sql +
                 "           AND EXISTS (SELECT 1"
                 + machine_placements_sql(reached_target_sql, visible_sql,
-                                         'nm.id') +
+                                         'na.jiduser') +
                 "                          AND px.id IS NULL) ")
         machines_sql = (
-            "  FROM (SELECT machines_id FROM probe_agent_config "
+            "  FROM (SELECT jiduser FROM probe_agent_config "
             "        UNION "
-            "        SELECT machines_id FROM probe_measures GROUP BY machines_id "
+            "        SELECT jiduser FROM probe_measures GROUP BY jiduser "
             + reached_sql +
             "       ) mach "
-            "  LEFT JOIN probe_agent_config ac ON ac.machines_id = mach.machines_id ")
+            "  LEFT JOIN probe_agent_config ac ON ac.jiduser = mach.jiduser ")
 
         # Who may be told that a machine exists is decided on the machine and
         # not on the probes: this page holds one row per machine, and a catalog
         # probe is visible to everybody.
         scope_sql, scope_params = self._machine_scope_clause(
-            login, 'mach.machines_id', readable=memberships_readable)
+            login, 'mach.jiduser', readable=memberships_readable)
         params.update(scope_params)
 
         # Name the machine is sorted and filtered on: the one its configuration
         # was sent under, otherwise the last one it reported over the window,
         # otherwise the one xmppmaster knows it by.
         known_hostname_sql = (
-            "(SELECT hm.hostname FROM xmppmaster.machines hm "
-            "  WHERE hm.id = mach.machines_id), "
+            "(SELECT hm.hostname FROM (" + XM_AGENTS_SQL + ") ha "
+            "   JOIN xmppmaster.machines hm ON hm.id = ha.id "
+            "  WHERE ha.jiduser = mach.jiduser), "
             if memberships_readable else "")
         hostname_sql = (
             "COALESCE(ac.hostname, "
             "         (SELECT MAX(wm.hostname) "
             "            FROM probes p "
             "            JOIN probe_measures wm ON wm.probe_id = p.id "
-            "           WHERE wm.machines_id = mach.machines_id "
+            "           WHERE wm.jiduser = mach.jiduser "
             "             AND wm.received_at >= :since "
             "             AND " + visible_sql + "), "
             + known_hostname_sql + "'')")
@@ -5669,7 +5844,7 @@ class ReflexDatabase(DatabaseHelper):
             params['filter'] = "%%%s%%" % filter_str
 
         alerts_sql = (
-            "  LEFT JOIN (SELECT a.machines_id, "
+            "  LEFT JOIN (SELECT a.jiduser, "
             "                    SUM(CASE WHEN a.severity = 'critical' THEN 1 ELSE 0 END) AS critical, "
             "                    SUM(CASE WHEN a.severity = 'high' THEN 1 ELSE 0 END) AS high, "
             "                    SUM(CASE WHEN a.severity = 'medium' THEN 1 ELSE 0 END) AS medium, "
@@ -5678,8 +5853,8 @@ class ReflexDatabase(DatabaseHelper):
             "               JOIN probes p ON p.id = a.probe_id "
             "              WHERE " + alert_active_sql() +
             "                AND " + visible_sql +
-            "              GROUP BY a.machines_id) al "
-            "    ON al.machines_id = mach.machines_id ")
+            "              GROUP BY a.jiduser) al "
+            "    ON al.jiduser = mach.jiduser ")
 
         # Placements and pending changes read with the expressions the machine
         # sheet reads for one machine, memberships included, for the rows of
@@ -5687,26 +5862,26 @@ class ReflexDatabase(DatabaseHelper):
         # the paginated statement they were evaluated for every machine before
         # the sort.
         page_target_sql, page_target_params = machine_target_clauses(
-            None, machine_column='page.machines_id', reach_sql=reach_sql)
+            None, machine_column='page.jiduser', reach_sql=reach_sql)
         params.update(page_target_params)
         page_placed = placed_probes_count_sql(page_target_sql, visible_sql,
-                                              'page.machines_id')
-        page_stale = config_stale_sql(page_target_sql, 'page.machines_id',
+                                              'page.jiduser')
+        page_stale = config_stale_sql(page_target_sql, 'page.jiduser',
                                       os_readable=memberships_readable)
         # Cadence read on the placements, as the machine sheet reads it: taken
         # from the measures of the window, it vanished with them and a machine
         # quiet for a day lost the very cadence its silence is judged on.
         page_cadence = placed_cadence_sql(page_target_sql, visible_sql,
-                                          'page.machines_id')
-        page_last = machine_last_received_sql(visible_sql, 'page.machines_id')
-        probe_last = probe_last_received_sql('page.machines_id')
+                                          'page.jiduser')
+        page_last = machine_last_received_sql(visible_sql, 'page.jiduser')
+        probe_last = probe_last_received_sql('page.jiduser')
         # Clock gap of the last report, used only for a machine heard of
         # nothing over the window, whose window bounds are empty.
         page_last_drift = (
             "(SELECT (SELECT TIMESTAMPDIFF(SECOND, lm.collected_at, "
             "                              lm.received_at) "
             "           FROM probe_measures lm "
-            "          WHERE lm.machines_id = page.machines_id "
+            "          WHERE lm.jiduser = page.jiduser "
             "            AND lm.probe_id = p.id "
             "          ORDER BY lm.received_at DESC, lm.id DESC LIMIT 1) "
             "   FROM probes p WHERE " + visible_sql +
@@ -5715,7 +5890,7 @@ class ReflexDatabase(DatabaseHelper):
         # Neither the sort nor the filter reads the activity of the window,
         # so the count does not compute it.
         total = _to_int(session.execute(text(
-            "SELECT COUNT(*) FROM (SELECT mach.machines_id" + machines_sql
+            "SELECT COUNT(*) FROM (SELECT mach.jiduser" + machines_sql
             + where_clause + ") counted"), params).scalar(), 0)
 
         params['limit'] = limit
@@ -5733,9 +5908,9 @@ class ReflexDatabase(DatabaseHelper):
             "       " + page_last + " AS last_measure_at, "
             "       " + page_last_drift + " AS last_drift, "
             "       EXISTS (SELECT 1 FROM probe_measures em "
-            "                WHERE em.machines_id = page.machines_id) "
+            "                WHERE em.jiduser = page.jiduser) "
             "           AS measured "
-            "  FROM (SELECT mach.machines_id, "
+            "  FROM (SELECT mach.jiduser, "
             "       " + hostname_sql + " AS hostname, "
             "       COALESCE(al.critical, 0) AS critical, "
             "       COALESCE(al.high, 0) AS high, "
@@ -5746,13 +5921,13 @@ class ReflexDatabase(DatabaseHelper):
             "       COALESCE(ac.probe_count, 0) AS probe_count, "
             "       ac.last_error, ac.updated_at"
             + machines_sql + alerts_sql + where_clause +
-            " ORDER BY hostname ASC, mach.machines_id ASC "
+            " ORDER BY hostname ASC, mach.jiduser ASC "
             " LIMIT :limit OFFSET :start) page) dated "
-            " ORDER BY dated.hostname ASC, dated.machines_id ASC"), params))
+            " ORDER BY dated.hostname ASC, dated.jiduser ASC"), params))
 
         # The measures of the window are read for the rows of the page only,
         # once it is cut: neither the sort nor the filter depends on them.
-        page_ids = [_to_int(row.get('machines_id'), 0) for row in rows]
+        page_ids = [str(row.get('jiduser') or '') for row in rows]
         activity = self._machines_activity(
             session, page_ids,
             visible_sql, params, reach_sql, fallback_silence)
@@ -5761,15 +5936,16 @@ class ReflexDatabase(DatabaseHelper):
         presence = self._machines_presence(session, page_ids)
 
         for row in rows:
-            for key in ('machines_id', 'probes_placed_count', 'config_stale',
+            row['jiduser'] = str(row.get('jiduser') or '')
+            for key in ('probes_placed_count', 'config_stale',
                         'probe_count', 'critical', 'high', 'medium', 'info'):
                 row[key] = _to_int(row.get(key), 0)
             # A machine says nothing either because its agent is stopped or
             # because the machine is off: only its connection tells them
             # apart, and reading it used to mean leaving this page.
             row['agent_online'] = (None if presence is None
-                                   else presence.get(row['machines_id'], 0))
-            stats = activity.get(row['machines_id']) or {}
+                                   else presence.get(row['jiduser'], 0))
+            stats = activity.get(row['jiduser']) or {}
             for key in ('probes_count', 'probes_silent', 'probes_unwatched'):
                 row[key] = _to_int(stats.get(key), 0)
             heard_in_window = 1 if stats else 0
@@ -5830,10 +6006,10 @@ class ReflexDatabase(DatabaseHelper):
 
         return {'total': total, 'data': rows}
 
-    def _machines_activity(self, session, machines_ids, visible_sql, params,
+    def _machines_activity(self, session, jidusers, visible_sql, params,
                            reach_sql, fallback_silence):
-        """Activity of some machines over the window, keyed by machines_id."""
-        if not machines_ids:
+        """Activity of some machines over the window, keyed by jiduser."""
+        if not jidusers:
             return {}
         params = dict(params)
         # Only the probes an agent measures: a probe the server evaluates owes
@@ -5845,7 +6021,7 @@ class ReflexDatabase(DatabaseHelper):
                          "   AND " + probe_measured_sql()), params))]
         if not probe_ids:
             return {}
-        machine_list, machine_params = _placeholders('actm', machines_ids)
+        machine_list, machine_params = _placeholders('actm', jidusers)
         probe_list, probe_params = _placeholders('actp', probe_ids)
         params.update(machine_params)
         params.update(probe_params)
@@ -5871,7 +6047,7 @@ class ReflexDatabase(DatabaseHelper):
         probe_watched = "(" + probe_placed + " AND " + probe_in_service + ")"
 
         rows = _rows(session.execute(text(
-            "SELECT pp.machines_id, "
+            "SELECT pp.jiduser, "
             "       SUM(CASE WHEN " + probe_placed +
             "                THEN 1 ELSE 0 END) AS probes_count, "
             # Signed gap between the two clocks, kept as its two bounds: the
@@ -5892,7 +6068,7 @@ class ReflexDatabase(DatabaseHelper):
             # One row per probe and per machine before rolling up to the
             # machine: the freshness of a probe cannot be read off a figure
             # already merged with the other probes.
-            "  FROM (SELECT pm.machines_id, pm.probe_id, "
+            "  FROM (SELECT pm.jiduser, pm.probe_id, "
             "               MAX(pm.received_at) AS last_received, "
             "               MAX(TIMESTAMPDIFF(SECOND, pm.collected_at, "
             "                   pm.received_at)) AS drift_behind, "
@@ -5903,46 +6079,44 @@ class ReflexDatabase(DatabaseHelper):
             # by probe on idx_probe_time that reads the whole history of
             # every probe instead of the ranges below.
             "          FROM probe_measures pm "
-            "         WHERE pm.machines_id IN (" + machine_list + ") "
+            "         WHERE pm.jiduser IN (" + machine_list + ") "
             "           AND pm.probe_id IN (" + probe_list + ") "
             "           AND pm.received_at >= :since "
-            "         GROUP BY pm.machines_id, pm.probe_id) pp "
+            "         GROUP BY pm.jiduser, pm.probe_id) pp "
             "  JOIN probes p ON p.id = pp.probe_id "
             # Placements naming the machine, directly or through a group or an
             # entity, one row per probe and machine.
-            "  LEFT JOIN (SELECT sp.probe_id, sp.machines_id, "
+            "  LEFT JOIN (SELECT sp.probe_id, sp.jiduser, "
             "                    MIN(sp.interval_seconds) AS interval_seconds "
             "               FROM (SELECT spa.probe_id, "
-            "                            CAST(spa.target_id AS UNSIGNED) "
-            "                                AS machines_id, "
+            "                            spa.target_id AS jiduser, "
             "                            spa.interval_seconds "
             "                       FROM probe_assignments spa "
             "                      WHERE spa.target_type = 'machine' "
-            "                        AND spa.target_id = CAST(CAST("
-            "                            spa.target_id AS UNSIGNED) AS CHAR) "
             "                     UNION ALL "
-            "                     SELECT spa.probe_id, rc.machines_id, "
+            "                     SELECT spa.probe_id, rc.jiduser, "
             "                            spa.interval_seconds "
             "                       FROM probe_assignments spa "
             "                       JOIN (" + reach_sql + ") rc "
             "                         ON rc.assignment_id = spa.id"
             "                    ) sp "
-            "              GROUP BY sp.probe_id, sp.machines_id) cm "
+            "              GROUP BY sp.probe_id, sp.jiduser) cm "
             "         ON cm.probe_id = pp.probe_id "
-            "        AND cm.machines_id = pp.machines_id "
-            # (probe_id, machines_id) is the unique key of probe_exclusions.
+            "        AND cm.jiduser = pp.jiduser "
+            # (probe_id, jiduser) is the unique key of probe_exclusions.
             "  LEFT JOIN probe_exclusions px "
             "         ON px.probe_id = pp.probe_id "
-            "        AND px.machines_id = pp.machines_id "
+            "        AND px.jiduser = pp.jiduser "
             " WHERE " + visible_sql +
-            " GROUP BY pp.machines_id"), params))
-        return dict((_to_int(row.get('machines_id'), 0), row) for row in rows)
+            " GROUP BY pp.jiduser"), params))
+        return dict((str(row.get('jiduser') or ''), row) for row in rows)
 
     @staticmethod
-    def _empty_machine_detail(machines_id):
+    def _empty_machine_detail(jiduser):
         """A sheet holding nothing, with the keys of a real one."""
         return {
-            'machines_id': _to_int(machines_id, 0),
+            'jiduser': str(jiduser or ''),
+            'hostname': '',
             'probes': [],
             'last_measures': [],
             'open_alerts': [],
@@ -5959,36 +6133,37 @@ class ReflexDatabase(DatabaseHelper):
         }
 
     @DatabaseHelper._sessionm
-    def get_machine_detail(self, session, login, machines_id):
+    def get_machine_detail(self, session, login, jiduser):
         """Supervision of one machine: probes, last measures and open alerts.
         """
         login = str(login or '')
-        machines_id = _to_int(machines_id, 0)
-        if machines_id <= 0:
-            return self._empty_machine_detail(0)
+        jiduser = _jiduser_or_none(jiduser)
+        if jiduser is None:
+            return self._empty_machine_detail('')
         # Two lists of entities meet here and must not be confused: the ones
         # the machine belongs to, used to know what the agent measures, and
         # the ones the reader reaches, used to know what he may see.
         memberships_readable = self._memberships_readable(session)
         # Read before anything else: whether this machine may be described at
         # all is not a question about the probes placed on it.
-        if not self._machine_in_scope(session, login, machines_id,
+        if not self._machine_in_scope(session, login, jiduser,
                                       readable=memberships_readable):
-            return self._empty_machine_detail(machines_id)
+            return self._empty_machine_detail(jiduser)
         fallback_silence = DEFAULT_SILENT_AFTER_SECONDS
+        hostname = self._machine_hostname(session, jiduser)
         group_ids, entity_ids = self._machine_memberships(
-            session, machines_id, memberships_readable)
+            session, jiduser, memberships_readable)
         visible_sql, params = self._visible_clause(login)
-        params['machines_id'] = machines_id
+        params['jiduser'] = jiduser
         params['now'] = datetime.now()
         # NULL when the system cannot be told, and told apart below: an
         # unknown system is not a system a probe does not cover.
-        params['machine_os'] = (self._machine_os(session, machines_id) or None
+        params['machine_os'] = (self._machine_os(session, jiduser) or None
                                 if memberships_readable else None)
 
         # Same target clauses as the configuration built for the agent.
         target_fragment, target_params = machine_target_clauses(
-            machines_id, group_ids=group_ids, entity_ids=entity_ids)
+            jiduser, group_ids=group_ids, entity_ids=entity_ids)
         probes = collapse_assignments(_rows(session.execute(text(
             "SELECT p.id AS probe_id, p.probe_key, p.label, p.category, "
             "       p.metric_key, p.unit, p.value_type, p.probe_type, "
@@ -6013,7 +6188,7 @@ class ReflexDatabase(DatabaseHelper):
             "       px.created_by AS exclusion_by, "
             "       px.created_at AS exclusion_at "
             + machine_placements_sql(target_fragment, visible_sql,
-                                     ':machines_id') +
+                                     ':jiduser') +
             " ORDER BY p.label ASC"),
             dict(params, **target_params))))
         for probe in probes:
@@ -6031,7 +6206,8 @@ class ReflexDatabase(DatabaseHelper):
         # The target of the placement shown, and what became of it.
         self._mark_target_states(
             session, login, probes, readable=memberships_readable,
-            known={('machine', str(machines_id)): TARGET_STATE_OK})
+            known={('machine', jiduser): TARGET_STATE_OK},
+            hostnames={jiduser: hostname})
 
         # Latest measure per probe and per instance, obtained in one statement.
         placed_ids = [_to_int(probe.get('probe_id'), 0) for probe in probes
@@ -6047,7 +6223,7 @@ class ReflexDatabase(DatabaseHelper):
                 "       DATE_SUB(latest.last_received, "
                 "                INTERVAL :batch_window SECOND) AS batch_start "
                 "  FROM (SELECT p.id AS probe_id, "
-                "               " + probe_last_received_sql(':machines_id') +
+                "               " + probe_last_received_sql(':jiduser') +
                 "                   AS last_received "
                 "          FROM probes p "
                 "         WHERE p.id IN (" + placed_fragment + ")) latest "
@@ -6065,7 +6241,7 @@ class ReflexDatabase(DatabaseHelper):
                     batch.get('probe_id'), 0)
                 batch_params['batch_start%d' % index] = batch.get('batch_start')
             last_measures = _rows(session.execute(text(
-                "SELECT pm.id, pm.machines_id, pm.uuid_inventorymachine, "
+                "SELECT pm.id, pm.jiduser, pm.uuid_inventorymachine, "
                 "       pm.hostname, pm.probe_id, pm.metric_key, pm.value_num, "
                 "       pm.value_text, pm.unit, pm.status, pm.detail, "
                 "       pm.collected_at, "
@@ -6078,7 +6254,7 @@ class ReflexDatabase(DatabaseHelper):
                 "       p.probe_type "
                 "  FROM probe_measures pm "
                 "  JOIN probes p ON p.id = pm.probe_id "
-                " WHERE pm.machines_id = :machines_id "
+                " WHERE pm.jiduser = :jiduser "
                 "   AND (" + " OR ".join(batch_clauses) + ") "
                 "   AND " + visible_sql +
                 " ORDER BY p.label ASC, pm.value_text ASC, "
@@ -6098,7 +6274,7 @@ class ReflexDatabase(DatabaseHelper):
         attach_measure_detail(last_measures)
 
         open_alerts = _rows(session.execute(text(
-            "SELECT a.id, a.probe_id, a.condition_id, a.machines_id, "
+            "SELECT a.id, a.probe_id, a.condition_id, a.jiduser, "
             "       a.hostname, a.severity, "
             "       a.status, a.value_at_trigger, a.value_text_at_trigger, "
             "       a.message, a.opened_at, a.last_seen_at, "
@@ -6109,7 +6285,7 @@ class ReflexDatabase(DatabaseHelper):
             "       p.label AS probe_label, p.unit "
             "  FROM alerts a "
             "  JOIN probes p ON p.id = a.probe_id "
-            " WHERE a.machines_id = :machines_id "
+            " WHERE a.jiduser = :jiduser "
             "   AND " + alert_active_sql() + " AND " + visible_sql +
             " ORDER BY FIELD(a.severity, 'info', 'medium', 'high', 'critical') DESC, "
             "          a.last_seen_at DESC"), params))
@@ -6122,24 +6298,24 @@ class ReflexDatabase(DatabaseHelper):
         reporting = self._annotate_freshness(probes, last_measures,
                                              fallback_silence)
 
-        self._annotate_probe_conditions(session, machines_id, probes,
+        self._annotate_probe_conditions(session, jiduser, probes,
                                         last_measures, open_alerts)
 
         agent_config = _one(session.execute(text(
-            "SELECT machines_id, hostname, sent_version, sent_at, "
+            "SELECT jiduser, hostname, sent_version, sent_at, "
             "       acked_version, acked_at, probe_count, last_error, "
             "       updated_at "
-            "  FROM probe_agent_config WHERE machines_id = :machines_id"),
-            {'machines_id': machines_id})) or {}
+            "  FROM probe_agent_config WHERE jiduser = :jiduser"),
+            {'jiduser': jiduser})) or {}
 
         # The machine list reads the same expression for every machine it
         # shows, see config_stale_sql.
         settled = _one(session.execute(text(
-            "SELECT " + config_stale_sql(target_fragment, ':machines_id',
+            "SELECT " + config_stale_sql(target_fragment, ':jiduser',
                                          os_readable=memberships_readable)
             + " AS config_stale, "
             + placed_cadence_sql(target_fragment, visible_sql,
-                                 ':machines_id') + " AS watched_cadence"),
+                                 ':jiduser') + " AS watched_cadence"),
             dict(params, **target_params))) or {}
         agent_config['config_stale'] = 1 if _to_int(
             settled.get('config_stale'), 0) else 0
@@ -6158,15 +6334,16 @@ class ReflexDatabase(DatabaseHelper):
         # Same key and same rule as the machine list, read with the same
         # statement on one identifier: a sheet and a list disagreeing on
         # whether an agent is connected would be worse than neither showing it.
-        presence = self._machines_presence(session, [machines_id])
+        presence = self._machines_presence(session, [jiduser])
         return {
-            'machines_id': machines_id,
+            'jiduser': jiduser,
+            'hostname': hostname,
             'probes': probes,
             'last_measures': last_measures,
             'open_alerts': open_alerts,
             'agent_config': agent_config,
             'agent_online': (None if presence is None
-                             else presence.get(machines_id, 0)),
+                             else presence.get(jiduser, 0)),
             'reporting': reporting,
         }
 
@@ -6280,7 +6457,7 @@ class ReflexDatabase(DatabaseHelper):
             'probes_server_evaluated': summary['server'],
         }
 
-    def _annotate_probe_conditions(self, session, machines_id, probes,
+    def _annotate_probe_conditions(self, session, jiduser, probes,
                                    last_measures, open_alerts):
         """Hang the effective conditions on the probes of a machine sheet."""
         probe_ids = []
@@ -6294,7 +6471,7 @@ class ReflexDatabase(DatabaseHelper):
             # The estate of this machine: the sheet must judge its values
             # against the thresholds that actually raise alerts on it.
             scope = self._condition_scope(
-                self._machine_entity(session, machines_id))
+                self._machine_entity(session, jiduser))
             fragment, params = _placeholders('cprobe', probe_ids)
             params.update(scope['params'])
             for condition in _rows(session.execute(text(
@@ -6444,27 +6621,25 @@ class ReflexDatabase(DatabaseHelper):
                 probe['conditions_state'] = 'satisfied'
 
     @DatabaseHelper._sessionm
-    def get_agent_config(self, session, machines_id, login=''):
+    def get_agent_config(self, session, jiduser, login=''):
         """Probe configuration distributed to the agent of a machine."""
-        machines_id = _to_int(machines_id, 0)
-        if machines_id <= 0:
+        jiduser = _jiduser_or_none(jiduser)
+        if jiduser is None:
             return {}
-        scope_sql, params = self._machine_scope_clause(
-            login, ':machines_id',
-            readable=self._memberships_readable(session))
-        params['machines_id'] = machines_id
+        if not self._machine_in_scope(session, login, jiduser):
+            return {}
         return _one(session.execute(text(
-            "SELECT id, machines_id, hostname, sent_version, sent_at, "
+            "SELECT id, jiduser, hostname, sent_version, sent_at, "
             "       acked_version, acked_at, probe_count, last_error, "
             "       updated_at "
-            "  FROM probe_agent_config WHERE machines_id = :machines_id "
-            "   AND " + scope_sql), params)) or {}
+            "  FROM probe_agent_config WHERE jiduser = :jiduser"),
+            {'jiduser': jiduser})) or {}
 
     # =========================================================================
     # Measures
     # =========================================================================
     @DatabaseHelper._sessionm
-    def get_measures_timeseries(self, session, login, machines_id, probe_id,
+    def get_measures_timeseries(self, session, login, jiduser, probe_id,
                                 days=7, max_points=5000, hours=None):
         """Measures of one probe on one machine over a period."""
         # Nothing to draw and nothing to say about how it was drawn: the empty
@@ -6479,9 +6654,9 @@ class ReflexDatabase(DatabaseHelper):
                  'probe_id': 0, 'probe_label': '', 'metric_key': '',
                  'unit': '', 'value_type': ''}
 
-        machines_id = _to_int(machines_id, 0)
+        jiduser = _jiduser_or_none(jiduser)
         probe_id = _to_int(probe_id, 0)
-        if machines_id <= 0 or probe_id <= 0:
+        if jiduser is None or probe_id <= 0:
             return dict(empty)
 
         access = self._probe_access(session, login, probe_id)
@@ -6490,7 +6665,7 @@ class ReflexDatabase(DatabaseHelper):
 
         # Before the measures are read: the estate of the reader decides
         # whether this machine may be described at all.
-        if not self._machine_in_scope(session, login, machines_id):
+        if not self._machine_in_scope(session, login, jiduser):
             return dict(empty)
 
         # The same period the presence strip of the machine is read over, see
@@ -6500,24 +6675,24 @@ class ReflexDatabase(DatabaseHelper):
                          MEASURE_POINTS_CEILING)
         since = datetime.now() - window
 
-        params = {'machines_id': machines_id, 'probe_id': probe_id,
+        params = {'jiduser': jiduser, 'probe_id': probe_id,
                   'since': since,
                   'batch_window': MEASURE_BATCH_WINDOW_SECONDS}
         # Two figures, one statement: how many points the window holds, and how
         # many curves they make.
         counts = _one(session.execute(text(
             "SELECT (SELECT COUNT(*) FROM probe_measures "
-            "         WHERE machines_id = :machines_id "
+            "         WHERE jiduser = :jiduser "
             "           AND probe_id = :probe_id "
             "           AND received_at >= :since) AS total, "
             "       (SELECT COUNT(DISTINCT value_text) FROM probe_measures "
-            "         WHERE machines_id = :machines_id "
+            "         WHERE jiduser = :jiduser "
             "           AND probe_id = :probe_id "
             "           AND received_at >= "
             "               (SELECT DATE_SUB(MAX(received_at), "
             "                                INTERVAL :batch_window SECOND) "
             "                  FROM probe_measures "
-            "                 WHERE machines_id = :machines_id "
+            "                 WHERE jiduser = :jiduser "
             "                   AND probe_id = :probe_id)) AS instances"),
             params)) or {}
         total = _to_int(counts.get('total'), 0)
@@ -6566,7 +6741,7 @@ class ReflexDatabase(DatabaseHelper):
                 "       value_text, MAX(unit) AS unit, "
                 "       MAX(status) AS status "
                 "  FROM probe_measures "
-                " WHERE machines_id = :machines_id AND probe_id = :probe_id "
+                " WHERE jiduser = :jiduser AND probe_id = :probe_id "
                 "   AND received_at >= :since "
                 " GROUP BY value_text, "
                 "          FLOOR(UNIX_TIMESTAMP(received_at) / :bucket) "
@@ -6580,7 +6755,7 @@ class ReflexDatabase(DatabaseHelper):
                 "SELECT collected_at, received_at, value_num, value_text, "
                 "       unit, status, detail "
                 "  FROM probe_measures "
-                " WHERE machines_id = :machines_id AND probe_id = :probe_id "
+                " WHERE jiduser = :jiduser AND probe_id = :probe_id "
                 "   AND received_at >= :since "
                 " ORDER BY received_at DESC "
                 " LIMIT :limit"), params))
@@ -6603,7 +6778,7 @@ class ReflexDatabase(DatabaseHelper):
             truncated = total > len(rows)
 
         threshold = self._probe_reference_threshold(session, probe_id,
-                                                    machines_id)
+                                                    jiduser)
         answer = {
             'total': total,
             'data': rows,
@@ -6630,9 +6805,9 @@ class ReflexDatabase(DatabaseHelper):
         answer.update(threshold)
         return answer
 
-    def _probe_reference_threshold(self, session, probe_id, machines_id=None):
+    def _probe_reference_threshold(self, session, probe_id, jiduser=None):
         """Threshold the chart of a probe draws as a reference line."""
-        scope = self._condition_scope(self._machine_entity(session, machines_id))
+        scope = self._condition_scope(self._machine_entity(session, jiduser))
         operator_sql, params = _placeholders('unplottable', THRESHOLDLESS_OPERATORS)
         params['probe_id'] = probe_id
         params.update(scope['params'])
@@ -6673,7 +6848,7 @@ class ReflexDatabase(DatabaseHelper):
     _presence_history_unreadable_logged = False
 
     @DatabaseHelper._sessionm
-    def get_agent_presence(self, session, login, machines_id, days=7,
+    def get_agent_presence(self, session, login, jiduser, days=7,
                            hours=None):
         """When the agent of one machine was connected over a period."""
         end = datetime.now()
@@ -6687,13 +6862,9 @@ class ReflexDatabase(DatabaseHelper):
             'unavailable': 0,
             'refused': 0,
         }
-        machines_id = _to_int(machines_id, 0)
-        if machines_id <= 0:
+        jiduser = _jiduser_or_none(jiduser)
+        if jiduser is None:
             return answer
-        # Folded into the dive that reads the JID: the guard costs no statement
-        # of its own, and an xmppmaster that cannot be read falls in the except
-        # below, which answers `unavailable` rather than an empty strip.
-        scope_sql, scope_params = self._machine_scope_clause(login, 'm.id')
 
         # The bare JID is the exact predicate, the prefix is what lets the
         # index on the JID be ranged instead of scanned: it may match wider --
@@ -6703,14 +6874,16 @@ class ReflexDatabase(DatabaseHelper):
                    " OR (um.jid LIKE :jid_prefix "
                    "     AND SUBSTRING_INDEX(um.jid, '/', 1) = :jid_bare))")
         try:
-            machine = _one(session.execute(text(
-                "SELECT m.jid, m.enabled, "
+            # Folded into the dive that reads the JID: the guard costs no
+            # statement of its own, and an xmppmaster that cannot be read
+            # falls in the except below, which answers `unavailable` rather
+            # than an empty strip.
+            machine = self._agent_row_in_scope(
+                session, login, jiduser,
+                "xm.jid, xm.enabled, "
                 # Whether anything at all was ever recorded, for any machine.
-                "       (SELECT 1 FROM xmppmaster.uptime_machine LIMIT 1) "
-                "           AS recorded "
-                "  FROM xmppmaster.machines m "
-                " WHERE m.id = :machines_id AND " + scope_sql),
-                dict(scope_params, machines_id=machines_id)))
+                "(SELECT 1 FROM xmppmaster.uptime_machine LIMIT 1) "
+                "    AS recorded")
             if machine is None:
                 # xmppmaster answered, and no machine of this identifier stands
                 # in the estate of the reader: none was ever registered under
@@ -6813,7 +6986,7 @@ class ReflexDatabase(DatabaseHelper):
         # incidents an estate carries: the count follows the machine and not
         # the probe, exactly as the list does.
         alert_scope_sql, alert_scope_params = self._machine_scope_clause(
-            login, 'a.machines_id', readable=memberships_readable,
+            login, 'a.jiduser', readable=memberships_readable,
             prefix='ascope')
         params.update(alert_scope_params)
         alert_where = (" WHERE " + alert_active_sql() + " AND " + visible_sql
@@ -6841,9 +7014,9 @@ class ReflexDatabase(DatabaseHelper):
         impacted_params = dict(params)
         impacted_params['status_open'] = ALERT_STATUS_OPEN
         impacted = _one(session.execute(text(
-            "SELECT COUNT(DISTINCT a.machines_id) AS impacted, "
+            "SELECT COUNT(DISTINCT a.jiduser) AS impacted, "
             "       COUNT(DISTINCT CASE WHEN a.status = :status_open "
-            "                           THEN a.machines_id END) AS unhandled "
+            "                           THEN a.jiduser END) AS unhandled "
             "  FROM alerts a JOIN probes p ON p.id = a.probe_id "
             + alert_where),
             impacted_params)) or {}
@@ -6869,7 +7042,7 @@ class ReflexDatabase(DatabaseHelper):
         # One row per machine: the estate of the reader decides it, see
         # machine_scope_sql.
         scope_sql, scope_params = self._machine_scope_clause(
-            login, 'ac.machines_id', readable=memberships_readable)
+            login, 'ac.jiduser', readable=memberships_readable)
 
         probes_total = _to_int(session.execute(text(
             "SELECT COUNT(*) FROM probes p WHERE " + visible_sql),
@@ -7422,16 +7595,16 @@ class ReflexDatabase(DatabaseHelper):
     # Operations shared with the master substitute
     # =========================================================================
     @DatabaseHelper._sessionm
-    def get_probe_config_for_machine(self, session, machines_id, group_ids=None,
+    def get_probe_config_for_machine(self, session, jiduser, group_ids=None,
                                      entity_ids=None):
         """Probes applicable to a machine, with their collection methods."""
-        machines_id = _to_int(machines_id, 0)
-        if machines_id <= 0:
+        jiduser = _jiduser_or_none(jiduser)
+        if jiduser is None:
             return []
 
         target_fragment, params = machine_target_clauses(
-            machines_id, group_ids=group_ids, entity_ids=entity_ids)
-        params['machine_os'] = self._machine_os(session, machines_id) or None
+            jiduser, group_ids=group_ids, entity_ids=entity_ids)
+        params['machine_os'] = self._machine_os(session, jiduser) or None
 
         # A probe placed widely leaves no row per machine, so an exception is
         # the only way to take it off one machine.
@@ -7450,7 +7623,7 @@ class ReflexDatabase(DatabaseHelper):
             "   AND " + target_fragment +
             "   AND NOT EXISTS (SELECT 1 FROM probe_exclusions px "
             "                    WHERE px.probe_id = p.id "
-            "                      AND px.machines_id = :machines_id) "
+            "                      AND px.jiduser = :jiduser) "
             " GROUP BY p.id, p.probe_key, p.label, p.metric_key, p.unit, "
             "          p.value_type, p.os_support "
             " ORDER BY p.probe_key ASC"), params))
@@ -7458,7 +7631,7 @@ class ReflexDatabase(DatabaseHelper):
         # Read after the coverage, never before, as on the removal path.
         try:
             resolved = self._resolve_alerts_off_coverage(
-                session, machines_id,
+                session, jiduser,
                 [_to_int(row.get('probe_id'), 0) for row in probes])
             # Committed even when it closed nothing: the statement takes its
             # locks whether it matches or not, and this runs for every machine
@@ -7467,11 +7640,11 @@ class ReflexDatabase(DatabaseHelper):
             if resolved:
                 logger.info("Reflex: %d alert(s) of machine %s resolved, "
                             "their probe no longer reaches it"
-                            % (resolved, machines_id))
+                            % (resolved, jiduser))
         except Exception as e:
             session.rollback()
             logger.error("Reflex: alerts of machine %s left open, their "
-                         "resolution failed: %s" % (machines_id, e))
+                         "resolution failed: %s" % (jiduser, e))
 
         # The coverage above has done its work on the alerts.
         kept, dropped = [], []
@@ -7483,7 +7656,7 @@ class ReflexDatabase(DatabaseHelper):
             logger.debug(
                 "Reflex: machine %s, %d probe(s) placed but not distributed, "
                 "no collector for its system: %s"
-                % (machines_id, len(dropped),
+                % (jiduser, len(dropped),
                    ", ".join(str(row.get('probe_key')) for row in dropped)))
 
         if not probes:
@@ -7508,15 +7681,15 @@ class ReflexDatabase(DatabaseHelper):
         return probes
 
     @DatabaseHelper._sessionm
-    def set_agent_config_sent(self, session, machines_id, hostname,
+    def set_agent_config_sent(self, session, jiduser, hostname,
                               sent_version, probe_count=0):
         """Record the configuration version distributed to an agent."""
-        machines_id = _to_int(machines_id, 0)
-        if machines_id <= 0:
+        jiduser = _jiduser_or_none(jiduser)
+        if jiduser is None:
             return False
         try:
             params = {
-                'machines_id': machines_id,
+                'jiduser': jiduser,
                 'hostname': _clean_str(hostname, 255, 'hostname') or '',
                 'sent_version': _clean_str(sent_version, 64, 'sent_version'),
                 'probe_count': _to_int(probe_count, 0),
@@ -7526,9 +7699,9 @@ class ReflexDatabase(DatabaseHelper):
             return False
         try:
             session.execute(text(
-                "INSERT INTO probe_agent_config (machines_id, hostname, "
+                "INSERT INTO probe_agent_config (jiduser, hostname, "
                 "  sent_version, sent_at, probe_count) "
-                "VALUES (:machines_id, :hostname, :sent_version, NOW(), "
+                "VALUES (:jiduser, :hostname, :sent_version, NOW(), "
                 "  :probe_count) "
                 "ON DUPLICATE KEY UPDATE hostname = VALUES(hostname), "
                 "  sent_version = VALUES(sent_version), sent_at = NOW(), "
@@ -7541,15 +7714,15 @@ class ReflexDatabase(DatabaseHelper):
         return True
 
     @DatabaseHelper._sessionm
-    def set_agent_config_acked(self, session, machines_id, acked_version,
+    def set_agent_config_acked(self, session, jiduser, acked_version,
                                last_error=None):
         """Record the configuration version an agent declares to apply."""
-        machines_id = _to_int(machines_id, 0)
-        if machines_id <= 0:
+        jiduser = _jiduser_or_none(jiduser)
+        if jiduser is None:
             return False
         try:
             params = {
-                'machines_id': machines_id,
+                'jiduser': jiduser,
                 'acked_version': _clean_str(acked_version, 64, 'acked_version'),
                 'last_error': _clean_str(last_error, 512, 'last_error'),
             }
@@ -7561,7 +7734,7 @@ class ReflexDatabase(DatabaseHelper):
                 "UPDATE probe_agent_config "
                 "   SET acked_version = :acked_version, acked_at = NOW(), "
                 "       last_error = :last_error "
-                " WHERE machines_id = :machines_id"), params)
+                " WHERE jiduser = :jiduser"), params)
             session.commit()
         except Exception as e:
             session.rollback()
@@ -7582,9 +7755,9 @@ class ReflexDatabase(DatabaseHelper):
             if not isinstance(measure, dict):
                 continue
             try:
-                machines_id = _to_int(measure.get('machines_id'), 0)
+                jiduser = normalise_jiduser(measure.get('jiduser'))
                 probe_id = _to_int(measure.get('probe_id'), 0)
-                if machines_id <= 0 or probe_id <= 0:
+                if probe_id <= 0:
                     raise ReflexValidationError(
                         "A measure needs a machine and a probe")
                 status = str(measure.get('status', 'ok') or 'ok').lower()
@@ -7596,7 +7769,7 @@ class ReflexDatabase(DatabaseHelper):
                     collected_at = collected_at.strftime("%Y-%m-%d %H:%M:%S")
                 collected_at = _clean_str(collected_at, 19, 'collected_at')
                 prepared.append({
-                    'machines_id': machines_id,
+                    'jiduser': jiduser,
                     'uuid_inventorymachine': _clean_str(
                         measure.get('uuid_inventorymachine'), 45,
                         'uuid_inventorymachine'),
@@ -7623,11 +7796,11 @@ class ReflexDatabase(DatabaseHelper):
             # received_at is the server clock and is the only timestamp any
             # freshness or retention question is allowed to read.
             session.execute(text(
-                "INSERT INTO probe_measures (machines_id, "
+                "INSERT INTO probe_measures (jiduser, "
                 "  uuid_inventorymachine, hostname, probe_id, metric_key, "
                 "  value_num, value_text, unit, status, detail, collected_at, "
                 "  received_at) "
-                "VALUES (:machines_id, :uuid_inventorymachine, :hostname, "
+                "VALUES (:jiduser, :uuid_inventorymachine, :hostname, "
                 "  :probe_id, :metric_key, :value_num, :value_text, :unit, "
                 "  :status, :detail, COALESCE(:collected_at, NOW(3)), NOW(3))"),
                 prepared)
