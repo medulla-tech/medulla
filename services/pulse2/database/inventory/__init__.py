@@ -882,14 +882,23 @@ class Inventory(DyngroupDatabaseHelper):
 
     def getLastMachineInventoryFull(self, ctx, params):
         """
-        Return the full and last inventory of a machine
+        Return the full and last inventory of a machine.
 
-        @param name: the name of the machine to get inventory
-        @type params: dict
+        @param params: machine UUID or inventory query parameters
+        @type params: str or dict
 
-        @return: Returns a dictionary where each key is an inventory part name
+        @return: dictionary keyed by inventory part
         @rtype: dict
         """
+        if isinstance(params, str):
+            params = {"uuid": params}
+        if (
+            not isinstance(params, dict)
+            or "uuid" not in params
+            or not self.doesUserHaveAccessToMachine(ctx, params["uuid"])
+        ):
+            return {}
+
         ret = {}
         for part in self.config.getInventoryParts():
             if part != "Entity":
@@ -1268,13 +1277,56 @@ class Inventory(DyngroupDatabaseHelper):
     def getMachineCustom(self, ctx, params):
         return self.getLastMachineInventoryPart(ctx, "Custom", params)
 
-    # TODO implement ...
     def doesUserHaveAccessToMachine(self, userid, machine_uuid):
-        return True
+        return self.doesUserHaveAccessToMachines(userid, [machine_uuid])
 
-    # TODO implement ...
     def doesUserHaveAccessToMachines(self, userid, machine_uuid, all=True):
-        return True
+        if isinstance(machine_uuid, str):
+            machine_uuid = [machine_uuid]
+        if not machine_uuid:
+            return True
+
+        if hasattr(userid, "locationsid") and userid.locationsid is not None:
+            location_ids = userid.locationsid
+        else:
+            user_id = getattr(userid, "userid", userid)
+            location_ids = [location.id for location in self.getUserLocations(user_id)]
+        if not location_ids:
+            return False
+
+        try:
+            machine_ids = {fromUUID(uuid) for uuid in machine_uuid}
+        except (AttributeError, TypeError, ValueError):
+            return False
+
+        session = create_session()
+        try:
+            has_entity = self.table["hasEntity"]
+            query = (
+                session.query(self.machine.c.id)
+                .select_from(
+                    self.machine.join(
+                        has_entity,
+                        has_entity.c.machine == self.machine.c.id,
+                    ).join(
+                        self.inventory,
+                        and_(
+                            self.inventory.c.id == has_entity.c.inventory,
+                            self.inventory.c.Last == 1,
+                        ),
+                    )
+                )
+                .filter(self.machine.c.id.in_(machine_ids))
+                .filter(has_entity.c.entity.in_(location_ids))
+                .distinct()
+            )
+            accessible_ids = {row[0] for row in query.all()}
+        finally:
+            session.close()
+
+        if all:
+            return machine_ids.issubset(accessible_ids)
+        return bool(accessible_ids)
 
     def getMachineByOwner(self, ctx, user):
         result = self.getLastMachineInventoryPart(ctx, "Hardware", {"Owner": user})
@@ -1629,13 +1681,37 @@ class Inventory(DyngroupDatabaseHelper):
         )
 
         noms = self.config.getInventoryNoms()
+        has_entity = self.table["hasEntity"]
         select_from = (
-            haspartTable.join(self.inventory).join(partTable).outerjoin(self.machine)
+            haspartTable.join(self.inventory)
+            .join(partTable)
+            .join(self.machine, self.machine.c.id == haspartTable.c.machine)
+            .join(
+                has_entity,
+                and_(
+                    has_entity.c.machine == self.machine.c.id,
+                    has_entity.c.inventory == self.inventory.c.id,
+                ),
+            )
         )
-        # Also join on the entity related table to filter on the computers the
-        # user has the right to see
-        # one machine only view
-        # select_from = select_from.join(self.table['hasEntity'], self.table['hasEntity'].c.machine == self.machine.c.id)
+
+        historical_inventory = (
+            ("date" in params and params["date"] != "")
+            or ("inventoryId" in params and params["inventoryId"] != "")
+        )
+        if historical_inventory:
+            current_has_entity = has_entity.alias("current_hasEntity")
+            current_inventory = self.inventory.alias("current_Inventory")
+            select_from = select_from.join(
+                current_has_entity,
+                current_has_entity.c.machine == self.machine.c.id,
+            ).join(
+                current_inventory,
+                and_(
+                    current_inventory.c.id == current_has_entity.c.inventory,
+                    current_inventory.c.Last == 1,
+                ),
+            )
 
         if part in noms:
             for nom in noms[part]:
@@ -1655,9 +1731,10 @@ class Inventory(DyngroupDatabaseHelper):
             )
         else:
             result = result.select_from(select_from).filter(self.inventory.c.Last == 1)
-        # Filter on the entities the user has the right to see
-        # No entity filtering
-        # result = result.filter(self.table['hasEntity'].c.entity.in_(ctx.locationsid))
+        if historical_inventory:
+            result = result.filter(current_has_entity.c.entity.in_(ctx.locationsid))
+        else:
+            result = result.filter(has_entity.c.entity.in_(ctx.locationsid))
         # Apply other filters
         result = self.__filterQuery(part, ctx, result, params)
         if "User" in params:
@@ -3271,6 +3348,9 @@ class Inventory(DyngroupDatabaseHelper):
         @rtype: list
         """
         ret = []
+        if "uuid" not in params:
+            return ret
+        self.complete_ctx(ctx)
         machineId = ""
         if "uuid" in params:
             uuid = params["uuid"]
@@ -3285,14 +3365,28 @@ class Inventory(DyngroupDatabaseHelper):
             max = 10
 
         session = create_session()
+        current_has_entity = self.table["hasEntity"].alias("current_hasEntity")
+        current_inventory = self.inventory.alias("current_Inventory")
         results = (
             session.query(self.klass["Inventory"])
             .select_from(
                 self.table["hasInventory"]
                 .join(self.table["Inventory"])
                 .join(self.machine)
+                .join(
+                    current_has_entity,
+                    current_has_entity.c.machine == self.machine.c.id,
+                )
+                .join(
+                    current_inventory,
+                    and_(
+                        current_inventory.c.id == current_has_entity.c.inventory,
+                        current_inventory.c.Last == 1,
+                    ),
+                )
             )
             .filter(Machine.id == machineId)
+            .filter(current_has_entity.c.entity.in_(ctx.locationsid))
             .order_by(self.klass["Inventory"].id.desc())
             .group_by(self.klass["Inventory"].id)
             .offset(min)
@@ -3314,20 +3408,37 @@ class Inventory(DyngroupDatabaseHelper):
         @return: Return a list of all the inventory history of the machine
         @rtype: list
         """
+        if "uuid" not in params:
+            return 0
+        self.complete_ctx(ctx)
         machineId = ""
         if "uuid" in params:
             uuid = params["uuid"]
             machineId = fromUUID(uuid)
 
         session = create_session()
+        current_has_entity = self.table["hasEntity"].alias("current_hasEntity")
+        current_inventory = self.inventory.alias("current_Inventory")
         count = (
             session.query(self.klass["Inventory"])
             .select_from(
                 self.table["hasInventory"]
                 .join(self.table["Inventory"])
                 .join(self.machine)
+                .join(
+                    current_has_entity,
+                    current_has_entity.c.machine == self.machine.c.id,
+                )
+                .join(
+                    current_inventory,
+                    and_(
+                        current_inventory.c.id == current_has_entity.c.inventory,
+                        current_inventory.c.Last == 1,
+                    ),
+                )
             )
             .filter(Machine.id == machineId)
+            .filter(current_has_entity.c.entity.in_(ctx.locationsid))
             .group_by(self.klass["Inventory"].id)
         )
         count = (
@@ -3355,6 +3466,8 @@ class Inventory(DyngroupDatabaseHelper):
 
         if "uuid" in params:
             uuid = params["uuid"]
+            if not self.doesUserHaveAccessToMachine(ctx, uuid):
+                return [{}, {}]
             # Get the machine ID from the uuid given in the parameters to get
             # all infos about the machine
             machineId = fromUUID(uuid)

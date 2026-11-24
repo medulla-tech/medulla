@@ -27,6 +27,8 @@
  * @see: http://teddy.fr/2007/11/28/how-serve-big-files-through-php/
  */
 
+require_once("modules/base/includes/computers.inc.php");
+
 function readfile_chunked($filename, $retbytes = true) {
     $chunksize = 1 * (1024 * 1024); // how many bytes per chunk
     $buffer = '';
@@ -51,7 +53,13 @@ function readfile_chunked($filename, $retbytes = true) {
     return $status;
 }
 
-if (isset($_GET['path'], $_SESSION) && preg_match("#^(\/var\/tmp\/report\-)(UUID)([0-9]+)(.xls)$#", $_GET['path'])) {
+if (isset($_GET['path'], $_SESSION) && preg_match("#^(\/var\/tmp\/report\-)(UUID)([0-9]+)(.xls)$#", $_GET['path'], $matches)) {
+    $uuid = $matches[2] . $matches[3];
+    if (!getComputer(array("uuid" => $uuid))) {
+        http_response_code(403);
+        exit;
+    }
+
     // Prevent download to stop after PHP timeout
     set_time_limit(0);
     $file= str_replace('../', '', $_GET['path']);

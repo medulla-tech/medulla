@@ -1537,7 +1537,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getCommand_action_time(
-        self, session, during_the_last_seconds, start, stop, filter=None
+        self, session, during_the_last_seconds, start, stop, filter=None, entity_ids=None
     ):
         try:
             command_qa = session.query(
@@ -1549,8 +1549,33 @@ class XmppMasterDatabase(DatabaseHelper):
                 Command_qa.command_grp.label("command_grp"),
                 Command_qa.command_machine.label("command_machine"),
                 Command_action.target.label("target"),
-                Command_qa.jid_machine.label("jid_machine"),
+                Command_action.jid_target.label("jid_machine"),
             ).outerjoin(Command_action, Command_qa.id == Command_action.command_id)
+            allowed_entities = []
+            for entity_id in entity_ids or []:
+                try:
+                    allowed_entities.append(int(entity_id))
+                except (TypeError, ValueError):
+                    continue
+            command_qa = command_qa.join(
+                Machines,
+                or_(
+                    and_(
+                        Command_action.target != "",
+                        Machines.uuid_inventorymachine == Command_action.target,
+                    ),
+                    and_(
+                        or_(
+                            Command_action.target == "",
+                            Command_action.target.is_(None),
+                        ),
+                        Command_action.jid_target != "",
+                        Machines.jid == Command_action.jid_target,
+                    ),
+                ),
+            ).join(
+                Glpi_entity, Machines.glpi_entity_id == Glpi_entity.id
+            ).filter(Glpi_entity.glpi_id.in_(allowed_entities))
             # si on veut passer par les groupe avant d'aller sur les machine.
             # command_qa = command_qa.group_by(Command_qa.id)
             command_qa = command_qa.order_by(desc(Command_qa.id))
@@ -5378,6 +5403,7 @@ class XmppMasterDatabase(DatabaseHelper):
         who,
         why,
         headercolumn,
+        entity_ids=None,
     ):
         # labelheader = [x.strip() for x in headercolumn.split("|") if x.strip() != "" and x is not "None"]
         logs = session.query(Logs)
@@ -5414,6 +5440,43 @@ class XmppMasterDatabase(DatabaseHelper):
             logs = logs.filter(Logs.who == who)
         if not (why == "None" or why == ""):
             logs = logs.filter(Logs.why == why)
+        if entity_ids is not None:
+            allowed_entities = []
+            for entity_id in entity_ids:
+                try:
+                    allowed_entities.append(int(entity_id))
+                except (TypeError, ValueError):
+                    continue
+            if not allowed_entities:
+                return {"data": []}
+
+            allowed_machines = (
+                session.query(Machines.hostname, Machines.jid, Machines.uuid_inventorymachine)
+                .join(Glpi_entity, Machines.glpi_entity_id == Glpi_entity.id)
+                .filter(Glpi_entity.glpi_id.in_(allowed_entities))
+            )
+            logs = logs.filter(
+                or_(
+                    Logs.who.in_(
+                        allowed_machines.with_entities(Machines.hostname).filter(
+                            Machines.hostname.isnot(None), Machines.hostname != ""
+                        )
+                    ),
+                    Logs.who.in_(
+                        allowed_machines.with_entities(Machines.jid).filter(
+                            Machines.jid.isnot(None), Machines.jid != ""
+                        )
+                    ),
+                    Logs.who.in_(
+                        allowed_machines.with_entities(
+                            Machines.uuid_inventorymachine
+                        ).filter(
+                            Machines.uuid_inventorymachine.isnot(None),
+                            Machines.uuid_inventorymachine != "",
+                        )
+                    ),
+                )
+            )
         logs = logs.order_by(desc(Logs.id)).limit(1000)
         result = logs.all()
         session.commit()
