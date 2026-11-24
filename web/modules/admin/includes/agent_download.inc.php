@@ -76,11 +76,18 @@ function admin_agent_download($os, $tag, $entityId) {
         if ($server !== ''
             && is_file(ADMIN_CLIENTS_DIR . "/win/$baseAgent")
             && is_file(ADMIN_AGENTS_DIR . "/$parametersTag/parameters.tar")) {
+            // Same signed file for everyone: only its name carries the server
+            // and the tag, read by the agent when it is installed by a double click
+            $filename = $baseAgent;
+            if (preg_match('/^[A-Za-z0-9.-]+$/', $server)
+                && preg_match('/^[A-Za-z0-9.-]+$/', $parametersTag)) {
+                $filename = "Medulla-Agent-windows-BASE_{$server}_{$parametersTag}.exe";
+            }
             return [
-                'filename' => $baseAgent,
+                'filename' => $filename,
                 'path' => ADMIN_CLIENTS_DIR . "/win/$baseAgent",
                 'content_type' => 'application/x-msdownload',
-                'command' => "$baseAgent /S /server=$server /tag=$parametersTag",
+                'command' => "$filename /S /server=$server /tag=$parametersTag",
             ];
         }
     }
