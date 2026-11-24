@@ -32,7 +32,7 @@ from mmc.plugins.glpi.location import GlpiLocation
 from mmc.plugins.mobile import getHmdmDevicesOsCount #hmdm
 import inspect
 
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from mmc.core.version import getMedullaVersion as getVersion, getMedullaRevision as getRevision
 
 # health check
 from mmc.plugins.glpi.health import scheduleCheckStatus

@@ -5,7 +5,7 @@
 
 # File : mmc/plugins/mastering/__init__.py
 
-from pulse2.version import getVersion, getRevision # pyflakes.ignore
+from mmc.core.version import getMedullaVersion as getVersion, getMedullaRevision as getRevision
 # Au cas où on souhaite appeler des configs d'autres modules
 from mmc.support.config import PluginConfig, PluginConfigFactory
 from mmc.plugins.mastering.config import MasteringConfig

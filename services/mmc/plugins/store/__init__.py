@@ -1,7 +1,7 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
-from pulse2.version import getVersion, getRevision
+from mmc.core.version import getMedullaVersion as getVersion, getMedullaRevision as getRevision
 from mmc.support.config import PluginConfig, PluginConfigFactory
 from mmc.plugins.store.config import StoreConfig
 from pulse2.database.store import StoreDatabase

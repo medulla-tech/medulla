@@ -7,7 +7,7 @@ import base64
 import json
 import configparser
 
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from mmc.core.version import getMedullaVersion as getVersion, getMedullaRevision as getRevision
 from pulse2.database.urbackup import UrbackupDatabase
 
 from mmc.support.config import PluginConfig, PluginConfigFactory

@@ -37,7 +37,7 @@ from pulse2.database.pulse import Pulse2Database
 from pulse2.managers.pulse import Pulse2Manager
 from mmc.plugins.medulla_server.medulla_server import Pulse2Pulse2Manager
 
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from mmc.core.version import getMedullaVersion as getVersion, getMedullaRevision as getRevision
 
 import logging
 import subprocess

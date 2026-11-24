@@ -12,7 +12,7 @@ import os
 import re
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 from .master.lib.managepackage import apimanagepackagemsc
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from mmc.core.version import getMedullaVersion as getVersion, getMedullaRevision as getRevision
 import hashlib
 import json
 # gestion context.

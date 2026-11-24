@@ -25,10 +25,11 @@ from mmc.plugins.dashboard.panel import (
     AgentsPanel,
     AlertsPanel,
 )
+from mmc.core.version import getMedullaRevision, getMedullaVersion
 
-VERSION = "5.6.2"
+VERSION = getMedullaVersion()
 APIVERSION = "0:1:0"
-REVISION = ""
+REVISION = getMedullaRevision()
 
 logger = logging.getLogger()
 

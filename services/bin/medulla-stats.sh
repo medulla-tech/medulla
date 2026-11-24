@@ -25,7 +25,7 @@ NB_MACH=$(mysql --defaults-group-suffix=medulla xmppmaster -Bse 'SELECT COUNT(*)
 NB_USERS=$(slapcat | grep "dn: uid=" | wc -l)
 NB_ENTITES=$(mysql --defaults-group-suffix=medulla xmppmaster -Bse 'SELECT COUNT(*) FROM local_glpi_entities')
 NB_PACKAGES=$(mysql --defaults-group-suffix=medulla pkgs -Bse 'SELECT COUNT(*) FROM packages INNER JOIN pkgs_shares ON pkgs_shares.id = packages.pkgs_share_id WHERE pkgs_shares.name NOT IN ("winupdates", "winupdatesmajor")')
-VERSION=$(dpkg-query -W -f='${Version}\n' mmc-agent | grep -oE '^[0-9]+\.[0-9]+\.[0-9]+')
+VERSION=$(dpkg-query -W -f='${Version}\n' mmc-agent | grep -oE '^[0-9]+\.[0-9]+\.[0-9]+git[0-9]+' | sed 's/git/-/')
 
 curl -fsSL -X POST \
   -H "Content-Type: application/json" \

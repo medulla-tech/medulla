@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from mmc.core.version import getMedullaVersion as getVersion, getMedullaRevision as getRevision
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.plugins.security.config import SecurityConfig
 from pulse2.database.security import SecurityDatabase

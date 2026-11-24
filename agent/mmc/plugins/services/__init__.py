@@ -13,6 +13,8 @@ import dbus.mainloop.glib
 
 dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
+from mmc.core.version import getMedullaRevision, getMedullaVersion
+
 try:
     from mmc.plugins.services.manager import ServiceManager
 except ImportError:
@@ -21,9 +23,9 @@ from mmc.plugins.services.config import ServicesConfig
 
 logger = logging.getLogger()
 
-VERSION = "5.6.6"
+VERSION = getMedullaVersion()
 APIVERSION = "0:1:0"
-REVISION = ""
+REVISION = getMedullaRevision()
 
 
 def getVersion():

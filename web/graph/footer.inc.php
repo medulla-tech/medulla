@@ -33,10 +33,7 @@ if ($sidebarDisplayed) {
 
     <footer id="footer">
         <div class="footer-content">
-            <span>MMC Agent
-                <a href="#" onclick="showPopupUp(event,'version.php'); return false;">
-                    <?php echo $_SESSION["modListVersion"]['ver'] ?>
-                </a>
+            <span>MMC Agent <?php echo $_SESSION["modListVersion"]['ver'] . "-" . $_SESSION["modListVersion"]['rev'] ?>
             </span>
             <span> - </span>
             <span>

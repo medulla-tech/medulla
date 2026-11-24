@@ -35,7 +35,7 @@ from mmc.plugins.base import LdapUserGroupControl
 from pulse2.managers.group import ComputerGroupManager
 from pulse2.managers.profile import ComputerProfileManager
 
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from mmc.core.version import getMedullaVersion as getVersion, getMedullaRevision as getRevision
 
 # health check
 from mmc.plugins.dyngroup.health import scheduleCheckStatus

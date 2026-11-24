@@ -47,7 +47,7 @@ import json
 
 import pwd
 import grp
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from mmc.core.version import getMedullaVersion as getVersion, getMedullaRevision as getRevision
 
 from pulse2.database.pkgs import PkgsDatabase
 from pulse2.database.xmppmaster import XmppMasterDatabase

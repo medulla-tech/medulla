@@ -3,11 +3,11 @@
 import logging
 from mmc.plugins.admin.config import AdminConfig
 from pulse2.database.admin import AdminDatabase
-from pulse2.version import getVersion, getRevision
+from mmc.core.version import getMedullaRevision, getMedullaVersion
 
-VERSION = "5.6.6"
+VERSION = getMedullaVersion()
 APIVERSION = "0:0:0"
-REVISION = ""
+REVISION = getMedullaRevision()
 
 def getApiVersion():
     return APIVERSION

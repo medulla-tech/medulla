@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # file : services/mmc/plugins/updates/__init__.py
 
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from mmc.core.version import getMedullaVersion as getVersion, getMedullaRevision as getRevision
 
 from mmc.support.mmctools import (
     RpcProxyI,

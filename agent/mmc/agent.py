@@ -38,7 +38,7 @@ except ImportError:
 from mmc.site import localstatedir
 from mmc.ssl import makeSSLContext
 from mmc.support.mmctools import Singleton
-from mmc.core.version import scmRevision
+from mmc.core.version import getMedullaRevision, getMedullaVersion
 from mmc.core.audit import AuditFactory
 from mmc.core.log import ColoredFormatter
 
@@ -79,7 +79,7 @@ sys.path.append("plugins")
 
 Fault = xmlrpc.client.Fault
 ctx = None
-VERSION = "5.6.6"
+VERSION = getMedullaVersion()
 
 PYTHON_VERSION = sys.version_info.major
 
@@ -813,7 +813,7 @@ sys.path.append("plugins")
 
 Fault = xmlrpc.client.Fault
 ctx = None
-VERSION = "5.6.6"
+VERSION = getMedullaVersion()
 
 
 class IncludeStartsWithFilter(logging.Filter):
@@ -1569,7 +1569,7 @@ class MmcServer(XMLRPC, object):
     # ===== Méthodes utilitaires =====
     def getRevision(self):
         """Retourne la révision SCM du serveur."""
-        return scmRevision("$Rev$")
+        return getMedullaRevision()
 
     def getVersion(self):
         """Retourne la version du serveur."""

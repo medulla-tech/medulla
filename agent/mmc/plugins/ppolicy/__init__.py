@@ -22,7 +22,7 @@ import calendar
 from ldap import modlist
 from mmc.plugins.base import ldapUserGroupControl
 from mmc.support.config import PluginConfig
-from mmc.core.version import scmRevision
+from mmc.core.version import getMedullaRevision, getMedullaVersion
 from mmc.core.audit import AuditFactory as AF
 from mmc.plugins.ppolicy.audit import AT, AA, PLUGIN_NAME
 
@@ -34,9 +34,9 @@ from mmc.plugins.ppolicy.signals import (
 
 logger = logging.getLogger()
 
-VERSION = "5.6.6"
+VERSION = getMedullaVersion()
 APIVERSION = "0:1:0"
-REVISION = scmRevision("$Rev$")
+REVISION = getMedullaRevision()
 
 
 def getVersion():

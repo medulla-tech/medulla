@@ -1,5 +1,5 @@
 # -*- coding: utf-8; -*-
-from pulse2.version import getVersion, getRevision
+from mmc.core.version import getMedullaVersion as getVersion, getMedullaRevision as getRevision
 from mmc.support.config import PluginConfig, PluginConfigFactory
 from mmc.plugins.mobile.config import MobileConfig
 from pulse2.database.mobile import MobileDatabase

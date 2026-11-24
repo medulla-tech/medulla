@@ -12,7 +12,7 @@ import base64
 import re
 import json
 
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from mmc.core.version import getMedullaVersion as getVersion, getMedullaRevision as getRevision
 
 from mmc.support.config import PluginConfigFactory
 from mmc.plugins.kiosk.config import KioskConfig

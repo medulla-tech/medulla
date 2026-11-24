@@ -16,7 +16,7 @@ import sys
 from pulse2.package_server.config import config_addons
 from pulse2.package_server.common import Common
 from pulse2.package_server.common.serializer import PkgsRsyncStateSerializer
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from mmc.core.version import getMedullaVersion as getVersion, getMedullaRevision as getRevision
 
 import pulse2.utils
 

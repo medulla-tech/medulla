@@ -44,7 +44,7 @@ pythonmodules = apis apis.clients database database.admin database.dyngroup \
 	dlp dlp.api dlp.tests \
 	cm cm.tests tests
 
-all-local: site.py version.py
+all-local: site.py
 
 # Expands Python modules list with found *.py files in each module given in pythonmodules
 modpythondir = $(pythondir)/$(notdir $(realpath $(srcdir)))
@@ -58,9 +58,8 @@ else
 packagermode = False
 endif
 
-EXTRA_DIST = site.py.in version.py.in $(nobase_modpython_DATA)
+EXTRA_DIST = site.py.in $(nobase_modpython_DATA)
 CLEANFILES = site.py
-DISTCLEANFILES = version.py
 
 edit = sed \
         -e 's|@packagermode[@]|$(packagermode)|g' \

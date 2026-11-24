@@ -1324,7 +1324,6 @@ fi
 %{_datadir}/mmc/main.php
 %{_datadir}/mmc/site.php
 %{_datadir}/mmc/token.php
-%{_datadir}/mmc/version.php
 %{_datadir}/mmc/demobanner.php
 %{_datadir}/mmc/graph/
 %{_datadir}/mmc/img/

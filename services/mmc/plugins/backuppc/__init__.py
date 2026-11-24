@@ -11,7 +11,7 @@ Plugin to manage the interface with BackupPC
 import logging
 
 from mmc.plugins.backuppc.config import BackuppcConfig
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from mmc.core.version import getMedullaVersion as getVersion, getMedullaRevision as getRevision
 from mmc.plugins.base import ComputerI
 from mmc.plugins.base.computers import ComputerManager
 

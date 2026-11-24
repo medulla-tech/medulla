@@ -54,7 +54,7 @@ from pulse2.managers.location import ComputerLocationManager
 import pulse2.database.msc.orm.commands_on_host
 from pulse2.utils import noNoneList
 
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from mmc.core.version import getMedullaVersion as getVersion, getMedullaRevision as getRevision
 
 APIVERSION = "0:0:0"
 

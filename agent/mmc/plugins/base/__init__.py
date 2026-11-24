@@ -34,7 +34,7 @@ from twisted.internet import defer
 
 from mmc.agent import PluginManager
 from mmc.core.audit import AuditFactory as AF
-from mmc.core.version import scmRevision
+from mmc.core.version import getMedullaRevision, getMedullaVersion
 from mmc.plugins.base.audit import AA, AT, PLUGIN_NAME
 from mmc.plugins.base.auth import (
     AuthenticationManager,
@@ -89,9 +89,9 @@ INI = f"{mmcconfdir}/plugins/base.ini"
 
 modList = None
 
-VERSION = "5.6.6"
+VERSION = getMedullaVersion()
 APIVERSION = "9:0:5"
-REVISION = scmRevision("$Rev$")
+REVISION = getMedullaRevision()
 
 # List of methods that can be called without user authentication
 NOAUTHNEEDED = [
