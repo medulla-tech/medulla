@@ -18,6 +18,8 @@ PULSE2_IMAGING_GRUB_FNAME = "conf.txt"
 PULSE2_IMAGING_CONF_FNAME = "CONF"
 PULSE2_IMAGING_SIZE_FNAME = "size.txt"
 PULSE2_IMAGING_LOG_FNAME = "log.txt"
+# ANSI escape sequences and control characters forbidden in XML 1.0
+LOG_CONTROL_CHARS = re.compile(r"\x1b\[[0-9;?]*[ -/]*[@-~]|[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]")
 PULSE2_IMAGING_PROGRESS_FNAME = "progress.txt"
 
 
@@ -78,7 +80,11 @@ class Pulse2Image:
         self.size = info["size"]
         self.has_error = info["has_error"]
         try:
-            self.logs = open(logPath, "r").readlines()
+            # davos.log holds the raw Clonezilla console output (ANSI colours,
+            # progress bars): strip the control characters that XML-RPC cannot
+            # carry, otherwise imageGetLogs fails with "not well-formed".
+            with open(logPath, "r", errors="replace") as log_file:
+                self.logs = [LOG_CONTROL_CHARS.sub("", line) for line in log_file]
         except BaseException:
             self.logs = []
 
