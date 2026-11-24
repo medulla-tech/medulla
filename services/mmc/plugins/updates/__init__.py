@@ -29,8 +29,7 @@ from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.msc.database import MscDatabase
 from pulse2.utils import normalize_entity
 
-from mmc.plugins.xmppmaster import callrestart
-from mmc.plugins.xmppmaster.master.agentmaster import send_message_json
+from mmc.plugins.xmppmaster.master.agentmaster import callrestartbymaster, send_message_json
 from mmc.plugins.xmppmaster.master.lib.utils import name_random
 
 import logging
@@ -325,7 +324,7 @@ class RpcProxy(RpcProxyI):
                 return {"sent": False, "reason": "already_requested"}
             login = self._ctx_login(ctx) or "root"
             try:
-                sent = callrestart(jid, True) == jid
+                sent = bool(callrestartbymaster(jid))
             except Exception as e:
                 logger.error(f"restart_machine: {jid}: {e}")
                 sent = False
