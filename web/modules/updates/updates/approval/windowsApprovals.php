@@ -16,7 +16,12 @@ if ($system === 'linux') {
     list($distributions, $distribution) = updatesLinuxDistributionFilter($entity);
 }
 $summary = $entity ? updatesApprovalsSummary(updatesEntityId($entity), $system, $distribution) : null;
-updatesStatusLinks($entity, $summary, $system, $status, $distribution);
+$filterOptions = array();
+$filters = array();
+if ($system === 'windows') {
+    list($filterOptions, $filters) = updatesApprovalFilters($summary);
+}
+updatesStatusLinks($entity, $summary, $system, $status, $distribution, $filters);
 
 if ($system === 'windows' && $entity && updatesWinTrackedProducts(updatesEntityId($entity)) === 0) {
     updatesWinNoProductNotice(updatesEntityId($entity));
@@ -28,7 +33,8 @@ updatesEntitySelect($entity, false,
 if ($system === 'linux' && $distributions !== null) {
     updatesDistributionSelect($distributions, $distribution);
 }
-$params = array('location' => $entity['uuid'], 'status' => $status);
+updatesApprovalFilterSelects($filterOptions, $filters, updatesApprovalUrl($entity, $status));
+$params = array('location' => $entity['uuid'], 'status' => $status) + $filters;
 if ($system === 'linux') {
     $params['system'] = 'linux';
     if ($distribution !== '') {

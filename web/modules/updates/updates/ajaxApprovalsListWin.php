@@ -54,10 +54,14 @@ if ($linux) {
     return;
 }
 
+$chosenFilters = updatesApprovalRequestFilters();
+$filters = $chosenFilters + array_fill_keys(array_keys(updatesApprovalFilterNames()), '');
+
 $total = 0;
 $rows = array();
 if ($entity) {
-    $result = xmlrpc_get_windows_approvals(updatesEntityId($entity), $status, $start, $maxperpage, $filter);
+    $result = xmlrpc_get_windows_approvals(updatesEntityId($entity), $status, $start, $maxperpage, $filter, 'windows', '',
+                                            $filters['version'], $filters['kind'], $filters['architecture']);
     if (updatesReadFailed($result)) {
         updatesReadFailedBox();
         return;
@@ -140,7 +144,7 @@ foreach ($rows as $row) {
         'location' => $entity['uuid'],
         'from'     => $status,
         'machines' => $ownMachines ?? '',
-    );
+    ) + $chosenFilters;
 }
 
 if (!empty($bulk) && !empty($params)) {
@@ -164,7 +168,7 @@ $n->start = 0;
 $n->end = $total;
 $n->setItemCount($total);
 $n->setNavBar(new AjaxNavBar($total, htmlspecialchars(addslashes($filter), ENT_QUOTES)));
-if ($filter !== '') {
+if ($filter !== '' || !empty($chosenFilters)) {
     $n->setEmptyState(_T("No updates found", "updates"), _T("No update matches the search.", "updates"));
 } else {
     $emptyTitles = array(
@@ -194,7 +198,7 @@ if (empty($bulk) || empty($params)) {
 }
 
 echo '<form method="post" class="updates-approval-form" action="'
-    . htmlspecialchars(updatesApprovalUrl($entity, $status), ENT_QUOTES, 'UTF-8') . '">';
+    . htmlspecialchars(updatesApprovalUrl($entity, $status, 'windows', '', $chosenFilters), ENT_QUOTES, 'UTF-8') . '">';
 $n->display();
 echo '<input type="hidden" name="auth_token" value="' . htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8') . '">';
 echo '<div class="approval-form-actions">';

@@ -2138,3 +2138,35 @@ msgstr "Versión %s descargada: se aplica al cerrar las aplicaciones de Office."
 #: modules/updates/updates/detailsMachineWin.php
 msgid "Upgrade"
 msgstr "Actualización de versión"
+
+#: modules/updates/includes/html.inc.php
+msgid "All versions"
+msgstr "Todas las versiones"
+
+#: modules/updates/includes/html.inc.php
+msgid "Type"
+msgstr "Tipo"
+
+#: modules/updates/includes/html.inc.php
+msgid "All types"
+msgstr "Todos los tipos"
+
+#: modules/updates/includes/html.inc.php
+msgid "All processors"
+msgstr "Todos los procesadores"
+
+#: modules/updates/includes/html.inc.php
+msgid "Cumulative"
+msgstr "Acumulativa"
+
+#: modules/updates/includes/html.inc.php
+msgid "Preview"
+msgstr "Vista previa"
+
+#: modules/updates/includes/html.inc.php
+msgid "Prerelease"
+msgstr "Versión preliminar"
+
+#: modules/updates/includes/html.inc.php
+msgid "Reset"
+msgstr "Restablecer"

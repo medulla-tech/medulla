@@ -838,8 +838,9 @@ function updatesStatusDistribution($value)
  * @param string $label
  * @param array  $options  value => label, "" removes the parameter
  * @param string $selected
+ * @param string $class    Extra CSS class of the filter
  */
-function updatesParamSelect($param, $label, $options, $selected)
+function updatesParamSelect($param, $label, $options, $selected, $class = '')
 {
     $labels = array();
     $values = array();
@@ -853,7 +854,7 @@ function updatesParamSelect($param, $label, $options, $selected)
     $select->setElements($labels);
     $select->setElementsVal($values);
     $select->setSelected(htmlspecialchars($selected, ENT_QUOTES, 'UTF-8'));
-    echo '<div class="entity-filter">';
+    echo '<div class="entity-filter' . (($class !== '') ? ' ' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') : '') . '">';
     echo '<label for="' . $id . '">' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . ':</label>';
     $select->display();
     echo '</div>';
@@ -2581,9 +2582,10 @@ function updatesApprovalId($value)
  * @param string     $status
  * @param string     $system       "windows" or "linux"
  * @param string     $distribution Linux distribution, "" for all
+ * @param array      $filters      Chosen Windows filters (updatesApprovalFilters)
  * @return string
  */
-function updatesApprovalUrl($entity, $status, $system = 'windows', $distribution = '')
+function updatesApprovalUrl($entity, $status, $system = 'windows', $distribution = '', $filters = array())
 {
     $params = array('tab' => ($system === 'linux') ? 'tablinux' : 'tabwin',
                     'status' => updatesApprovalStatus($status, $system));
@@ -2593,7 +2595,129 @@ function updatesApprovalUrl($entity, $status, $system = 'windows', $distribution
     if ($system === 'linux' && $distribution !== '') {
         $params['distribution'] = $distribution;
     }
+    if ($system !== 'linux') {
+        $params += $filters;
+    }
     return urlStrRedirect("updates/updates/updatesListWin", $params);
+}
+
+/**
+ * Text filter of the approval list from a request, "" when unusable.
+ *
+ * @param mixed $value
+ * @return string
+ */
+function updatesApprovalFilterValue($value)
+{
+    $value = is_scalar($value) && !is_bool($value) ? trim((string) $value) : '';
+    return (strlen($value) <= 128) ? $value : '';
+}
+
+/**
+ * Filters of the Windows approval list asked by the request, empty ones left out.
+ *
+ * @return array parameter => value
+ */
+function updatesApprovalRequestFilters()
+{
+    $filters = array();
+    foreach (array_keys(updatesApprovalFilterNames()) as $param) {
+        $value = updatesApprovalFilterValue($_GET[$param] ?? '');
+        if ($value !== '') {
+            $filters[$param] = $value;
+        }
+    }
+    return $filters;
+}
+
+/**
+ * Filters of the Windows approval list, in display order.
+ *
+ * @return array URL parameter => array(label, all: label of the choice that filters nothing)
+ */
+function updatesApprovalFilterNames()
+{
+    return array(
+        'version'      => array('label' => _T("Version", "updates"), 'all' => _T("All versions", "updates")),
+        'kind'         => array('label' => _T("Type", "updates"), 'all' => _T("All types", "updates")),
+        'architecture' => array('label' => _T("Processor", "updates"), 'all' => _T("All processors", "updates")),
+    );
+}
+
+/**
+ * Label of a value of a filter of the Windows approval list, unescaped.
+ *
+ * @param string $param version, kind or architecture
+ * @param string $value
+ * @return string
+ */
+function updatesApprovalFilterLabel($param, $value)
+{
+    if ($param === 'kind') {
+        $kinds = array(
+            'cumulative' => _T("Cumulative", "updates"),
+            'preview'    => _T("Preview", "updates"),
+            'prerelease' => _T("Prerelease", "updates"),
+        );
+        return $kinds[$value] ?? updatesCatalogText($value);
+    }
+    if ($param === 'architecture' && strtolower($value) === 'arm64') {
+        return 'ARM64';
+    }
+    return $value;
+}
+
+/**
+ * Filters offered by the Windows approval list and the ones requested in the
+ * URL, kept only when the server offers them.
+ *
+ * @param array|null $summary Answer of updatesApprovalsSummary()
+ * @return array array(parameter => array(value => label), parameter => chosen value)
+ */
+function updatesApprovalFilters($summary)
+{
+    $offered = is_array($summary) && is_array($summary['filters'] ?? null) ? $summary['filters'] : array();
+    $options = array();
+    $chosen = array();
+    foreach (array_keys(updatesApprovalFilterNames()) as $param) {
+        $list = array();
+        foreach ((is_array($offered[$param] ?? null) ? $offered[$param] : array()) as $value) {
+            $value = updatesApprovalFilterValue($value);
+            if ($value !== '') {
+                $list[$value] = updatesApprovalFilterLabel($param, $value);
+            }
+        }
+        if (empty($list)) {
+            continue;
+        }
+        $options[$param] = $list;
+        $requested = updatesApprovalFilterValue($_GET[$param] ?? '');
+        if ($requested !== '' && isset($list[$requested])) {
+            $chosen[$param] = $requested;
+        }
+    }
+    return array($options, $chosen);
+}
+
+/**
+ * Filters of the Windows approval list; each choice reloads the page with its parameter.
+ *
+ * @param array  $options  parameter => array(value => label) (updatesApprovalFilters)
+ * @param array  $chosen   parameter => chosen value
+ * @param string $resetUrl Page without any of these filters, linked when one is chosen
+ */
+function updatesApprovalFilterSelects($options, $chosen, $resetUrl = '')
+{
+    $names = updatesApprovalFilterNames();
+    foreach ($options as $param => $list) {
+        updatesParamSelect($param, $names[$param]['label'], array('' => $names[$param]['all']) + $list,
+                           (string) ($chosen[$param] ?? ''), 'updates-filter-compact');
+    }
+    if (!empty($chosen) && $resetUrl !== '') {
+        echo '<div class="entity-filter updates-filter-reset"><a href="'
+            . htmlspecialchars($resetUrl, ENT_QUOTES, 'UTF-8') . '">'
+            . htmlspecialchars(_T("Reset", "updates"), ENT_QUOTES, 'UTF-8') . '</a></div>';
+    }
 }
 
 /**
@@ -2657,8 +2781,9 @@ function updatesApprovalsSummary($entityId, $system, $distribution = '')
  * @param string     $system       "windows" or "linux"
  * @param string     $selected
  * @param string     $distribution Linux distribution, "" for all
+ * @param array      $filters      Chosen Windows filters (updatesApprovalFilters)
  */
-function updatesStatusLinks($entity, $summary, $system, $selected, $distribution = '')
+function updatesStatusLinks($entity, $summary, $system, $selected, $distribution = '', $filters = array())
 {
     $counts = is_array($summary['counts'] ?? null) ? $summary['counts'] : null;
     $links = array();
@@ -2667,7 +2792,7 @@ function updatesStatusLinks($entity, $summary, $system, $selected, $distribution
         $text = htmlspecialchars(($count !== null) ? $label . ' (' . $count . ')' : $label, ENT_QUOTES, 'UTF-8');
         $links[] = ($status === $selected)
             ? '<strong class="updates-status-current">' . $text . '</strong>'
-            : '<a href="' . htmlspecialchars(updatesApprovalUrl($entity, $status, $system, $distribution), ENT_QUOTES, 'UTF-8') . '">' . $text . '</a>';
+            : '<a href="' . htmlspecialchars(updatesApprovalUrl($entity, $status, $system, $distribution, $filters), ENT_QUOTES, 'UTF-8') . '">' . $text . '</a>';
     }
     echo '<div class="updates-status-links">'
         . implode('<span class="updates-status-sep">&middot;</span>', $links) . '</div>';
@@ -2757,7 +2882,7 @@ function updatesApprovalPopup($status)
         } else {
             new NotifyWidgetFailure(updatesActionText($text['failure'], $label, $entityName));
         }
-        header('Location: ' . updatesApprovalUrl($entity, $backStatus));
+        header('Location: ' . updatesApprovalUrl($entity, $backStatus, 'windows', '', updatesApprovalRequestFilters()));
         exit;
     }
 

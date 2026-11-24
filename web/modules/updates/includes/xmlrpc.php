@@ -156,16 +156,21 @@ function xmlrpc_reset_linux_releases($entity_id)
  *
  * @param string $status pending, approved or declined; ignored for linux
  * @param string $system windows or linux
- * @return array {total, counts: {pending, approved, declined}, rows: [{update_id, kb, title, classification,
+ * @param string $version      Windows only: version label to keep, "" for all
+ * @param string $kind         Windows only: classification or kind of update to keep, "" for all
+ * @param string $architecture Windows only: processor to keep, "" for all
+ * @return array {total, counts: {pending, approved, declined}, filters: {version: [], kind: [], architecture: []}, rows: [{update_id, kb, title, classification,
  *                severity, exploited, critical, machines, by_rule, decided_by, decided_at,
  *                package_state, package_error, deployed}]}
  *               linux: rows [{package, classification, severity, machines, approved}], rules_from {id, name}|null
  */
-function xmlrpc_get_windows_approvals($entity_id, $status, $start, $limit, $filter = "", $system = 'windows', $distribution = '')
+function xmlrpc_get_windows_approvals($entity_id, $status, $start, $limit, $filter = "", $system = 'windows', $distribution = '',
+                                      $version = '', $kind = '', $architecture = '')
 {
     return xmlCall("updates.get_windows_approvals",
                    array(intval($entity_id), (string) $status, intval($start), intval($limit), (string) $filter,
-                         (string) $system, (string) $distribution));
+                         (string) $system, (string) $distribution,
+                         (string) $version, (string) $kind, (string) $architecture));
 }
 
 /**

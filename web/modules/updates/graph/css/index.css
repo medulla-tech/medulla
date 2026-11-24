@@ -136,14 +136,18 @@
 
 .updates-status-links a,
 .updates-status-links a:link,
-.updates-status-links a:visited {
+.updates-status-links a:visited,
+.updates-filter-reset a,
+.updates-filter-reset a:link,
+.updates-filter-reset a:visited {
     color: var(--color-primary);
     background: none;
     border: none;
     text-decoration: none;
 }
 
-.updates-status-links a:hover {
+.updates-status-links a:hover,
+.updates-filter-reset a:hover {
     text-decoration: underline;
 }
 
@@ -182,6 +186,20 @@
     border-radius: var(--radius-sm);
     min-width: 180px;
     max-width: 100%;
+}
+
+.entity-filter.updates-filter-compact label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.entity-filter.updates-filter-compact select {
+    min-width: 0;
+    max-width: 170px;
 }
 
 .updates-settings-form #entity-filter {

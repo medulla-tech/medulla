@@ -308,6 +308,7 @@ class RpcProxy(RpcProxyI):
         xmppmaster. Returns {"sent": bool, "reason": ""}, reason when not sent:
         "not_found", "forbidden", "not_waiting", "offline", "already_requested",
         "send_failed", "internal_error"."""
+        # pylint: disable=unsubscriptable-object
         try:
             jid = str(jid or "").strip()
             database = UpdatesDatabase()
@@ -324,7 +325,8 @@ class RpcProxy(RpcProxyI):
                 return {"sent": False, "reason": "already_requested"}
             login = self._ctx_login(ctx) or "root"
             try:
-                sent = bool(callrestartbymaster(jid))
+                callrestartbymaster(jid)
+                sent = True
             except Exception as e:
                 logger.error(f"restart_machine: {jid}: {e}")
                 sent = False
@@ -647,9 +649,11 @@ class RpcProxy(RpcProxyI):
 
     @with_optional_xmpp_context
     def get_windows_approvals(self, entity_id, status="pending", start=0, limit=-1,
-                              filter="", system="windows", distribution="", ctx=None):
+                              filter="", system="windows", distribution="", version="",
+                              kind="", architecture="", ctx=None):
         empty = {"total": 0, "rows": [],
                  "counts": {"pending": 0, "approved": 0, "declined": 0},
+                 "filters": {"version": [], "kind": [], "architecture": []},
                  "parent": None}
         try:
             entity_ids = self._dashboard_scope([entity_id], ctx)
@@ -660,7 +664,10 @@ class RpcProxy(RpcProxyI):
                                                                 limit, filter,
                                                                 self._system(system),
                                                                 str(distribution or ""),
-                                                                user_entity_ids(ctx))
+                                                                user_entity_ids(ctx),
+                                                                str(version or ""),
+                                                                str(kind or ""),
+                                                                str(architecture or ""))
             _sizes_for_xmlrpc(approvals["rows"])
             return approvals
         except Exception as e:

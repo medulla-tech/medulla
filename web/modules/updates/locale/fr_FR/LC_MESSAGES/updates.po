@@ -2138,3 +2138,35 @@ msgstr "Version %s téléchargée : elle s'applique à la fermeture des applicat
 #: modules/updates/updates/detailsMachineWin.php
 msgid "Upgrade"
 msgstr "Mise à niveau"
+
+#: modules/updates/includes/html.inc.php
+msgid "All versions"
+msgstr "Toutes les versions"
+
+#: modules/updates/includes/html.inc.php
+msgid "Type"
+msgstr "Type"
+
+#: modules/updates/includes/html.inc.php
+msgid "All types"
+msgstr "Tous les types"
+
+#: modules/updates/includes/html.inc.php
+msgid "All processors"
+msgstr "Tous les processeurs"
+
+#: modules/updates/includes/html.inc.php
+msgid "Cumulative"
+msgstr "Cumulative"
+
+#: modules/updates/includes/html.inc.php
+msgid "Preview"
+msgstr "Préversion"
+
+#: modules/updates/includes/html.inc.php
+msgid "Prerelease"
+msgstr "Version préliminaire"
+
+#: modules/updates/includes/html.inc.php
+msgid "Reset"
+msgstr "Réinitialiser"

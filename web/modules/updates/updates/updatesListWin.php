@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['approval_bulk'])) {
     } else {
         new NotifyWidgetFailure(_T("The selection could not be saved.", "updates"));
     }
-    header("Location: " . updatesApprovalUrl($entity, $currentStatus));
+    header("Location: " . updatesApprovalUrl($entity, $currentStatus, 'windows', '', updatesApprovalRequestFilters()));
     exit;
 }
 
