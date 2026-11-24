@@ -36,7 +36,7 @@ import multiprocessing as mp
 
 from mmc.site import mmcconfdir, localstatedir
 from mmc.core.log import ColoredFormatter
-from pulse2.version import getVersion, getRevision
+from mmc.core.version import getMedullaVersion as getVersion, getMedullaRevision as getRevision
 from pulse2.inventoryserver.server import InventoryGetService
 from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 
