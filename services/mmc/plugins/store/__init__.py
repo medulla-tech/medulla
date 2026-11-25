@@ -140,7 +140,13 @@ def _store_api_post(endpoint, data):
             return json.loads(response.read().decode('utf-8'))
     except urllib.error.HTTPError as e:
         logger.error(f"Store API POST HTTP error {e.code}: {url}")
-        return None
+        try:
+            answer = json.loads(e.read().decode('utf-8'))
+        except ValueError:
+            answer = None
+        if isinstance(answer, dict) and answer.get('error'):
+            return {'success': False, 'error': answer['error']}
+        return {'success': False, 'error': f'Store API returned HTTP {e.code}'}
     except Exception as e:
         logger.error(f"Store API POST error: {e}")
         return None
@@ -803,7 +809,6 @@ def _regenerate_packages(config):
 
 def create_software_request(software_name, os, requester_name, requester_email, message=""):
     """Create a new software request via store API"""
-    # TODO: implement via store API when endpoint is available
     result = _store_api_post('requests', {
         'software_name': software_name,
         'os': os or '',
@@ -813,42 +818,5 @@ def create_software_request(software_name, os, requester_name, requester_email, 
     })
     if not result:
         result = {'success': False, 'error': 'Failed to contact store API'}
-
-    if not result.get('success'):
-        return result
-
-    # 2. Call AI webhook if enabled
-    config = StoreConfig("store")
-    if config.ai_webhook_url:
-        try:
-            webhook_data = {
-                'request_id': result.get('id'),
-                'software_name': software_name,
-                'os': os or '',
-                'requester_name': requester_name,
-                'requester_email': requester_email,
-                'message': message or ''
-            }
-
-            req = urllib.request.Request(
-                config.ai_webhook_url,
-                data=json.dumps(webhook_data).encode('utf-8'),
-                headers={'Content-Type': 'application/json'},
-                method='POST'
-            )
-
-            # Create SSL context (optionally skip verification for self-signed certs)
-            ssl_context = None
-            if config.store_api_skip_ssl:
-                ssl_context = ssl.create_default_context()
-                ssl_context.check_hostname = False
-                ssl_context.verify_mode = ssl.CERT_NONE
-
-            with urllib.request.urlopen(req, timeout=10, context=ssl_context) as response:
-                logging.getLogger().info(f"AI webhook called successfully for request {result.get('id')}")
-        except urllib.error.URLError as e:
-            logging.getLogger().warning(f"AI webhook call failed: {e}")
-        except Exception as e:
-            logging.getLogger().warning(f"AI webhook error: {e}")
 
     return result
