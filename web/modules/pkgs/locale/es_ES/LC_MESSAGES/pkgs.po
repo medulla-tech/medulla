@@ -111,7 +111,7 @@ msgstr "Sección de instalación"
 
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:45
 msgid "Wait and go to step"
-msgstr "Espere y vaya al paso"
+msgstr "Esperar e ir al paso"
 
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:54
 #: modules/pkgs/includes/actions/actionerrorcompletedend.php:46
@@ -128,11 +128,11 @@ msgstr "Etiqueta del paso :"
 
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:65
 msgid "Wait for (seconds)"
-msgstr "Espere (segundos)"
+msgstr "Esperar (segundos)"
 
 #: modules/pkgs/includes/actions/actionerrorcompletedend.php:31
 msgid "End Error"
-msgstr "Fin del error"
+msgstr "Fin con error"
 
 #: modules/pkgs/includes/actions/action_notification.php:99
 msgid "User Notification"
@@ -194,13 +194,13 @@ msgstr "Definir el tamaño del texto del mensaje"
 #: modules/pkgs/includes/actions/action_loop_question.php:152
 #: modules/pkgs/includes/actions/action_question.php:159
 msgid "True button text"
-msgstr "Texto del botón True"
+msgstr "Texto del botón Verdadero"
 
 #: modules/pkgs/includes/actions/action_notification.php:161
 #: modules/pkgs/includes/actions/action_loop_question.php:155
 #: modules/pkgs/includes/actions/action_question.php:162
 msgid "Define text to be shown on button returning True"
-msgstr "Definir el texto que se mostrará en el botón que devuelve True"
+msgstr "Definir el texto que se mostrará en el botón que devuelve Verdadero"
 
 #: modules/pkgs/includes/actions/action_notification.php:172
 #: modules/pkgs/includes/actions/action_loop_question.php:238
@@ -262,26 +262,26 @@ msgstr "Definir el tamaño del texto de la pregunta"
 #: modules/pkgs/includes/actions/action_loop_question.php:167
 #: modules/pkgs/includes/actions/action_question.php:174
 msgid "False button text"
-msgstr "Texto falso del botón"
+msgstr "Texto del botón Falso"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:170
 #: modules/pkgs/includes/actions/action_question.php:177
 msgid "Define text to be shown on button returning False"
-msgstr "Definir el texto que se mostrará en el botón que devuelve False"
+msgstr "Definir el texto que se mostrará en el botón que devuelve Falso"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:181
 #: modules/pkgs/includes/actions/action_question.php:191
 msgid "If 'True' go to step"
-msgstr "Si es \"Verdadero\", vaya al paso"
+msgstr "Si es \"Verdadero\", ir al paso"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:184
 #: modules/pkgs/includes/actions/action_question.php:194
 msgid "Define step label if user response is True"
-msgstr "Definir la etiqueta del paso si la respuesta del usuario es True"
+msgstr "Definir la etiqueta del paso si la respuesta del usuario es Verdadero"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:195
 msgid "If 'Max Postponements Reached' go to step"
-msgstr "Si se ha alcanzado el número máximo de aplazamientos, vaya al paso siguiente"
+msgstr "Si se ha alcanzado el número máximo de aplazamientos, ir al paso"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:198
 msgid "Define step label if the maximum number of postponements reached"
@@ -290,7 +290,7 @@ msgstr "Definir la etiqueta de paso si se alcanza el número máximo de aplazami
 #: modules/pkgs/includes/actions/action_loop_question.php:209
 #: modules/pkgs/includes/actions/action_question.php:224
 msgid "If 'No User' go to step"
-msgstr "Si no hay usuario, vaya al paso"
+msgstr "Si no hay usuario, ir al paso"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:212
 #: modules/pkgs/includes/actions/action_question.php:227
@@ -501,7 +501,7 @@ msgstr "Establecer tiempo de espera (en segundos)"
 
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:39
 msgid "End Success"
-msgstr "Éxito final"
+msgstr "Fin con éxito"
 
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:74
 msgid "Delete package"
@@ -528,11 +528,11 @@ msgstr "Sin inventario"
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:129
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:134
 msgid "Inventory on change"
-msgstr "Inventario sobre el cambio"
+msgstr "Inventario si hay cambios"
 
 #: modules/pkgs/includes/actions/action_question.php:101
 msgid "User Question"
-msgstr "Pregunta del usuario"
+msgstr "Pregunta al usuario"
 
 #: modules/pkgs/includes/actions/action_question.php:106
 msgid "Submit a question to the connected user"
@@ -540,11 +540,11 @@ msgstr "Enviar una pregunta al usuario conectado"
 
 #: modules/pkgs/includes/actions/action_question.php:207
 msgid "If 'False' go to step"
-msgstr "Si es \"False\", vaya al paso"
+msgstr "Si es \"Falso\", ir al paso"
 
 #: modules/pkgs/includes/actions/action_question.php:210
 msgid "Define step label if user response is False"
-msgstr "Definir la etiqueta del paso si la respuesta del usuario es False"
+msgstr "Definir la etiqueta del paso si la respuesta del usuario es Falso"
 
 #: modules/pkgs/includes/actions/action_download.php:76
 #: modules/pkgs/pkgs/detail.php:93
@@ -594,29 +594,29 @@ msgstr "Ir al paso"
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:181
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:196
 msgid "On success go to step"
-msgstr "Si tiene éxito, vaya al paso"
+msgstr "Si tiene éxito, ir al paso"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:346
 #: modules/pkgs/includes/actions/action_unzip_file.php:361
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:216
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:231
 msgid "On error go to step"
-msgstr "En caso de error, vaya al paso"
+msgstr "En caso de error, ir al paso"
 
 #: modules/pkgs/includes/actions/action_kiosknotification.php:94
 msgid "Kiosk Progression"
-msgstr "Progresión del quiosco"
+msgstr "Progresión del Kiosk"
 
 msgid "Log message"
 msgstr "Mensaje de registro"
 
 #: modules/pkgs/includes/actions/action_kiosknotification.php:100
 msgid "Send a notification to the kiosk"
-msgstr "Enviar una notificación al quiosco"
+msgstr "Enviar una notificación al Kiosk"
 
 #: modules/pkgs/includes/actions/action_kiosknotification.php:119
 msgid "Define text for message to be shown in kiosk"
-msgstr "Definir el texto del mensaje que se mostrará en el quiosco"
+msgstr "Definir el texto del mensaje que se mostrará en el Kiosk"
 
 #: modules/pkgs/includes/actions/action_kiosknotification.php:136
 #: modules/pkgs/includes/actions/action_kiosknotification.php:146
@@ -625,7 +625,7 @@ msgstr "Progresión (porcentaje)"
 
 #: modules/pkgs/includes/actions/action_kiosknotification.php:150
 msgid "Define progression percentage to be shown in kiosk"
-msgstr "Definir el porcentaje de progresión que se mostrará en el quiosco"
+msgstr "Definir el porcentaje de progresión que se mostrará en el Kiosk"
 
 #: modules/pkgs/includes/actions/actioncleaning.php:37
 msgid "Remove uploaded files"
@@ -641,16 +641,16 @@ msgstr "Reiniciar la máquina"
 
 #: modules/pkgs/includes/actions/actionrestart.php:41
 msgid "Restart Agent Machine"
-msgstr "Reiniciar la máquina agente"
+msgstr "Reiniciar el agente de la máquina"
 
 #: modules/pkgs/includes/actions/actionrestart.php:60
 #: modules/pkgs/pkgs/detail.php:145 modules/pkgs/pkgs/detail.php:231
 msgid "Restart"
-msgstr "Reinicie"
+msgstr "Reiniciar"
 
 #: modules/pkgs/includes/actions/actionrestart.php:83
 msgid "Target Restart"
-msgstr "Reinicio del objetivo"
+msgstr "Objetivo del reinicio"
 
 #: modules/pkgs/includes/actions/action_section_update.php:41
 msgid "Update Section"
@@ -678,7 +678,7 @@ msgstr "en ko, 0 = ilimitado"
 
 #: modules/pkgs/pkgs/addXMPP.php:38
 msgid "Workflow"
-msgstr "Workflow"
+msgstr "Plan de despliegue"
 
 #: modules/pkgs/includes/query.php:78
 msgid "Associate inventory"
@@ -919,7 +919,7 @@ msgstr "Carrete"
 
 #: modules/pkgs/pkgs/add.php:313 modules/pkgs/pkgs/edit.php:408
 msgid "Launcher (kiosk)"
-msgstr "Lanzadera (quiosco)"
+msgstr "Lanzadera (Kiosk)"
 
 #: modules/pkgs/pkgs/add.php:322 modules/pkgs/pkgs/edit.php:454
 #: modules/pkgs/pkgs/detail.php:290
@@ -1072,7 +1072,7 @@ msgstr "Acciones disponibles"
 
 #: modules/pkgs/pkgs/addXMPP.php:43
 msgid "Deployment Workflow"
-msgstr "Flujo de trabajo de implantación"
+msgstr "Flujo de despliegue"
 
 #: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:55
 msgid "Validity (months)"
@@ -1314,7 +1314,7 @@ msgstr "Fecha de la última modificación"
 
 #: modules/pkgs/pkgs/detail.php:205
 msgid "Sharing Location"
-msgstr "Compartir ubicación"
+msgstr "Ubicación del recurso compartido"
 
 #: modules/pkgs/pkgs/detail.php:207
 msgid "Package Uuid"
@@ -1335,7 +1335,7 @@ msgstr "Método de transferencia"
 
 #: modules/pkgs/pkgs/detail.php:224 modules/pkgs/pkgs/detail.php:247
 msgid "Size"
-msgstr "Talla"
+msgstr "Tamaño"
 
 #: modules/pkgs/pkgs/detail.php:225
 msgid "Transferfile"

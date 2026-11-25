@@ -850,7 +850,7 @@ msgstr "Reconfigurar máquinas"
 #: modules/admin/admin/ajaxRelaysList.php:67
 #: modules/admin/admin/ajaxRelaysList.php:68
 msgid "Remote control"
-msgstr "Mando a distancia"
+msgstr "Control remoto"
 
 #: modules/admin/admin/ajaxRelaysList.php:70
 #: modules/admin/admin/ajaxRelaysList.php:71

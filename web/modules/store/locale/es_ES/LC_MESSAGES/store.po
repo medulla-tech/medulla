@@ -128,7 +128,7 @@ msgstr "Detalles del paquete"
 
 #: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:153
 msgid "Deploy"
-msgstr "Despliegue"
+msgstr "Desplegar"
 
 #: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:201
 #: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:210
@@ -363,7 +363,7 @@ msgstr "Despliegue iniciado en %d máquina(s)"
 #: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/startDeploy.php:195
 #: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/startDeploy.php:254
 msgid "Deployment failed"
-msgstr "Error de implantación"
+msgstr "Error de despliegue"
 
 #: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/startDeploy.php:144
 msgid "No groups selected"

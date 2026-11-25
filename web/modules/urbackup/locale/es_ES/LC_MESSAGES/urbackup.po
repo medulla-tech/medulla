@@ -61,7 +61,7 @@ msgstr "Espacio en disco utilizado por todos los clientes"
 #: modules/urbackup/urbackup/result_search_file.php:48
 #: modules/urbackup/urbackup/all_files_backup.php:120
 msgid "Size"
-msgstr "Talla"
+msgstr "Tamaño"
 
 #: modules/urbackup/urbackup/index.php:189
 #: modules/urbackup/urbackup/index.php:270

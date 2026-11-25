@@ -228,11 +228,11 @@ msgstr "Recarga "
 
 #: modules/xmppmaster/xmppmaster/popupReloadDeploy.php:20
 msgid "Reload the deployment"
-msgstr "Recargar la implantación"
+msgstr "Recargar el despliegue"
 
 #: modules/xmppmaster/xmppmaster/popupReloadDeploy.php:37
 msgid "Force re-deployment during initial validity period"
-msgstr "Reasignación forzosa durante el periodo de validez inicial"
+msgstr "Forzar el redespliegue durante el periodo de validez inicial"
 
 #: modules/xmppmaster/xmppmaster/popupReloadDeploy.php:41
 msgid "Rechedule deployment between now and 1 day"
@@ -572,7 +572,7 @@ msgstr "Detalle Acciones"
 
 #: modules/xmppmaster/xmppmaster/wakeonlan.php:35
 msgid "Wake On Lan"
-msgstr "Despertar en Lan"
+msgstr "Wake on LAN"
 
 #: modules/xmppmaster/xmppmaster/wakeonlan.php:41
 msgid "Mac address"
@@ -866,7 +866,7 @@ msgstr "Arch"
 
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:103
 msgid "Kiosk presence"
-msgstr "Presencia en quioscos"
+msgstr "Presencia del Kiosk"
 
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:104
 msgid "AD OU User"
@@ -934,7 +934,7 @@ msgstr "Último valor"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:138
 msgid "History"
-msgstr "Historia"
+msgstr "Historial"
 
 #: modules/xmppmaster/xmppmaster/customQA.php:38
 #, php-format
@@ -990,7 +990,7 @@ msgstr "Mostrar"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:190
 msgid "Wake on Lan"
-msgstr "Despertar en Lan"
+msgstr "Wake on LAN"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:196
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:591
@@ -1376,7 +1376,7 @@ msgstr "A LA ESPERA DEL INICIO "
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:440
 msgid "Abort Deployment"
-msgstr "Abortar la implantación"
+msgstr "Abortar el despliegue"
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:446
 msgid "Graph"
@@ -1385,7 +1385,7 @@ msgstr "Gráfico"
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:447
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:529
 msgid "Deployment Success"
-msgstr "Éxito de la implantación"
+msgstr "Éxito del despliegue"
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:448
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:481
@@ -1471,7 +1471,7 @@ msgstr "Retraso en el despliegue"
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:464
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:546
 msgid "Deployment start"
-msgstr "Inicio de la implantación"
+msgstr "Inicio del despliegue"
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:465
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:547
@@ -1541,7 +1541,7 @@ msgstr "Inventario asociado"
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:659
 msgid "Size"
-msgstr "Talla"
+msgstr "Tamaño"
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:712
 msgid "OFFLINE"
@@ -1550,7 +1550,7 @@ msgstr "FUERA DE LÍNEA"
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:737
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:125
 msgid "Restart deployment"
-msgstr "Reiniciar la implantación"
+msgstr "Reiniciar el despliegue"
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:786
 msgid "Machine Name"
@@ -1611,7 +1611,7 @@ msgstr "Número de máquinas"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:186
 msgid "Number of shares"
-msgstr "Número de acciones"
+msgstr "Número de recursos compartidos"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:218
 msgid "share user"
@@ -1905,7 +1905,7 @@ msgstr "Resultados de la acción rápida"
 #: modules/xmppmaster/xmppmaster/localSidebar.php:27
 #: modules/xmppmaster/infoPackage.inc.php:182
 msgid "Wake on LAN"
-msgstr "Despertar en LAN"
+msgstr "Wake on LAN"
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:34
 msgid "List of Uninventoried Machines"
@@ -2275,7 +2275,7 @@ msgstr "quick action reversessh para guacamole"
 
 #: modules/xmppmaster/infoPackage.inc.php:300
 msgid "Audit deployment"
-msgstr "Despliegue de la auditoría"
+msgstr "Auditoría del despliegue"
 
 #: modules/xmppmaster/infoPackage.inc.php:305
 msgid "XMPP log"
@@ -2316,7 +2316,7 @@ msgstr "Lista de ordenadores desplegados por equipo"
 
 #: modules/xmppmaster/infoPackage.inc.php:365
 msgid "List of not launched deployments"
-msgstr "Lista de implantaciones no lanzadas"
+msgstr "Lista de despliegues no lanzados"
 
 #: modules/xmppmaster/infoPackage.inc.php:370
 msgid "Transfert syncthing list no transfered"
