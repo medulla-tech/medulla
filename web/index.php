@@ -89,11 +89,10 @@ if (isset($_GET['token'])) {
     $login = magic_link_peek($token);
 
     // (re) Creation of a clean session
-    $ip = preg_replace('@\.@', '', $_SERVER["REMOTE_ADDR"]);
-    $sessionid = md5(time() . $ip . mt_rand());
+    // L'identifiant de session est genere par PHP (CSPRNG) et regenere
+    // apres authentification dans includes/createSession.inc.php
     session_destroy();
     session_name("PULSESESSION");
-    session_id($sessionid);
     ini_set('session.cookie_httponly', 1);
     ini_set('session.cookie_samesite', 'Lax');
     if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
@@ -147,10 +146,9 @@ if (isset($_POST["bConnect"]) || isset($_POST["bMagicLink"])) {
     $isMagic = isset($_POST["bMagicLink"]) || ((int)($_POST["magic_link"] ?? 0) === 1);
 
     // Nouvelle session web
-    $ip = preg_replace('@\.@', '', $_SERVER["REMOTE_ADDR"]);
-    $sessionid = md5(time() . $ip . mt_rand());
+    // L'identifiant de session est genere par PHP (CSPRNG) et regenere
+    // apres authentification dans includes/createSession.inc.php
     session_destroy();
-    session_id($sessionid);
     session_name("PULSESESSION");
     ini_set('session.cookie_httponly', 1);
     ini_set('session.cookie_samesite', 'Lax');
