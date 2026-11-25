@@ -33,31 +33,29 @@ $submod->setImg('modules/security/graph/navbar/security');
 $submod->setDefaultPage("security/security/index");
 $submod->setPriority(500);
 
-// CVE Summary page (index), one tab per platform
-$page = new Page("index", _T('Dashboard', 'security'));
-$page->setFile("modules/security/security/index.php");
-foreach (array("taball" => _T("All", "security"), "tabwindows" => "Windows", "tablinux" => "Linux") as $tabId => $tabTitle) {
-    // Platform filter, not a privilege
-    $tab = new Tab($tabId, $tabTitle);
-    $tab->setOptions(array("noACL" => True));
-    $page->addTab($tab);
+// Pages with one tab per platform, all rendered through index.php
+$platformPages = array(
+    "index" => _T('Dashboard', 'security'),
+    "softwares" => _T('Software list', 'security'),
+    "allcves" => _T('CVEs', 'security'),
+    "machines" => _T('Results by Machine', 'security'),
+);
+foreach ($platformPages as $action => $description) {
+    $page = new Page($action, $description);
+    $page->setFile("modules/security/security/index.php");
+    foreach (array("taball" => _T("All", "security"), "tabwindows" => "Windows", "tablinux" => "Linux", "tabmacos" => "macOS") as $tabId => $tabTitle) {
+        // Platform filter, not a privilege
+        $tab = new Tab($tabId, $tabTitle);
+        $tab->setOptions(array("noACL" => True));
+        $page->addTab($tab);
+    }
+    $submod->addPage($page);
 }
-$submod->addPage($page);
 
 // Ajax CVE List
 $page = new Page("ajaxCVEList", _T('CVE List', 'security'));
 $page->setFile("modules/security/security/ajaxCVEList.php");
 $page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
-$submod->addPage($page);
-
-// Software page, sorted by priority
-$page = new Page("softwares", _T('Software list', 'security'));
-$page->setFile("modules/security/security/softwares.php");
-$submod->addPage($page);
-
-// All CVEs page (flat list)
-$page = new Page("allcves", _T('CVEs', 'security'));
-$page->setFile("modules/security/security/allcves.php");
 $submod->addPage($page);
 
 // Ajax Softwares List
@@ -76,11 +74,6 @@ $submod->addPage($page);
 $page = new Page("ajaxSoftwareCVEList", _T('Software CVE List', 'security'));
 $page->setFile("modules/security/security/ajaxSoftwareCVEList.php");
 $page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
-$submod->addPage($page);
-
-// Results by Machine page
-$page = new Page("machines", _T('Results by Machine', 'security'));
-$page->setFile("modules/security/security/machines.php");
 $submod->addPage($page);
 
 // Ajax Machines List

@@ -23,14 +23,13 @@
 require_once("modules/security/includes/xmlrpc.php");
 require_once("modules/security/includes/html.inc.php");
 
-$tabPlatforms = array('tabwindows' => 'windows', 'tablinux' => 'linux');
-$platform = $tabPlatforms[$_GET['tab'] ?? ''] ?? '';
+$platform = SecurityFilter::platform();
 $location = SecurityFilter::location();
 
 $summary = xmlrpc_get_dashboard_summary($location, $platform);
 $priorities = xmlrpc_get_softwares_summary(0, 10, '', $location, '', $platform);
 
-$scope = array('location' => $location, 'platform' => $platform);
+$scope = array('tab' => SecurityFilter::platformTab($platform), 'location' => $location);
 $lastScan = $summary['last_scan'] ?? null;
 $scanStatuses = array(
     'completed' => _T("Completed", "security"),
@@ -39,13 +38,7 @@ $scanStatuses = array(
 );
 
 SecurityFilter::script();
-?>
 
-<div class="filters-row">
-    <?php SecurityFilter::entitySelect($location); ?>
-</div>
-
-<?php
 $cards = new StatCards();
 $cards->addCard(intval($summary['exploited'] ?? 0), _T("Exploited CVEs", "security"), 'exploited', array(
     'href'  => urlStrRedirect("security/security/allcves", $scope + array('exploited_only' => 1)),
@@ -73,10 +66,16 @@ if ($lastScan) {
 $cards->display();
 ?>
 
-<div class="priority-header">
-    <h3><?php echo _T("To fix first", "security"); ?></h3>
-    <a href="<?php echo htmlspecialchars(urlStrRedirect("security/security/softwares", $scope)); ?>"><?php echo _T("View all software", "security"); ?> &rarr;</a>
+<div class="filters-row">
+    <div class="filters-left">
+        <?php SecurityFilter::entitySelect($location); ?>
+    </div>
 </div>
+
+<h3 class="section-title priority-header">
+    <?php echo _T("To fix first", "security"); ?>
+    <a href="<?php echo htmlspecialchars(urlStrRedirect("security/security/softwares", $scope)); ?>"><?php echo _T("View all software", "security"); ?> &rarr;</a>
+</h3>
 
 <?php
 $count = min(10, intval($priorities['total'] ?? 0));

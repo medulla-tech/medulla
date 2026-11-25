@@ -20,39 +20,26 @@
  * Security Module - All CVEs List
  */
 
-require("graph/navbar.inc.php");
-require("localSidebar.php");
 require_once("modules/security/includes/xmlrpc.php");
 require_once("modules/security/includes/html.inc.php");
-
-$p = new PageGenerator(_T("CVEs", 'security'));
-$p->setSideMenu($sidemenu);
-$p->display();
 
 list($entityLabels, $entityValues) = SecurityFilter::entities();
 $location = SecurityFilter::location();
 $severity = (string)SecurityFilter::severity();
 $exploitedOnly = SecurityFilter::exploitedOnly();
 $platform = SecurityFilter::platform();
-
-SecurityFilter::script();
 ?>
+
+<?php SecurityFilter::script(); ?>
 
 <div class="filters-row">
     <div class="filters-left">
         <?php SecurityFilter::entitySelect($location); ?>
-        <?php SecurityFilter::platformSelect($platform); ?>
         <div class="severity-filter">
             <label for="severity-filter"><?php echo _T("Severity", "security"); ?>:</label>
             <?php SecurityFilter::severitySelect($severity); ?>
         </div>
-        <div class="severity-filter">
-            <label>
-                <input type="checkbox" id="exploited-filter" <?php echo $exploitedOnly ? 'checked' : ''; ?>
-                       onchange="securityApplyFilter('exploited_only', this.checked ? '1' : '')" />
-                <?php echo _T("Exploited only", "security"); ?>
-            </label>
-        </div>
+        <?php SecurityFilter::exploitedCheckbox($exploitedOnly); ?>
     </div>
     <div class="search-wrapper">
     <?php
@@ -68,14 +55,10 @@ SecurityFilter::script();
     </div>
 </div>
 
-<div class="list-actions">
-    <button class="btn btnPrimary" onclick="openExportPopup()" title="<?php echo _T('Export CVE IDs as CSV', 'security'); ?>">
-        <?php echo _T('Export CSV', 'security'); ?>
-    </button>
+<div class="cve-toolbar">
+    <button type="button" class="btn btnSecondary" onclick="openExportPopup()" title="<?php echo htmlspecialchars(_T("Export CVE IDs as CSV", "security"), ENT_QUOTES); ?>"><?php echo htmlspecialchars(_T("Export CSV", "security")); ?></button>
     <?php if ($severity !== ''): ?>
-    <button class="btn btnSecondary" onclick="createGroupFromSeverity()">
-        <?php echo _T("Create a group with the affected machines", "security"); ?>
-    </button>
+    <button type="button" class="btn btnSecondary" onclick="createGroupFromSeverity()" title="<?php echo htmlspecialchars(_T("Create a group with the affected machines", "security"), ENT_QUOTES); ?>"><?php echo htmlspecialchars(_T("Create a group", "security")); ?></button>
     <?php endif; ?>
 </div>
 
@@ -85,8 +68,8 @@ SecurityFilter::script();
     <div style="float:right"><a href="#" class="popup_close_btn" onclick="closeExportPopup(); return false;"><img src="img/common/icn_close.png" alt="[x]"/></a></div>
     <div id="__popup_container">
         <h2><?php echo _T('Export CVE IDs', 'security'); ?></h2>
-        <form onsubmit="doExport(); return false;" style="text-align: left; padding: 10px 30px;">
-            <div style="display: grid; grid-template-columns: auto 1fr; gap: 10px 16px; align-items: center;">
+        <form onsubmit="doExport(); return false;" class="cve-export-form">
+            <div class="cve-export-fields">
                 <label><?php echo _T('Entity', 'security'); ?> :</label>
                 <select id="export-entity">
                     <?php foreach ($entityValues as $i => $value): ?>
@@ -112,8 +95,8 @@ SecurityFilter::script();
                     <option value="0"><?php echo _T('All', 'security'); ?></option>
                 </select>
 
-                <label style="align-self: start; padding-top: 2px;"><?php echo _T('Columns', 'security'); ?> :</label>
-                <div style="display: flex; flex-wrap: wrap; gap: 4px 16px;">
+                <label class="cve-export-top"><?php echo _T('Columns', 'security'); ?> :</label>
+                <div class="cve-export-columns">
                     <label><input type="checkbox" class="export-col" value="cve_id" checked disabled> <?php echo _T('CVE ID', 'security'); ?></label>
                     <label><input type="checkbox" class="export-col" value="severity"> <?php echo _T('Severity', 'security'); ?></label>
                     <label><input type="checkbox" class="export-col" value="cvss_score"> <?php echo _T('CVSS', 'security'); ?></label>
@@ -123,7 +106,7 @@ SecurityFilter::script();
                     <label><input type="checkbox" class="export-col" value="software"> <?php echo _T('Software', 'security'); ?></label>
                 </div>
             </div>
-            <div style="margin-top: 20px; text-align: center;">
+            <div class="cve-export-buttons">
                 <button type="submit" class="btn btnPrimary"><?php echo _T('Download', 'security'); ?></button>
                 <button type="button" class="btn btnSecondary" onclick="closeExportPopup()"><?php echo _T('Cancel', 'security'); ?></button>
             </div>
@@ -136,8 +119,20 @@ $ajax->displayDivToUpdate();
 ?>
 
 <script>
+// Search text of the list on screen, not the text being typed in the search field
+function appliedCveFilter() {
+    return jQuery('#cve-applied-filter').attr('data-filter') || '';
+}
+
 function createGroupFromSeverity() {
-    var url = '<?php echo urlStrRedirect("security/security/ajaxCreateGroupFromSeverity", array('severity' => $severity, 'location' => $location)); ?>';
+    var url = '<?php echo urlStrRedirect("security/security/ajaxCreateGroupFromSeverity", array(
+        'severity' => $severity,
+        'location' => $location,
+        'platform' => $platform,
+        'exploited_only' => $exploitedOnly ? '1' : '',
+        'back' => SecurityFilter::here(),
+    )); ?>';
+    url += '&filter=' + encodeURIComponent(appliedCveFilter());
     PopupWindow(null, url, 300);
 }
 
@@ -170,6 +165,7 @@ function doExport() {
     url += '&platform=<?php echo urlencode($platform); ?>';
     url += '&limit=' + encodeURIComponent(jQuery('#export-limit').val());
     url += '&columns=' + encodeURIComponent(columns.join(','));
+    url += '&filter=' + encodeURIComponent(appliedCveFilter());
     if (jQuery('#export-exploited').is(':checked')) {
         url += '&exploited_only=1';
     }

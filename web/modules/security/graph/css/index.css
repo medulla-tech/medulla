@@ -12,13 +12,6 @@
     color: var(--color-primary);
 }
 
-.summary-box {
-    background: var(--gray-50);
-    padding: 10px 15px;
-    border-radius: var(--radius-md);
-    margin-bottom: 10px;
-}
-
 /* =============================================================================
    Filters Row (entity + severity + search)
    ============================================================================= */
@@ -31,8 +24,13 @@
 
 .filters-left {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 15px;
+}
+
+/* Global label margin would shift a centered label off its field */
+.filters-row label {
+    margin: 0;
 }
 
 .entity-filter {
@@ -63,18 +61,21 @@
 
 .severity-filter {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 8px;
 }
 
-.severity-filter label {
+/* Text on the baseline of the neighbouring labels, box centered on the text */
+.checkbox-filter label {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 5px;
     cursor: pointer;
 }
 
-.severity-filter input[type="checkbox"] {
+.checkbox-filter input[type="checkbox"] {
+    align-self: center;
+    margin: 0;
     cursor: pointer;
 }
 
@@ -93,6 +94,10 @@
 .search-wrapper {
     display: flex;
     align-items: center;
+}
+
+.filters-row > .search-wrapper:only-child {
+    margin-left: auto;
 }
 
 .search-wrapper form {
@@ -178,11 +183,6 @@
 .cve-header.severity-none { border-left: 4px solid var(--severity-none); }
 .cve-header.severity-na { border-left: 4px solid var(--severity-na); }
 
-.cve-title {
-    font-size: 1.5em;
-    margin-bottom: 10px;
-}
-
 .cve-meta {
     display: flex;
     gap: 20px;
@@ -198,6 +198,15 @@
 
 .cve-meta-item strong {
     color: var(--color-text-medium);
+}
+
+.external-links a,
+.external-links a:visited {
+    color: var(--color-primary);
+}
+
+.external-links a:hover {
+    color: var(--color-text-black);
 }
 
 .cvss-score {
@@ -225,32 +234,6 @@
     padding-bottom: 5px;
     border-bottom: 2px solid var(--color-primary);
 }
-
-.software-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.software-list li {
-    padding: 8px 12px;
-    background: var(--gray-50);
-    margin-bottom: 5px;
-    border-radius: 3px;
-}
-
-.software-list li:hover {
-    background: var(--gray-100);
-}
-
-/* =============================================================================
-   Ajax CVE List (ajaxCVEList.php, ajaxMachineCVEList.php)
-   ============================================================================= */
-tr.severity-critical td:first-child { border-left: 3px solid var(--severity-critical); }
-tr.severity-high td:first-child { border-left: 3px solid var(--severity-high); }
-tr.severity-medium td:first-child { border-left: 3px solid var(--severity-medium); }
-tr.severity-low td:first-child { border-left: 3px solid var(--severity-low); }
-tr.severity-na td:first-child { border-left: 3px solid var(--severity-na); }
 
 /* =============================================================================
    Empty Message
@@ -337,33 +320,6 @@ tr.severity-na td:first-child { border-left: 3px solid var(--severity-na); }
     margin-top: 3px;
 }
 
-.btn {
-    display: inline-block;
-    padding: 10px 20px;
-    border: none;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    font-size: 1em;
-}
-
-.btn-primary {
-    background: var(--color-primary);
-    color: var(--color-text-white);
-}
-
-.btn-primary:hover {
-    background: var(--color-primary-dark);
-}
-
-.btn-success {
-    background: var(--severity-low);
-    color: var(--color-text-white);
-}
-
-.btn-success:hover {
-    background: #218838;
-}
-
 .scan-history {
     margin-top: 15px;
 }
@@ -391,10 +347,6 @@ tr.severity-na td:first-child { border-left: 3px solid var(--severity-na); }
 /* =============================================================================
    Misc
    ============================================================================= */
-.software-version {
-    color: var(--color-text-medium);
-}
-
 .section-count {
     font-weight: normal;
     font-size: 0.9em;
@@ -450,28 +402,13 @@ tr.severity-na td:first-child { border-left: 3px solid var(--severity-na); }
    Add Item Form (for exclusion tabs)
    ============================================================================= */
 .add-item-form {
-    margin-bottom: 20px;
-    padding: 20px;
-    background: var(--gray-100);
-    border-radius: var(--radius-lg);
-}
-
-.add-item-form label {
-    display: block;
-    margin-bottom: 12px;
-    font-weight: 500;
-    color: var(--color-text-dark);
-}
-
-.add-item-row {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .add-item-input {
-    flex: 1;
-    max-width: 400px;
+    width: 260px;
     padding: .625rem 1rem;
     font-size: inherit;
     line-height: 1.2;
@@ -497,6 +434,12 @@ tr.severity-na td:first-child { border-left: 3px solid var(--severity-na); }
 /* CVE ID (first column): never break, always readable */
 .security-table td:first-child {
     white-space: nowrap;
+}
+
+/* Same row height in and out of the ajax container: global.css only lowers
+   the 41px line of ul.action under #container */
+.security-table .action {
+    line-height: 18px;
 }
 
 /* Action column : garder le slot "deploy" vide réservé (visibility au lieu de
@@ -530,11 +473,15 @@ tr.severity-na td:first-child { border-left: 3px solid var(--severity-na); }
     border-bottom: 1px dotted var(--color-text-light);
 }
 
-.cve-table td:first-child,
-.cve-table th:first-child {
-    width: 90px;
-    white-space: nowrap;
-    text-align: center;
+.cve-id {
+    display: inline-block;
+    min-width: 17ch;
+    font-variant-numeric: tabular-nums;
+}
+
+.cve-table .cve-id + .exploited-flag,
+.cve-table a + .exploited-flag {
+    margin-left: 8px;
 }
 
 .priority-header {
@@ -543,21 +490,22 @@ tr.severity-na td:first-child { border-left: 3px solid var(--severity-na); }
     align-items: baseline;
 }
 
+.priority-header a {
+    font-weight: normal;
+}
+
 .filters-row,
 .filters-left {
     flex-wrap: wrap;
     gap: 10px 15px;
 }
 
-.list-actions {
+/* Actions above the CVE list */
+.cve-toolbar {
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
     gap: 10px;
-    margin: 0 0 10px;
-}
-
-.list-actions .btn {
-    white-space: nowrap;
+    margin: 10px 0;
 }
 
 /* Type badge after a software name */
@@ -565,3 +513,154 @@ tr.severity-na td:first-child { border-left: 3px solid var(--severity-na); }
     margin-left: 8px;
 }
 
+/* =============================================================================
+   Store update deployment (deployStoreUpdate.php)
+   ============================================================================= */
+.deploy-header {
+    background: var(--gray-50);
+    padding: 20px;
+    border-radius: var(--radius-lg);
+    margin-bottom: 20px;
+    border-left: 4px solid var(--severity-low);
+}
+
+.deploy-header .section-title,
+.deploy-machines .section-title {
+    margin-top: 0;
+}
+
+.deploy-info {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.deploy-info-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.deploy-info-label {
+    color: var(--color-text-medium);
+    font-weight: 500;
+}
+
+.deploy-version-arrow {
+    color: var(--severity-low);
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.deploy-version-old {
+    color: var(--severity-critical);
+    text-decoration: line-through;
+    font-size: 1.1em;
+}
+
+.deploy-version-new {
+    color: var(--severity-low);
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.deploy-warning {
+    margin: 20px 0;
+    font-weight: bold;
+}
+
+.deploy-machines {
+    background: var(--color-bg-white);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.deploy-select-actions {
+    margin: 15px 0;
+    display: flex;
+    gap: 20px;
+}
+
+.deploy-select-actions a {
+    cursor: pointer;
+    color: var(--color-primary);
+}
+
+.deploy-select-actions a:hover {
+    text-decoration: underline;
+}
+
+.deploy-selected {
+    margin-left: 20px;
+    color: var(--color-text-medium);
+}
+
+.deploy-table th:first-child,
+.deploy-table td:first-child {
+    width: 40px;
+}
+
+.deploy-table input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.deploy-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+/* CVE export popup */
+#export-popup:has(#__popup_container > h2:first-child) {
+    max-width: min(760px, 90vw);
+}
+
+.cve-export-form {
+    text-align: left;
+    padding: 10px 30px;
+}
+
+.cve-export-fields {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 10px 16px;
+    align-items: center;
+}
+
+.cve-export-fields label {
+    margin: 0;
+    white-space: nowrap;
+}
+
+.cve-export-fields > label {
+    text-align: right;
+}
+
+.cve-export-fields label.cve-export-top {
+    align-self: start;
+}
+
+.cve-export-fields input[type="checkbox"] {
+    margin: 0;
+    justify-self: start;
+}
+
+.cve-export-columns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px 16px;
+}
+
+.cve-export-columns label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cve-export-buttons {
+    margin-top: 20px;
+    text-align: center;
+}

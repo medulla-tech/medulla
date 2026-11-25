@@ -39,14 +39,13 @@ $result = xmlrpc_get_group_machines($group_id, $start, $maxperpage, $filter);
 $data = $result['data'] ?? array();
 $count = $result['total'] ?? 0;
 
-$hostnames = array();
 $params = array();
 foreach ($data as $row) {
-    $hostnames[] = htmlspecialchars($row['hostname']);
     $params[] = array('id_glpi' => $row['id_glpi'], 'hostname' => $row['hostname'], 'back' => SecurityFilter::back());
 }
 
 if ($count > 0) {
+    list($hostnames, $presences) = SecurityLists::machineNames($params);
     $n = new OptimizedListInfos($hostnames, _T("Machine", "security"));
     $n->setResizable();
     $n->setTableCssClass("security-table");
@@ -55,6 +54,7 @@ if ($count > 0) {
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $filter));
     $n->setParamInfo($params);
+    $n->setMainActionClasses($presences);
     $n->addActionItem(new ActionItem(_T("View CVEs", "security"), "machineDetail", "display", "", "security", "security"));
     $n->start = 0;
     $n->end = $count;

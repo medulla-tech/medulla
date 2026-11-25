@@ -27,7 +27,7 @@ require_once("modules/security/includes/xmlrpc.php");
 $group_id = isset($_GET['group_id']) ? intval($_GET['group_id']) : 0;
 $group_name = $_GET['group_name'] ?? '';
 
-$p = new PageGenerator(sprintf(_T("Machines in group: %s", 'security'), htmlspecialchars($group_name)));
+$p = new PageGenerator(htmlspecialchars($group_name));
 $p->setSideMenu($sidemenu);
 $p->display();
 require_once("modules/security/includes/html.inc.php");
@@ -37,22 +37,17 @@ if ($group_id <= 0) {
     echo '<p class="error">' . _T("Invalid group", "security") . '</p>';
     return;
 }
-
-$summary = xmlrpc_get_group_machines($group_id, 0, 1, '');
 ?>
 
 <?php SecurityFilter::backLink('groups', _T("Back to groups list", "security")); ?>
 
-<div class="summary-box">
-    <strong><?php echo _T("Group", "security"); ?>:</strong> <?php echo htmlspecialchars($group_name); ?> &nbsp;|&nbsp;
-    <strong><?php echo _T("Total Machines", "security"); ?>:</strong> <?php echo intval($summary['total'] ?? 0); ?>
-</div>
-
-<div class="search-wrapper" style="margin-bottom: 15px;">
-<?php
-$ajax = new AjaxFilter(urlStrRedirect("security/security/ajaxGroupMachinesList", array('group_id' => $group_id, 'back' => SecurityFilter::here())));
-$ajax->display();
-?>
+<div class="filters-row">
+    <div class="search-wrapper">
+    <?php
+    $ajax = new AjaxFilter(urlStrRedirect("security/security/ajaxGroupMachinesList", array('group_id' => $group_id, 'back' => SecurityFilter::here())));
+    $ajax->display();
+    ?>
+    </div>
 </div>
 
 <?php

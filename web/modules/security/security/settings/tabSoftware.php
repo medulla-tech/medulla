@@ -46,22 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['badd_software'])) {
 }
 ?>
 
-<h3><?php echo _T("Excluded Software", "security"); ?></h3>
-<p style="color:#666; font-size:0.9em; margin-bottom:15px;">
-    <?php echo _T("Software listed here will not appear in CVE reports. You can also exclude software directly from the Software page.", "security"); ?>
-</p>
-
-<?php
-AddItemForm::show(
-    'new_software_name',
-    'badd_software',
-    _T("e.g. Mozilla Firefox", "security"),
-    _T("Add", "security"),
-    _T("Add software to exclusions:", "security")
-);
-?>
-
-<!-- Excluded software list -->
 <?php
 $ajax = new AjaxFilter(
     urlStrRedirect("security/security/ajaxExcludedSoftwaresList"),
@@ -69,6 +53,22 @@ $ajax = new AjaxFilter(
     array(),
     "searchSoftware"
 );
-$ajax->display();
+?>
+<div class="filters-row">
+    <?php
+    AddItemForm::show(
+        'new_software_name',
+        'badd_software',
+        _T("e.g. Mozilla Firefox", "security"),
+        _T("Add", "security"),
+        _T("Software name", "security")
+    );
+    ?>
+    <div class="search-wrapper">
+    <?php $ajax->display(); ?>
+    </div>
+</div>
+
+<?php
 $ajax->displayDivToUpdate();
 ?>

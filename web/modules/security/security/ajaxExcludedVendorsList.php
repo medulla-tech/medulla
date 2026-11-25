@@ -73,10 +73,7 @@ $removeAction->setWidth(400);
 
 // Display message if no exclusions
 if ($count == 0) {
-    EmptyStateBox::show(
-        _T("No excluded vendors", "security"),
-        _T("Use the form above to add vendors to the exclusion list.", "security")
-    );
+    EmptyStateBox::show(_T("No excluded vendors", "security"));
 } else {
     // Create and display list
     $list = new OptimizedListInfos($vendorNames, _T("Vendor name", "security"));

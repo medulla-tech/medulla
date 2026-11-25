@@ -20,18 +20,13 @@
  * Security Module - Results by Machine
  */
 
-require("graph/navbar.inc.php");
-require("localSidebar.php");
 require_once("modules/security/includes/xmlrpc.php");
 require_once("modules/security/includes/html.inc.php");
-
-$p = new PageGenerator(_T("Machines", 'security'));
-$p->setSideMenu($sidemenu);
-$p->display();
 
 $location = SecurityFilter::location();
 $platform = SecurityFilter::platform();
 $group = SecurityFilter::group();
+$exploitedOnly = SecurityFilter::exploitedOnly();
 
 SecurityFilter::script();
 ?>
@@ -40,11 +35,11 @@ SecurityFilter::script();
     <div class="filters-left">
         <?php SecurityFilter::entitySelect($location); ?>
         <?php SecurityFilter::groupSelect($group); ?>
-        <?php SecurityFilter::platformSelect($platform); ?>
+        <?php SecurityFilter::exploitedCheckbox($exploitedOnly); ?>
     </div>
     <div class="search-wrapper">
     <?php
-    $ajax = new AjaxFilter(urlStrRedirect("security/security/ajaxMachinesList", array('location' => $location, 'platform' => $platform, 'group_id' => $group, 'back' => SecurityFilter::here())));
+    $ajax = new AjaxFilter(urlStrRedirect("security/security/ajaxMachinesList", array('location' => $location, 'platform' => $platform, 'group_id' => $group, 'exploited_only' => $exploitedOnly ? '1' : '', 'back' => SecurityFilter::here())));
     $ajax->display();
     ?>
     </div>

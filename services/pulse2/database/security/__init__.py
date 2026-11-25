@@ -8,6 +8,7 @@ from sqlalchemy.exc import DBAPIError, IntegrityError
 from datetime import datetime
 from mmc.database.database_helper import DatabaseHelper
 from pulse2.database.security.schema import Cve, SoftwareCve, Scan
+from pulse2.managers.group import ComputerGroupManager
 import logging
 import re
 
@@ -32,6 +33,7 @@ PLATFORMS = {
     'windows': "os.name LIKE '%windows%'",
     'linux': ("os.name <> '' AND os.name NOT LIKE '%windows%' "
               "AND os.name NOT LIKE '%mac%' AND os.name NOT LIKE '%darwin%'"),
+    'macos': "(os.name LIKE '%mac%' OR os.name LIKE '%darwin%')",
 }
 
 
@@ -92,6 +94,16 @@ def _scope(policy, entity_ids=None, platform='', **computers):
     """_computers_where arguments for the machines in scope of a read."""
     return {'entity_ids': entity_ids, 'excluded': (policy or {}).get('excluded_machines_ids'),
             'platform': platform, **computers}
+
+
+def _cve_search(filter_str):
+    """_cve_rows where and params of a search on the CVE id or description."""
+    if not filter_str:
+        return '', {}
+    return "AND (c.cve_id LIKE :search OR c.description LIKE :search)", {'search': f"%{filter_str}%"}
+
+
+GROUP_IS_DYNAMIC = "COALESCE(LENGTH(g.query), 0) > 0"
 
 
 def _groups_where(login):
@@ -230,7 +242,7 @@ class SecurityDatabase(DatabaseHelper):
     def getDbConnection(self):
         NB_DB_CONN_TRY = 2
         ret = None
-        for i in range(NB_DB_CONN_TRY):
+        for _ in range(NB_DB_CONN_TRY):
             try:
                 ret = self.db.connect()
             except DBAPIError as e:
@@ -440,10 +452,7 @@ class SecurityDatabase(DatabaseHelper):
                  policy=None, platform='', exploited_only=False):
         """Paginated CVEs present in the park, with their affected machine count."""
         try:
-            where, params = '', {}
-            if filter_str:
-                where = "AND (c.cve_id LIKE :search OR c.description LIKE :search)"
-                params['search'] = f"%{filter_str}%"
+            where, params = _cve_search(filter_str)
             rows = self._cve_rows(session, policy, severity, exploited_only, where, **params)
             by_key, info = self._index(rows)
             installs = self._installs(self._names(by_key), **_scope(policy, entity_ids, platform))
@@ -545,10 +554,12 @@ class SecurityDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_machines_summary(self, session, start=0, limit=50, filter_str='', entity_ids=None,
-                             policy=None, platform='', exploited_only=False, group_id=None, login=None):
-        """GLPI machines (of group_id if set) with their CVE counters, filtered by entity and display policies."""
+                             policy=None, platform='', exploited_only=False, group_id=None, login=None,
+                             ctx=None):
+        """GLPI machines (of group_id if set) with their CVE counters, filtered by entity and display policies.
+        exploited_only keeps only the machines having an exploited CVE."""
         try:
-            machine_ids = None if group_id is None else self._group_members(session, group_id, login)
+            machine_ids = None if group_id is None else self._group_members(session, group_id, login, ctx)
             if (entity_ids is not None and not entity_ids) or machine_ids == set():
                 return {'total': 0, 'data': []}
             computers = _scope(policy, entity_ids, platform, hostname=filter_str, machine_ids=machine_ids)
@@ -557,6 +568,8 @@ class SecurityDatabase(DatabaseHelper):
             if not machines:
                 return {'total': 0, 'data': []}
             data = self._machine_rows(session, machines, policy, exploited_only, **computers)
+            if exploited_only:
+                data = [row for row in data if row['total_cves']]
             data.sort(key=lambda x: _priority(x, 'risk_score'), reverse=True)
             return {'total': len(data), 'data': data[start:start + limit]}
         except Exception as e:
@@ -571,10 +584,7 @@ class SecurityDatabase(DatabaseHelper):
             keys = set(self._installs(machine_ids=[id_glpi], entity_ids=entity_ids))
             if not keys:
                 return {'total': 0, 'data': []}
-            where, params = '', {}
-            if filter_str:
-                where = "AND (c.cve_id LIKE :search OR c.description LIKE :search)"
-                params['search'] = f"%{filter_str}%"
+            where, params = _cve_search(filter_str)
             rows = [r for r in self._cve_rows(session, policy, severity, False, where, **params)
                     if (r.glpi_software_name, r.software_version) in keys]
             return self._cve_list(session, rows, start, limit)
@@ -735,7 +745,7 @@ class SecurityDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_groups_summary(self, session, start=0, limit=50, filter_str='', login=None, entity_ids=None,
-                           policy=None, platform='', exploited_only=False):
+                           policy=None, platform='', exploited_only=False, ctx=None):
         """Groups visible to login (None = all) with their CVE counters on the machines in scope."""
         try:
             where, params = _groups_where(login)
@@ -750,19 +760,14 @@ class SecurityDatabase(DatabaseHelper):
 
             total = _run(session, f"SELECT COUNT(*) FROM dyngroup.Groups g WHERE {where}", **params).scalar() or 0
             rows = _run(session, f"""
-                SELECT g.id, g.name, COALESCE(LENGTH(g.query), 0) > 0 AS is_dynamic
+                SELECT g.id, g.name, {GROUP_IS_DYNAMIC} AS is_dynamic
                 FROM dyngroup.Groups g
                 WHERE {where} ORDER BY g.name LIMIT :limit OFFSET :start""", **params).fetchall()
             if not rows:
                 return {'total': total, 'data': []}
 
-            group_machines = {r.id: set() for r in rows}
-            for group_id, uuid in _run(session, """
-                    SELECT r.FK_groups, dm.uuid FROM dyngroup.Results r
-                    JOIN dyngroup.Machines dm ON dm.id = r.FK_machines
-                    WHERE r.FK_groups IN :group_ids""", group_ids=list(group_machines)):
-                group_machines[group_id].add(_uuid_to_id(uuid))
-            visible = self._visible(set().union(*group_machines.values()) - {None}, entity_ids, policy, platform)
+            group_machines = self._groups_members(session, {r.id: r.is_dynamic for r in rows}, ctx)
+            visible = self._visible(set().union(*group_machines.values()), entity_ids, policy, platform)
 
             by_key, info = self._index(self._cve_rows(session, policy, exploited_only=exploited_only))
             keys = self._keys_by_machine(self._installs(self._names(by_key), machine_ids=visible))
@@ -783,15 +788,37 @@ class SecurityDatabase(DatabaseHelper):
             logger.error(f"Error getting groups summary: {e}")
             return {'total': 0, 'data': []}
 
-    def _group_members(self, session, group_id, login=None):
+    def _groups_members(self, session, groups, ctx=None):
+        """{group id: set(machine id)} of groups {id: is_dynamic}.
+
+        Stored results first; a dynamic group without any is a request, answered by dyngroup
+        for ctx (security context of the user, skipped when None).
+        """
+        members = {group_id: set() for group_id in groups}
+        for group_id, uuid in _run(session, """
+                SELECT r.FK_groups, dm.uuid FROM dyngroup.Results r
+                JOIN dyngroup.Machines dm ON dm.id = r.FK_machines
+                WHERE r.FK_groups IN :group_ids""", group_ids=list(members)):
+            members[group_id].add(_uuid_to_id(uuid))
+        if ctx is not None:
+            for group_id, is_dynamic in groups.items():
+                if is_dynamic and not members[group_id]:
+                    try:
+                        uuids = ComputerGroupManager().requestresult_group(ctx, group_id, 0, -1, '')
+                        members[group_id].update(_uuid_to_id(uuid) for uuid in uuids)
+                    except Exception as e:
+                        logger.error(f"Error resolving dynamic group {group_id}: {e}")
+        return {group_id: ids - {None} for group_id, ids in members.items()}
+
+    def _group_members(self, session, group_id, login=None, ctx=None):
         """Machine ids of a group, empty when the group is not visible to login."""
         where, params = _groups_where(login)
-        uuids = _run(session, f"""
-            SELECT DISTINCT dm.uuid FROM dyngroup.Results r
-            JOIN dyngroup.Machines dm ON dm.id = r.FK_machines
-            JOIN dyngroup.Groups g ON g.id = r.FK_groups
-            WHERE r.FK_groups = :group_id AND {where}""", group_id=group_id, **params)
-        return {_uuid_to_id(uuid) for (uuid,) in uuids} - {None}
+        group = _run(session, f"""
+            SELECT g.id, {GROUP_IS_DYNAMIC} AS is_dynamic FROM dyngroup.Groups g
+            WHERE g.id = :group_id AND {where}""", group_id=group_id, **params).first()
+        if group is None:
+            return set()
+        return self._groups_members(session, {group.id: group.is_dynamic}, ctx)[group.id]
 
     @DatabaseHelper._sessionm
     def get_groups_list(self, session, login=None, policy=None):
@@ -806,10 +833,10 @@ class SecurityDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_group_machines(self, session, group_id, start=0, limit=50, filter_str='', login=None,
-                           entity_ids=None, policy=None):
+                           entity_ids=None, policy=None, ctx=None):
         """Machines in scope of a group visible to login, with their CVE counters."""
         try:
-            machine_ids = self._group_members(session, group_id, login)
+            machine_ids = self._group_members(session, group_id, login, ctx)
             if not machine_ids or (entity_ids is not None and not entity_ids):
                 return {'total': 0, 'data': []}
 
@@ -833,11 +860,13 @@ class SecurityDatabase(DatabaseHelper):
     # Group creation helpers
     # =========================================================================
     @DatabaseHelper._sessionm
-    def get_machines_by_severity(self, session, severity, entity_ids=None, policy=None):
+    def get_machines_by_severity(self, session, severity, entity_ids=None, policy=None, platform='',
+                                 exploited_only=False, filter_str=''):
         """Machines having a software version with a CVE of the given severity."""
         try:
-            by_key, _ = self._index(self._cve_rows(session, policy, severity))
-            installs = self._installs(self._names(by_key), **_scope(policy, entity_ids))
+            where, params = _cve_search(filter_str)
+            by_key, _ = self._index(self._cve_rows(session, policy, severity, exploited_only, where, **params))
+            installs = self._installs(self._names(by_key), **_scope(policy, entity_ids, platform))
             machine_ids = set().union(*(ids for key, ids in installs.items() if key in by_key))
             if not machine_ids:
                 return []

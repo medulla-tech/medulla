@@ -136,10 +136,18 @@ class RpcProxy(RpcProxyI):
         allowed, requested = self._allowed(), _ids(location)
         if allowed is None or requested is None:
             return requested if allowed is None else allowed
-        return [e for e in requested if e in allowed]
+        return [e for e in requested or [] if e in allowed]
 
     def _login(self):
         return None if self.userid == 'root' else self.userid
+
+    def _ctx(self):
+        """Security context of the session user, given to dyngroup to answer dynamic groups."""
+        ctx = self.currentContext
+        if ctx is None:
+            ctx = SecurityContext()
+            ctx.userid = self.userid
+        return ctx
 
     def get_dashboard_summary(self, location='', platform='', exploited_only=False):
         return SecurityDatabase().get_dashboard_summary(
@@ -160,7 +168,8 @@ class RpcProxy(RpcProxyI):
         """group_id: only the machines of this group, if visible to the logged user."""
         return SecurityDatabase().get_machines_summary(
             int(start), int(limit), filter_str, self._entities(location), _filters(), platform,
-            _bool(exploited_only), int(group_id) if str(group_id).isdigit() else None, self._login())
+            _bool(exploited_only), int(group_id) if str(group_id).isdigit() else None, self._login(),
+            self._ctx())
 
     def get_machine_cves(self, id_glpi, start=0, limit=50, filter_str='', severity=None):
         return SecurityDatabase().get_machine_cves(
@@ -188,7 +197,7 @@ class RpcProxy(RpcProxyI):
         """user_login is ignored: the groups are the ones of the logged user."""
         return SecurityDatabase().get_groups_summary(
             int(start), int(limit), filter_str, self._login(), self._allowed(), _filters(), platform,
-            _bool(exploited_only))
+            _bool(exploited_only), self._ctx())
 
     def get_groups_list(self):
         """[{id, name}] of the groups visible to the logged user, for a selector."""
@@ -196,11 +205,13 @@ class RpcProxy(RpcProxyI):
 
     def get_group_machines(self, group_id, start=0, limit=50, filter_str=''):
         return SecurityDatabase().get_group_machines(
-            int(group_id), int(start), int(limit), filter_str, self._login(), self._allowed(), _filters())
+            int(group_id), int(start), int(limit), filter_str, self._login(), self._allowed(), _filters(),
+            self._ctx())
 
-    def get_machines_by_severity(self, severity, location=''):
+    def get_machines_by_severity(self, severity, location='', platform='', exploited_only=False, filter_str=''):
         """UUID and hostname of the machines affected by a CVE of this severity."""
-        return SecurityDatabase().get_machines_by_severity(severity, self._entities(location), _filters())
+        return SecurityDatabase().get_machines_by_severity(
+            severity, self._entities(location), _filters(), platform, _bool(exploited_only), filter_str)
 
     def get_machines_for_vulnerable_software(self, software_name, software_version, location='',
                                              start=0, limit=100, filter_str=''):

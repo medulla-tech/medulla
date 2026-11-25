@@ -35,7 +35,8 @@ $result = xmlrpc_get_softwares_summary(
     $filter,
     SecurityFilter::location(),
     SecurityFilter::category(),
-    SecurityFilter::platform()
+    SecurityFilter::platform(),
+    SecurityFilter::exploitedOnly()
 );
 $count = $result['total'] ?? 0;
 

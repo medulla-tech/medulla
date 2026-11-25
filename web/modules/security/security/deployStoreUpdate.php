@@ -145,7 +145,8 @@ if (isset($_POST['bconfirm'])) {
 }
 
 // Page title
-$p = new PageGenerator(sprintf(_T("Deploy Update: %s", 'security'), htmlspecialchars($software_name)));
+$deployed = trim(($store_name ?: $software_name) . ' ' . $store_version);
+$p = new PageGenerator(sprintf(_T("Deploy Update: %s", 'security'), htmlspecialchars($deployed)));
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -153,144 +154,32 @@ $location = SecurityFilter::location();
 
 // Get affected machines
 $machines = xmlrpc_get_machines_for_vulnerable_software($software_name, $software_version, $location);
+$total = intval($machines['total'] ?? 0);
 ?>
-
-
-<style>
-.deploy-header {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    border-left: 4px solid #28a745;
-}
-.deploy-header h4 {
-    margin: 0 0 15px 0;
-    color: #333;
-    font-size: 1.2em;
-}
-.deploy-info {
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
-    align-items: center;
-}
-.deploy-info-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-.deploy-info-item .label {
-    color: #666;
-    font-weight: 500;
-}
-.version-arrow {
-    color: #28a745;
-    font-weight: bold;
-    font-size: 1.5em;
-}
-.version-old {
-    color: #dc3545;
-    text-decoration: line-through;
-    font-size: 1.1em;
-}
-.version-new {
-    color: #28a745;
-    font-weight: bold;
-    font-size: 1.1em;
-}
-.machines-section {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-}
-.machines-section h4 {
-    margin: 0 0 15px 0;
-    color: #24607E;
-}
-.machines-list {
-    max-height: 400px;
-    overflow-y: auto;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-.machines-list table {
-    width: 100%;
-    border-collapse: collapse;
-}
-.machines-list th {
-    background: #f0f0f0;
-    padding: 10px 12px;
-    text-align: left;
-    position: sticky;
-    top: 0;
-    font-weight: 600;
-}
-.machines-list td {
-    padding: 10px 12px;
-    border-bottom: 1px solid #eee;
-}
-.machines-list tr:hover {
-    background: #f8f9fa;
-}
-.machines-list input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-}
-.select-actions {
-    margin: 15px 0;
-    display: flex;
-    gap: 20px;
-}
-.select-actions a {
-    cursor: pointer;
-    color: #24607E;
-    text-decoration: none;
-}
-.select-actions a:hover {
-    text-decoration: underline;
-}
-.no-package-warning {
-    background: #fff3cd;
-    border: 1px solid #ffc107;
-    padding: 15px 20px;
-    border-radius: 8px;
-    margin: 20px 0;
-    color: #856404;
-}
-.button-bar {
-    margin-top: 20px;
-    display: flex;
-    gap: 10px;
-}
-</style>
 
 <?php SecurityFilter::backLink('index', _T("Back to CVE Summary", "security")); ?>
 
 <div class="deploy-header">
-    <h4><?php echo _T("Update Information", "security"); ?></h4>
+    <h3 class="section-title"><?php echo _T("Update Information", "security"); ?></h3>
     <div class="deploy-info">
         <div class="deploy-info-item">
-            <span class="label"><?php echo _T("Software:", "security"); ?></span>
+            <span class="deploy-info-label"><?php echo _T("Software:", "security"); ?></span>
             <strong><?php echo htmlspecialchars($software_name); ?></strong>
         </div>
         <div class="deploy-info-item">
-            <span class="label"><?php echo _T("Vulnerable:", "security"); ?></span>
-            <span class="version-old"><?php echo htmlspecialchars($software_version); ?></span>
+            <span class="deploy-info-label"><?php echo _T("Vulnerable:", "security"); ?></span>
+            <span class="deploy-version-old"><?php echo htmlspecialchars($software_version); ?></span>
         </div>
-        <span class="version-arrow">&rarr;</span>
+        <span class="deploy-version-arrow">&rarr;</span>
         <div class="deploy-info-item">
-            <span class="label"><?php echo _T("Store:", "security"); ?></span>
-            <span class="version-new"><?php echo htmlspecialchars($store_version); ?></span>
+            <span class="deploy-info-label"><?php echo _T("Store:", "security"); ?></span>
+            <span class="deploy-version-new"><?php echo htmlspecialchars($store_version); ?></span>
         </div>
     </div>
 </div>
 
 <?php if (empty($store_package_uuid)): ?>
-<div class="no-package-warning">
+<div class="deploy-warning">
     <strong><?php echo _T("Warning:", "security"); ?></strong>
     <?php echo _T("No deployment package is available yet for this software. The package may still be building or not yet downloaded.", "security"); ?>
 </div>
@@ -304,66 +193,55 @@ $machines = xmlrpc_get_machines_for_vulnerable_software($software_name, $softwar
     <input type="hidden" name="store_version" value="<?php echo htmlspecialchars($store_version); ?>" />
     <input type="hidden" name="store_package_uuid" value="<?php echo htmlspecialchars($store_package_uuid); ?>" />
 
-    <div class="machines-section">
-        <h4><?php echo sprintf(_T("Select machines to update (%d affected)", "security"), intval($machines['total'] ?? 0)); ?></h4>
+    <div class="deploy-machines">
+        <h3 class="section-title"><?php echo sprintf(_T("Select machines to update (%d affected)", "security"), $total); ?></h3>
 
-        <div class="select-actions">
-            <a onclick="selectAllMachines()"><?php echo _T("Select all", "security"); ?></a>
-            <a onclick="selectNoneMachines()"><?php echo _T("Select none", "security"); ?></a>
-            <span style="color: #666; margin-left: 20px;">
-                <span id="selectedCount"><?php echo intval($machines['total'] ?? 0); ?></span> <?php echo _T("selected", "security"); ?>
-            </span>
-        </div>
-
-        <div class="machines-list">
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width: 40px;">
-                            <input type="checkbox" id="selectAll" onclick="toggleAllMachines(this)" checked />
-                        </th>
-                        <th><?php echo _T("Hostname", "security"); ?></th>
-                        <th><?php echo _T("Entity", "security"); ?></th>
-                        <th><?php echo _T("Installed Version", "security"); ?></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if ($machines['total'] > 0): ?>
-                        <?php foreach ($machines['data'] as $machine): ?>
-                        <tr>
-                            <td>
-                                <input type="checkbox" name="machines[]"
-                                       value="<?php echo htmlspecialchars($machine['uuid'] . '##' . $machine['hostname']); ?>"
-                                       checked class="machine-checkbox"
-                                       onchange="updateSelectedCount()" />
-                            </td>
-                            <td>
-                                <a href="<?php echo urlStrRedirect('base/computers/display', array('uuid' => $machine['uuid'])); ?>">
-                                    <?php echo htmlspecialchars($machine['hostname']); ?>
-                                </a>
-                            </td>
-                            <td><?php echo htmlspecialchars($machine['entity_name']); ?></td>
-                            <td><?php echo htmlspecialchars($machine['installed_version'] ?? '-'); ?></td>
-                        </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="4" style="text-align: center; padding: 30px; color: #666;">
-                                <?php echo _T("No machines found with this software", "security"); ?>
-                            </td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
+        <?php
+        if ($total > 0) {
+            $checks = array();
+            $hostnames = array();
+            $entities = array();
+            $versions = array();
+            foreach ($machines['data'] as $machine) {
+                $checks[] = '<input type="checkbox" name="machines[]" value="'
+                    . htmlspecialchars($machine['uuid'] . '##' . $machine['hostname'])
+                    . '" checked class="machine-checkbox" onchange="updateSelectedCount()" />';
+                $hostnames[] = '<a href="' . htmlspecialchars(urlStrRedirect('base/computers/display', array('uuid' => $machine['uuid']))) . '">'
+                    . htmlspecialchars($machine['hostname']) . '</a>';
+                $entities[] = htmlspecialchars($machine['entity_name']);
+                $versions[] = htmlspecialchars($machine['installed_version'] ?? '-');
+            }
+            ?>
+            <div class="deploy-select-actions">
+                <a onclick="selectAllMachines()"><?php echo _T("Select all", "security"); ?></a>
+                <a onclick="selectNoneMachines()"><?php echo _T("Select none", "security"); ?></a>
+                <span class="deploy-selected">
+                    <span id="selectedCount"><?php echo $total; ?></span> <?php echo _T("selected", "security"); ?>
+                </span>
+            </div>
+            <?php
+            $n = new OptimizedListInfos($checks, '<input type="checkbox" id="selectAll" onclick="toggleAllMachines(this)" checked />');
+            $n->setTableCssClass("security-table deploy-table");
+            $n->disableFirstColumnActionLink();
+            $n->addExtraInfoRaw($hostnames, _T("Hostname", "security"));
+            $n->addExtraInfo($entities, _T("Entity", "security"));
+            $n->addExtraInfo($versions, _T("Installed Version", "security"));
+            $n->setItemCount(count($checks));
+            $n->start = 0;
+            $n->end = count($checks);
+            $n->display(0, 0);
+        } else {
+            EmptyStateBox::show(_T("No machines found with this software", "security"));
+        }
+        ?>
     </div>
 
-    <div class="button-bar">
-        <?php if ($machines['total'] > 0 && !empty($store_package_uuid)): ?>
+    <div class="deploy-actions">
+        <?php if ($total > 0 && !empty($store_package_uuid)): ?>
         <input type="submit" name="bconfirm" class="btnPrimary"
                value="<?php echo _T("Deploy to selected machines", "security"); ?>" />
         <?php endif; ?>
-        <a href="<?php echo urlStrRedirect('security/security/index'); ?>" class="btnSecondary" style="padding: 8px 15px; text-decoration: none;">
+        <a href="<?php echo urlStrRedirect('security/security/index'); ?>" class="btnSecondary">
             <?php echo _T("Cancel", "security"); ?>
         </a>
     </div>

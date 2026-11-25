@@ -30,11 +30,13 @@ require_once("modules/security/includes/html.inc.php");
 SecurityFilter::script();
 ?>
 
-<div class="search-wrapper" style="margin-bottom: 15px;">
-<?php
-$ajax = new AjaxFilter(urlStrRedirect("security/security/ajaxEntitiesList"));
-$ajax->display();
-?>
+<div class="filters-row">
+    <div class="search-wrapper">
+    <?php
+    $ajax = new AjaxFilter(urlStrRedirect("security/security/ajaxEntitiesList"));
+    $ajax->display();
+    ?>
+    </div>
 </div>
 
 <?php

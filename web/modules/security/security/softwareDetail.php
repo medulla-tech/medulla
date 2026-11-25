@@ -29,7 +29,7 @@ $software_name = $_GET['software_name'] ?? '';
 $software_version = $_GET['software_version'] ?? '';
 $severity = (string)SecurityFilter::severity();
 
-$p = new PageGenerator(sprintf(_T("CVEs for %s %s", 'security'), htmlspecialchars($software_name), htmlspecialchars($software_version)));
+$p = new PageGenerator(htmlspecialchars(trim($software_name . ' ' . $software_version)));
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -38,7 +38,6 @@ if ($software_name === '') {
     return;
 }
 
-$summary = xmlrpc_get_software_cves($software_name, $software_version, 0, 1, '', null);
 $machines = xmlrpc_get_machines_for_vulnerable_software($software_name, $software_version, SecurityFilter::location(), 0, 50);
 
 SecurityFilter::script();
@@ -46,20 +45,12 @@ SecurityFilter::script();
 
 <?php SecurityFilter::backLink('softwares', _T("Back to software list", "security")); ?>
 
-<div class="summary-box">
-    <strong><?php echo _T("Software", "security"); ?>:</strong> <?php echo htmlspecialchars($software_name); ?> &nbsp;|&nbsp;
-    <strong><?php echo _T("Version", "security"); ?>:</strong> <?php echo htmlspecialchars($software_version); ?> &nbsp;|&nbsp;
-    <strong><?php echo _T("Total CVEs", "security"); ?>:</strong> <?php echo intval($summary['total'] ?? 0); ?>
-</div>
-
-<h3><?php echo _T("Machines", "security"); ?></h3>
+<h3 class="section-title"><?php echo _T("Machines", "security"); ?></h3>
 <?php
-$hostnames = array();
 $entities = array();
 $versions = array();
 $params = array();
 foreach ($machines['data'] ?? array() as $machine) {
-    $hostnames[] = htmlspecialchars($machine['hostname']);
     $entities[] = htmlspecialchars($machine['entity_name'] ?? '');
     $versions[] = htmlspecialchars($machine['installed_version'] ?? '');
     $params[] = array(
@@ -68,14 +59,16 @@ foreach ($machines['data'] ?? array() as $machine) {
         'back' => SecurityFilter::here()
     );
 }
-$shown = count($hostnames);
+$shown = count($params);
 if ($shown > 0) {
+    list($hostnames, $presences) = SecurityLists::machineNames($params);
     $n = new OptimizedListInfos($hostnames, _T("Machine", "security"));
     $n->setTableCssClass("security-table");
     $n->disableFirstColumnActionLink();
     $n->addExtraInfo($entities, _T("Entity", "security"));
     $n->addExtraInfo($versions, _T("Installed Version", "security"));
     $n->setParamInfo($params);
+    $n->setMainActionClasses($presences);
     $n->addActionItem(new ActionItem(_T("View CVEs", "security"), "machineDetail", "display", "", "security", "security"));
     $n->setItemCount($shown);
     $n->start = 0;
@@ -90,7 +83,7 @@ if ($shown > 0) {
 }
 ?>
 
-<h3><?php echo _T("CVEs", "security"); ?></h3>
+<h3 class="section-title"><?php echo _T("CVEs", "security"); ?></h3>
 
 <div class="filters-row">
     <div class="severity-filter">

@@ -29,7 +29,7 @@ $id_glpi = isset($_GET['id_glpi']) ? intval($_GET['id_glpi']) : 0;
 $hostname = $_GET['hostname'] ?? '';
 $category = SecurityFilter::category();
 
-$p = new PageGenerator(sprintf(_T("Vulnerable Software on %s", 'security'), htmlspecialchars($hostname)));
+$p = new PageGenerator(htmlspecialchars($hostname));
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -38,19 +38,10 @@ if ($id_glpi <= 0) {
     return;
 }
 
-$summary = xmlrpc_get_machine_softwares_summary($id_glpi, 0, 1, '');
-$cveSummary = xmlrpc_get_machine_cves($id_glpi, 0, 1, '', null);
-
 SecurityFilter::script();
 ?>
 
 <?php SecurityFilter::backLink('machines', _T("Back to machines list", "security")); ?>
-
-<div class="summary-box">
-    <strong><?php echo _T("Machine", "security"); ?>:</strong> <?php echo htmlspecialchars($hostname); ?> &nbsp;|&nbsp;
-    <strong><?php echo _T("Vulnerable Software", "security"); ?>:</strong> <?php echo intval($summary['total'] ?? 0); ?> &nbsp;|&nbsp;
-    <strong><?php echo _T("Total CVEs", "security"); ?>:</strong> <?php echo intval($cveSummary['total'] ?? 0); ?>
-</div>
 
 <div class="filters-row">
     <div class="filters-left">

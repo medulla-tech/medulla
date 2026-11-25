@@ -26,20 +26,8 @@ require_once("includes/UIComponents.php");
 require_once("modules/security/includes/xmlrpc.php");
 
 /**
- * Displays a styled form to add an item to an exclusion list.
- * Matches the search input style for consistency.
- *
- * CSS classes used (defined in graph/css/index.css, loaded by dynamicCss.php):
- * - .add-item-form
- * - .add-item-row
- * - .add-item-input
- * - .add-item-button
- *
- * @param string $inputName Name attribute for the input field
- * @param string $buttonName Name attribute for the submit button
- * @param string $placeholder Placeholder text for the input
- * @param string $buttonLabel Label for the submit button
- * @param string $label Optional label above the input
+ * Inline form adding an item to an exclusion list, placed in a .filters-row.
+ * The field is a text input, or a select when options are given.
  */
 class AddItemForm
 {
@@ -48,47 +36,51 @@ class AddItemForm
     private $placeholder;
     private $buttonLabel;
     private $label;
+    private $options;
 
-    public function __construct($inputName, $buttonName, $placeholder = '', $buttonLabel = '', $label = '')
+    public function __construct($inputName, $buttonName, $placeholder = '', $buttonLabel = '', $label = '', $options = null)
     {
         $this->inputName = $inputName;
         $this->buttonName = $buttonName;
         $this->placeholder = $placeholder;
         $this->buttonLabel = $buttonLabel ?: _T("Add", "security");
         $this->label = $label;
+        $this->options = $options;
     }
 
     public function display()
     {
+        $name = htmlspecialchars($this->inputName);
         ?>
-        <div class="add-item-form">
-            <form method="POST" action="">
-                <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
-                <?php if (!empty($this->label)): ?>
-                <label for="<?php echo htmlspecialchars($this->inputName); ?>"><?php echo htmlspecialchars($this->label); ?></label>
-                <?php endif; ?>
-                <div class="add-item-row">
-                    <input type="text"
-                           name="<?php echo htmlspecialchars($this->inputName); ?>"
-                           id="<?php echo htmlspecialchars($this->inputName); ?>"
-                           placeholder="<?php echo htmlspecialchars($this->placeholder); ?>"
-                           class="add-item-input" />
-                    <input type="submit"
-                           name="<?php echo htmlspecialchars($this->buttonName); ?>"
-                           value="<?php echo htmlspecialchars($this->buttonLabel); ?>"
-                           class="btnPrimary add-item-button" />
-                </div>
-            </form>
-        </div>
+        <form class="add-item-form" method="POST" action="">
+            <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
+            <?php if (!empty($this->label)): ?>
+            <label for="<?php echo $name; ?>"><?php echo htmlspecialchars($this->label); ?>:</label>
+            <?php endif; ?>
+            <?php if (is_array($this->options)): ?>
+            <select name="<?php echo $name; ?>" id="<?php echo $name; ?>" class="add-item-input">
+                <?php foreach ($this->options as $value => $text): ?>
+                <option value="<?php echo htmlspecialchars($value); ?>"><?php echo htmlspecialchars($text); ?></option>
+                <?php endforeach; ?>
+            </select>
+            <?php else: ?>
+            <input type="text"
+                   name="<?php echo $name; ?>"
+                   id="<?php echo $name; ?>"
+                   placeholder="<?php echo htmlspecialchars($this->placeholder); ?>"
+                   class="add-item-input" />
+            <?php endif; ?>
+            <input type="submit"
+                   name="<?php echo htmlspecialchars($this->buttonName); ?>"
+                   value="<?php echo htmlspecialchars($this->buttonLabel); ?>"
+                   class="btnPrimary add-item-button" />
+        </form>
         <?php
     }
 
-    /**
-     * Static helper for quick display
-     */
-    public static function show($inputName, $buttonName, $placeholder = '', $buttonLabel = '', $label = '')
+    public static function show($inputName, $buttonName, $placeholder = '', $buttonLabel = '', $label = '', $options = null)
     {
-        $form = new self($inputName, $buttonName, $placeholder, $buttonLabel, $label);
+        $form = new self($inputName, $buttonName, $placeholder, $buttonLabel, $label, $options);
         $form->display();
     }
 }
@@ -303,10 +295,10 @@ class SecurityBadge
  */
 class SecurityColumns
 {
-    // Name, version below, type badge only for an extension
-    public static function software($row)
+    // Name linked to its CVEs, version below, type badge only for an extension
+    public static function software($row, $params)
     {
-        return htmlspecialchars($row['software_name']) . ' ' . SecurityBadge::type($row)
+        return SecurityLists::detailLink('softwareDetail', $params, htmlspecialchars($row['software_name'])) . ' ' . SecurityBadge::type($row)
             . '<br/><span class="cell-sub">' . htmlspecialchars($row['software_version']) . '</span>';
     }
 
@@ -348,6 +340,95 @@ class SecurityLists
         }
     }
 
+    // Link to a detail page of the module around an already escaped label
+    public static function detailLink($action, $params, $label)
+    {
+        if (!hasCorrectAcl("security", "security", $action)) {
+            return $label;
+        }
+        return '<a href="' . htmlspecialchars(urlStrRedirect("security/security/" . $action, $params)) . '">' . $label . '</a>';
+    }
+
+    // Name cells (detail link, hover block) and presence classes of a machine list.
+    // $params: detail parameters of each row, with id_glpi and hostname
+    public static function machineNames($params)
+    {
+        if (empty($params)) {
+            return array(array(), array());
+        }
+        require_once("modules/xmppmaster/includes/xmlrpc.php");
+        require_once("modules/base/includes/computers.inc.php");
+        $uuids = array();
+        foreach ($params as $row) {
+            $uuids[] = 'UUID' . intval($row['id_glpi']);
+        }
+        $online = xmlrpc_getPresenceuuids($uuids);
+        if (!is_array($online)) {
+            $online = array();
+        }
+        $computers = getRestrictedComputersList(0, -1, array('uuids' => $uuids), false);
+        $infos = array();
+        foreach (is_array($computers) ? $computers : array() as $uuid => $computer) {
+            $info = is_array($computer[1] ?? null) ? $computer[1] : array();
+            $infos[self::first($info['objectUUID'] ?? $uuid)] = $info;
+        }
+
+        $names = array();
+        $classes = array();
+        foreach ($params as $idx => $row) {
+            $uuid = $uuids[$idx];
+            $present = !empty($online[$uuid]);
+            $fields = array(
+                _T("System", "security") => self::first($infos[$uuid]['os'] ?? ''),
+                _T("Entity", "security") => self::first($infos[$uuid]['entity'] ?? ''),
+                _T("Status", "security") => $present ? _T("Online", "security") : _T("Offline", "security"),
+            );
+            $tooltip = '<table class="ttable"><tr class="tt-section"><td colspan="2">' . htmlspecialchars(_T("Machine", "security")) . '</td></tr>';
+            foreach ($fields as $label => $value) {
+                if ((string)$value !== '') {
+                    $tooltip .= '<tr><td>' . htmlspecialchars($label) . '</td><td> : ' . htmlspecialchars($value) . '</td></tr>';
+                }
+            }
+            $tooltip .= '</table>';
+            $names[] = self::detailLink('machineDetail', $row, '<span class="infomach" mydata="' . htmlspecialchars($tooltip, ENT_QUOTES, 'UTF-8') . '">'
+                . htmlspecialchars($row['hostname']) . '</span>');
+            $classes[] = $present ? "machineNamepresente" : "machineName";
+        }
+        self::machineTooltipScript();
+        return array($names, $classes);
+    }
+
+    private static function first($value)
+    {
+        return is_array($value) ? (string)($value[0] ?? '') : (string)$value;
+    }
+
+    private static function machineTooltipScript()
+    {
+        static $emitted = false;
+        if ($emitted) {
+            return;
+        }
+        $emitted = true;
+        ?>
+        <script>
+        jQuery(function() {
+            jQuery(".security-table td .infomach").tooltip({
+                position: {
+                    my: "left top",
+                    at: "left bottom+10",
+                    collision: "flipfit"
+                },
+                items: "[mydata]",
+                content: function() {
+                    return jQuery(this).attr("mydata");
+                }
+            });
+        });
+        </script>
+        <?php
+    }
+
     // Software sorted by priority; no paging when $filter is null
     public static function softwares($data, $count, $filter = null, $back = null)
     {
@@ -358,10 +439,9 @@ class SecurityLists
         $deploy = new ActionItem(_T("Deploy update", "security"), "deployStoreUpdate", "install", "", "security", "security");
         $deployActions = array();
         foreach ($data as $row) {
-            $names[] = SecurityColumns::software($row);
             $machines[] = intval($row['machines_affected'] ?? 0);
             $deployActions[] = !empty($row['store_has_update']) ? $deploy : new EmptyActionItem();
-            $params[] = array(
+            $rowParams = array(
                 'software_name' => $row['software_name'],
                 'software_version' => $row['software_version'],
                 'store_name' => $row['store_name'] ?? '',
@@ -369,6 +449,8 @@ class SecurityLists
                 'store_package_uuid' => $row['store_package_uuid'] ?? '',
                 'back' => $back ?? SecurityFilter::back()
             );
+            $params[] = $rowParams;
+            $names[] = SecurityColumns::software($row, $rowParams);
         }
         $exclude = new ActionPopupItem(_T("Exclude this software", "security"), "ajaxAddExclusion", "delete", "", "security", "security");
         $exclude->setWidth(400);
@@ -388,7 +470,6 @@ class SecurityLists
     // CVEs, exploited first; $full adds the software, machines and exclusion of the global list
     public static function cves($data, $count, $filter, $full = false)
     {
-        $markers = array();
         $ids = array();
         $risks = array();
         $softwares = array();
@@ -396,13 +477,14 @@ class SecurityLists
         $fixes = array();
         $machines = array();
         $params = array();
-        $classes = array();
         $hasUnfixed = false;
         foreach ($data as $row) {
-            $markers[] = SecurityBadge::exploited($row['exploited_since'] ?? null);
+            $rowParams = array('cve_id' => $row['cve_id'], 'back' => SecurityFilter::back());
+            $params[] = $rowParams;
             // Description en infobulle : en anglais et trop longue pour une colonne (complète dans la fiche)
-            $ids[] = '<span title="' . htmlspecialchars(SecurityFormat::truncate($row['description'] ?? '', 300)) . '">'
-                . htmlspecialchars($row['cve_id']) . '</span>';
+            $ids[] = self::detailLink('cveDetail', $rowParams, '<span class="cve-id" title="'
+                . htmlspecialchars(SecurityFormat::truncate($row['description'] ?? '', 300)) . '">'
+                . htmlspecialchars($row['cve_id']) . '</span>') . SecurityBadge::exploited($row['exploited_since'] ?? null);
             $risks[] = SecurityBadge::risk($row['cvss_score'], $row['severity']);
             $sw = array();
             foreach ($row['softwares'] ?? array() as $s) {
@@ -414,16 +496,11 @@ class SecurityLists
             $fixes[] = SecurityBadge::fix($row['fix_available'] ?? null);
             $hasUnfixed = $hasUnfixed || ($row['fix_available'] ?? null) === false;
             $machines[] = intval($row['machines_affected'] ?? 0);
-            $params[] = array('cve_id' => $row['cve_id'], 'back' => SecurityFilter::back());
-            // "alternate" keeps the zebra striping, "severity-*" adds the side border
-            $classes[] = 'severity-' . SecurityBadge::severityClass($row['severity']) . ' alternate';
         }
 
-        $n = new OptimizedListInfos($markers, _T("Exploited", "security"));
+        $n = new OptimizedListInfos($ids, _T("CVE ID", "security"));
         $n->setTableCssClass("security-table cve-table");
         $n->disableFirstColumnActionLink();
-        $n->setCssClasses($classes);
-        $n->addExtraInfoRaw($ids, _T("CVE ID", "security"));
         $n->addExtraInfoCenteredRaw($risks, _T("Risk", "security"));
         if ($full) {
             $n->addExtraInfoRaw($softwares, _T("Software", "security"));
@@ -451,7 +528,9 @@ class SecurityLists
  */
 class SecurityFilter
 {
-    private static $platforms = array('', 'windows', 'linux');
+    private static $platforms = array('' => '', 'windows' => 'Windows', 'linux' => 'Linux', 'macos' => 'macOS');
+    private static $tabs = array('taball' => '', 'tabwindows' => 'windows', 'tablinux' => 'linux', 'tabmacos' => 'macos');
+    private static $tabbed = false;
     private static $severities = array('Critical', 'High', 'Medium', 'Low');
     private static $categories = array('', 'software', 'extension');
 
@@ -476,9 +555,36 @@ class SecurityFilter
         return implode(',', $kept ?: $allowed);
     }
 
+    // Platform of the current tab on a tabbed page, of the request otherwise
     public static function platform()
     {
-        return self::pick('platform', self::$platforms);
+        if (self::$tabbed) {
+            return self::$tabs[$_GET['tab'] ?? ''] ?? '';
+        }
+        return self::pick('platform', array_keys(self::$platforms));
+    }
+
+    public static function platformTab($platform)
+    {
+        return array_search($platform, self::$tabs, true) ?: 'taball';
+    }
+
+    // One tab per platform over the given content file, the other filters follow the tab
+    public static function platformTabs($file)
+    {
+        self::$tabbed = true;
+        $params = array_filter(array_intersect_key($_GET, array_flip(self::$filters)), 'is_string');
+        $tabs = new TabbedPageGenerator();
+        foreach (self::$tabs as $id => $platform) {
+            $tabs->addTab($id, $platform === '' ? _T("All", "security") : self::$platforms[$platform], "", $file, $params);
+        }
+        $tabs->display();
+    }
+
+    // Display name of a platform, '' when none is selected
+    public static function platformLabel($platform)
+    {
+        return self::$platforms[$platform] ?? '';
     }
 
     public static function category()
@@ -558,6 +664,7 @@ class SecurityFilter
 
     private static $pages = array('index', 'softwares', 'machines', 'entities', 'groups', 'allcves',
         'softwareDetail', 'machineDetail', 'groupDetail', 'cveDetail');
+    private static $filters = array('location', 'category', 'severity', 'exploited_only', 'group_id');
     private static $keys = array('tab', 'location', 'platform', 'category', 'severity', 'exploited_only', 'group_id',
         'group_name', 'id_glpi', 'hostname', 'software_name', 'software_version', 'cve_id', 'back');
 
@@ -623,12 +730,13 @@ class SecurityFilter
         echo '</select></div>';
     }
 
-    public static function platformSelect($current)
+    public static function exploitedCheckbox($checked)
     {
-        echo '<div class="type-filter"><label for="platform-filter">' . _T("Platform", "security") . ':</label>';
-        echo '<select id="platform-filter" onchange="securityApplyFilter(\'platform\', this.value)">';
-        echo self::options(self::$platforms, array(_T("All", "security"), "Windows", "Linux"), $current);
-        echo '</select></div>';
+        echo '<div class="checkbox-filter"><label>';
+        echo '<input type="checkbox" id="exploited-filter"' . ($checked ? ' checked' : '')
+            . ' onchange="securityApplyFilter(\'exploited_only\', this.checked ? \'1\' : \'\')" /> ';
+        echo _T("Exploited only", "security");
+        echo '</label></div>';
     }
 
     private static function options($values, $labels, $current)

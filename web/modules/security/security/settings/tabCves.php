@@ -47,22 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['badd_cve'])) {
 }
 ?>
 
-<h3><?php echo _T("Excluded CVEs", "security"); ?></h3>
-<p style="color:#666; font-size:0.9em; margin-bottom:15px;">
-    <?php echo _T("CVEs listed here will not appear in reports. You can also exclude CVEs directly from the CVEs page.", "security"); ?>
-</p>
-
-<?php
-AddItemForm::show(
-    'new_cve_id',
-    'badd_cve',
-    _T("e.g. CVE-2024-12345", "security"),
-    _T("Add", "security"),
-    _T("Add CVE to exclusions:", "security")
-);
-?>
-
-<!-- Excluded CVEs list -->
 <?php
 $ajax = new AjaxFilter(
     urlStrRedirect("security/security/ajaxExcludedCvesList"),
@@ -70,6 +54,22 @@ $ajax = new AjaxFilter(
     array(),
     "searchCve"
 );
-$ajax->display();
+?>
+<div class="filters-row">
+    <?php
+    AddItemForm::show(
+        'new_cve_id',
+        'badd_cve',
+        _T("e.g. CVE-2024-12345", "security"),
+        _T("Add", "security"),
+        _T("CVE ID", "security")
+    );
+    ?>
+    <div class="search-wrapper">
+    <?php $ajax->display(); ?>
+    </div>
+</div>
+
+<?php
 $ajax->displayDivToUpdate();
 ?>

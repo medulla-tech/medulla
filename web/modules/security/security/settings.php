@@ -49,7 +49,7 @@ $p->addTab(
 // Tab 2: CVE Exclusions
 $p->addTab(
     "tabcves",
-    _T("CVEs", "security"),
+    _T("Excluded CVEs", "security"),
     "",
     "modules/security/security/settings/tabCves.php",
     array()
@@ -58,7 +58,7 @@ $p->addTab(
 // Tab 3: Software Exclusions
 $p->addTab(
     "tabsoftware",
-    _T("Software", "security"),
+    _T("Excluded Software", "security"),
     "",
     "modules/security/security/settings/tabSoftware.php",
     array()
@@ -67,7 +67,7 @@ $p->addTab(
 // Tab 4: Vendor Exclusions
 $p->addTab(
     "tabvendors",
-    _T("Vendors", "security"),
+    _T("Excluded Vendors", "security"),
     "",
     "modules/security/security/settings/tabVendors.php",
     array()
@@ -76,7 +76,7 @@ $p->addTab(
 // Tab 5: Machine Exclusions
 $p->addTab(
     "tabmachines",
-    _T("Machines", "security"),
+    _T("Excluded Machines", "security"),
     "",
     "modules/security/security/settings/tabMachines.php",
     array()
@@ -85,7 +85,7 @@ $p->addTab(
 // Tab 6: Group Exclusions
 $p->addTab(
     "tabgroups",
-    _T("Groups", "security"),
+    _T("Excluded Groups", "security"),
     "",
     "modules/security/security/settings/tabGroups.php",
     array()

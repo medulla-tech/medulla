@@ -49,10 +49,7 @@ $excludedMachines = $policies['exclusions']['machines_ids'] ?? array();
 
 // Display message if no exclusions
 if (empty($excludedMachines)) {
-    EmptyStateBox::show(
-        _T("No excluded machines", "security"),
-        _T("Machines can be excluded from the Machines page using the exclude action.", "security")
-    );
+    EmptyStateBox::show(_T("No excluded machines", "security"));
 } else {
     // Build filter to get machines by their UUIDs
     $uuids = array_map(function($id) { return 'UUID' . intval($id); }, $excludedMachines);
@@ -140,10 +137,7 @@ if (empty($excludedMachines)) {
     $removeAction->setWidth(400);
 
     if ($count == 0) {
-        EmptyStateBox::show(
-            _T("No machines match your search", "security"),
-            _T("Try a different search term.", "security")
-        );
+        EmptyStateBox::show(_T("No machines match your search", "security"));
     } else {
         // Create and display list
         $list = new OptimizedListInfos($hostnames, _T("Machine", "security"));
