@@ -2135,3 +2135,35 @@ msgstr ""
 #: modules/updates/updates/detailsMachineWin.php
 msgid "Upgrade"
 msgstr ""
+
+#: modules/updates/includes/html.inc.php
+msgid "All versions"
+msgstr ""
+
+#: modules/updates/includes/html.inc.php
+msgid "Type"
+msgstr ""
+
+#: modules/updates/includes/html.inc.php
+msgid "All types"
+msgstr ""
+
+#: modules/updates/includes/html.inc.php
+msgid "All processors"
+msgstr ""
+
+#: modules/updates/includes/html.inc.php
+msgid "Cumulative"
+msgstr ""
+
+#: modules/updates/includes/html.inc.php
+msgid "Preview"
+msgstr ""
+
+#: modules/updates/includes/html.inc.php
+msgid "Prerelease"
+msgstr ""
+
+#: modules/updates/includes/html.inc.php
+msgid "Reset"
+msgstr ""

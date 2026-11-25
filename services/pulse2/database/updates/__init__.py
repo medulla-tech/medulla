@@ -550,6 +550,24 @@ WINDOWS_TRACKED_UPDATES_SQL = f"""
      WHERE u.release_id IS NULL AND {CURRENT_UPDATE_SQL}
 """
 
+# Filters of the approvals list (catalog update u, its release vr, its product vp).
+# version: product name up to its first comma and release name, "Windows 11 26H2";
+# an update without release takes its first product by position
+APPROVAL_VERSION_SQL = """TRIM(CONCAT(SUBSTRING_INDEX(COALESCE(vp.display_name, vp.name), ',', 1),
+                                      ' ', COALESCE(vr.name, '')))"""
+# The catalog names the processor of an update without release in its title only
+APPROVAL_ARCHITECTURE_SQL = """COALESCE(LOWER(vr.architecture),
+                CASE WHEN u.title LIKE '%%arm64%%' THEN 'arm64'
+                     WHEN u.title LIKE '%%x64%%' THEN 'x64'
+                     WHEN u.title LIKE '%%x86%%' THEN 'x86' END)"""
+# prerelease, preview and cumulative exist in the title only; else the classification
+APPROVAL_KIND_SQL = """CASE WHEN u.title LIKE '%%Prerelease%%' OR u.title LIKE '%%Internal%%'
+                          THEN 'prerelease'
+                     WHEN u.title LIKE '%%Preview%%' THEN 'preview'
+                     WHEN u.title LIKE '%%Cumulative%%' THEN 'cumulative'
+                     ELSE u.classification END"""
+APPROVAL_FILTERS = ("version", "kind", "architecture")
+
 # One row per catalog update :entity_id follows: missing on a machine at or below
 # it, decided for it, or tracked by it. Without machine: no offer, machines = 0
 WINDOWS_APPROVAL_UPDATES_SQL = f"""
@@ -563,8 +581,17 @@ WINDOWS_APPROVAL_UPDATES_SQL = f"""
            COALESCE(mu.own_machines, 0) AS own_machines,
            a.decided_by, a.decided_at, ea.source_id AS decided_in,
            (a.status IS NULL AND {APPROVAL_RULE_MATCH_SQL}) AS by_rule,
-           {APPROVAL_STATUS_SQL} AS status
+           {APPROVAL_STATUS_SQL} AS status,
+           {APPROVAL_VERSION_SQL} AS version,
+           vp.position AS version_position, COALESCE(vr.name, '') AS version_release,
+           {APPROVAL_ARCHITECTURE_SQL} AS architecture,
+           {APPROVAL_KIND_SQL} AS kind
     FROM updates u
+    LEFT JOIN releases vr ON vr.id = u.release_id
+    LEFT JOIN products vp ON vp.id = COALESCE(vr.product_id,
+              (SELECT upr.product_id FROM update_products upr
+                 JOIN products fp ON fp.id = upr.product_id
+                WHERE upr.update_id = u.id ORDER BY fp.position, fp.id LIMIT 1))
     LEFT JOIN ({WINDOWS_MISSING_UPDATES_SQL}) mu ON mu.update_id = u.id
     LEFT JOIN effective_approvals ea ON ea.entity_id = :entity_id AND ea.update_id = u.id
     LEFT JOIN approvals a ON a.entity_id = ea.source_id AND a.update_id = u.id
@@ -1823,7 +1850,7 @@ class UpdatesDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def get_windows_approvals(self, session, entity_id, status="pending", start=0,
                               limit=-1, filter="", system="windows", distribution="",
-                              allowed_ids=None):
+                              allowed_ids=None, version="", kind="", architecture=""):
         """Effective status per update: the entity's decision, else its nearest
         ancestor's, else its effective rules. Per row "inherited_from" when the
         decision comes from an ancestor. Updates missing on a machine come first,
@@ -1834,10 +1861,14 @@ class UpdatesDatabase(DatabaseHelper):
         distribution when distribution is not empty; "rules_from" is the entity
         whose rules apply.
 
+        Windows: version, kind and architecture narrow the rows, empty for all;
+        "filters" lists the values the entity has for each, whatever the status.
+
         allowed_ids: entities the user sees, None when not restricted; the machines
         of the others are not counted."""
         result = {"total": 0, "rows": [],
                   "counts": {status: 0 for status in WINDOWS_APPROVAL_STATUSES},
+                  "filters": {name: [] for name in APPROVAL_FILTERS},
                   "parent": None}
         if status not in WINDOWS_APPROVAL_STATUSES:
             return result
@@ -1855,12 +1886,27 @@ class UpdatesDatabase(DatabaseHelper):
         }
         params.update(self._visible_params(allowed_ids))
         visible = bindparam("allowed_ids", expanding=True)
+        versions = {}
         for row in session.execute(text(f"""
-                SELECT s.status, COUNT(*) AS updates
+                SELECT s.status, s.version, s.version_position, s.version_release,
+                       s.architecture, s.kind, COUNT(*) AS updates
                 FROM ({WINDOWS_APPROVAL_UPDATES_SQL}) AS s
-                GROUP BY s.status
+                GROUP BY s.status, s.version, s.version_position, s.version_release,
+                         s.architecture, s.kind
                 """).bindparams(visible), params):
-            result["counts"][row.status] = int(row.updates)
+            result["counts"][row.status] += int(row.updates)
+            if row.version:
+                versions[row.version] = (int(row.version_position or 0), row.version_release)
+            for name in ("architecture", "kind"):
+                value = getattr(row, name)
+                if value and value not in result["filters"][name]:
+                    result["filters"][name].append(value)
+        # Products in catalog order, newest release first
+        result["filters"]["version"] = sorted(
+            sorted(versions, key=lambda label: versions[label][1], reverse=True),
+            key=lambda label: versions[label][0])
+        result["filters"]["architecture"].sort()
+        result["filters"]["kind"].sort()
 
         params["status"] = status
         where = ""
@@ -1869,6 +1915,12 @@ class UpdatesDatabase(DatabaseHelper):
             where = """AND (LOWER(s.title) LIKE LOWER(:filter) ESCAPE '!'
                             OR LOWER(CONCAT('KB', s.kb)) LIKE LOWER(:filter) ESCAPE '!')"""
             params["filter"] = self._like_pattern(filter)
+        chosen = {"version": version, "kind": kind, "architecture": architecture}
+        for name in APPROVAL_FILTERS:
+            value = str(chosen[name] or "").strip()
+            if value:
+                where += f" AND s.{name} = :{name}"
+                params[name] = value
         page = self._page_sql(start, limit, params)
         sql = text(f"""
             SELECT s.*, p.state AS package_state, p.error AS package_error,
@@ -1916,7 +1968,8 @@ class UpdatesDatabase(DatabaseHelper):
             })
         if not result["rows"] and page:
             result["total"] = self.get_windows_approvals(
-                entity_id, status, 0, -1, filter, allowed_ids=allowed_ids)["total"]
+                entity_id, status, 0, -1, filter, allowed_ids=allowed_ids, version=version,
+                kind=kind, architecture=architecture)["total"]
         return result
 
     def _linux_approvals(self, session, entity_id, status, start, limit, filter,
