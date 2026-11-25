@@ -32,9 +32,9 @@ if(!isset($_GET['os']) && isset($_GET["objectUUID"])) {
     $_GET["os"] = $machine["platform"];
 }
 
-$cn = htmlspecialchars($_GET['cn'] ?? '');
-$os = htmlspecialchars($_GET['os'] ?? '');
-$entity = htmlspecialchars($_GET['entity'] ?? '');
+$cn = htmlspecialchars($_GET['cn'] ?? '', ENT_QUOTES, 'UTF-8', false);
+$os = htmlspecialchars($_GET['os'] ?? '', ENT_QUOTES, 'UTF-8', false);
+$entity = htmlspecialchars($_GET['entity'] ?? '', ENT_QUOTES, 'UTF-8', false);
 $presencemachinexmpp = $_GET['presencemachinexmpp'] ?? false;
 
 $objectUUID = $_GET['objectUUID'] ?? '';
