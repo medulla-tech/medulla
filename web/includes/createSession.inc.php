@@ -24,6 +24,13 @@
  * file: createSession.php
  */
 
+// Nouvel identifiant de session (aleatoire, genere par PHP) a chaque
+// authentification reussie : protege contre la fixation de session et
+// remplace l'ancien identifiant md5(time() . ip . mt_rand()).
+if (session_status() === PHP_SESSION_ACTIVE) {
+    session_regenerate_id(true);
+}
+
 $_SESSION["login"] = $login;
 // $_SESSION["pass"] = $pass;
 // pour 1 verification de jeton CSRF
