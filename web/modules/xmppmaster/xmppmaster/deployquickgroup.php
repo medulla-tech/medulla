@@ -25,8 +25,9 @@
  */
 
 require_once("modules/base/includes/computers.inc.php");
+require_once("modules/xmppmaster/includes/functions.php");
 
-if ($_GET['type'] !== 0) $grouptype = ""; else $grouptype = "(Imaging)";
+if ($_GET['type'] !== 0) $grouptype = ""; else $grouptype = "("._T("Imaging", "xmppmaster").")";
 $id  = $_GET['id'];
 $gid = $_GET['gid'];
 $groupname = htmlspecialchars($_GET['groupname'] ?? '');
@@ -71,29 +72,29 @@ $nbr_absent = $count - $nbr_presense;
 
     <!-- Actions for online machines -->
     <?php if ($nbr_presense > 0): ?>
-    <div class="actions-section">
+    <div class="actions-section" data-title="<?php echo _T("Actions", "xmppmaster"); ?>">
         <div class="actions-grid">
             <div class="action-item" id="shutdown0" title="<?php echo _T("Shutdown all online machines", "xmppmaster"); ?>">
-                <img src="img/actions/power.svg" alt="Shutdown">
+                <img src="img/actions/power.svg" alt="<?php echo _T("Shutdown", "xmppmaster"); ?>">
                 <span id="shutdown"><?php echo _T("Shutdown", "xmppmaster"); ?></span>
             </div>
             <div class="action-item" id="reboot0" title="<?php echo _T("Reboot all online machines", "xmppmaster"); ?>">
-                <img src="img/actions/restart.svg" alt="Reboot">
+                <img src="img/actions/restart.svg" alt="<?php echo _T("Reboot", "xmppmaster"); ?>">
                 <span id="reboot"><?php echo _T("Reboot", "xmppmaster"); ?></span>
             </div>
             <div class="action-item" id="inventory0" title="<?php echo _T("Run inventory on all online machines", "xmppmaster"); ?>">
-                <img src="img/actions/inventory.svg" alt="Inventory">
+                <img src="img/actions/inventory.svg" alt="<?php echo _T("Run inventory", "xmppmaster"); ?>">
                 <span id="inventory"><?php echo _T("Run inventory", "xmppmaster"); ?></span>
             </div>
             <div class="action-item" id="vncchangeperms0" title="<?php echo _T("Change VNC settings on all online machines", "xmppmaster"); ?>">
-                <img src="img/actions/control.svg" alt="VNC">
+                <img src="img/actions/control.svg" alt="<?php echo _T("Change VNC settings", "xmppmaster"); ?>">
                 <span id="vncchangeperms"><?php echo _T("Change VNC settings", "xmppmaster"); ?></span>
                 <label class="action-option" onclick="event.stopPropagation();">
                     <input type="checkbox" id="checkboxvncchangeperms" checked> <?php echo _T("Ask user approval", "xmppmaster"); ?>
                 </label>
             </div>
             <div class="action-item" id="installkey0" title="<?php echo _T("Install ARS key on all online machines", "xmppmaster"); ?>">
-                <img src="img/actions/key.svg" alt="Key">
+                <img src="img/actions/key.svg" alt="<?php echo _T("Install ARS key", "xmppmaster"); ?>">
                 <span id="installkey"><?php echo _T("Install ARS key", "xmppmaster"); ?></span>
             </div>
         </div>
@@ -102,10 +103,10 @@ $nbr_absent = $count - $nbr_presense;
 
     <!-- WOL for offline machines -->
     <?php if ($nbr_absent > 0): ?>
-    <div class="actions-section">
+    <div class="actions-section" data-title="<?php echo _T("Actions", "xmppmaster"); ?>">
         <div class="actions-grid">
             <div class="action-item" id="wol0" title="<?php echo _T("Wake on LAN for all offline machines", "xmppmaster"); ?>">
-                <img src="img/actions/power.svg" alt="WOL">
+                <img src="img/actions/power.svg" alt="<?php echo _T("Wake on LAN", "xmppmaster"); ?>">
                 <span id="wol"><?php echo _T("Wake on LAN", "xmppmaster"); ?></span>
                 <label class="action-option" onclick="event.stopPropagation();">
                     <input type="checkbox" id="checkboxwol"> <?php echo _T("Imaging", "xmppmaster"); ?>
@@ -126,12 +127,13 @@ $nbr_absent = $count - $nbr_presense;
         <h3><?php echo _T("Custom command", "xmppmaster"); ?></h3>
         <div class="command-row">
             <select id="select">
+                <option value="" data-placeholder="1" selected><?php echo htmlspecialchars(_T("Choose a command", "xmppmaster")); ?></option>
                 <?php
                 foreach($qacomand['command'] as $tabblecommand) {
                     if ($tabblecommand['namecmd'] != "Restart machine agent") {
                         $tabblecommand['customcmd'] = preg_replace('/\r?\n|\r/', ' ', $tabblecommand['customcmd']);
                         $tabblecommand['customcmd'] = trim($tabblecommand['customcmd'], " \t\n\r");
-                        echo '<option value="'.htmlspecialchars($tabblecommand['customcmd']).'">'.htmlspecialchars($tabblecommand['namecmd']).' ('.$tabblecommand['os'].')</option>';
+                        echo '<option value="'.htmlspecialchars($tabblecommand['customcmd']).'">'.htmlspecialchars(xmppmaster_qa_label($tabblecommand['namecmd'])).' ('.$tabblecommand['os'].')</option>';
                         $mm[] = '"'.addslashes($tabblecommand['namecmd']).'": {
                             "description" : "'.addslashes($tabblecommand['description']).'",
                             "customcmd" : "'.addslashes($tabblecommand['customcmd']).'",
@@ -141,7 +143,7 @@ $nbr_absent = $count - $nbr_presense;
                 }
                 ?>
             </select>
-            <button id="buttoncmd" class="btn btn-primary"><?php echo _T("Send custom command", "xmppmaster"); ?></button>
+            <button id="buttoncmd" class="btn btn-primary" disabled><?php echo _T("Send custom command", "xmppmaster"); ?></button>
         </div>
     </div>
 </div>
@@ -163,21 +165,30 @@ $nbr_absent = $count - $nbr_presense;
 var groupinfo = <?php echo json_encode($_GET); ?>;
 groupinfo.auth_token = <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>;
 
-jQuery(function() {
-    var t = jQuery('#select option:selected').val();
-    jQuery('#namecmd').val(t);
-    var y = jQuery('#select option:selected').text();
-    jQuery('#namecmdos').val(y);
-});
+function qaSelectedOption() {
+    var opt = jQuery('#select option:selected');
+    if (!opt.length || opt.is('[data-placeholder]')) {
+        return null;
+    }
+    return opt;
+}
 
-jQuery('#select').on('change', function() {
-    var t = jQuery('#select option:selected').val();
-    jQuery('#namecmd').val(t);
-    var y = jQuery('#select option:selected').text();
-    jQuery('#namecmdos').val(y);
-});
+function qaSyncCommand() {
+    var opt = qaSelectedOption();
+    jQuery('#namecmd').val(opt ? opt.val() : '');
+    jQuery('#namecmdos').val(opt ? opt.text() : '');
+    jQuery('#buttoncmd').prop('disabled', !opt);
+    return opt;
+}
+
+jQuery(qaSyncCommand);
+
+jQuery('#select').on('change', qaSyncCommand);
 
 jQuery('#buttoncmd').click(function() {
+    if (!qaSyncCommand()) {
+        return;
+    }
     groupinfo["namecmd"] = jQuery('#namecmd').val();
     groupinfo["namecmdos"] = jQuery('#namecmdos').val();
     groupinfo["user"] = jQuery('#user').val();
@@ -202,13 +213,13 @@ function wol(data) {
     machine_already_present = data[3];
     machine_not_present = data[4];
     if (machine_not_present.length == 0) {
-        alert("All machines are running");
+        alert(<?php echo json_encode(_T("All machines are running", "xmppmaster")); ?>);
     } else {
         text = "";
         for (var i = 0; i < machine_not_present.length; i++) {
             text = text + machine_not_present[i] + ", ";
         }
-        alert("Wakeonlan on the following machines in progress\n" + text, "", "alert-info");
+        alert(<?php echo json_encode(_T("Wakeonlan on the following machines in progress", "xmppmaster")); ?> + "\n" + text, "", "alert-info");
     }
 }
 
@@ -233,13 +244,13 @@ function reboot(data) {
     machine_already_present = data[3];
     machine_not_present = data[4];
     if (machine_already_present.length == 0) {
-        alert("No machines are running\nReboot possible only on running machine");
+        alert(<?php echo json_encode(_T("No machines are running\nReboot possible only on running machine", "xmppmaster")); ?>);
     } else {
         text = "";
         for (var i = 0; i < machine_already_present.length; i++) {
             text = text + machine_not_present[i] + ", ";
         }
-        alert("Reboot on the following machines in progress\n" + text, "", "alert-info");
+        alert(<?php echo json_encode(_T("Reboot on the following machines in progress", "xmppmaster")); ?> + "\n" + text, "", "alert-info");
     }
 }
 
@@ -250,13 +261,13 @@ function shutdownfunction(data) {
     machine_already_present = data[3];
     machine_not_present = data[4];
     if (machine_already_present.length == 0) {
-        alert("All machines are off\nShutdown possible only on running machines");
+        alert(<?php echo json_encode(_T("All machines are off\nShutdown possible only on running machines", "xmppmaster")); ?>);
     } else {
         text = "";
         for (var i = 0; i < machine_already_present.length; i++) {
             text = text + machine_already_present[i] + ", ";
         }
-        alert("shutdown on the following machines in progress\n" + text, "", "alert-info");
+        alert(<?php echo json_encode(_T("shutdown on the following machines in progress", "xmppmaster")); ?> + "\n" + text, "", "alert-info");
     }
 }
 
@@ -267,13 +278,13 @@ function vncchangepermsfunction(data) {
     machine_already_present = data[3];
     machine_not_present = data[4];
     if (machine_already_present.length == 0) {
-        alert("All machines are off\nVNC settings change available only on running machines");
+        alert(<?php echo json_encode(_T("All machines are off\nVNC settings change available only on running machines", "xmppmaster")); ?>);
     } else {
         text = "";
         for (var i = 0; i < machine_already_present.length; i++) {
             text = text + machine_already_present[i] + ", ";
         }
-        alert("VNC settings change on the following machines in progress\n" + text, "", "alert-info");
+        alert(<?php echo json_encode(_T("VNC settings change on the following machines in progress", "xmppmaster")); ?> + "\n" + text, "", "alert-info");
     }
 }
 
@@ -284,13 +295,13 @@ function installkey(data) {
     machine_already_present = data[3];
     machine_not_present = data[4];
     if (machine_already_present.length == 0) {
-        alert("No machines are running\nARS key installation possible only on running machine");
+        alert(<?php echo json_encode(_T("No machines are running\nARS key installation possible only on running machine", "xmppmaster")); ?>);
     } else {
         text = "";
         for (var i = 0; i < machine_already_present.length; i++) {
             text = text + machine_already_present[i] + ", ";
         }
-        alert("ARS key installation on the following machines in progress\n" + text, "", "alert-info");
+        alert(<?php echo json_encode(_T("ARS key installation on the following machines in progress", "xmppmaster")); ?> + "\n" + text, "", "alert-info");
     }
 }
 

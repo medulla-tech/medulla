@@ -24,6 +24,7 @@
  */
 
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once("modules/xmppmaster/includes/functions.php");
 require_once("includes/UIComponents.php");
     global $conf;
     $maxperpage = $conf["global"]["maxperpage"];
@@ -52,8 +53,8 @@ require_once("includes/UIComponents.php");
     $os   = array();
     $count = $result['len'];
     foreach($result['command'] as $val){
-        $names[] = $val['namecmd'];
-        $desc[]  = $val['description'];
+        $names[] = xmppmaster_qa_label($val['namecmd']);
+        $desc[]  = xmppmaster_qa_label($val['description']);
         $os[]    = $val['os'];
         $val['editcreate'] = 'editeqa';
         $params[] = $val;

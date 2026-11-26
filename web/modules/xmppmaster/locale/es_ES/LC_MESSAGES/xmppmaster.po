@@ -2536,3 +2536,282 @@ msgstr "Número de máquinas vinculadas a este relé."
 
 msgid "Machines attached to this relay that have not yet sent an inventory."
 msgstr "Máquinas vinculadas a este relé que aún no han enviado su inventario."
+
+msgid "Add SSH user to admins group"
+msgstr "Añadir el usuario SSH al grupo de administradores"
+
+msgid "Remove SSH user from admins group"
+msgstr "Quitar el usuario SSH del grupo de administradores"
+
+msgid "Disable fast startup"
+msgstr "Desactivar el inicio rápido"
+
+msgid "Enable fast startup"
+msgstr "Activar el inicio rápido"
+
+msgid "Disable rescue agent"
+msgstr "Desactivar el agente de rescate"
+
+msgid "Download agent log to file-transfer folder"
+msgstr "Descargar el registro del agente en la carpeta file-transfer"
+
+msgid "List Network Connections"
+msgstr "Listar las conexiones de red"
+
+msgid "Reconfigure machine agent"
+msgstr "Reconfigurar el agente de la máquina"
+
+msgid "Reset Medulla Agent base"
+msgstr "Restablecer la base del agente Medulla"
+
+msgid "Restart machine agent"
+msgstr "Reiniciar el agente de la máquina"
+
+msgid "Restart Medulla Agent service"
+msgstr "Reiniciar el servicio del agente Medulla"
+
+msgid "Show connected users list"
+msgstr "Mostrar la lista de usuarios conectados"
+
+msgid "Show last 100 lines of agent logs"
+msgstr "Mostrar las últimas 100 líneas de los registros del agente"
+
+msgid "Show process List"
+msgstr "Mostrar la lista de procesos"
+
+msgid "Show routing table"
+msgstr "Mostrar la tabla de enrutamiento"
+
+msgid "Show services List"
+msgstr "Mostrar la lista de servicios"
+
+msgid "View free disk space"
+msgstr "Ver el espacio libre en disco"
+
+msgid "View task list"
+msgstr "Ver la lista de tareas"
+
+msgid "VNC view all screen"
+msgstr "VNC: ver todas las pantallas"
+
+msgid "VNC view primary screen"
+msgstr "VNC: ver la pantalla principal"
+
+msgid "VNC view secondary screen"
+msgstr "VNC: ver la segunda pantalla"
+
+msgid "VNC view third screen"
+msgstr "VNC: ver la tercera pantalla"
+
+msgid "Deploy updatebackupclient.ini file"
+msgstr "Desplegar el archivo updatebackupclient.ini"
+
+msgid "Add pulseuser account to Administrators group"
+msgstr "Añadir la cuenta pulseuser al grupo Administradores"
+
+msgid "Remove pulseuser account from Administrators group"
+msgstr "Quitar la cuenta pulseuser del grupo Administradores"
+
+msgid "Disable Windows 10 fast startup"
+msgstr "Desactivar el inicio rápido de Windows 10"
+
+msgid "Enable Windows 10 fast startup"
+msgstr "Activar el inicio rápido de Windows 10"
+
+msgid "Disable the rescue agent"
+msgstr "Desactivar el agente de rescate"
+
+msgid "Get list of network connections and ports"
+msgstr "Obtener la lista de conexiones de red y puertos"
+
+msgid "Force the machine agent to reconfigure itself"
+msgstr "Forzar al agente de la máquina a reconfigurarse"
+
+msgid "Force reset of Medulla agent base files"
+msgstr "Forzar el restablecimiento de los archivos de base del agente Medulla"
+
+msgid "Restart the machine agent"
+msgstr "Reiniciar el agente de la máquina"
+
+msgid "Restart Medulla Agent windows service"
+msgstr "Reiniciar el servicio Windows del agente Medulla"
+
+msgid "Restart Medulla Agent linux service"
+msgstr "Reiniciar el servicio Linux del agente Medulla"
+
+msgid "Restart Medulla Agent macos service"
+msgstr "Reiniciar el servicio macOS del agente Medulla"
+
+msgid "Get list of connected users"
+msgstr "Obtener la lista de usuarios conectados"
+
+msgid "Get list of connected users from WMI"
+msgstr "Obtener la lista de usuarios conectados mediante WMI"
+
+msgid "Get the 100 last lines of XMPP agent logs"
+msgstr "Obtener las últimas 100 líneas de los registros del agente XMPP"
+
+msgid "Get list of processes"
+msgstr "Obtener la lista de procesos"
+
+msgid "Get list of processes with PowerShell CIM"
+msgstr "Obtener la lista de procesos con PowerShell CIM"
+
+msgid "View the IP routing table"
+msgstr "Ver la tabla de enrutamiento IP"
+
+msgid "Get list of services"
+msgstr "Obtener la lista de servicios"
+
+msgid "Get list of services from WMI"
+msgstr "Obtener la lista de servicios mediante WMI"
+
+msgid "Get free disk space"
+msgstr "Obtener el espacio libre en disco"
+
+msgid "Get list of tasks"
+msgstr "Obtener la lista de tareas"
+
+msgid "Display all screens"
+msgstr "Mostrar todas las pantallas"
+
+msgid "Display primary screen"
+msgstr "Mostrar la pantalla principal"
+
+msgid "Display secondary screen"
+msgstr "Mostrar la segunda pantalla"
+
+msgid "Display third screen"
+msgstr "Mostrar la tercera pantalla"
+
+msgid "Quick Actions"
+msgstr "Acciones rápidas"
+
+msgid "Quick Actions group"
+msgstr "Acciones rápidas en el grupo"
+
+msgid "OS"
+msgstr "OS"
+
+msgid "Shutdown"
+msgstr "Apagar"
+
+msgid "Reboot"
+msgstr "Reiniciar"
+
+msgid "Run inventory"
+msgstr "Inventario"
+
+msgid "Change VNC settings"
+msgstr "Configuración VNC"
+
+msgid "Ask user approval"
+msgstr "Aprobación del usuario"
+
+msgid "Install ARS key"
+msgstr "Instalar la clave ARS"
+
+msgid "Imaging"
+msgstr "Imaging"
+
+msgid "Custom command"
+msgstr "Comando personalizado"
+
+msgid "Send custom command"
+msgstr "Enviar"
+
+msgid "Monitoring"
+msgstr "Supervisión"
+
+msgid "Process list"
+msgstr "Procesos"
+
+msgid "Disk usage"
+msgstr "Espacio en disco"
+
+msgid "Agent details"
+msgstr "Detalles del agente"
+
+msgid "Offline"
+msgstr "Fuera de línea"
+
+msgid "No machines in this group."
+msgstr "No hay máquinas en este grupo."
+
+msgid "Shutdown all online machines"
+msgstr "Apagar todas las máquinas en línea"
+
+msgid "Reboot all online machines"
+msgstr "Reiniciar todas las máquinas en línea"
+
+msgid "Run inventory on all online machines"
+msgstr "Ejecutar el inventario en todas las máquinas en línea"
+
+msgid "Change VNC settings on all online machines"
+msgstr "Cambiar la configuración de VNC en todas las máquinas en línea"
+
+msgid "Install ARS key on all online machines"
+msgstr "Instalar la clave ARS en todas las máquinas en línea"
+
+msgid "Wake on LAN for all offline machines"
+msgstr "Wake on LAN para todas las máquinas fuera de línea"
+
+msgid "Wake on LAN sent to:"
+msgstr "Wake on LAN enviado a:"
+
+msgid "Reboot sent to:"
+msgstr "Reinicio enviado a:"
+
+msgid "Shutdown sent to:"
+msgstr "Apagado enviado a:"
+
+msgid "VNC settings changed for:"
+msgstr "Configuración de VNC modificada para:"
+
+msgid "SSH key installed on:"
+msgstr "Clave SSH instalada en:"
+
+msgid "All machines are running"
+msgstr "Todas las máquinas están encendidas"
+
+msgid "Wakeonlan on the following machines in progress"
+msgstr "Wake on LAN en curso en las siguientes máquinas"
+
+msgid "No machines are running\nReboot possible only on running machine"
+msgstr "Ninguna máquina está encendida\nEl reinicio solo es posible en una máquina encendida"
+
+msgid "Reboot on the following machines in progress"
+msgstr "Reinicio en curso en las siguientes máquinas"
+
+msgid "All machines are off\nShutdown possible only on running machines"
+msgstr "Todas las máquinas están apagadas\nEl apagado solo es posible en máquinas encendidas"
+
+msgid "shutdown on the following machines in progress"
+msgstr "Apagado en curso en las siguientes máquinas"
+
+msgid "All machines are off\nVNC settings change available only on running machines"
+msgstr "Todas las máquinas están apagadas\nEl cambio de configuración de VNC solo es posible en máquinas encendidas"
+
+msgid "VNC settings change on the following machines in progress"
+msgstr "Cambio de configuración de VNC en curso en las siguientes máquinas"
+
+msgid "No machines are running\nARS key installation possible only on running machine"
+msgstr "Ninguna máquina está encendida\nLa instalación de la clave ARS solo es posible en una máquina encendida"
+
+msgid "ARS key installation on the following machines in progress"
+msgstr "Instalación de la clave ARS en curso en las siguientes máquinas"
+
+#, php-format
+msgid "Inventory request <strong>sent</strong> for %s in entity [%s]"
+msgstr "Solicitud de inventario <strong>enviada</strong> para %s en la entidad [%s]"
+
+#, php-format
+msgid "Inventory request <strong>sent</strong> for %s"
+msgstr "Solicitud de inventario <strong>enviada</strong> para %s"
+
+#, php-format
+msgid "Inventory request <strong>sent</strong> for group [%s] (%d machines)"
+msgstr "Solicitud de inventario <strong>enviada</strong> para el grupo [%s] (%d máquinas)"
+
+msgid "Choose a command"
+msgstr "Elegir un comando"

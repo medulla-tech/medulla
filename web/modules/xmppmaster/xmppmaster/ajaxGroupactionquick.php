@@ -24,6 +24,7 @@
  */
 
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once("modules/xmppmaster/includes/functions.php");
 require_once("includes/UIComponents.php");
 
 global $conf;
@@ -121,7 +122,7 @@ foreach($dd['1'] as $name_grpqa) {
     $ids_grpqa[] = 'rqa_'.$name_grpqa;
 }
 
-$n = new OptimizedListInfos($dd[1], _T("Custom Command", "xmppmaster"));
+$n = new OptimizedListInfos(array_map('xmppmaster_qa_label', $dd[1]), _T("Custom Command", "xmppmaster"));
 $n->setcssIds($ids_grpqa);
 $n->setCssClass("package");
 $n->disableFirstColumnActionLink();
