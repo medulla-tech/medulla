@@ -22,6 +22,7 @@ Medulla provides a real-time management solution for complex and distributed env
 * Backup and Restore
 * Update management
 * Self-service kiosk
+* Mobile device management (MDM) for Android
 
 ## Installation
 
@@ -40,8 +41,9 @@ Our team is available for any questions or demonstration requests.
 - Ubuntu
 - Zorin OS
 - macOS 26.2 or later
+- Android smartphones and tablets (via the MDM module)
 
-**Upcoming support:** Debian 13 and Android agents.
+**Upcoming support:** Debian 13.
 
 ## Documentation
 
