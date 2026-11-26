@@ -39,8 +39,10 @@ $scanStatuses = array(
 
 SecurityFilter::script();
 
+$exploitedCount = intval($summary['exploited'] ?? 0);
+
 $cards = new StatCards();
-$cards->addCard(intval($summary['exploited'] ?? 0), _T("Exploited CVEs", "security"), 'exploited', array(
+$cards->addCard($exploitedCount, _T("Exploited CVEs", "security"), 'exploited', array(
     'href'  => urlStrRedirect("security/security/allcves", $scope + array('exploited_only' => 1)),
     'title' => _T("Click to view exploited CVEs", "security"),
 ));
@@ -63,7 +65,9 @@ if ($lastScan) {
 } else {
     $cards->addCard('-', _T("No scan has been performed yet", "security"), 'info', array('date' => true));
 }
+echo '<div class="security-dashboard' . ($exploitedCount > 0 ? ' has-exploited' : '') . '">';
 $cards->display();
+echo '</div>';
 ?>
 
 <div class="filters-row">
