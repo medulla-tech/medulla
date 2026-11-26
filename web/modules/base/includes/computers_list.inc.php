@@ -105,7 +105,6 @@ function list_computers(
     $emptyAction = new EmptyActionItem();
 
     $inventAction = new ActionItem(_("Inventory"), "invtabs", "inventory", "inventory", "base", "computers");
-    $monitoringAction = new ActionItem(_("Monitoring"), "monitoringview", "monit", "computers", "xmppmaster", "xmppmaster");
     $glpiAction = new ActionItem(_("GLPI Inventory"), "glpitabs", "inventory", "inventory", "base", "computers");
     $logAction = new ActionItem(_("View deployment details"), "viewlogs", "logfile", "computer", "xmppmaster", "xmppmaster");
     $mscAction = new ActionItem(_("Software deployment"), "msctabs", "install", "computer", "base", "computers");
@@ -143,7 +142,6 @@ function list_computers(
     $vncClientActiongriser = new EmptyActionItem1(_("Remote control"), "vnc_client", "guacag", "computer", "base", "computers");
 
     $actionInventory = array();
-    $actionMonitoring = array();
     $action_logs_msc = array();
     $action_deploy_msc = array();
     $actionImaging = array();
@@ -214,7 +212,6 @@ function list_computers(
         }
 
         if (in_array("xmppmaster", $_SESSION["supportModList"])) {
-            $actionMonitoring[] = $monitoringAction;
             $action_deploy_msc[] = $mscAction;
             if ($groupinfodeploy == -1) {
                 $action_logs_msc[]   = $logNoAction;
@@ -388,7 +385,6 @@ function list_computers(
         if ($groupinfodeploy == -1) {
             $n->addActionItemArray($actionInventory);
         }
-        $n->addActionItemArray($actionMonitoring);
     }
 
     if ($msc_can_download_file) {
