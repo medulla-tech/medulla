@@ -25,6 +25,7 @@
  */
 
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once("modules/xmppmaster/includes/functions.php");
 
 // Get machine info
 if(!isset($_GET['os']) && isset($_GET["objectUUID"])) {
@@ -68,35 +69,35 @@ $jid = $_GET['jid'] ?? '';
     </div>
 
     <!-- Main Actions -->
-    <div class="actions-section">
+    <div class="actions-section" data-title="<?php echo _T("Actions", "xmppmaster"); ?>">
         <div class="actions-grid">
             <?php if ($presencemachinexmpp): ?>
                 <div class="action-item" id="shutdown0" title="<?php echo _T("Click here to shut down the remote machine:", "xmppmaster") . " " . $cn; ?>">
-                    <img src="img/actions/power.svg" alt="Shutdown">
+                    <img src="img/actions/power.svg" alt="<?php echo _T("Shutdown", "xmppmaster"); ?>">
                     <span id="shutdown"><?php echo _T("Shutdown", "xmppmaster"); ?></span>
                 </div>
                 <div class="action-item" id="reboot0" title="<?php echo _T("Click here to reboot the remote machine:", "xmppmaster") . " " . $cn; ?>">
-                    <img src="img/actions/restart.svg" alt="Reboot">
+                    <img src="img/actions/restart.svg" alt="<?php echo _T("Reboot", "xmppmaster"); ?>">
                     <span id="reboot"><?php echo _T("Reboot", "xmppmaster"); ?></span>
                 </div>
                 <div class="action-item" id="inventory0" title="<?php echo _T("Click here to refresh the inventory for the remote machine:", "xmppmaster") . " " . $cn; ?>">
-                    <img src="img/actions/inventory.svg" alt="Inventory">
+                    <img src="img/actions/inventory.svg" alt="<?php echo _T("Run inventory", "xmppmaster"); ?>">
                     <span id="inventory"><?php echo _T("Run inventory", "xmppmaster"); ?></span>
                 </div>
                 <div class="action-item" id="vncchangeperms0" title="<?php echo _T("Click here to change the settings for the VNC connection to the remote machine:", "xmppmaster") . " " . $cn; ?>">
-                    <img src="img/actions/control.svg" alt="VNC">
+                    <img src="img/actions/control.svg" alt="<?php echo _T("Change VNC settings", "xmppmaster"); ?>">
                     <span id="vncchangeperms"><?php echo _T("Change VNC settings", "xmppmaster"); ?></span>
                     <label class="action-option" onclick="event.stopPropagation();">
                         <input type="checkbox" id="checkboxvncchangeperms" checked> <?php echo _T("Ask user approval", "xmppmaster"); ?>
                     </label>
                 </div>
                 <div class="action-item" id="installkey0" title="<?php echo _T("Click here to install an SSH key on the remote machine:", "xmppmaster") . " " . $cn; ?>">
-                    <img src="img/actions/key.svg" alt="Key">
+                    <img src="img/actions/key.svg" alt="<?php echo _T("Install ARS key", "xmppmaster"); ?>">
                     <span id="installkey"><?php echo _T("Install ARS key", "xmppmaster"); ?></span>
                 </div>
             <?php else: ?>
                 <div class="action-item" id="wol0" title="<?php echo _T("Click here to start the remote machine if it is not already running:", "xmppmaster") . " " . $cn; ?>">
-                    <img src="img/actions/power.svg" alt="WOL">
+                    <img src="img/actions/power.svg" alt="<?php echo _T("Wake on LAN", "xmppmaster"); ?>">
                     <span id="wol"><?php echo _T("Wake on LAN", "xmppmaster"); ?></span>
                     <label class="action-option" onclick="event.stopPropagation();">
                         <input type="checkbox" id="checkboxwol"> <?php echo _T("Imaging", "xmppmaster"); ?>
@@ -126,12 +127,13 @@ $jid = $_GET['jid'] ?? '';
         <h3><?php echo _T("Custom command", "xmppmaster"); ?></h3>
         <div class="command-row">
             <select id="select">
+                <option value="" data-placeholder="1" selected><?php echo htmlspecialchars(_T("Choose a command", "xmppmaster")); ?></option>
                 <?php
                 foreach($qacomand['command'] as $tabblecommand) {
                     if($tabblecommand['namecmd'] != "Restart machine agent") {
                         $tabblecommand['customcmd'] = preg_replace('/\r?\n|\r/',' ', $tabblecommand['customcmd']);
                         $tabblecommand['customcmd'] = trim($tabblecommand['customcmd'], " \t\n\r");
-                        echo '<option value="'.htmlspecialchars($tabblecommand['customcmd']).'">'.htmlspecialchars($tabblecommand['namecmd']).'</option>';
+                        echo '<option value="'.htmlspecialchars($tabblecommand['customcmd']).'" data-namecmd="'.htmlspecialchars($tabblecommand['namecmd']).'">'.htmlspecialchars(xmppmaster_qa_label($tabblecommand['namecmd'])).'</option>';
                         $mm[] = "'".addslashes($tabblecommand['namecmd'])."': {
                             'description' : '".addslashes($tabblecommand['description'])."',
                             'customcmd' : '".addslashes($tabblecommand['customcmd'])."',
@@ -141,7 +143,7 @@ $jid = $_GET['jid'] ?? '';
                 }
                 ?>
             </select>
-            <button id="buttoncmd" class="btn btn-primary"><?php echo _T("Send custom command", "xmppmaster"); ?></button>
+            <button id="buttoncmd" class="btn btn-primary" disabled><?php echo _T("Send custom command", "xmppmaster"); ?></button>
         </div>
     </div>
 
@@ -150,15 +152,15 @@ $jid = $_GET['jid'] ?? '';
         <h3><?php echo _T("Monitoring", "xmppmaster"); ?></h3>
         <div class="monitoring-grid">
             <div class="monitoring-item" id="clone_ps_aux">
-                <img src="img/actions/process.svg" alt="Process">
+                <img src="img/actions/process.svg" alt="<?php echo _T("Process list", "xmppmaster"); ?>">
                 <span id="clone_ps_aux0"><?php echo _T("Process list", "xmppmaster"); ?></span>
             </div>
             <div class="monitoring-item" id="disk_usage">
-                <img src="img/actions/disk.svg" alt="Disk">
+                <img src="img/actions/disk.svg" alt="<?php echo _T("Disk usage", "xmppmaster"); ?>">
                 <span id="disk_usage0"><?php echo _T("Disk usage", "xmppmaster"); ?></span>
             </div>
             <div class="monitoring-item" id="agentinfo">
-                <img src="img/actions/info.svg" alt="Info">
+                <img src="img/actions/info.svg" alt="<?php echo _T("Agent details", "xmppmaster"); ?>">
                 <span id="agentinfo0"><?php echo _T("Agent details", "xmppmaster"); ?></span>
             </div>
         </div>
@@ -207,26 +209,42 @@ $jid = $_GET['jid'] ?? '';
 <?php if ($presencemachinexmpp): ?>
 var myObject = {<?php echo implode(",", $mm); ?>};
 
-jQuery(function() {
-    var t = jQuery('#select option:selected').text();
-    jQuery('#namecmd').val(t);
-    jQuery('#customcmd').val(myObject[t].customcmd);
-    jQuery('#description').val(myObject[t].description);
-    jQuery('#os').val(myObject[t].os);
-    jQuery('#user').val(myObject[t].user);
+function qaSelectedCommand() {
+    var opt = jQuery('#select option:selected');
+    if (!opt.length || opt.is('[data-placeholder]')) {
+        return null;
+    }
+    var t = opt.attr('data-namecmd');
+    if (typeof t === 'undefined' || !Object.prototype.hasOwnProperty.call(myObject, t)) {
+        return null;
+    }
+    return {name: t, data: myObject[t]};
+}
+
+function qaSyncCommand() {
+    var c = qaSelectedCommand();
+    jQuery('#namecmd').val(c ? c.name : '');
+    jQuery('#customcmd').val(c ? c.data.customcmd : '');
+    jQuery('#description').val(c ? c.data.description : '');
+    jQuery('#os').val(c ? c.data.os : '');
+    jQuery('#user').val(c ? c.data.user : '');
+    jQuery('#buttoncmd').prop('disabled', !c);
+    return c;
+}
+
+jQuery(qaSyncCommand);
+
+jQuery('#select').on('change', qaSyncCommand);
+
+jQuery('#formcmdcustom').on('submit', function() {
+    return qaSelectedCommand() !== null;
 });
 
 jQuery('#buttoncmd').click(function() {
+    if (!qaSyncCommand()) {
+        return;
+    }
     jQuery('#formcmdcustom').submit();
-});
-
-jQuery('#select').on('change', function() {
-    var t = jQuery('#select option:selected').text();
-    jQuery('#namecmd').val(t);
-    jQuery('#customcmd').val(myObject[t].customcmd);
-    jQuery('#description').val(myObject[t].description);
-    jQuery('#os').val(myObject[t].os);
-    jQuery('#user').val(myObject[t].user);
 });
 <?php endif; ?>
 
@@ -258,7 +276,7 @@ jQuery('#wol, #wol0').on('click', function() {
     uuid['wol'] = jQuery('#checkboxwol').is(':checked');
     jQuery.post("modules/xmppmaster/xmppmaster/actionwakeonlan.php", uuid)
         .done(function(data) {
-            alert("Wake on LAN sent to: " + uuid['cn'], "", "alert-info");
+            alert(<?php echo json_encode(_T("Wake on LAN sent to:", "xmppmaster")); ?> + " " + uuid['cn'], "", "alert-info");
         });
 });
 
@@ -272,7 +290,7 @@ jQuery('#inventory, #inventory0').on('click', function() {
 jQuery('#reboot, #reboot0').on('click', function() {
     jQuery.post("modules/xmppmaster/xmppmaster/actionrestart.php", uuid)
         .done(function(data) {
-            alert("Reboot sent to: " + uuid['cn'], "", "alert-info");
+            alert(<?php echo json_encode(_T("Reboot sent to:", "xmppmaster")); ?> + " " + uuid['cn'], "", "alert-info");
         });
 });
 
@@ -281,7 +299,7 @@ jQuery('#shutdown, #shutdown0').on('click', function() {
     uuid['msg'] = jQuery('#msgshutdown').val();
     jQuery.post("modules/xmppmaster/xmppmaster/actionshutdown.php", uuid)
         .done(function(data) {
-            alert("Shutdown sent to: " + uuid['cn'], "", "alert-info");
+            alert(<?php echo json_encode(_T("Shutdown sent to:", "xmppmaster")); ?> + " " + uuid['cn'], "", "alert-info");
         });
 });
 
@@ -289,7 +307,7 @@ jQuery('#vncchangeperms, #vncchangeperms0').on('click', function() {
     uuid['askpermission'] = jQuery('#checkboxvncchangeperms').is(":checked") ? 1 : 0;
     jQuery.post("modules/xmppmaster/xmppmaster/actionvncchangeperms.php", uuid)
         .done(function(data) {
-            alert("VNC settings changed for: " + uuid['cn'], "", "alert-info");
+            alert(<?php echo json_encode(_T("VNC settings changed for:", "xmppmaster")); ?> + " " + uuid['cn'], "", "alert-info");
         });
 });
 
@@ -297,7 +315,7 @@ jQuery('#installkey, #installkey0').on('click', function() {
     jQuery.post("modules/xmppmaster/xmppmaster/actionkeyinstall.php", uuid)
         .done(function(data) {
             var obj = jQuery.parseJSON(data);
-            alert("SSH key installed on: " + obj.hostname, "", "alert-info");
+            alert(<?php echo json_encode(_T("SSH key installed on:", "xmppmaster")); ?> + " " + obj.hostname, "", "alert-info");
         });
 });
 </script>

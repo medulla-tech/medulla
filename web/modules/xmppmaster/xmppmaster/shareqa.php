@@ -26,6 +26,7 @@
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once("modules/xmppmaster/includes/functions.php");
 require_once("modules/base/includes/users-xmlrpc.inc.php");
 
 if (isset($_POST['bcreate'])){
@@ -69,15 +70,15 @@ if (isset($_POST['bcreate']) && isset($json['namecmd'])){
   }
 
   if (safeCount($fail_list)){
-    new NotifyWidgetFailure(sprintf(_T("Error when updating sharing of Quick Action %s","xmppmaster"), $json['namecmd']));
+    new NotifyWidgetFailure(sprintf(_T("Error when updating sharing of Quick Action %s","xmppmaster"), xmppmaster_qa_label($json['namecmd'])));
   }
   elseif (safeCount($to_add) || safeCount($to_remove)) {
-    new NotifyWidgetSuccess(sprintf(_T("Sharing of Quick Action %s updated successfully","xmppmaster"), $json['namecmd']));
+    new NotifyWidgetSuccess(sprintf(_T("Sharing of Quick Action %s updated successfully","xmppmaster"), xmppmaster_qa_label($json['namecmd'])));
   }
   //header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/shareqa", array()));
 }
 
-$p = new PageGenerator(_T("Share the Quick Action",'xmppmaster').' '.$_GET['namecmd']);
+$p = new PageGenerator(_T("Share the Quick Action",'xmppmaster').' '.xmppmaster_qa_label($_GET['namecmd']));
 $p->setSideMenu($sidemenu);
 $p->display();
 

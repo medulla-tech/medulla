@@ -24,6 +24,7 @@
  */
 
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once("modules/xmppmaster/includes/functions.php");
 
 if (isset($_POST["bconfirm"])) {
     verifyCSRFToken($_POST);
@@ -32,7 +33,7 @@ if (isset($_POST["bconfirm"])) {
 }
 else{
     extract($_GET);
-    $f = new PopupForm(sprintf(_T("Delete this Quick Action :%s"),$namecmd));
+    $f = new PopupForm(sprintf(_T("Delete this Quick Action :%s"),xmppmaster_qa_label($namecmd)));
     $f->setLevel('danger');
     $hidden = new HiddenTpl("namecmd");
     $f->add($hidden, array("value" => $namecmd, "hide" => True));

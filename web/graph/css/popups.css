@@ -574,6 +574,10 @@
   content: "Actions";
 }
 
+.quick-actions-popup .actions-section[data-title]::before {
+  content: attr(data-title);
+}
+
 .quick-actions-popup .actions-section::before,
 .quick-actions-popup .custom-command-section h3,
 .quick-actions-popup .monitoring-section h3 {

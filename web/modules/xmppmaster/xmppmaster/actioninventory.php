@@ -61,8 +61,9 @@ switch($_POST['action']){
                                                 'QuickAction | Inventory | Inventory requested');
         // xmlrpc_setCommand_qa("Run Inventory", "Run Inventory", $_SESSION["login"], "", $_POST['UUID'], $_POST['os'], $_POST['jid']);
         $notif = new NotifyWidgetSuccess(
-            "Inventory request <strong>sent</strong> for " . htmlspecialchars($_POST['cn'])
-            . (!empty($_POST['entity']) ? " in entity [" . htmlspecialchars($_POST['entity']) . "]" : "")
+            !empty($_POST['entity'])
+                ? sprintf(_T("Inventory request <strong>sent</strong> for %s in entity [%s]", "xmppmaster"), htmlspecialchars($_POST['cn']), htmlspecialchars($_POST['entity']))
+                : sprintf(_T("Inventory request <strong>sent</strong> for %s", "xmppmaster"), htmlspecialchars($_POST['cn']))
         );
         $result = $_POST;
         echo json_encode([
@@ -120,7 +121,7 @@ switch($_POST['action']){
         }
         // xmlrpc_setCommand_qa("Run Inventory", "Run Inventory", $_SESSION["login"], $_POST['gid'], "", "", $_POST['groupname']);
         $notif = new NotifyWidgetSuccess(
-            "Inventory request <strong>sent</strong> for group [" . htmlspecialchars($_POST['groupname']) . "] (" . count($list) . " machines)"
+            sprintf(_T("Inventory request <strong>sent</strong> for group [%s] (%d machines)", "xmppmaster"), htmlspecialchars($_POST['groupname']), count($list))
         );
         echo json_encode([
             'status' => 'ok',
