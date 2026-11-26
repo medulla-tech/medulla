@@ -97,9 +97,9 @@ var actionsList = [
  */
 var actionsOs = {
     'action_kiosknotification': ['win'],
-    'action_notification': ['win'],
-    'action_question': ['win'],
-    'action_loop_question': ['win'],
+    'action_notification': ['win', 'linux', 'mac'],
+    'action_question': ['win', 'linux', 'mac'],
+    'action_loop_question': ['win', 'linux', 'mac'],
 };
 /**
  *
