@@ -46,7 +46,7 @@ msgstr "Administrativo"
 
 #: modules/glpi/glpi/tabs.php:99
 msgid "History"
-msgstr "Historia"
+msgstr "Historial"
 
 #: modules/glpi/glpi/tabs.php:100
 #: modules/glpi/includes/panels/antivirus.inc.php:33
@@ -160,7 +160,7 @@ msgstr "Editar archivos de configuración"
 #: modules/glpi/glpi/ajaxMachinesList.php:187
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:91
 msgid "Imaging management"
-msgstr "Gestión de imagenes"
+msgstr "Gestión de Imaging"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:189
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:92
@@ -256,7 +256,7 @@ msgstr "Usuario AD OU"
 #: modules/glpi/glpi/ajaxMachinesList.php:233
 #: modules/glpi/glpi/machinesList.php:72
 msgid "Kiosk enabled"
-msgstr "Quiosco habilitado"
+msgstr "Kiosk habilitado"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:234
 #: modules/glpi/glpi/machinesList.php:73
@@ -614,7 +614,7 @@ msgstr "Sistema de archivos"
 #: modules/glpi/glpi/ajaxViewPart.php:223
 #: modules/glpi/glpi/ajaxViewPart.php:248
 msgid "Size"
-msgstr "Talla"
+msgstr "Tamaño"
 
 #: modules/glpi/glpi/ajaxViewPart.php:224
 msgid "Free Size"

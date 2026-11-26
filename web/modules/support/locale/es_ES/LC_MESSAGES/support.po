@@ -34,7 +34,7 @@ msgstr "Su suscripción"
 
 #: modules/support/includes/panels/license.inc.php:91
 msgid "Computers"
-msgstr "Computadoras"
+msgstr "Máquinas"
 
 #: modules/support/includes/panels/license.inc.php:106
 msgid "End"

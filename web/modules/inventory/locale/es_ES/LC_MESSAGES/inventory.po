@@ -9,7 +9,7 @@ msgstr ""
 
 #: modules/inventory/includes/panels/inventory.inc.php:30
 msgid "Computers"
-msgstr "Computadoras"
+msgstr "Máquinas"
 
 #: modules/inventory/includes/panels/inventory.inc.php:43
 msgid "Create a group"
@@ -341,7 +341,7 @@ msgstr "inventario de contenidos de %s"
 
 #: modules/inventory/inventory/tabs.php:106
 msgid "History"
-msgstr "Historia"
+msgstr "Historial"
 
 #: modules/inventory/inventory/tabs.php:117
 msgid "Get XLS Report"
@@ -923,7 +923,7 @@ msgstr "Serie"
 #: modules/inventory/inventory/ajaxViewPart.php:580
 #: modules/inventory/inventory/ajaxViewPart.php:604
 msgid "Size"
-msgstr "Talla"
+msgstr "Tamaño"
 
 #: modules/inventory/inventory/i18n_labels.php:134
 #: modules/inventory/inventory/slot.php:27

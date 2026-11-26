@@ -150,7 +150,7 @@ msgstr "Trabajo en curso"
 
 #: modules/msc/includes/functions.php:315
 msgid "Wake on LAN"
-msgstr "Despertar en LAN"
+msgstr "Wake on LAN"
 
 #: modules/msc/includes/functions.php:316
 msgid "Upload"
@@ -644,7 +644,7 @@ msgstr "Título del paquete"
 
 #: modules/msc/includes/bundle_widgets.php:350
 msgid "Wake on lan"
-msgstr "Despertar en lan"
+msgstr "Wake on LAN"
 
 #: modules/msc/includes/bundle_widgets.php:351
 msgid "Start the script"
@@ -1461,7 +1461,7 @@ msgstr "ordenadores fuera del periodo de validez"
 
 #: modules/msc/msc/statuscsv.php:109
 msgid "computers running a deployment"
-msgstr "ordenadores que ejecutan una implantación"
+msgstr "máquinas que ejecutan un despliegue"
 
 #: modules/msc/msc/statuscsv.php:110 modules/msc/msc/msctabsstatus.php:136
 msgid "waiting to upload"

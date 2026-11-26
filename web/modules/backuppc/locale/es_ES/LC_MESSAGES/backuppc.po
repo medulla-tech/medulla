@@ -189,7 +189,7 @@ msgstr "Ver todas las versiones"
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:170
 #: modules/backuppc/backuppc/ajaxFileSearch.php:118
 msgid "Size"
-msgstr "Talla"
+msgstr "Tamaño"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:191
 msgid "Download selected (ZIP)"
@@ -332,7 +332,7 @@ msgstr "Configuración"
 #: modules/backuppc/backuppc/hostStatus.php:221
 #: modules/backuppc/infoPackage.inc.php:54
 msgid "Advanced scripts"
-msgstr "Guiones avanzados"
+msgstr "Scripts avanzados"
 
 #: modules/backuppc/backuppc/hostStatus.php:222
 #: modules/backuppc/infoPackage.inc.php:57
