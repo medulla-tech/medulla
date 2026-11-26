@@ -111,11 +111,12 @@ function handleAuthentication($providerKey) {
 
             // Création session locale MMC
             $error = ""; $login = "";
-            $ip         = preg_replace('@\.@', '', $_SERVER["REMOTE_ADDR"]);
-            $sessionid  = md5(time() . $ip . mt_rand());
-            session_id($sessionid);
-            session_name("PULSESESSION");
-            session_start();
+            // Session deja active (ligne 16) : l'identifiant est regenere
+            // apres authentification dans includes/createSession.inc.php
+            if (session_status() !== PHP_SESSION_ACTIVE) {
+                session_name("PULSESESSION");
+                session_start();
+            }
 
             $_SESSION["ip_addr"]                   = $_SERVER["REMOTE_ADDR"];
             $_SESSION["XMLRPC_agent"]              = parse_url($conf["server_01"]["url"]);
