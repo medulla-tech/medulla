@@ -34,6 +34,11 @@ if (isset($_POST["bconfirm"])) {
     verifyCSRFToken($_POST);
 
     $params = getParams();
+
+    $item_uuid = $_POST['itemid'];
+    $label = urldecode($_POST['itemlabel']);
+
+    $params['default_name'] = $_POST['default_mi_label'];
     $params['hidden'] = ($_POST['do_display'] != 'on');
     $params['hidden_WOL'] = ($_POST['do_display_WOL'] != 'on');
     $params['default'] = ($_POST['do_default'] == 'on');

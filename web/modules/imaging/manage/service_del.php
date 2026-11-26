@@ -36,6 +36,11 @@ if (isset($_POST["bconfirm"])) {
 
     $params = getParams();
 
+    $item_uuid = $_POST['itemid'];
+    $label = urldecode($_POST['itemlabel']);
+
+    $ret = xmlrpc_delServiceToLocation($item_uuid, $location, $params);
+
     // goto images list
     if ($ret[0] and !isXMLRPCError()) {
         $str = sprintf(_T("Service <strong>%s</strong> removed from default boot menu", "imaging"), $label);
