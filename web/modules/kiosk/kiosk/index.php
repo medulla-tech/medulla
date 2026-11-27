@@ -19,19 +19,24 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require_once("modules/kiosk/includes/xmlrpc.php");
-require_once("modules/medulla_server/includes/utilities.php");
+require_once("modules/kiosk/includes/functions.php");
+require_once("modules/kiosk/includes/html.inc.php");
 
 require("graph/navbar.inc.php");
 require("localSidebar.php");
-?>
-<?php
-$p = new PageGenerator(_T("List of profils",'kiosk'));
+
+$p = new PageGenerator(_T("Profile List", 'kiosk'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$ajax = new AjaxFilter(urlStrRedirect("kiosk/kiosk/ajaxProfilesList"));
+$location = kioskSelectedLocation();
+$params = ($location === '') ? array() : array('location' => $location);
+
+echo '<div class="kiosk-filter-bar">';
+if (count(kioskEntities()) > 1) {
+    kioskEntityFilter($location);
+}
+$ajax = new AjaxFilter(urlStrRedirect("kiosk/kiosk/ajaxProfilesList"), "container", $params);
 $ajax->display();
 $ajax->displayDivToUpdate();
-
-?>
+echo '</div>';

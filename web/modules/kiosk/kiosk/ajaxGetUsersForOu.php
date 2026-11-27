@@ -19,34 +19,30 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require_once("../includes/xmlrpc.php");
-require_once("../includes/functions.php");
-require_once("../../../includes/config.inc.php");
-require_once("../../../includes/session.inc.php");
-require_once("../../../includes/PageGenerator.php");
-require_once("../../../includes/acl.inc.php");
+require_once("modules/kiosk/includes/xmlrpc.php");
+require_once("modules/kiosk/includes/functions.php");
 
-$roots = $_POST['roots'];
-$tmp = [];
-foreach($roots as $root)
-{
-    $tmp = array_merge(xmlrpc_get_users_from_ou($root),$tmp);
+kioskRequireAcl(array("add", "edit"));
+
+$entity = kioskPostedEntity();
+if ($entity === null) {
+    exit;
 }
-$users = [];
 
-foreach($tmp as $user)
-{
-    if(!in_array($user,$users))
-        $users[] = $user;
+$source = (string) ($_POST['source'] ?? '');
+$ous = kioskPostedList('roots');
+if (!in_array($source, array('ou_user', 'ou_machine'), true) || empty($ous)) {
+    exit;
 }
-unset($tmp);
-unset($roots);
 
-echo '<ul>';
-foreach($users as $user)
-{
-    echo '<li>'.$user.'</li>';
+$total = intval(xmlrpc_kiosk_count_machines_of_ous($source, $ous, $entity));
+if ($total === 0) {
+    $text = _T("No machine concerned", "kiosk");
+} elseif ($total === 1) {
+    $text = _T("1 machine concerned", "kiosk");
+} else {
+    $text = sprintf(_T("%d machines concerned", "kiosk"), $total);
 }
-echo '</ul>';
 
-?>
+echo htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+exit;

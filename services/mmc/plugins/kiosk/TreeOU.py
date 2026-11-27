@@ -3,8 +3,6 @@
 #
 # SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
-from mmc.support.config import PluginConfig, PluginConfigFactory
-from mmc.plugins.base.config import BasePluginConfig
 
 
 class TreeOU(object):
@@ -103,7 +101,7 @@ class TreeOU(object):
         else:
             return False
 
-    def create_recursively(self, string, leaf_only=False):
+    def create_recursively(self, string, leaf_only=False, separator=None):
         """
         Create recursively the TreeOU objects as child from the specified string.
 
@@ -114,11 +112,15 @@ class TreeOU(object):
                 non-selectable (used for the Entity source). When False
                 (default, kept for backward compat with Group/OU/LDAP sources)
                 every node touched by this call is selectable.
+            separator when given, the names are separated by it instead of >>
+                and " > " is part of a name.
         """
         temp = self
 
-        string = string.replace(" > ", ">>")
-        elements = string.split(">>")
+        if separator is None:
+            string = string.replace(" > ", ">>")
+            separator = ">>"
+        elements = string.split(separator)
         last_index = len(elements) - 1
         for idx, element in enumerate(elements):
             element = element.strip()
@@ -132,9 +134,12 @@ class TreeOU(object):
                 if not leaf_only or idx == last_index:
                     temp.selectable = True
 
-    def recursive_json(self):
+    def recursive_json(self, separator=">>"):
         """
         Generate a dict which starts at the specified object and gives all the childrens.
+
+        Params:
+            separator string joining the names of a node path.
 
         Returns:
             a dict of the tree structure.
@@ -144,13 +149,13 @@ class TreeOU(object):
         self.json = {
             "name": self.name,
             "child": [],
-            "path": ">>".join(self.path),
+            "path": separator.join(self.path),
             "selectable": self.selectable,
         }
         # Check if the actual node has children
         for element in self.child:
             # If it's the case each child's dict is append
-            self.json["child"].append(element.recursive_json())
+            self.json["child"].append(element.recursive_json(separator))
         return self.json
 
     def get_path(self):
@@ -168,39 +173,6 @@ class TreeOU(object):
 
         canonical.reverse()
         return canonical
-
-    def str_to_ou(self, ou_string):
-        """
-        Generate a OU string with the path of the node. For example, for the node root>>first_child>>grand_son,
-        it's str_to_ou() is OU=grand_son,OU=first_child,OU=root,DC=myDomain,DC=local.
-        The DC datas are read from the configuration file.
-
-        Params:
-            String ou_string contains the path of the node pointed.
-
-        Returns:
-            String which contains the result (i.e.: OU=grand_son,OU=first_child,OU=root,DC=myDomain,DC=local)
-            or
-            returns False if the string can't be generated
-        """
-        config = PluginConfigFactory.new(BasePluginConfig, "base")
-        if config.has_section("authentication_externalldap"):
-            # Get the parameters from the config file
-            suffix = config.get("authentication_externalldap", "suffix_ou")
-
-            ou_list = ou_string.split(">>")
-            ou_list.reverse()
-
-            ous = []
-            for ou in ou_list:
-                ou = "OU=" + ou
-                ous.append(ou)
-
-            ous.append(suffix)
-            return ",".join(ous)
-
-        else:
-            return False
 
     def recursive_paths(self, list):
         """This method returns the list of the paths for all the childrens.

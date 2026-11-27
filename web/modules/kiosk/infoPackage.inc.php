@@ -82,20 +82,6 @@ $page->setFile("modules/kiosk/kiosk/deleteProfile.php");//, array("expert" => Tr
 $page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
 $submod->addPage($page);
 
-$page = new Page("acknowledges", _T('Installation Requests', 'kiosk'));
-$page->setFile("modules/kiosk/kiosk/acknowledges.php");
-$submod->addPage($page);
-
-$page = new Page("ajaxAcknowledges", _T('Installation Requests', 'kiosk'));
-$page->setFile("modules/kiosk/kiosk/ajaxAcknowledges.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, 'noHeader' => false));
-$submod->addPage($page);
-
-$page = new Page("modifyAcknowledge", _T('Modify Installation Authorisations', 'kiosk'));
-$page->setFile("modules/kiosk/kiosk/modifyAcknowledge.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, 'noHeader' => false));
-$submod->addPage($page);
-
 $mod->addSubmod($submod);
 
 $MMCApp = &MMCApp::getInstance();

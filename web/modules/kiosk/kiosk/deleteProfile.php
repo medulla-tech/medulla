@@ -20,74 +20,42 @@
  */
 
 require_once("modules/kiosk/includes/xmlrpc.php");
-require_once("modules/medulla_server/includes/utilities.php");
+require_once("modules/kiosk/includes/functions.php");
+
+kioskRequireAcl("edit");
 
 if (isset($_POST['gid']) && is_array($_POST['gid'])) {
+    verifyCSRFToken($_POST);
     header('Content-Type: application/json');
 
-    verifyCSRFToken($_POST);
+    $ids = array_values(array_unique(array_filter(array_map('intval', array_filter($_POST['gid'], 'is_scalar')))));
+    $deleted = empty($ids) ? array() : kioskDeleteProfiles($ids);
 
-    $ids = array_values(array_unique(array_filter(array_map('intval', $_POST['gid']))));
-
-    if (empty($ids)) {
-        echo json_encode(['success' => false]);
-        exit;
-    }
-
-    $deleted = xmlrpc_delete_profiles($ids);
-    $deleted = is_array($deleted) ? array_map('intval', $deleted) : [];
-    $failedCount = count(array_diff($ids, $deleted));
-
-    $errors = [];
-    if ($failedCount > 0) {
-        $errors[] = sprintf(_T("%d profile(s) could not be deleted", "kiosk"), $failedCount);
-    }
-
-    if (!empty($deleted)) {
-        new NotifyWidgetSuccess(sprintf(
-            _T("%d profile(s) successfully deleted", "kiosk"),
-            count($deleted)
-        ));
-    }
-    foreach ($errors as $err) {
-        new NotifyWidgetFailure($err);
-    }
-
-    echo json_encode(['success' => empty($errors), 'errors' => $errors]);
+    echo json_encode(array('success' => !empty($ids) && count($deleted) === count($ids), 'errors' => array()));
     exit;
 }
 
-if (!isset($_REQUEST['name'])) {
-    new NotifyWidgetFailure(_T("Missing parameter name", "kiosk"));
-    header("Location: " . urlStrRedirect("kiosk/kiosk/index"));
-    exit;
-}
-
-if (!isset($_REQUEST['id'])) {
-    new NotifyWidgetFailure(_T("Missing parameter id", "kiosk"));
-    header("Location: " . urlStrRedirect("kiosk/kiosk/index"));
-    exit;
-}
-
-$id = (int)$_REQUEST['id'];
-$name = htmlspecialchars((string)$_REQUEST['name'], ENT_QUOTES, 'UTF-8');
+$id = intval($_GET['id'] ?? 0);
 
 if (isset($_POST["bconfirm"])) {
-    $result = xmlrpc_delete_profile($id);
-    if ($result) {
-        new NotifyWidgetSuccess(sprintf(_T("Profile %s successfully deleted", "kiosk"), $name));
-    } else {
-        new NotifyWidgetFailure(sprintf(_T("Impossible to delete profile %s", "kiosk"), $name));
-    }
+    verifyCSRFToken($_POST);
+    kioskDeleteProfiles(array($id));
     header("Location: " . urlStrRedirect("kiosk/kiosk/index"));
     exit;
 }
 
+$profile = xmlrpc_kiosk_get_profile_by_id($id);
+
 $f = new PopupForm(_T("Delete Profile", "kiosk"));
-$f->setLevel('danger');
-$f->addText(sprintf(_T("Delete the profile %s ?", "kiosk"), $name));
-$hidden = new HiddenTpl("id");
-$f->add($hidden, array("value" => $id, "hide" => True));
-$f->addDangerButton("bconfirm");
+if (is_array($profile)) {
+    $f->setLevel('danger');
+    $f->addText(sprintf(
+        _T("Delete the profile %s ?", "kiosk"),
+        '<strong>' . htmlspecialchars((string) $profile['name'], ENT_QUOTES, 'UTF-8') . '</strong>'
+    ));
+    $f->addDangerButton("bconfirm");
+} else {
+    $f->addText(_T("Profile not found", "kiosk"));
+}
 $f->addCancelButton("bback");
 $f->display();

@@ -18,6 +18,7 @@ from sqlalchemy import (
     distinct,
     not_,
     text,
+    bindparam,
     Boolean,
 )  # cast, Date, select,
 from sqlalchemy.orm import sessionmaker, load_only
@@ -14211,56 +14212,70 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
         result = [rowproxy._asdict() for rowproxy in resultquery]
         return result
 
-    @DatabaseHelper._sessionm
-    def get_oumachine_list_from_machines(self, session):
-        """Get all ous listed in machines table (in ad_ou_machine and ad_ou_user fields)
-        Returns list: all unique OUs found in the table
-        """
-        query = (
-            session.query(Machines.ad_ou_machine).group_by(
-                Machines.ad_ou_machine).all()
-        )
-        result = []
-        if query is not None:
-            for ou in query:
-                if ou[0] != "":
-                    if ou[0] not in result:
-                        result.append(ou[0].replace("@@", "/"))
-        return result
+    # Value listed per kiosk profile source, and the join it needs
+    MACHINE_OU_SOURCES = {
+        "ou_user": ("REPLACE(m.ad_ou_user, '@@', '/')", ""),
+        "ou_machine": ("REPLACE(m.ad_ou_machine, '@@', '/')", ""),
+        "group": ("ua.adname", "JOIN users_adgroups ua ON ua.lastuser = m.lastuser"),
+    }
+
+    # Machines (alias m) of the GLPI entities :entity_ids and of their sub-entities
+    ENTITY_SUBTREE_MACHINES_SQL = """
+          FROM local_glpi_entities root
+          JOIN local_glpi_entities e
+            ON e.id = root.id
+            OR LEFT(e.completename, CHAR_LENGTH(root.completename) + 3)
+               = CONCAT(root.completename, ' > ')
+          JOIN local_glpi_machines lgm
+            ON lgm.entities_id = e.id
+           AND lgm.is_deleted = 0
+           AND lgm.is_template = 0
+          JOIN machines m
+            ON m.uuid_inventorymachine REGEXP '^UUID[0-9]+$'
+           AND lgm.id = CAST(SUBSTRING(m.uuid_inventorymachine, 5) AS UNSIGNED)
+          {join}
+         WHERE root.id IN :entity_ids
+    """
 
     @DatabaseHelper._sessionm
-    def get_ouuser_list_from_machines(self, session):
-        """Get all ous listed in machines table (in ad_ou_machine and ad_ou_user fields)
-        Returns list: all unique OUs found in the table
-        """
-        query = session.query(Machines.ad_ou_user).group_by(
-            Machines.ad_ou_user).all()
-        result = []
-        if query is not None:
-            for ou in query:
-                if ou[0] != "":
-                    if ou[0] not in result:
-                        result.append(ou[0].replace("@@", "/"))
-        return result
+    def get_ou_list_from_machines(self, session, source, entity_ids):
+        """Values of a kiosk profile source (a key of MACHINE_OU_SOURCES) found on
+        the machines of the GLPI entities and of their sub-entities; OUs as A/B/C."""
+        value, join = self.MACHINE_OU_SOURCES[source]
+        entity_ids = [int(entity_id) for entity_id in entity_ids or []]
+        if not entity_ids:
+            return []
+        sql = text(
+            f"SELECT DISTINCT {value} AS value"
+            f"{self.ENTITY_SUBTREE_MACHINES_SQL.format(join=join)}"
+            f" AND {value} <> '' ORDER BY value"
+        ).bindparams(bindparam("entity_ids", expanding=True))
+        return [row.value for row in session.execute(sql, {"entity_ids": entity_ids})]
 
     @DatabaseHelper._sessionm
-    def get_users_from_ou_from_machines(self, session, ou):
-        """Get all users listed in machines table corresponding to ad_ou_user = ou
-        Params:
-            ou (str) : The location where the users are searched
-        Returns list: all unique OUs found in the table
-        """
-        result = []
-        query = (
-            session.query(Machines.lastuser)
-            .filter(Machines.ad_ou_user == ou)
-            .group_by(Machines.lastuser)
-            .all()
-        )
-
-        if query is not None:
-            result = [user[0] for user in query]
-        return result
+    def count_machines_in_ous(self, session, source, ous, entity_ids):
+        """Number of machines of the GLPI entities and of their sub-entities
+        whose OU (source "ou_user" or "ou_machine") is one of ous (A/B/C) or
+        below it."""
+        value = self.MACHINE_OU_SOURCES[source][0]
+        entity_ids = [int(entity_id) for entity_id in entity_ids or []]
+        ous = [str(ou) for ou in ous or [] if ou]
+        if not entity_ids or not ous:
+            return 0
+        params = {"entity_ids": entity_ids}
+        matches = []
+        for index, ou in enumerate(ous):
+            params[f"ou{index}"] = ou
+            matches.append(
+                f"{value} = :ou{index}"
+                f" OR LEFT({value}, CHAR_LENGTH(:ou{index}) + 1) = CONCAT(:ou{index}, '/')"
+            )
+        sql = text(
+            "SELECT COUNT(DISTINCT m.id)"
+            f"{self.ENTITY_SUBTREE_MACHINES_SQL.format(join='')}"
+            f" AND m.agenttype = 'machine' AND ({' OR '.join(matches)})"
+        ).bindparams(bindparam("entity_ids", expanding=True))
+        return int(session.execute(sql, params).scalar() or 0)
 
     @DatabaseHelper._sessionm
     def get_ou_list_from_entity(self, session):

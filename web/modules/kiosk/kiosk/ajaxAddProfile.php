@@ -19,41 +19,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require_once("../includes/xmlrpc.php");
-require_once("../includes/functions.php");
-require_once("../../pkgs/includes/xmlrpc.php");
-require_once("../../../includes/config.inc.php");
-require_once("../../../includes/session.inc.php");
-require_once("../../../includes/PageGenerator.php");
-require_once("../../../includes/acl.inc.php");
+require_once("modules/kiosk/includes/xmlrpc.php");
+require_once("modules/kiosk/includes/functions.php");
 
-
-if(isset($_POST['name'], $_POST['active'])) {
-    $owner = $_SESSION['login'];
-    $name = rename_profile(htmlentities($_POST['name']));
-    if(is_string($_POST['ous']) && $_POST['ous'] == "none") {
-        $ous = "";
-    } else {
-        $ous = $_POST['ous'];
-    }
-
-    $packages = (!empty($_POST['packages'])) ? $_POST['packages'] : [];
-
-    $source = htmlentities($_POST['source']);
-
-    // Add the profile to the database
-    $result = xmlrpc_create_profile($name, $owner, $ous, htmlentities($_POST['active']), $packages, strtolower(str_replace(" ", "_", $source)));
-
-    header('Content-Type: application/json');
-    if ($result === false) {
-        echo json_encode([
-            "status" => "exists",
-            "message" => sprintf(_T("A profile named %s already exists", "kiosk"), htmlspecialchars($name, ENT_QUOTES, 'UTF-8')),
-        ]);
-    } else {
-        new NotifyWidgetSuccess(sprintf(_T("Profile %s successfully added", "kiosk"), $name));
-        echo json_encode(["status" => "ok"]);
-    }
-} else {
-    new NotifyWidgetWarning(sprintf(_T('Unable to create the profile %s', 'kiosk'), $name));
-}
+kioskSaveProfile("add");

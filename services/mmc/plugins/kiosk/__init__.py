@@ -1,16 +1,16 @@
 # -*- coding:Utf-8; -*
 # SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
-# SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
+# SPDX-FileCopyrightText: 2024-2026 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 """
 Plugin to manage the interface with Kiosk
 """
-import logging
-import uuid
-import os
 import base64
+import logging
 import re
-import json
+import subprocess
+import tempfile
+import threading
 
 from mmc.core.version import getMedullaVersion as getVersion, getMedullaRevision as getRevision
 
@@ -20,31 +20,35 @@ from mmc.plugins.kiosk.TreeOU import TreeOU
 from mmc.plugins.base.config import BasePluginConfig
 from mmc.plugins.xmppmaster.master.lib.utils import name_random
 
-
 from mmc.support.mmctools import (
     RpcProxyI,
     ContextMakerI,
-    SecurityContext,
     EnhancedSecurityContext
 )
-from mmc.plugins.base import (with_xmpp_context,
-                              with_optional_xmpp_context,)
+from mmc.plugins.base import (with_optional_xmpp_context,
+                              user_entity_scope,
+                              check_user_entity,
+                              log_entity_refusal)
 # Database
-from pulse2.database.kiosk import KioskDatabase
+from pulse2.database.kiosk import KioskDatabase, PROFILE_SOURCES
+from pulse2.database.kiosk.schema import Profiles
 from pulse2.database.xmppmaster import XmppMasterDatabase
+from pulse2.database.pkgs import PkgsDatabase
 from mmc.plugins.glpi.database import Glpi
-from distutils.version import LooseVersion, StrictVersion
+from pulse2.utils import normalize_entity
 
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
+LDAP_SECTION = "authentication_externalldap"
+OU_SOURCES = ("ou_user", "ou_machine")
 
 logger = logging.getLogger()
 
 
-# #############################################################
-# PLUGIN GENERAL FUNCTIONS
-# #############################################################
+# The XML-RPC dispatcher serves every callable of this module, whatever its
+# name and without a session: the helpers live in RpcProxy, which refuses the
+# names starting with an underscore.
 
 
 def getApiVersion():
@@ -56,11 +60,7 @@ def activate():
     Read the plugin configuration, initialize it, and run some tests to ensure
     it is ready to operate.
     """
-    logger = logging.getLogger()
     config = KioskConfig("kiosk")
-
-    # Registering KioskComputers in ComputerManager
-    # ComputerManager().register('kiosk', KioskComputers)
 
     if config.disable:
         logger.warning("Plugin kiosk: disabled by configuration.")
@@ -74,36 +74,20 @@ def activate():
     return True
 
 
+def activate_2():
+    """Once every plugin is loaded: gives an entity to the profiles without one."""
+    try:
+        left = KioskDatabase().adopt_profiles(RpcProxy._owner_entities)
+        if left:
+            logger.warning(f"Plugin kiosk: {left} profile(s) without entity")
+    except Exception as e:
+        logger.error(f"Plugin kiosk: profiles not given an entity: {e}")
+    return True
+
+
 class ContextMaker(ContextMakerI):
-    """
-    Fabrique de contextes personnalisés pour XMPP, héritée de ContextMakerI.
-    Sert à créer et initialiser un objet de type `EnhancedSecurityContext`.
-
-    appeler sur chaque module a l'initialiasation'
-
-    Méthodes
-    --------
-    getContext() :
-        Crée et retourne un contexte sécurisé enrichi contenant les informations
-        de l'utilisateur et de la requête courante.
-    """
-
     def getContext(self):
-        """
-        Crée un contexte de type `EnhancedSecurityContext` pour l'utilisateur courant.
-
-        Retourne
-        --------
-        EnhancedSecurityContext
-            Contexte initialisé avec :
-              - `userid` : l'identifiant de l'utilisateur courant
-              - `request` : la requête associée
-              - `session` : la session courante
-
-        Effets de bord
-        --------------
-        - Écrit des logs de niveau `error` lors de la création du contexte.
-        """
+        """EnhancedSecurityContext of the current user, request and session."""
         s = EnhancedSecurityContext()
         s.userid = self.userid
         s.request = self.request
@@ -111,890 +95,321 @@ class ContextMaker(ContextMakerI):
         return s
 
 
-
-def _authorized_entity_paths(login):
-    """
-    Return the set of entity paths (>>-separated) the user is allowed to set
-    on a kiosk profile. Sourced from Glpi().getUserLocations so it matches
-    exactly what get_ou_list_entity exposes in the UI.
-    """
-    locations = Glpi().getUserLocations(login) or []
-    allowed = set()
-    for loc in locations:
-        cn = getattr(loc, "completename", None) or getattr(loc, "name", "")
-        if cn:
-            # GLPI completename uses " > ", the kiosk frontend uses ">>".
-            allowed.add(str(cn).replace(" > ", ">>"))
-    return allowed
-
-
-def _filter_authorized_entity_ous(login, ous):
-    """
-    Drop any OU not present in the user's authorized GLPI locations.
-    Used as a server-side guard for source='entity', mirroring what the
-    Machines view does by only proposing authorized entities.
-    """
-    if not ous:
-        return ous
-
-    allowed = _authorized_entity_paths(login)
-
-    if isinstance(ous, str):
-        if ous.strip() == "":
-            return ous
-        if ous in allowed:
-            return ous
-        logger.warning(
-            "kiosk: rejected unauthorized entity OU for %s: %s", login, ous
-        )
-        return ""
-
-    if isinstance(ous, list):
-        filtered = [ou for ou in ous if ou in allowed]
-        rejected = [ou for ou in ous if ou not in allowed]
-        if rejected:
-            logger.warning(
-                "kiosk: rejected unauthorized entity OUs for %s: %s",
-                login,
-                rejected,
-            )
-        return filtered
-
-    return ous
-
-
-def _owner_patterns(login):
-    if login == "root":
-        return None
-    patterns = XmppMasterDatabase().get_team_patterns_from_login(login)
-    if patterns == []:
-        patterns = [login]
-    return patterns
-
-
 class RpcProxy(RpcProxyI):
+    def getFunction(self, funcname):
+        # The helpers trust their arguments: only the public methods are callable
+        if funcname.startswith("_"):
+            raise AttributeError(funcname)
+        return RpcProxyI.getFunction(self, funcname)
 
-    @with_optional_xmpp_context
-    def create_profile(self,
-                       name,
-                       login,
-                       ous,
-                       active,
-                       packages,
-                       source,
-                       ctx=None):
-        if KioskDatabase().profile_name_exists(name, _owner_patterns(login)):
-            return False
-        if source == "entity":
-            ous = _filter_authorized_entity_ous(login, ous)
-        result = KioskDatabase().create_profile(name, login, ous, active, packages, source)
-        notify_kiosks()
-        return result
-# #############################################################
-# KIOSK DATABASE FUNCTIONS
-# #############################################################
+    ##
+    # helpers
+    ##
 
-    @with_optional_xmpp_context
-    def get_profiles_list(self, login, start=0, limit=-1, filter="", ctx=None):
-        patterns = _owner_patterns(login)
-        if patterns is None:
-            return KioskDatabase().get_profiles_list(start, limit, filter)
-        return KioskDatabase().get_profiles_list_team(patterns, start, limit, filter)
+    @staticmethod
+    def _login(ctx):
+        if ctx is None:
+            return None
+        return (ctx.get_session_info() or {}).get("userid") or getattr(ctx, "userid", None)
 
-    @with_optional_xmpp_context
-    def get_profiles_name_list(self, ctx=None):
-        return KioskDatabase().get_profiles_name_list()
+    @staticmethod
+    def _allowed_entity(ctx, action, entity_id):
+        """GLPI id of the entity when the user has it, else None."""
+        entity = None if isinstance(entity_id, bool) else normalize_entity(entity_id, defaut=None)
+        if entity is None or entity < 0 or not check_user_entity(ctx, entity):
+            log_entity_refusal(ctx, action, entity_id)
+            return None
+        return entity
 
-    @with_optional_xmpp_context
-    def delete_profiles(self, login, ids, ctx=None):
-        if not isinstance(ids, (list, tuple)):
-            ids = [ids]
+    @staticmethod
+    def _allowed_profiles(ctx, ids):
+        """{profile id: entity id} of the existing profiles of ids the user has;
+        a profile without entity belongs to the unrestricted users only."""
         wanted = []
-        for id in ids:
+        for profile_id in ids if isinstance(ids, (list, tuple)) else [ids]:
             try:
-                wanted.append(int(id))
+                wanted.append(int(profile_id))
             except (TypeError, ValueError):
                 continue
-        allowed = KioskDatabase().filter_profile_ids(wanted, _owner_patterns(login))
-        if not allowed:
+        return {
+            profile_id: entity_id
+            for profile_id, entity_id in KioskDatabase().get_profile_entities(wanted).items()
+            if check_user_entity(ctx, entity_id)
+        }
+
+    @staticmethod
+    def _owner_entities(login):
+        """GLPI ids of the entities of a user, [] when they cannot be read."""
+        try:
+            return [int(location.id) for location in Glpi().getUserLocations(login) or []]
+        except Exception as e:
+            logger.warning(f"kiosk: entities of {login!r} not read: {e}")
             return []
-        deleted = [int(id) for id in KioskDatabase().delete_profiles(allowed)]
-        if deleted:
-            notify_kiosks()
+
+    @staticmethod
+    def _visible_packages(login):
+        """uuids of the packages the user sees."""
+        sharing = PkgsDatabase().pkgs_search_share({"login": login})
+        packages = PkgsDatabase().get_all_packages(
+            login, sharing["config"]["centralizedmultiplesharing"]
+        )
+        return set(packages["datas"]["uuid"])
+
+    @staticmethod
+    def _notify_substitute(action, entity_ids):
+        """Tells the master substitute that the profiles of these GLPI entities
+        changed; it computes and pushes the packages of the machines."""
+        entity_ids = sorted({int(entity_id) for entity_id in entity_ids if entity_id is not None})
+        if not entity_ids:
+            return
+        data = {
+            "subaction": "profiles_changed",
+            "entity_ids": entity_ids,
+            "sessionid": name_random(8, "kiosk_"),
+        }
+
+        def send():
+            try:
+                # Imported here: at module level it would be callable by XML-RPC
+                from mmc.plugins.xmppmaster.master.agentmaster import callXmppPlugin
+                callXmppPlugin("kiosk", data)
+            except Exception as e:
+                logger.warning(f"{action}: substitute not notified ({data}): {e}")
+
+        threading.Thread(target=send, daemon=True).start()
+
+    @staticmethod
+    def _ldapsearch(base, ldap_filter):
+        """DNs of the entries of the external directory under base, [] when it
+        is not configured or does not answer."""
+        config = PluginConfigFactory.new(BasePluginConfig, "base")
+        if not config.has_section(LDAP_SECTION):
+            return []
+        try:
+            with tempfile.NamedTemporaryFile("w") as secret:
+                secret.write(config.get(LDAP_SECTION, "bindpasswd"))
+                secret.flush()
+                result = subprocess.run(
+                    ["ldapsearch", "-o", "ldif-wrap=no",
+                     "-H", config.get(LDAP_SECTION, "ldapurl"),
+                     "-x", "-b", base,
+                     "-D", config.get(LDAP_SECTION, "bindname"),
+                     "-y", secret.name,
+                     "-LLL", ldap_filter, "dn"],
+                    capture_output=True, text=True, timeout=60, check=False,
+                )
+        except (OSError, subprocess.SubprocessError) as e:
+            logger.warning(f"kiosk: ldapsearch failed: {e}")
+            return []
+        if result.returncode != 0:
+            logger.warning(f"kiosk: ldapsearch failed: {result.stderr.strip()}")
+            return []
+        dns = []
+        for line in result.stdout.splitlines():
+            if line.startswith("dn:: "):
+                dns.append(base64.b64decode(line[len("dn:: "):]).decode("utf-8", "replace"))
+            elif line.startswith("dn: "):
+                dns.append(line[len("dn: "):])
+        return dns
+
+    @classmethod
+    def _ldap_ous(cls):
+        config = PluginConfigFactory.new(BasePluginConfig, "base")
+        if not config.has_section(LDAP_SECTION):
+            return []
+        ous = []
+        for dn in cls._ldapsearch(config.get(LDAP_SECTION, "suffix_ou"),
+                                  "(objectClass=organizationalUnit)"):
+            ou = dn.replace(",OU=", " < ").replace("OU=", "")
+            ou = re.sub(",DC=(.+)", "", ou).split(" < ")
+            ou.reverse()
+            ous.append(">>".join(ou))
+        return ous
+
+    @staticmethod
+    def _ou_list(ous):
+        if isinstance(ous, str):
+            ous = [ous]
+        return [str(ou) for ou in ous or [] if ou]
+
+    @staticmethod
+    def _ou_parents(ou):
+        """OUs above an OU: A and A/B for A/B/C."""
+        parts = ou.split("/")
+        return ["/".join(parts[:depth]) for depth in range(1, len(parts))]
+
+    @classmethod
+    def _source_values(cls, source, entity):
+        """Values a profile of this source may take in the entity."""
+        if source == "ldap":
+            return cls._ldap_ous()
+        return XmppMasterDatabase().get_ou_list_from_machines(source, [entity])
+
+    def _checked_profile(self, ctx, action, entity, name, source, ous, packages, profile_id=None):
+        """(name, source, ous, packages, visible packages) ready to be stored,
+        None when the profile is refused."""
+        name = str(name).strip()
+        source = str(source).lower()
+        if not name or len(name) > Profiles.name.type.length or source not in PROFILE_SOURCES:
+            logger.warning(f"{action}: name {name!r} or source {source!r} refused")
+            return None
+        if KioskDatabase().profile_name_exists(name, entity, exclude_id=profile_id):
+            logger.warning(f"{action}: name {name!r} already used in entity {entity}")
+            return None
+
+        ous = self._ou_list(ous)
+        if source == "entity":
+            ous = []
+        elif source in XmppMasterDatabase.MACHINE_OU_SOURCES:
+            known = set(self._source_values(source, entity))
+            if source in OU_SOURCES:
+                for value in list(known):
+                    known.update(self._ou_parents(value))
+            if profile_id is not None:
+                stored = KioskDatabase().get_profile_by_id(profile_id) or {}
+                if stored.get("source") == source and stored.get("entity_id") == entity:
+                    known.update(stored["ous"])
+            refused = [ou for ou in ous if ou not in known]
+            if refused or not ous:
+                logger.warning(f"{action}: {source} {refused or ous} refused in entity {entity} "
+                               f"for user {self._login(ctx)!r}")
+                return None
+
+        if isinstance(packages, dict):
+            packages = list(packages.values())
+        uuids = [package.get("uuid") if isinstance(package, dict) else package
+                 for package in packages or []]
+        visible = self._visible_packages(self._login(ctx))
+        return name, source, ous, [uuid for uuid in uuids if uuid in visible], visible
+
+    @staticmethod
+    def _active(active):
+        if isinstance(active, str):
+            return 1 if active.strip().lower() in ("1", "true", "active") else 0
+        return 1 if active else 0
+
+    ##
+    # profiles
+    ##
+
+    @with_optional_xmpp_context
+    def get_profiles_list(self, entity="", start=0, limit=-1, filter="", ctx=None):
+        """Profiles of the entity ("UUIDn" or n), of every entity of the user
+        when it is "" or -1: {"total": n, "datas": [{"id", "name", "entity_id",
+        "source", "active", "creation_date", "owner"}]}."""
+        return KioskDatabase().get_profiles_list(
+            user_entity_scope(ctx, entity), start, limit, filter
+        )
+
+    @with_optional_xmpp_context
+    def get_profile_by_id(self, id, ctx=None):
+        """The profile with "ous": [str] and "packages": [{"uuid", "name"}], the
+        packages the user sees only; False when it does not exist or is out of
+        the entities of the user."""
+        allowed = self._allowed_profiles(ctx, [id])
+        if not allowed:
+            return False
+        profile = KioskDatabase().get_profile_by_id(next(iter(allowed)))
+        if profile is None:
+            return False
+        visible = self._visible_packages(self._login(ctx))
+        profile["packages"] = [package for package in profile["packages"]
+                               if package["uuid"] in visible]
+        return profile
+
+    @with_optional_xmpp_context
+    def create_profile(self, name, entity_id, source, ous, active, packages, ctx=None):
+        """Returns the id of the new profile, False when it is refused.
+
+        ous: values of the source, ignored for "entity". packages: uuids."""
+        action = "kiosk.create_profile"
+        entity = self._allowed_entity(ctx, action, entity_id)
+        if entity is None:
+            return False
+        checked = self._checked_profile(ctx, action, entity, name, source, ous, packages)
+        if checked is None:
+            return False
+        name, source, ous, packages, _ = checked
+        profile_id = KioskDatabase().create_profile(
+            name, entity, source, ous, self._active(active), packages, self._login(ctx)
+        )
+        if profile_id is False:
+            return False
+        self._notify_substitute(action, [entity])
+        return profile_id
+
+    @with_optional_xmpp_context
+    def update_profile(self, id, name, entity_id, source, ous, active, packages, ctx=None):
+        """Returns True when the profile is updated. The packages the user does
+        not see stay as they are."""
+        action = "kiosk.update_profile"
+        allowed = self._allowed_profiles(ctx, [id])
+        if not allowed:
+            return False
+        profile_id, previous_entity = next(iter(allowed.items()))
+        entity = self._allowed_entity(ctx, action, entity_id)
+        if entity is None:
+            return False
+        checked = self._checked_profile(ctx, action, entity, name, source, ous, packages,
+                                        profile_id)
+        if checked is None:
+            return False
+        name, source, ous, packages, visible = checked
+        if not KioskDatabase().update_profile(
+            profile_id, name, entity, source, ous, self._active(active), packages, visible
+        ):
+            return False
+        self._notify_substitute(action, [previous_entity, entity])
+        return True
+
+    @with_optional_xmpp_context
+    def delete_profiles(self, ids, ctx=None):
+        """Returns the ids of the profiles actually deleted."""
+        allowed = self._allowed_profiles(ctx, ids)
+        deleted = KioskDatabase().delete_profiles(list(allowed))
+        self._notify_substitute("kiosk.delete_profiles",
+                                [allowed[profile_id] for profile_id in deleted])
         return deleted
 
-    @with_optional_xmpp_context
-    def delete_profile(self, login, id, ctx=None):
-        try:
-            id = int(id)
-        except (TypeError, ValueError):
-            return False
-        return id in self.delete_profiles(login, [id], ctx=ctx)
+    ##
+    # sources
+    ##
 
     @with_optional_xmpp_context
-    def get_profile_by_id(self, login, id, ctx=None):
-        try:
-            id = int(id)
-        except (TypeError, ValueError):
-            return False
-        if not KioskDatabase().filter_profile_ids([id], _owner_patterns(login)):
-            return False
-        return KioskDatabase().get_profile_by_id(id)
-
-    @with_optional_xmpp_context
-    def update_profile(self, login, id, name, ous, active, packages, source, ctx=None):
-        try:
-            id = int(id)
-        except (TypeError, ValueError):
-            return False
-        if not KioskDatabase().filter_profile_ids([id], _owner_patterns(login)):
-            return False
-        if KioskDatabase().profile_name_exists(name, _owner_patterns(login), exclude_id=id):
-            return False
-        if source == "entity":
-            ous = _filter_authorized_entity_ous(login, ous)
-        result = KioskDatabase().update_profile(
-            login, id, name, ous, active, packages, source
-        )
-        notify_kiosks()
-        return result
-
-
-# #############################################################
-# KIOSK GENERAL FUNCTIONS
-# #############################################################
-def get_ou_list(source, *args, **kwargs):
-    """This function returns the list of OUs
-
-    Returns:
-        list of strings. The strings are the OUs
-        or
-        returns False for some issues
-    """
-    funcname = "get_ou_list_%s" % (source.lower())
-    try:
-        func = globals()[funcname]
-        # Step 1 - Get datas
-        datas = func(*args, **kwargs)
-
+    def get_ou_list(self, source, entity_id, ctx=None):
+        """Tree (TreeOU.recursive_json) of the values of a source in the entity
+        and its sub-entities; [] when the entity is refused. The source
+        "entity" has no value."""
+        source = str(source).lower()
+        if source == "entity" or source not in PROFILE_SOURCES:
+            return []
+        entity = self._allowed_entity(ctx, "kiosk.get_ou_list", entity_id)
+        if entity is None:
+            return []
         tree = TreeOU()
-
-        # Entity source: only show the entities the user is actually
-        # authorized on, but rebuild the hierarchy *between authorized
-        # entities only* (no synthetic ancestors). Each node displays the
-        # short name; data-root keeps the ">>"-normalized completename so
-        # the kiosk DB still receives the canonical identifier.
-        if source.lower() == "entity":
-            items = []
-            for line in datas:
-                completename = str(line)
-                if not completename:
-                    continue
-                normalized = completename.replace(" > ", ">>")
-                segments = normalized.split(">>")
-                items.append({
-                    "normalized": normalized,
-                    "segments": segments,
-                    "short": segments[-1],
-                })
-            # Shallowest first so a parent is always created before its child.
-            items.sort(key=lambda x: (len(x["segments"]), x["normalized"]))
-
-            nodes = {}  # normalized completename -> TreeOU
-            for item in items:
-                node = TreeOU(item["short"])
-                node.selectable = True
-
-                # Find the closest authorized ancestor (longest prefix that
-                # belongs to another authorized entity); fall back to root.
-                parent = tree
-                for prefix_len in range(len(item["segments"]) - 1, 0, -1):
-                    prefix = ">>".join(item["segments"][:prefix_len])
-                    if prefix in nodes:
-                        parent = nodes[prefix]
-                        break
-
-                if not parent.add_child(node):
-                    logger.warning(
-                        "kiosk: duplicate short name '%s' under same parent "
-                        "for entity '%s', skipping",
-                        item["short"], item["normalized"]
-                    )
-                    continue
-                # add_child rewrote node.path from get_path(); force the
-                # canonical completename so the frontend POSTs the right value.
-                node.path = [item["normalized"]]
-                nodes[item["normalized"]] = node
-
-            return tree.recursive_json()
-
-        # Other sources (Group, Ou Machine, Ou User, LDAP) keep the historical
-        # behaviour: rebuild the tree from the ">>"-separated paths.
-        for line in datas:
-            tree.create_recursively(line)
-
+        if source in OU_SOURCES:
+            for value in self._source_values(source, entity):
+                tree.create_recursively(value, separator="/")
+            return tree.recursive_json("/")
+        for value in self._source_values(source, entity):
+            tree.create_recursively(value)
         return tree.recursive_json()
-    except:
-        return []
 
-
-def get_ou_list_ou_machine(*args, **kwargs):
-    ous = XmppMasterDatabase().get_oumachine_list_from_machines()
-    return ous
-
-
-def get_ou_list_ou_user(*args, **kwargs):
-    ous = XmppMasterDatabase().get_ouuser_list_from_machines()
-    return ous
-
-
-def get_ou_list_ldap(*args, **kwargs):
-    # Check the ldap config
-    config = PluginConfigFactory.new(BasePluginConfig, "base")
-    kconfig = KioskConfig("kiosk")
-
-    ous = []
-    if config.has_section("authentication_externalldap"):
-        id = str(uuid.uuid4())
-        file = "/tmp/ous-" + id
-
-        # Get the parameters from the config file
-        ldapurl = config.get("authentication_externalldap", "ldapurl")
-        suffix = config.get("authentication_externalldap", "suffix_ou")
-        bindname = config.get("authentication_externalldap", "bindname")
-        bindpasswd = config.get("authentication_externalldap", "bindpasswd")
-
-        # Execute the command which get the OU list and write into the specified file
-        command = """ldapsearch -o ldif-wrap=no -H %s -x -b "%s" -D "%s" -w %s -LLL "(
-        objectClass=organizationalUnit)" dn > %s""" % (
-            ldapurl,
-            suffix,
-            bindname,
-            bindpasswd,
-            file,
-        )
-
-        os.system(command)
-
-        ous = []
-        # Parse the file
-        with open(file, "r") as ou_file:
-            lines = ou_file.read().splitlines()
-            # The lines that don't start by 'dn' are ignored
-            lines = [element for element in lines if element.startswith("dn")]
-
-            # Parse the result for each lines
-            for element in lines:
-                # Lines starts with dn:: are get in base64 format
-                if element.startswith("dn:: "):
-                    tmp = element.split("::")
-                    ou = base64.b64decode(tmp[1])
-
-                else:
-                    tmp = element.split(": ")
-                    ou = tmp[1]
-                # Format the result
-                ou = ou.replace(",OU=", " < ")
-                ou = ou.replace("OU=", "")
-                ou = re.sub(",DC=(.+)", "", ou)
-
-                ou = ou.split(" < ")
-                ou.reverse()
-                ou = ">>".join(ou)
-                # Save the content into a list
-                ous.append(ou)
-
-        # Delete the file
-        os.remove(file)
-    else:
-        return False
-
-
-def get_ou_list_group(login, *args, **kwargs):
-    teammates = XmppMasterDatabase().get_teammembers_from_login(login)
-    if login == "root":
-        return XmppMasterDatabase().get_all_ad_groups()
-    else:
-        if teammates == []:
-            teammates.append(login)
-        return XmppMasterDatabase().get_all_ad_groups_team(teammates)
-
-
-def get_ou_list_entity(*args, **kwargs):
-    """
-    Returns the list of GLPI entities the user has access to.
-
-    Uses Glpi().getUserLocations (SQL path) so the kiosk view shares the
-    same source of truth as the Machines view (medulla_server.getUserLocations).
-    """
-    owner = args[0] if args else kwargs.get("owner", "")
-    if not owner:
-        logger.warning("get_ou_list_entity called without owner login")
-        return []
-
-    locations = Glpi().getUserLocations(owner) or []
-
-    result = []
-    for loc in locations:
-        completename = getattr(loc, "completename", None) or getattr(loc, "name", "")
-        if completename:
-            result.append(str(completename))
-
-    logger.debug(f"Entités GLPI retournées (SQL) pour {owner} : {result}")
-    return result
-
-
-def get_ou_tree():
-    """This function returns the list of OUs
-
-    Returns:
-        TreeOU object which contains all the OUs.
-        or
-        returns False for some issues
-    """
-
-    # Check the ldap config
-    config = PluginConfigFactory.new(BasePluginConfig, "base")
-    kconfig = KioskConfig("kiosk")
-
-    ous = []
-
-    if kconfig.use_external_ldap is False:
-        ous = XmppMasterDatabase().get_ou_list_from_machines()
-    elif config.has_section("authentication_externalldap"):
-        id = str(uuid.uuid4())
-        file = "/tmp/ous-" + id
-
-        # Get the parameters from the config file
-        ldapurl = config.get("authentication_externalldap", "ldapurl")
-        suffix = config.get("authentication_externalldap", "suffix_ou")
-        bindname = config.get("authentication_externalldap", "bindname")
-        bindpasswd = config.get("authentication_externalldap", "bindpasswd")
-
-        # Execute the command which get the OU list and write into the specified file
-        command = """ldapsearch -o ldif-wrap=no -H %s -x -b "%s" -D "%s" -w %s -LLL "(
-        objectClass=organizationalUnit)" dn > %s""" % (
-            ldapurl,
-            suffix,
-            bindname,
-            bindpasswd,
-            file,
-        )
-
-        os.system(command)
-
-        # Parse the file
-        with open(file, "r") as ou_file:
-            lines = ou_file.read().splitlines()
-            # The lines that don't start by 'dn' are ignored
-            lines = [element for element in lines if element.startswith("dn")]
-
-            # Parse the result for each lines
-            for element in lines:
-                # Lines starts with dn:: are get in base64 format
-                if element.startswith("dn:: "):
-                    tmp = element.split("::")
-                    ou = base64.b64decode(tmp[1])
-
-                else:
-                    tmp = element.split(": ")
-                    ou = tmp[1]
-                # Format the result
-                ou = ou.replace(",OU=", " < ")
-                ou = ou.replace("OU=", "")
-                ou = re.sub(",DC=(.+)", "", ou)
-
-                ou = ou.split(" < ")
-                ou.reverse()
-                ou = ">>".join(ou)
-                # Save the content into a list
-                ous.append(ou)
-
-        # Delete the file
-        os.remove(file)
-    else:
-        return False
-    return ous
-
-
-def str_to_ou(string):
-    return TreeOU().str_to_ou(string)
-
-
-def get_users_from_ou(ou):
-    """This function returns the list of user for the specified ou.
-
-    Params:
-        string OU must be formatted like path : /root/son/grand_son. See TreeOU.get_path() method to obtain this
-        kind of string from the initial OU string.
-
-    Returns:
-        list of strings. The strings are the OUs
-        or
-        returns False for some issues
-    """
-    config = PluginConfigFactory.new(BasePluginConfig, "base")
-    kconfig = KioskConfig("kiosk")
-
-    users = []
-    if kconfig.use_external_ldap is False:
-        # ou = ou.replace("/", "@@")
-        users = XmppMasterDatabase().get_users_from_ou_from_machines(ou)
-    elif config.has_section("authentication_externalldap"):
-        ou = str_to_ou(ou)
-
-        id = str(uuid.uuid4())
-        file = "/tmp/users_ou-" + id
-
-        # Get the parameters from the config file
-        ldapurl = config.get("authentication_externalldap", "ldapurl")
-        bindname = config.get("authentication_externalldap", "bindname")
-        bindpasswd = config.get("authentication_externalldap", "bindpasswd")
-
-        command = """ldapsearch -o ldif-wrap=no -H %s -x -b "%s" -D "%s" -w %s -LLL "(&(!(objectclass=computer))
-        (objectclass=person))" dn > %s""" % (
-            ldapurl,
-            ou,
-            bindname,
-            bindpasswd,
-            file,
-        )
-
-        os.system(command)
-        # Parse the file
-        with open(file, "r") as user_file:
-            lines = user_file.read().splitlines()
-
-            # The lines that don't start by 'dn' are ignored
-            lines = [element for element in lines if element.startswith("dn")]
-            for element in lines:
-                # Lines starts with dn:: are get in base64 format
-                if element.startswith("dn:: "):
-                    tmp = element.split("::")
-                    cn = base64.b64decode(tmp[1])
-
-                else:
-                    tmp = element.split(": ")
-                    cn = tmp[1]
-                # Format the result
-                cn = re.sub("CN=", "", cn)
-                cn = re.sub(",OU=(.+)", "", cn)
-
-                # Save the content into a list
-                users.append(cn)
-
-        # Delete the file
-        os.remove(file)
-    else:
-        return False
-    return users
-
-
-def handlerkioskpresence(
-    jid, id, os, hostname, uuid_inventorymachine, agenttype, classutil, fromplugin=False
-):
-    """
-    This function launch the kiosk actions when a prensence machine is active
-    """
-    logger.debug("kiosk handled")
-    # print jid, id, os, hostname, uuid_inventorymachine, agenttype, classutil
-    # get the profiles from the table machine.
-    machine = XmppMasterDatabase().getMachinefromjid(jid)
-    structuredatakiosk = get_packages_for_machine(machine)
-    datas = {
-        "subaction": "initialisation_kiosk",
-        "data": structuredatakiosk,
-    }
-
-    if not fromplugin:
-        send_message_to_machine(datas, jid, name_random(6, "initialisation_kiosk"))
-    return datas
-
-
-def send_message_to_machine(
-    datas, jid, sessionid=None, subaction="send_message_to_jid"
-):
-    from mmc.plugins.xmppmaster.master.agentmaster import callXmppPlugin
-
-    # use plugin master kiosk for send msg
-    datasend = {"subaction": subaction, "jid": jid, "data": datas}
-
-    if sessionid is not None:
-        datasend["sessionid"] = name_random(6, "sendmsgmachine")
-
-    else:
-        datasend["sessionid"] = sessionid
-    callXmppPlugin("kiosk", datasend)
-
-
-def test_call_xmpp_plugin_master(jid):
-    datas = {"subaction": "test"}
-
-    send_message_to_machine(datas, jid)
-
-
-def get_ou_for_user(user):
-    """This function find the ou of the specified user.
-
-    Params:
-        string user name
-
-    Returns:
-        The string of the OU
-        or
-        returns False for some issues
-    """
-    config = PluginConfigFactory.new(BasePluginConfig, "base")
-    config = PluginConfigFactory.new(BasePluginConfig, "base")
-    kconfig = KioskConfig("kiosk")
-
-    ous = []
-    if kconfig.use_external_ldap is False:
-        ous = XmppMasterDatabase().get_ou_for_user_from_machines(user)
-    elif config.has_section("authentication_externalldap"):
-        id = str(uuid.uuid4())
-        file = "/tmp/ou_user-" + id
-
-        # Get the parameters from the config file
-        ldapurl = config.get("authentication_externalldap", "ldapurl")
-        suffix = config.get("authentication_externalldap", "suffix_ou")
-        bindname = config.get("authentication_externalldap", "bindname")
-        bindpasswd = config.get("authentication_externalldap", "bindpasswd")
-
-        command = """ldapsearch -o ldif-wrap=no -H "%s" -x -b "%s" -D "%s" -w %s -LLL "(&(objectclass=user)
-        (samaccountname=%s))" dn > %s""" % (
-            ldapurl,
-            suffix,
-            bindname,
-            bindpasswd,
-            user,
-            file,
-        )
-
-        os.system(command)
-        with open(file, "r") as user_file:
-            lines = user_file.read().splitlines()
-
-            # The lines that don't start by 'dn' are ignored
-            lines = [element for element in lines if element.startswith("dn")]
-            for element in lines:
-                # Lines starts with dn:: are get in base64 format
-                if element.startswith("dn:: "):
-                    tmp = element.split("::")
-                    ou = base64.b64decode(tmp[1])
-
-                else:
-                    tmp = element.split(": ")
-                    ou = tmp[1]
-                # Format the result
-                # Format the result
-                ou = re.sub("CN=" + user + ",", "", ou)
-                ou = re.sub(",DC=(.+)", "", ou)
-                ou = ou.replace(",OU=", " < ")
-                ou = ou.replace("OU=", "")
-
-                ou = ou.split(" < ")
-                ou.reverse()
-                ou = ">>".join(ou)
-                # Save the content into a list
-                ous.append(ou)
-        # Delete the file
-        os.remove(file)
-    else:
-        return False
-    return ous
-
-
-def notify_kiosks():
-    """This function send a notification message for all the machine which have a kiosk on it."""
-
-    machines_list = XmppMasterDatabase().get_machines_with_kiosk()
-
-    for machine in machines_list:
-        if machine["uuid_inventorymachine"] == "":
-            continue
-        try:
-            structuredatakiosk = get_packages_for_machine(machine)
-        except Exception as e:
-            logger.error(
-                "kiosk: unable to compute packages for %s: %s" % (machine["jid"], e)
-            )
-            continue
-        datas = {
-            "subaction": "profiles_updated",
-            "data": structuredatakiosk,
-        }
-        send_message_to_machine(
-            datas, machine["jid"], name_random(6, "profiles_updated")
-        )
-
-
-def notify_kiosk(machine):
-    """This function send a notification message for the specified machine.
-    Param:
-        machine : XmppMasterDatabase.Machine object
-    """
-
-    structuredatakiosk = get_packages_for_machine(machine)
-    datas = {
-        "subaction": "profiles_updated",
-        "data": structuredatakiosk,
-    }
-    send_message_to_machine(datas, machine["jid"], name_random(6, "profiles_updated"))
-
-
-def get_packages_for_machine(machine):
-    """Get a list of the packages for the concerned machine.
-    Param:
-        machine : dict of the machine datas.
-        Data structure:
-        { "ad_ou_machine":"somethine", "ad_ou_user": "something", "hostname":"machine-name", "uuid_inventorymachine":"UUID1"}
-    Returns:
-        list of the packages"""
-
-    # We have to check the packages OS from profiles list, and verify if they are compatible with the current machine
-
-
-    # Get the machine OS
-    platform = "win"
-    mach_platform = ""
-    if "platform" in machine:
-        # Because re is picky, we have to use an independant str
-        mach_platform = machine["platform"]
-        if re.match("Microsoft", mach_platform, re.I) is not None:
-            platform = "win"
-        elif (
-            re.match("Darwin", mach_platform, re.I) is not None
-            or re.match("mac", mach_platform, re.I) is not None
-        ):
-            # GLPI reports macOS as "macOS 26.2" (lowercase) -> case-insensitive
-            # match, and accept the "mac"/"Mac OS X"/"Darwin" forms.
-            platform = "mac"
-        else:
-            platform = "linux"
-
-    #
-    # Setting up the sources datas info
-    #
-    machine_entity = XmppMasterDatabase().getmachineentityfromjid(machine["jid"])
-    machine_entity = (
-        machine_entity.complete_name.replace(" > ", ">>")
-        if machine_entity is not None
-        else None
-    )
-    OUmachine = (
-        machine["ad_ou_machine"].replace("\n", "").replace("\r", "").replace("@@", "/")
-    )
-    OUuser = (
-        machine["ad_ou_user"].replace("\n", "").replace("\r", "").replace("@@", "/")
-    )
-    group = XmppMasterDatabase().get_ad_group_for_lastuser(machine["lastuser"])
-    if OUmachine == "":
-        OUmachine = None
-    if OUuser == "":
-        OUuser == None
-
-    ldap = get_ou_for_user(machine["lastuser"])
-    ldap = None if ldap is False else ldap
-
-    _sources = {
-        "ou_machine": OUmachine,
-        "ou_user": OUuser,
-        "ldap": ldap,
-        "group": group,
-        "entity": machine_entity,
-    }
-    # remove empty values and delete the temp _sources variable
-    sources = {key: _sources[key] for key in _sources if _sources[key] != None}
-
-    # we find all profiles with the specified sources
-    profiles = KioskDatabase().get_profiles_by_sources(sources)
-
-    # search packages and acknowledgements for the applied profiles
-    list_profile_packages = KioskDatabase().get_packages_for_profile_list(profiles)
-    if list_profile_packages is None or list_profile_packages == []:
-        return []
-    # Define the path for the packages list. Needed to find some info from xmppdeploy.json
-    pkg_dir = os.path.join("/", "var","lib", "pulse2", "packages")
-
-
-    # pkg_statuses is the cleaned up list of packages associated to the profiles list.
-    #   We will determine some info from packages and machine:
-    #       such OS compatibility between package and machine,
-    #       if the uninstall section is pecified,
-    #       if the launcher command is specified ...
-    #       the rights allowed, acknowledged, rejected ....
-
-    pkg_statuses = {}
-    for pkg in list_profile_packages:
-        # get a shortcut to package uuid
-        uuid = pkg["package_uuid"]
-
-        ### Check if the packages found are OS compatible
-        depl = {}
-        pkg_path = os.path.join(pkg_dir, uuid, "xmppdeploy.json")
-        try:
-            with open(pkg_path, "r") as fb:
-                try:
-                    depl = json.load(fb)
-                except:
-                    depl = {}
-                finally:
-                    fb.close()
-        except:
-            # Can't read xmppdeploy.json : probably corrupted package : skip
-            continue
-
-        # Check if the machine OS is compatible with the package
-        if platform not in pkg["os"]:
-            continue
-
-        # Check if the uninstall section is present.
-        # Use .get() chains: a package may lack a section for this platform
-        # (e.g. a "mac" package whose xmppdeploy.json has no "mac" metaparameter);
-        # a direct [platform] lookup would raise KeyError and wipe the whole list.
-        uninstall_section_present = False
-        update_section_present = False
-        for action_name in depl.get("metaparameter", {}).get(platform, {}).get("label", []):
-            if action_name == action_name.startswith("upd_"):
-                uninstall_section_present = True
-            if action_name == "label_section_uninstall" or action_name.startswith("Uninst_"):
-                uninstall_section_present = True
-
-        # An uninstall section can exist but be empty (no command / no script):
-        # the Delete button would then be a no-op. Demote it to "no uninstall"
-        # so the kiosk shows the "Installed" badge instead of a dead Delete.
-        if uninstall_section_present:
-            in_uninstall_section = False
-            uninstall_has_content = False
-            for step in depl.get(platform, {}).get("sequence", []):
-                step_action = step.get("action", "")
-                if step_action == "action_section_uninstall":
-                    in_uninstall_section = True
-                    continue
-                if step_action in ("actionsuccescompletedend", "actionerrorcompletedend"):
-                    in_uninstall_section = False
-                    continue
-                if in_uninstall_section and (
-                    str(step.get("command", "")).strip()
-                    or str(step.get("script", "")).strip()
-                ):
-                    uninstall_has_content = True
-                    break
-            uninstall_section_present = uninstall_has_content
-
-        # Check if the launcher is specified
-        launcher = depl.get("info", {}).get("launcher", "")
-
-        # Check if the package is installed on the machine
-        found = Glpi().find_software_info_for_machine(machine["uuid_inventorymachine"],  pkg)
-        installed = True if found != [] else False
-        # create a new entry for this package if not existing in pkg_statuses
-        if uuid not in pkg_statuses:
-            # By default set to restricted
-            pkg_statuses[uuid] = {
-                "icon": "kiosk.png",
-                "right": "restricted",
-                "launcher" : launcher,
-                "uninstall" : uninstall_section_present,
-                "update": update_section_present,
-                "installed" : installed,
-                "uuid" : uuid,
-                "version_software": pkg["version_software"],
-                "vendor": pkg["vendor"],
-                "version": pkg["version_package"],
-                "software": pkg["software"],
-                "description": pkg["description"],
-                "name":pkg["name_package"],
-                "action": []
-            }
-
-        # We will find some info from profile rights
-        if pkg["package_status"] == "allowed":
-            pkg_statuses[uuid]["right"] = "allowed"
-
-        elif pkg["package_status"] == "restricted" and pkg["status"] == "allowed":
-            pkg_statuses[uuid]["right"] = "allowed"
-
-        # We fully know the package rights and states: we can put actions on it
-        pkg_statuses[uuid]["action"] = []
-
-        if installed == False:
-            if pkg_statuses[uuid]["right"] == "allowed":
-                pkg_statuses[uuid]["action"].append("Install")
-            else:
-                pkg_statuses[uuid]["action"].append("Ask")
-        else:
-            if pkg_statuses[uuid]["launcher"] != "":
-                pkg_statuses[uuid]["action"].append("Launch")
-            if pkg_statuses[uuid]["uninstall"] is True:
-                pkg_statuses[uuid]["action"].append("Delete")
-            if pkg_statuses[uuid]["update"] is True:
-                if LooseVersion(found[0][2]) < LooseVersion(pkg["version"]):
-                    pkg_statuses[uuid]["action"].append("Update")
-            # Installed but the package ships no uninstall section: nothing
-            # actionable. Emit a non-actionable "Installed" badge so the kiosk
-            # can show the package is present instead of leaving an empty card.
-            if pkg_statuses[uuid]["uninstall"] is False:
-                pkg_statuses[uuid]["action"].append("Installed")
-
-    structuredatakiosk = []
-    for uuid in pkg_statuses:
-        structuredatakiosk.append(pkg_statuses[uuid])
-
-    return structuredatakiosk
-
-
-def update_launcher(uuid, launcher):
-    """Send the new launcher for the specified package.
-    Params:
-        uuid: str which contains the uuid of the package.
-        launcher: str or base64 str of the launcher
-
-    Emits:
-        "update_launcher" subaction for kiosk_plugin
-    """
-
-    datas = {
-        "subaction": "update_launcher",
-        "data": {"uuid": uuid, "launcher": launcher},
-    }
-
-    machines_list = XmppMasterDatabase().get_machines_with_kiosk()
-    for machine in machines_list:
-        # Send the launcher to all the machines
-        send_message_to_machine(
-            datas, machine["jid"], name_random(6, "update_launcher")
-        )
-
-        # Update the datas for all the kiosks
-        structuredatakiosk = get_packages_for_machine(machine)
-    notify_kiosks()
-
-
-def get_acknowledges_for_sharings(sharings, start=0, limit=-1, filter=""):
-    acknowledges = KioskDatabase().get_acknowledges_for_sharings(
-        sharings, start, limit, filter
-    )
-
-    return acknowledges
-
-
-def update_acknowledgement(id, acknowledgedbyuser, startdate, enddate, status):
-    result = KioskDatabase().update_acknowledgement(
-        id, acknowledgedbyuser, startdate, enddate, status
-    )
-
-    return result
-
-
-def get_conf_kiosk():
-    config = PluginConfigFactory.new(BasePluginConfig, "base")
-    kconfig = KioskConfig("kiosk")
-
-    result = {
-        "use_external_ldap": kconfig.use_external_ldap,
-        "enable_acknowledgements": kconfig.enable_acknowledgements,
-    }
-
-    return result
+    @with_optional_xmpp_context
+    def count_machines_of_ous(self, source, ous, entity_id, ctx=None):
+        """Number of machines of the entity and of its sub-entities a profile
+        restricted to these OUs (A/B/C) applies to; 0 when the entity is
+        refused or the source is not an OU."""
+        source = str(source).lower()
+        if source not in OU_SOURCES:
+            return 0
+        entity = self._allowed_entity(ctx, "kiosk.count_machines_of_ous", entity_id)
+        if entity is None:
+            return 0
+        ous = set(self._ou_list(ous))
+        ous = sorted(ou for ou in ous if ous.isdisjoint(self._ou_parents(ou)))
+        return XmppMasterDatabase().count_machines_in_ous(source, ous, [entity])
+
+    @with_optional_xmpp_context
+    def get_conf_kiosk(self, ctx=None):
+        return {"use_external_ldap": KioskConfig("kiosk").use_external_ldap}

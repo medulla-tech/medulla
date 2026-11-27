@@ -6,214 +6,234 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: modules/kiosk/includes/functions.php:104
+msgid "None"
+msgstr ""
+
+#: modules/kiosk/includes/functions.php:105
+msgid "User OU"
+msgstr ""
+
+#: modules/kiosk/includes/functions.php:106
+msgid "Machine OU"
+msgstr ""
+
+#: modules/kiosk/includes/functions.php:107
+msgid "Group"
+msgstr ""
+
+#: modules/kiosk/includes/functions.php:108
+msgid "LDAP"
+msgstr ""
+
+#: modules/kiosk/includes/functions.php:135
+msgid "%d profile(s) successfully deleted"
+msgstr ""
+
+#: modules/kiosk/includes/functions.php:139
+msgid "%d profile(s) could not be deleted"
+msgstr ""
+
+#: modules/kiosk/includes/functions.php:179
+msgid "Profile %s successfully added"
+msgstr ""
+
+#: modules/kiosk/includes/functions.php:179
+msgid "The profile %s has been updated"
+msgstr ""
+
+#: modules/kiosk/includes/functions.php:186
+msgid "Profile not saved: its name is already used in this entity or too long, or the selection is no longer valid."
+msgstr ""
+
+#: modules/kiosk/includes/functions.php:233
+msgid "Sub-levels of %s"
+msgstr ""
+
+#: modules/kiosk/includes/html.inc.php:135
+msgid "Profile information"
+msgstr ""
+
+#: modules/kiosk/includes/html.inc.php:138 modules/kiosk/kiosk/ajaxProfilesList.php:87
+msgid "Profile Name"
+msgstr ""
+
+#: modules/kiosk/includes/html.inc.php:142 modules/kiosk/kiosk/ajaxProfilesList.php:81
+msgid "Active"
+msgstr ""
+
+#: modules/kiosk/includes/html.inc.php:142 modules/kiosk/kiosk/ajaxProfilesList.php:81
+msgid "Inactive"
+msgstr ""
+
+#: modules/kiosk/includes/html.inc.php:145 modules/kiosk/kiosk/ajaxProfilesList.php:93
+msgid "Profile Status"
+msgstr ""
+
+#: modules/kiosk/includes/html.inc.php:150
+msgid "Scope"
+msgstr ""
+
+#: modules/kiosk/includes/html.inc.php:163 modules/kiosk/includes/html.inc.php:41 modules/kiosk/kiosk/ajaxProfilesList.php:91
+msgid "Entity"
+msgstr ""
+
+#: modules/kiosk/includes/html.inc.php:171
+msgid "Restriction"
+msgstr ""
+
+#: modules/kiosk/includes/html.inc.php:174
+msgid "Search by name ..."
+msgstr ""
+
+#: modules/kiosk/includes/html.inc.php:192
+msgid "Packages"
+msgstr ""
+
+#: modules/kiosk/includes/html.inc.php:196
+msgid "Available packages"
+msgstr ""
+
+#: modules/kiosk/includes/html.inc.php:201
+msgid "Profile packages"
+msgstr ""
+
+#: modules/kiosk/includes/html.inc.php:208
+msgid "Create"
+msgstr ""
+
+#: modules/kiosk/includes/html.inc.php:208
+msgid "Save"
+msgstr ""
+
+#: modules/kiosk/includes/html.inc.php:223
+msgid "Select at least one item of the restriction."
+msgstr ""
+
+#: modules/kiosk/includes/html.inc.php:224
+msgid "Nothing found on the machines of this entity."
+msgstr ""
+
+#: modules/kiosk/includes/html.inc.php:225
+msgid "OUs concerned"
+msgstr ""
+
+#: modules/kiosk/includes/html.inc.php:226
+msgid "Groups concerned"
+msgstr ""
+
+#: modules/kiosk/includes/html.inc.php:227
+msgid "Expand all"
+msgstr ""
+
+#: modules/kiosk/includes/html.inc.php:228
+msgid "Collapse all"
+msgstr ""
+
+#: modules/kiosk/includes/html.inc.php:229
+msgid "Saving the profile may take a few moments."
+msgstr ""
+
+#: modules/kiosk/includes/html.inc.php:230
+msgid "The profile could not be saved."
+msgstr ""
+
+#: modules/kiosk/includes/html.inc.php:34
+msgid "All my entities"
+msgstr ""
+
 #: modules/kiosk/infoPackage.inc.php:30 modules/kiosk/infoPackage.inc.php:35
 msgid "Kiosk"
 msgstr ""
 
-#: modules/kiosk/infoPackage.inc.php:43 modules/kiosk/infoPackage.inc.php:47
-#: modules/kiosk/kiosk/localSidebar.php:26
+#: modules/kiosk/infoPackage.inc.php:43 modules/kiosk/infoPackage.inc.php:47 modules/kiosk/kiosk/index.php:28 modules/kiosk/kiosk/localSidebar.php:24
 msgid "Profile List"
 msgstr ""
 
-#: modules/kiosk/infoPackage.inc.php:52 modules/kiosk/kiosk/localSidebar.php:27
+#: modules/kiosk/infoPackage.inc.php:52 modules/kiosk/kiosk/localSidebar.php:25
 msgid "Add Profile"
 msgstr ""
 
-#: modules/kiosk/infoPackage.inc.php:76
-#: modules/kiosk/kiosk/ajaxProfilesList.php:39
-#: modules/kiosk/kiosk/editProfile.php:98
+#: modules/kiosk/infoPackage.inc.php:76 modules/kiosk/kiosk/ajaxProfilesList.php:48 modules/kiosk/kiosk/editProfile.php:37
 msgid "Edit Profile"
 msgstr ""
 
-#: modules/kiosk/infoPackage.inc.php:80
-#: modules/kiosk/kiosk/ajaxProfilesList.php:40
+#: modules/kiosk/infoPackage.inc.php:80 modules/kiosk/kiosk/ajaxProfilesList.php:49 modules/kiosk/kiosk/deleteProfile.php:49
 msgid "Delete Profile"
 msgstr ""
 
-#: modules/kiosk/infoPackage.inc.php:85 modules/kiosk/infoPackage.inc.php:89
-#: modules/kiosk/kiosk/acknowledges.php:7
-#: modules/kiosk/kiosk/localSidebar.php:29
-msgid "Installation Requests"
-msgstr ""
-
-#: modules/kiosk/infoPackage.inc.php:94
-#: modules/kiosk/kiosk/ajaxAcknowledges.php:46
-#: modules/kiosk/kiosk/modifyAcknowledge.php:69
-msgid "Modify Installation Authorisations"
-msgstr ""
-
-#: modules/kiosk/kiosk/add.php:63
+#: modules/kiosk/kiosk/add.php:33
 msgid "Add New Profile"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:86 modules/kiosk/kiosk/ajaxAcknowledges.php:75
-#: modules/kiosk/kiosk/ajaxProfilesList.php:66
-#: modules/kiosk/kiosk/editProfile.php:122
-msgid "Profile Name"
+#: modules/kiosk/kiosk/ajaxGetUsersForOu.php:40
+msgid "No machine concerned"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:87 modules/kiosk/kiosk/editProfile.php:123
-msgid "Name"
+#: modules/kiosk/kiosk/ajaxGetUsersForOu.php:42
+msgid "1 machine concerned"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:93 modules/kiosk/kiosk/editProfile.php:129
-msgid "Set the profile to active / inactive state"
+#: modules/kiosk/kiosk/ajaxGetUsersForOu.php:44
+msgid "%d machines concerned"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:94 modules/kiosk/kiosk/ajaxProfilesList.php:53
-#: modules/kiosk/kiosk/editProfile.php:130
-msgid "Active"
+#: modules/kiosk/kiosk/ajaxProfilesList.php:39
+msgid "No profiles"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:94 modules/kiosk/kiosk/ajaxProfilesList.php:53
-#: modules/kiosk/kiosk/editProfile.php:130
-msgid "Inactive"
+#: modules/kiosk/kiosk/ajaxProfilesList.php:40
+msgid "Use the sidebar menu to create a new profile."
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:97 modules/kiosk/kiosk/ajaxProfilesList.php:69
-#: modules/kiosk/kiosk/editProfile.php:133
-msgid "Profile Status"
+#: modules/kiosk/kiosk/ajaxProfilesList.php:56
+msgid "Delete selected"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:105 modules/kiosk/kiosk/editProfile.php:143
-msgid "Manage packages"
+#: modules/kiosk/kiosk/ajaxProfilesList.php:57
+msgid "Cancel"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:120 modules/kiosk/kiosk/editProfile.php:147
-#: modules/kiosk/kiosk/editProfile.php:152
-msgid "Restricted packages"
+#: modules/kiosk/kiosk/ajaxProfilesList.php:58
+msgid "Selection mode"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:128 modules/kiosk/kiosk/editProfile.php:163
-msgid "Available packages"
+#: modules/kiosk/kiosk/ajaxProfilesList.php:59
+msgid "Delete this profile?"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:129 modules/kiosk/kiosk/add.php:133
-#: modules/kiosk/kiosk/editProfile.php:164
-#: modules/kiosk/kiosk/editProfile.php:168
-msgid "Search by name ..."
+#: modules/kiosk/kiosk/ajaxProfilesList.php:60
+msgid "Delete %d profiles?"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:132 modules/kiosk/kiosk/editProfile.php:167
-msgid "Allowed packages"
+#: modules/kiosk/kiosk/ajaxProfilesList.php:61
+msgid "Delete"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:147 modules/kiosk/kiosk/editProfile.php:183
-msgid "Source"
+#: modules/kiosk/kiosk/ajaxProfilesList.php:62
+msgid "Some profiles could not be deleted:"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:169
-msgid "Create"
+#: modules/kiosk/kiosk/ajaxProfilesList.php:63
+msgid "An error occurred while deleting."
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:169
-msgid "Create the profile"
+#: modules/kiosk/kiosk/ajaxProfilesList.php:64
+msgid "Close"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:178
-msgid "The LDAP is not configured correctly. Please check your configuration."
+#: modules/kiosk/kiosk/ajaxProfilesList.php:80
+msgid "No entity"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:187
-msgid "Please select the concerned OUs"
-msgstr ""
-
-#: modules/kiosk/kiosk/ajaxEditProfile.php:37
-#, php-format
-msgid "The profile %s has been updated"
-msgstr ""
-
-#: modules/kiosk/kiosk/ajaxEditProfile.php:40
-msgid "Unable to update the profile"
-msgstr ""
-
-#: modules/kiosk/kiosk/index.php:29
-msgid "List of profils"
-msgstr ""
-
-#: modules/kiosk/kiosk/ajaxAcknowledges.php:73
-msgid "Package Name"
-msgstr ""
-
-#: modules/kiosk/kiosk/ajaxAcknowledges.php:77
-msgid "Asked by User"
-msgstr ""
-
-#: modules/kiosk/kiosk/ajaxAcknowledges.php:78
-msgid "Asked On"
-msgstr ""
-
-#: modules/kiosk/kiosk/ajaxAcknowledges.php:79
-msgid "Starts On"
-msgstr ""
-
-#: modules/kiosk/kiosk/ajaxAcknowledges.php:80
-msgid "Ends On"
-msgstr ""
-
-#: modules/kiosk/kiosk/ajaxAcknowledges.php:81
-#: modules/kiosk/kiosk/modifyAcknowledge.php:95
-msgid "Status"
-msgstr ""
-
-#: modules/kiosk/kiosk/editProfile.php:202
-msgid "modify"
-msgstr ""
-
-#: modules/kiosk/kiosk/editProfile.php:202
-msgid "Modify the profile"
-msgstr ""
-
-#: modules/kiosk/kiosk/deleteProfile.php:34
-msgid "Missing parameter name"
-msgstr ""
-
-#: modules/kiosk/kiosk/deleteProfile.php:43
-msgid "Missing parameter id"
+#: modules/kiosk/kiosk/ajaxProfilesList.php:99
+msgid "Elements"
 msgstr ""
 
 #: modules/kiosk/kiosk/deleteProfile.php:53
-#, php-format
-msgid "Profile %s successfully deleted"
+msgid "Delete the profile %s ?"
 msgstr ""
 
-#: modules/kiosk/kiosk/deleteProfile.php:58
-#, php-format
-msgid "Impossible to delete profile %s"
-msgstr ""
-
-#: modules/kiosk/kiosk/modifyAcknowledge.php:43
-#, php-format
-msgid "%s has been granted the rights %s on package %s (%s) from %s to %s."
-msgstr ""
-
-#: modules/kiosk/kiosk/modifyAcknowledge.php:47
-msgid "Error while changing the authorisations"
-msgstr ""
-
-#: modules/kiosk/kiosk/modifyAcknowledge.php:70
-msgid "This authorisation can't be edited (missing parameter)"
-msgstr ""
-
-#: modules/kiosk/kiosk/modifyAcknowledge.php:75
-#, php-format
-msgid "%s requested installation authorisation for package %s (profile %s)"
-msgstr ""
-
-#: modules/kiosk/kiosk/modifyAcknowledge.php:82
-msgid "Start Date"
-msgstr ""
-
-#: modules/kiosk/kiosk/modifyAcknowledge.php:86
-msgid "End Date"
-msgstr ""
-
-#: modules/kiosk/kiosk/ajaxAddProfile.php:47
-#, php-format
-msgid "Profile %s successfully added"
-msgstr ""
-
-#: modules/kiosk/kiosk/ajaxAddProfile.php:49
-#, php-format
-msgid "Unable to create the profile %s"
+#: modules/kiosk/kiosk/deleteProfile.php:58 modules/kiosk/kiosk/editProfile.php:29
+msgid "Profile not found"
 msgstr ""
