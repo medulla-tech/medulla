@@ -21,93 +21,84 @@
  *
  */
 
-var sending = false;
-var savingModalDelay = 2000;
+var kioskSending = false;
 
-jQuery("#bvalid").click(function() {
-    if(sending)
-        return;
-
-    if(jQuery("#name").val() == "")
-        jQuery("#name").focus();
-
-    else if(ous.length == 0)
-        alert(MSG_OU_REQUIRED, '', 'alert-warning');
-    else
-    {
-        sending = true;
-        jQuery("#bvalid").prop("disabled", true);
-        sendForm();
+jQuery(document).ready(function(){
+    function applyFilter(filter, items) {
+        var value = jQuery(filter).val().toLowerCase();
+        jQuery(items).each(function() {
+            jQuery(this).toggle(jQuery(this).text().toLowerCase().indexOf(value) > -1);
+        });
     }
+
+    jQuery("#availableFilter").on("keyup", function() {
+        applyFilter("#availableFilter", "#available-packages li");
+    });
+
+    jQuery("#profileFilter").on("keyup", function() {
+        applyFilter("#profileFilter", "#profile-packages li");
+    });
 });
 
-function sendForm(){
-    var action = jQuery("[name='action']").val()
-    if(action == 'undefined')
-        var url = "modules/kiosk/kiosk/ajaxAddProfile.php";
-    else
-    {
-        action = action[0].toUpperCase() + action.substring(1)
-        var url = "modules/kiosk/kiosk/ajax"+action+"Profile.php";
+function kioskSubmitProfile() {
+    if(kioskSending || !validateForm("profile-form"))
+        return false;
+
+    if(jQuery("#source").val() !== "entity" && kioskSelectedOus.length == 0) {
+        alert(kioskForm.messages.ouRequired, '', 'modal-info');
+        return false;
     }
 
-    // Create json which contains all the needed infos
-    var datas = {};
-    datas['name'] = jQuery("#name").val();
-    datas['active'] = jQuery("#status").val();
-    datas['owner'] = jQuery("[name='owner']").val();
-    datas['source'] = jQuery("#source").val();
-    datas['id'] = jQuery("[name='id']").val();
-    datas['auth_token'] = jQuery("[name='auth_token']").val();
-    datas['ous'] = ous;
-    datas['packages'] = generate_json();
-
-    var redirect = function() {
-        window.location.replace("main.php?module=kiosk&submod=kiosk&action=index");
+    var button = jQuery("#profile-form [name='bvalid']");
+    var datas = {
+        'name': jQuery("#name").val(),
+        'active': jQuery("#status").val(),
+        'entity_id': jQuery("#entity_id").val(),
+        'source': jQuery("#source").val(),
+        'ous': kioskSelectedOus,
+        'packages': kioskProfilePackages(),
+        'auth_token': jQuery("#profile-form [name='auth_token']").val()
     };
-    var modalShown = false;
+    if(kioskForm.profile.id !== null)
+        datas['id'] = kioskForm.profile.id;
 
+    kioskSending = true;
+    button.prop("disabled", true);
+
+    var modalShown = false;
     var timer = setTimeout(function() {
         timer = null;
         modalShown = true;
-        alert(MSG_SAVING_PROFILE, '', 'modal-info');
+        alert(kioskForm.messages.saving, '', 'modal-info');
         var popup = jQuery("#popup");
         popup.find(".js-alert-content").append('<div class="kiosk-saving-spinner"><span class="spinner spinner-lg"></span></div>');
         popup.find(".js-alert-actions").remove();
         popup.find("a.popup_close_btn").hide();
         jQuery("#overlay").off("click", closePopup);
         popup.css("margin-top", -(popup.outerHeight() / 2) + "px");
-    }, savingModalDelay);
+    }, 2000);
 
-    // Send the infos to ajaxAddProfile.php
-    jQuery.post(url, datas, null, "json").done(function(data){
+    function giveBack(message, klass) {
         if(timer !== null)
             clearTimeout(timer);
-        if(data && data.status === "exists")
-        {
-            if(modalShown)
-            {
-                jQuery("#popup, #overlay").stop(true, true);
-                jQuery("#popup a.popup_close_btn").show();
-            }
-            alert(data.message);
-            sending = false;
-            jQuery("#bvalid").prop("disabled", false);
-            jQuery("#name").focus();
+        if(modalShown) {
+            jQuery("#popup, #overlay").stop(true, true);
+            jQuery("#popup a.popup_close_btn").show();
+        }
+        alert(message, '', klass);
+        kioskSending = false;
+        button.prop("disabled", false);
+    }
+
+    jQuery.post(kioskForm.saveUrl, datas, null, "json").done(function(data){
+        if(data && data.status === "ok") {
+            window.location.replace(kioskForm.listUrl);
             return;
         }
-        redirect();
+        giveBack((data && data.message) ? data.message : kioskForm.messages.failed, 'modal-info');
     }).fail(function(){
-        if(timer !== null)
-            clearTimeout(timer);
-        if(modalShown)
-        {
-            closePopup();
-            jQuery("#popup").promise().done(function() {
-                jQuery(this).find("a.popup_close_btn").show();
-            });
-        }
-        sending = false;
-        jQuery("#bvalid").prop("disabled", false);
+        giveBack(kioskForm.messages.failed);
     });
+
+    return false;
 }

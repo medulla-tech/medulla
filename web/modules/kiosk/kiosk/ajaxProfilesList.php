@@ -19,33 +19,34 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-
 require_once("modules/kiosk/includes/xmlrpc.php");
-require_once("modules/medulla_server/includes/utilities.php");
+require_once("modules/kiosk/includes/functions.php");
 require_once("includes/UIComponents.php");
 
+kioskRequireAcl("index");
 
 global $conf;
-$start = (isset($_GET['start'])) ? htmlentities($_GET['start']) : 0;
 $maxperpage = $conf['global']['maxperpage'];
-$filter = (isset($_GET['filter'])) ? htmlentities($_GET['filter']) : "";
+$start = max(0, intval($_GET['start'] ?? 0));
+$filter = isset($_GET['filter']) ? (string) $_GET['filter'] : "";
 
-$login = $_SESSION['login'];
-
-$profiles = xmlrpc_get_profiles_list($login, $start, $maxperpage, $filter);
-$count = $profiles['total'];
-$profiles = $profiles['datas'];
+$result = xmlrpc_kiosk_get_profiles_list(kioskSelectedLocation(), $start, $maxperpage, $filter);
+$profiles = (is_array($result) && isset($result['datas']) && is_array($result['datas'])) ? $result['datas'] : array();
+$count = is_array($result) ? intval($result['total'] ?? 0) : 0;
 
 if ($count == 0) {
     EmptyStateBox::show(
         _T("No profiles", "kiosk"),
-        _T("Use the sidebar menu to create a new profile.", "kiosk")
+        ($filter === '') ? _T("Use the sidebar menu to create a new profile.", "kiosk") : ''
     );
     return;
 }
 
-$action_editProfiles = new ActionItem(_T("Edit Profile", 'kiosk'), "edit", "edit", "profile", "kiosk", "kiosk");
-$action_deleteProfile = new ActionPopupItem(_T("Delete Profile", 'kiosk'), "deleteProfile", "delete", "profile", "kiosk", "kiosk");
+$entities = kioskEntities();
+$canWrite = hasCorrectAcl("kiosk", "kiosk", "edit");
+
+$editAction = new ActionItem(_T("Edit Profile", 'kiosk'), "edit", "edit", "profile", "kiosk", "kiosk");
+$deleteAction = new ActionPopupItem(_T("Delete Profile", 'kiosk'), "deleteProfile", "delete", "profile", "kiosk", "kiosk");
 
 $bulkBar = new BulkSelectBar(
     urlStrRedirect("kiosk/kiosk/deleteProfile"),
@@ -64,49 +65,46 @@ $bulkBar = new BulkSelectBar(
     ]
 );
 
-$profiles_name = [];
-$profiles_date = [];
-$profiles_status = [];
-$action_edit = [];
-$action_delete = [];
-$action_acknowledge = [];
+$names = array();
+$entityNames = array();
+$statuses = array();
+$cssIds = array();
+$params = array();
 
-$params = [];
-
-foreach($profiles as $element) {
-    $profiles_name[] = htmlspecialchars($element['name'], ENT_QUOTES, 'UTF-8');
-    $profiles_status[] = ($element['active'] == 1) ? _T("Active", "kiosk") : _T("Inactive", "kiosk");
-    $params[] = ['id' => $element['id'], 'name' => $element['name']];
-
-    $action_edit[] = $action_editProfiles;
-    $action_delete[] = $action_deleteProfile;
-    $bulkBar->addItem((int)$element['id'], $element['name']);
+foreach ($profiles as $profile) {
+    $id = intval($profile['id']);
+    $names[] = htmlspecialchars((string) $profile['name'], ENT_QUOTES, 'UTF-8');
+    $entityId = $profile['entity_id'] ?? null;
+    $entityNames[] = ($entityId !== null && isset($entities[intval($entityId)]))
+        ? htmlspecialchars($entities[intval($entityId)], ENT_QUOTES, 'UTF-8')
+        : _T("No entity", "kiosk");
+    $statuses[] = ($profile['active'] == 1) ? _T("Active", "kiosk") : _T("Inactive", "kiosk");
+    $cssIds[] = 'k_' . $id;
+    $params[] = array('id' => $id);
+    $bulkBar->addItem($id, (string) $profile['name']);
 }
 
-// Avoiding the CSS selector (tr id) to start with a number
-$ids_kiosk = [];
-foreach($profiles as $index => $name_kiosk) {
-    $ids_kiosk[] = htmlspecialchars('k_'.$name_kiosk['name'], ENT_QUOTES, 'UTF-8');
+$n = new OptimizedListInfos($names, _T("Profile Name", "kiosk"));
+$n->setCssIds($cssIds);
+if (!$canWrite) {
+    $n->disableFirstColumnActionLink();
 }
-
-$n = new OptimizedListInfos($profiles_name, _T("Profile Name", "kiosk"));
-$n->setcssIds($ids_kiosk);
-$n->disableFirstColumnActionLink();
-$n->addExtraInfo($profiles_status, _T("Profile Status", "kiosk"));
-// parameters are :
-// - label
-// - action
-// - class (icon)
-// - profile get parameter
-// - module
-// - submodule
+if (count($entities) > 1) {
+    $n->addExtraInfo($entityNames, _T("Entity", "kiosk"));
+}
+$n->addExtraInfo($statuses, _T("Profile Status", "kiosk"));
 $n->setParamInfo($params);
-$n->addActionItemArray($action_edit);
-$n->addActionItemArray($action_delete);
+$n->addActionItem($editAction);
+if ($canWrite) {
+    $n->addActionItem($deleteAction);
+}
+$n->setName(_T("Elements", "kiosk"));
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->start = 0;
 $n->end = $count;
 $n->display();
 
-$bulkBar->display();
+if ($canWrite) {
+    $bulkBar->display();
+}

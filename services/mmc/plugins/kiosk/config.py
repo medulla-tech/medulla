@@ -42,13 +42,6 @@ class KioskConfig(PluginConfig, KioskDatabaseConfig):
         if self.has_option("provider", "use_external_ldap"):
             self.use_external_ldap = self.getboolean("provider", "use_external_ldap")
 
-        self.enable_acknowledgements = False
-        if self.has_option("display", "enable_acknowledgements"):
-            self.enable_acknowledgements = self.getboolean(
-                "display", "enable_acknowledgements"
-            )
-        # ...
-
     def check(self):
         """
         Check the values set in the configuration file.

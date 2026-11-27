@@ -19,39 +19,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require_once("../includes/xmlrpc.php");
-require_once("../includes/functions.php");
-require_once("../../pkgs/includes/xmlrpc.php");
-require_once("../../../includes/config.inc.php");
-require_once("../../../includes/session.inc.php");
-require_once("../../../includes/PageGenerator.php");
-require_once("../../../includes/acl.inc.php");
+require_once("modules/kiosk/includes/xmlrpc.php");
+require_once("modules/kiosk/includes/functions.php");
 
-if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
-    http_response_code(405);
-    exit;
-}
-
-verifyCSRFToken($_POST);
-
-
-if(isset($_POST['id'], $_POST['name'], $_POST['active'])) {
-    $login = $_SESSION['login'];
-    $ous = (is_string($_POST['ous']) && $_POST['ous'] == "none") ? "" : $_POST['ous'];
-    $packages = isset($_POST['packages']) ? $_POST['packages'] : $_POST['sources'];
-
-    $result = xmlrpc_update_profile($login, $_POST['id'], htmlentities($_POST['name']), $ous, $_POST['active'], $packages, strtolower(str_replace(" ", "_", $_POST['source'])));
-    header('Content-Type: application/json');
-    if ($result === false) {
-        echo json_encode([
-            "status" => "exists",
-            "message" => sprintf(_T("A profile named %s already exists", "kiosk"), htmlentities($_POST['name'])),
-        ]);
-    } else {
-        new NotifyWidgetSuccess(sprintf(_T('The profile %s has been updated', 'kiosk'), htmlentities($_POST['name'])));
-        echo json_encode(["status" => "ok"]);
-    }
-
-} else {
-    new NotifyWidgetSuccess(sprintf(_T('Unable to update the profile', 'kiosk')));
-}
+kioskSaveProfile("edit");

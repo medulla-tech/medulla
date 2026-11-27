@@ -22,20 +22,37 @@
  * file: ajaxSources.php
  */
 
-require_once("../includes/xmlrpc.php");
-require_once("../includes/functions.php");
-require_once("../../../includes/config.inc.php");
-require_once("../../../includes/session.inc.php");
-require_once("../../../includes/PageGenerator.php");
-require_once("../../../includes/acl.inc.php");
+require_once("modules/kiosk/includes/xmlrpc.php");
+require_once("modules/kiosk/includes/functions.php");
 
-$ou = $_POST['ou'];
-$owner = (!empty($_POST['owner'])) ? htmlentities($_POST['owner']) : $_SESSION['login'];
-$result = "";
-$number = 0;
-$token = $_SESSION['glpi_user']['api_token'];
+kioskRequireAcl(array("add", "edit"));
 
-$data = xmlrpc_get_ou_list($ou, $owner, $token);
-recursiveArrayToList($data, $result, $number);
+$source = (string) ($_POST['source'] ?? '');
+$entity = kioskPostedEntity();
+if ($entity === null) {
+    exit;
+}
 
-echo $result;
+$tree = xmlrpc_kiosk_get_ou_list($source, $entity);
+if (!is_array($tree) || !isset($tree['child']) || !is_array($tree['child'])) {
+    $tree = array('name' => '', 'child' => array());
+}
+
+// Values of the edited profile no machine carries any more stay selectable.
+if (!empty($_POST['profile_id'])) {
+    $profile = xmlrpc_kiosk_get_profile_by_id(intval($_POST['profile_id']));
+    if (is_array($profile) && $profile['source'] === $source && $profile['entity_id'] !== null
+        && intval($profile['entity_id']) === $entity) {
+        $paths = array();
+        kioskTreePaths($tree, $paths);
+        foreach ($profile['ous'] as $ou) {
+            if (!isset($paths[(string) $ou])) {
+                $tree['child'][] = array('name' => (string) $ou, 'child' => array(), 'path' => (string) $ou, 'selectable' => true);
+            }
+        }
+    }
+}
+
+$count = 0;
+echo recursiveArrayToList($tree, $count);
+exit;
