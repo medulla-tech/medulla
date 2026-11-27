@@ -4,9 +4,11 @@
 
 # Medulla RMM
 
-Medulla est la solution RMM open source qui vous redonne la maîtrise complète de vos postes de travail. Grâce au protocole XMPP en temps réel, pilotez vos postes avec réactivité, sécurité et sans dépendance à un éditeur propriétaire.
+Medulla est la solution RMM open source qui vous redonne la maîtrise complète de vos postes de travail. Elle automatise les tâches répétitives, déploie applications et systèmes d'exploitation, et gère vos postes où qu'ils se trouvent.
 
-## Fonctionnalités principales :
+Grâce au protocole XMPP en temps réel, Medulla vous permet de piloter vos postes avec réactivité, sécurité et sans dépendance à un éditeur propriétaire.
+
+## Fonctionnalités principales
 
 * Masterisation et multicast
   * Générateur de configuration système
@@ -18,7 +20,8 @@ Medulla est la solution RMM open source qui vous redonne la maîtrise complète 
 * Inventaire
 * Prise en main à distance
 * Sauvegarde et restauration
-* Gestion des mises à jour
+* Gestion des mises à jour Windows et Linux
+* Supervision par sondes (Reflex)
 * Kiosque applicatif
 * Gestion des terminaux mobiles Android (MDM)
 
