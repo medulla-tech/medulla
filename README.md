@@ -4,11 +4,11 @@
 
 # Medulla RMM
 
-Medulla RMM is a radically simple IT automation and lifecycle management tool that offers the ability to handle repetitive tasks, quickly deploy applications, operating system and proactively manage them all where ever they are. 
+Medulla is the open-source RMM solution that gives you back full control of your workstations. It automates repetitive tasks, deploys applications and operating systems, and manages your workstations wherever they are.
 
-Medulla provides a real-time management solution for complex and distributed environments.
+Built on the real-time XMPP protocol, Medulla lets you manage your workstations with responsiveness and security, without depending on a proprietary vendor.
 
-## Main feature :
+## Main features
 
 * Imaging and Multicast
   * System Configuration Builder
@@ -20,7 +20,8 @@ Medulla provides a real-time management solution for complex and distributed env
 * Complete inventory
 * Remote control
 * Backup and Restore
-* Update management
+* Update management for Windows and Linux
+* Monitoring with probes (Reflex)
 * Self-service kiosk
 * Mobile device management (MDM) for Android
 
