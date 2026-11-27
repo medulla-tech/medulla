@@ -217,6 +217,8 @@ class SecurityDatabase(DatabaseHelper):
         self.config = config
         self.db = create_engine(
             self.makeConnectionPath(),
+            # Tables are utf8mb4: a software name can hold 4-byte characters
+            connect_args={'charset': 'utf8mb4'},
             pool_recycle=self.config.dbpoolrecycle,
             pool_size=self.config.dbpoolsize
         )
