@@ -463,6 +463,21 @@
     cursor: help;
 }
 
+.security-dashboard .stat-card-critical .stat-card-value {
+    color: var(--color-text-dark);
+}
+
+.has-exploited .stat-card-exploited .stat-card-value {
+    color: var(--severity-critical);
+}
+
+.has-exploited .stat-card-exploited .stat-card-value::before {
+    content: "⚠";
+    content: "⚠" / "";
+    line-height: 1;
+    margin-right: 0.25em;
+}
+
 .cell-sub {
     color: var(--color-text-light);
     font-size: var(--text-sm);
